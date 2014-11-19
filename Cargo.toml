@@ -1,5 +1,5 @@
 [package]
 
-name = "collect-rs"
+name = "collect"
 version = "0.0.1"
 authors = ["Alexis Beingessner <a.beingessner@gmail.com>"]
