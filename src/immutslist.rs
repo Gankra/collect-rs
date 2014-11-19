@@ -88,11 +88,13 @@ impl<T> ImmutSList<T> {
     pub fn iter <'a> (&'a self) -> Items<'a, T> {
         Items{ head: self.front.as_ref().map(|x| &**x), nelem: self.len() }
     }
-}
 
-impl<T> Collection for ImmutSList<T> {
-    fn len (&self) -> uint {
+    pub fn len (&self) -> uint {
         self.length
+    }
+
+    pub fn is_empty(&self) -> bool {
+        return self.len() == 0
     }
 }
 
