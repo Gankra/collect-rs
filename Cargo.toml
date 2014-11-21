@@ -2,4 +2,6 @@
 
 name = "collect"
 version = "0.0.1"
-authors = ["Alexis Beingessner <a.beingessner@gmail.com>"]
+authors = ["Alexis Beingessner <a.beingessner@gmail.com>",
+           "Sebastian Gesemann <s.gesemann@gmail.com>"]
+

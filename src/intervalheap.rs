@@ -26,9 +26,9 @@ use std::vec;
 // The last item in v is to be added.
 fn inteval_heap_push<T: Ord>(v: &mut [T]) {
     debug_assert!(v.len() > 0);
-    let mut node_l = (v.len() - 1) & !1u;
-    let mut node_r = node_l + ((v.len() & 1) ^ 1);
-    if v[node_r] < v[node_l] { v.swap(node_l, node_r); }
+    let mut node_r = v.len() - 1;
+    let mut node_l = node_r & !1u;
+    if v[node_l] > v[node_r] { v.swap(node_l, node_r); }
     while node_l > 0 {
         let parent_l = (node_l / 2 - 1) & !1u;
         let parent_r = parent_l + 1;
@@ -137,7 +137,7 @@ impl<T> IntervalHeap<T> {
     pub fn clear(&mut self) {
         self.data.clear();
     }
-    /// converts the interval heap into a vector
+    /// converts the interval heap into a vector (constant time complexity)
     pub fn into_vec(self) -> Vec<T> {
         self.data
     }
