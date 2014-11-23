@@ -1,5 +1,6 @@
 #![feature(unsafe_destructor)]
 #![feature(default_type_params)]
+#![feature(if_let)]
 
 //! collect-rs is intended as an experimental extension of the Rust standard library's
 //! libcollections. Ideas that are too niche, crazy, or experimental to land in libcollections
@@ -23,6 +24,6 @@
 
 extern crate test;
 
-pub mod immutslist;
-pub mod intervalheap;
+pub mod blist;
+pub mod immutslist;pub mod intervalheap;
 
