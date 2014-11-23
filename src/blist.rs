@@ -141,6 +141,11 @@ impl<T> BList<T> {
         self.len() == 0
     }
 
+    /// Drops everything in the list.
+    pub fn clear(&mut self) {
+        self.list.clear();
+    }
+
     /// Gets a by-reference iterator over the elements in the list.
     pub fn iter(&self) -> Items<T> {
         let len = self.len();
