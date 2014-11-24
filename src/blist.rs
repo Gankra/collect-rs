@@ -1,7 +1,9 @@
 use std::collections::{dlist, ring_buf, DList, RingBuf};
 use std::iter;
 use std::fmt;
+use std::mem;
 use std::hash::{Hash, Writer};
+use std::num::Int;
 
 #[deriving(Clone)]
 /// A BList is a hybrid between an array and a doubly-linked-list. It consists of arrays in a
@@ -23,7 +25,8 @@ pub struct BList<T> {
 impl<T> BList<T> {
     /// Creates a new BList with a reasonable choice for B.
     pub fn new() -> BList<T> {
-        BList::with_b(7)
+        // RingBuf always has capacity = 2^k - 1; b = 6 gets us len = 7 = 2^3 - 1
+        BList::with_b(6)
     }
 
     /// Creates a new BList with the specified B.
@@ -41,9 +44,9 @@ impl<T> BList<T> {
 impl<T> BList<T> {
     /// Inserts the element at the back of the list.
     pub fn push_back(&mut self, elem: T) {
-        self.len += 1;
-
-        let max = self.block_max();
+        self.len = self.len.checked_add(1).expect("capacity overflow");
+        let b = self.b;
+        let max = block_max(b);
         if let Some(block) = self.list.back_mut() {
             if block.len() < max {
                 block.push_back(elem);
@@ -52,16 +55,16 @@ impl<T> BList<T> {
         }
 
         // Couldn't insert, gotta make a new back
-        let mut new_block = self.make_block();
+        let mut new_block = make_block(b);
         new_block.push_back(elem);
         self.list.push_back(new_block);
     }
 
     /// Inserts the element at the front of the list.
     pub fn push_front(&mut self, elem: T) {
-        self.len += 1;
-
-        let max = self.block_max();
+        self.len = self.len.checked_add(1).expect("capacity overflow");
+        let b = self.b;
+        let max = block_max(b);
         if let Some(block) = self.list.front_mut() {
             if block.len() < max {
                 block.push_front(elem);
@@ -70,7 +73,7 @@ impl<T> BList<T> {
         }
 
         // Couldn't insert, gotta make a new front
-        let mut new_block = self.make_block();
+        let mut new_block = make_block(b);
         new_block.push_front(elem);
         self.list.push_front(new_block);
     }
@@ -179,25 +182,34 @@ impl<T> BList<T> {
             len: len,
         }
     }*/
+
+    /// Lazily moves the contents of `other` to the end of `self`, in the sense that it makes no
+    /// effort to preserve the node-size lower-bound invariant. This can have negative effects
+    /// on the effeciency of the resulting list, but is otherwise much faster than a proper
+    /// invariant-preserving `append`.
+    pub fn append_lazy(&mut self, other: &mut BList<T>) {
+        let list = mem::replace(&mut other.list, DList::new());
+        self.list.append(list);
+    }
+
 }
 
-// Privates
-impl<T> BList<T> {
-    /// Makes a new block for insertion in the list.
-    fn make_block(&self) -> RingBuf<T> {
-         RingBuf::with_capacity(self.block_max())
-    }
 
-    /// Gets the largest a block is allowed to become.
-    fn block_max(&self) -> uint {
-        self.b + 1
-    }
 
-    /// Gets the smallest a (non-end) block is allowed to become.
-    #[allow(unused)]
-    fn block_min(&self) -> uint {
-        self.b - 1
-    }
+/// Makes a new block for insertion in the list.
+fn make_block<T>(b: uint) -> RingBuf<T> {
+     RingBuf::with_capacity(block_max(b))
+}
+
+/// Gets the largest a block is allowed to become.
+fn block_max(b: uint) -> uint {
+    b + 1
+}
+
+/// Gets the smallest a (non-end) block is allowed to become.
+#[allow(unused)]
+fn block_min(b: uint) -> uint {
+    b - 1
 }
 
 /// Abstracts over getting the appropriate iterator from a T, &T, or &mut T
@@ -321,6 +333,9 @@ impl<A,
     RingBufIter: ExactSize<A>,
     DListIter: ExactSize<T>,
     T: Traverse<RingBufIter>> ExactSize<A> for AbsItems<DListIter, RingBufIter> { }
+
+
+
 
 impl<A> FromIterator<A> for BList<A> {
     fn from_iter<T: Iterator<A>>(iterator: T) -> BList<A> {
