@@ -24,3 +24,5 @@
 extern crate test;
 
 pub mod immutslist;
+pub mod intervalheap;
+
