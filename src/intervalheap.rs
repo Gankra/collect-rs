@@ -1,70 +1,95 @@
-//! This module contains the implementation of an interval heap data structure.
+//! A double-ended priority queue implemented with an interval heap.
 
-use std::mem;
-use std::vec;
+use std::slice;
+use std::default::Default;
 
-// Interval Heap:
-// --------------
-// (1) each node (except possibly the last leaf) contains two values
-//     where the first one is less than or equal to the second one
-// (2) each node represents a closed interval
-// (3) a child node's interval is completely contained in the parent node's
-//     interval
-
-
-// item indices...
+// An interval heap is a binary tree structure with the following properties:
+//
+// (1) Each node (except possibly the last leaf) contains two values
+//     where the first one is less than or equal to the second one.
+// (2) Each node represents a closed interval.
+// (3) A child node's interval is completely contained in the parent node's
+//     interval.
+//
+// This implies that the min and max elements are always in the root node.
+//
+// This interval heap implementation stores its nodes in a linear array
+// using a Vec. Here's an example of the layout of a tree with 13 items
+// (7 nodes) where the numbers represent the *offsets* in the array:
 //
 //          (0 1)
 //         /     \
 //    (2 3)       (4 5)
 //    /   \       /    \
-//  (6 7)(8 9)(10 11)(12 13)
-//  ........................
+//  (6 7)(8 9)(10 11)(12 --)
+//
+// Even indices are used for the "left" element of a node while odd indices
+// are used for the "right" element of a node. Note: the last node may not
+// have a "right" element.
+
+// FIXME: There may be a better algorithm for turning a vector into an
+// interval heap. Right now, this takes O(n log n) time, I think.
 
 
-// v[x] for x in [0,len-1) is considered a valid interval heap.
-// The last item in v is to be added.
+fn is_root(x: uint) -> bool { x < 2 }
+
+/// Set LSB to zero for the "left" item index of a node.
+fn left(x: uint) -> uint { x & !1u }
+
+/// Returns index of "left" item of parent node.
+fn parent_left(x: uint) -> uint {
+    debug_assert!(!is_root(x));
+    left((x - 2) / 2)
+}
+
+/// The first `v.len() - 1` elements are considered a valid interval heap
+/// and the last element is to be inserted.
 fn inteval_heap_push<T: Ord>(v: &mut [T]) {
     debug_assert!(v.len() > 0);
-    let mut node_r = v.len() - 1;
-    let mut node_l = node_r & !1u;
-    if v[node_l] > v[node_r] { v.swap(node_l, node_r); }
-    while node_l > 0 {
-        let parent_l = (node_l / 2 - 1) & !1u;
-        let parent_r = parent_l + 1;
-        if v[node_l] < v[parent_l] {
-            v.swap(parent_l, node_l);
-        } else if v[parent_r] < v[node_r] {
-            v.swap(parent_r, node_r);
+    // Start with the last new/modified node and work our way to
+    // the root if necessary...
+    let mut node_max = v.len() - 1;
+    let mut node_min = left(node_max);
+    // The reason for using two variables instead of one is to
+    // get around the special case of the last node only containing
+    // one element (node_min == node_max).
+    if v[node_min] > v[node_max] { v.swap(node_min, node_max); }
+    while !is_root(node_min) {
+        let par_min = parent_left(node_min);
+        let par_max = par_min + 1;
+        if v[node_min] < v[par_min] {
+            v.swap(par_min, node_min);
+        } else if v[par_max] < v[node_max] {
+            v.swap(par_max, node_max);
         } else {
             return; // nothing to do anymore
         }
-        debug_assert!(!(v[node_r] < v[node_l]));
-        node_l = parent_l;
-        node_r = parent_r;
+        debug_assert!(v[node_min] <= v[node_max]);
+        node_min = par_min;
+        node_max = par_max;
     }
 }
 
-// pushes item v[index] down the tree as needed
-// to restore interval heap properties
-fn down_min<T: Ord>(v: &mut [T], mut index: uint) {
-    debug_assert!(index & 1 == 0);
+/// The min element in the root node of an otherwise valid interval heap
+/// has been been replaced with some other value without violating rule (1)
+/// for the root node. This function restores the interval heap properties.
+fn update_min<T: Ord>(v: &mut [T]) {
+    // Starting at the root, we go down the tree...
+    debug_assert!(v[0] <= v[1]);
+    let mut left = 0;
     loop {
-        let c1 = index * 2 + 2;
-        let c2 = index * 2 + 4;
-        if v.len() <= c1 { return; }
-        // which path to go down in the tree?
-        let ch = if v.len() <= c2 {
-                     c1 // c1 is the only child
-                 } else {
-                     if v[c1] < v[c2] { c1 } else { c2 }
-                 };
-        if v[ch] < v[index] {
-            v.swap(ch, index);
-            index = ch;
-            let right = index + 1;
+        let c1 = left * 2 + 2; // index of 1st child's left element
+        let c2 = left * 2 + 4; // index of 2nd child's left element
+        if v.len() <= c1 { return; } // No children. We're done.
+        // Pick child with lowest min
+        let ch = if v.len() <= c2 || v[c1] < v[c2] { c1 }
+                 else { c2 };
+        if v[ch] < v[left] {
+            v.swap(ch, left);
+            left = ch;
+            let right = left + 1;
             if right < v.len() {
-                if v[index] > v[right] { v.swap(index, right); }
+                if v[left] > v[right] { v.swap(left, right); }
             }
         } else {
             break;
@@ -72,37 +97,29 @@ fn down_min<T: Ord>(v: &mut [T], mut index: uint) {
     }
 }
 
-// pushes item v[index] down the tree as needed
-// to restore interval heap properties
-fn down_max<T: Ord>(v: &mut [T], mut index: uint) {
-    debug_assert!(index & 1 == 1);
+/// The max element in the root node of an otherwise valid interval heap
+/// has been been replaced with some other value without violating rule (1)
+/// for the root node. This function restores the interval heap properties.
+fn update_max<T: Ord>(v: &mut [T]) {
+    debug_assert!(v[0] <= v[1]);
+    // Starting at the root, we go down the tree...
+    let mut right = 1;
     loop {
-        let c1 = index * 2 + 1;
-        let c2 = index * 2 + 3;
-        if v.len() <= c1 { return; }
-        // which path to go down in the tree?
-        let ch = if v.len() <= c2 {
-                     c1 // c1 is the only child
-                 } else {
-                     if v[c1] > v[c2] { c1 } else { c2 }
-                 };
-        if v[ch] > v[index] {
-            v.swap(ch, index);
-            index = ch;
-            let left = index - 1;
-            if v[left] > v[index] { v.swap(left, index); }
+        let c1 = right * 2 + 1; // index of 1st child's right element
+        let c2 = right * 2 + 3; // index of 2nd child's right element
+        if v.len() <= c1 { return; } // No children. We're done.
+        // Pick child with greatest max
+        let ch = if v.len() <= c2 || v[c1] > v[c2] { c1 }
+                 else { c2 };
+        if v[ch] > v[right] {
+            v.swap(ch, right);
+            right = ch;
+            let left = right - 1; // always exists
+            if v[left] > v[right] { v.swap(left, right); }
         } else {
             break;
         }
     }
-}
-
-// replaces and element and propagates the new one down the tree
-fn replace_and_down<T: Ord>(v: &mut [T], index: uint, x: T) -> T {
-    let res = mem::replace(&mut v[index], x);
-    if index & 1 == 0 { down_min(v, index); }
-    else { down_max(v, index); }
-    res
 }
 
 /// An `IntervalHeap` is an implementation of a double-ended priority queue.
@@ -116,183 +133,162 @@ pub struct IntervalHeap<T> {
     data: Vec<T>
 }
 
-pub type MoveItems<T> = vec::MoveItems<T>;
+impl<T: Ord> Default for IntervalHeap<T> {
+    /// Creates an empty `IntervalHeap`.
+    #[inline]
+    fn default() -> IntervalHeap<T> { IntervalHeap::new() }
+}
 
-impl<T> IntervalHeap<T> {
-    /// creates empty interval heap
+/// `IntervalHeap` iterator.
+pub type Items<'a, T> = slice::Items<'a, T>;
+
+impl<T: Ord> IntervalHeap<T> {
+    /// Creates an empty `IntervalHeap`.
     pub fn new() -> IntervalHeap<T> {
         IntervalHeap { data: Vec::new() }
     }
-    /// creates empty interval heap with a user-defined initial capacity
-    /// which causes insertions not to reallocate memory if the capacity
-    /// is sufficient to hold the new items.
+
+    /// Creates an empty `IntervalHeap` with a specific capacity. This
+    /// preallocates enough memory for capacity elements, so that the
+    /// `IntervalHeap` does not have to be reallocated until it contains at
+    /// least that many values.
     pub fn with_capacity(c: uint) -> IntervalHeap<T> {
         IntervalHeap { data: Vec::with_capacity(c) }
     }
-    /// returns true if the queue contains no items
-    pub fn is_empty(&self) -> bool {
-        self.data.is_empty()
-    }
-    /// drops all items from the queue
-    pub fn clear(&mut self) {
-        self.data.clear();
-    }
-    /// converts the interval heap into a vector (constant time complexity)
-    pub fn into_vec(self) -> Vec<T> {
-        self.data
-    }
-    /// converts the interval heap into an iterator
-    pub fn into_iter(self) -> MoveItems<T> {
-        self.data.into_iter()
-    }
-    /// returns the number of items in the interval heap
-    pub fn len(&self) -> uint {
-        self.data.len()
-    }
-    /// returns the number of items the interval heap could hold
-    /// without any memory reallocation
-    pub fn capacity(&self) -> uint {
-        self.data.capacity()
-    }
-    /// reserves capacity for at least `additional` more elements to be
-    /// inserted in the `IntervalHeap`. The collection may reserve more
-    /// space to avoid frequent reallocations.
-    pub fn reserve(&mut self, additional: uint) {
-        self.data.reserve(additional);
-    }
-    /// discards as much additional capacity as possible.
-    pub fn shrink_to_fit(&mut self) {
-        self.data.shrink_to_fit()
-    }
-    /// provides read-access to all the items.
-    pub fn as_slice(&self) -> &[T] {
-        self.data.as_slice()
-    }
-    /// returns a reference to the minimal item or None (if empty)
-    pub fn get_min<'a>(&'a self) -> Option<&'a T> {
-        match self.data.len() {
-            0 => None,
-            _ => Some(&self.data[0])
-        }
-    }
-    /// returns a reference to the maximum item or None (if empty)
-    pub fn get_max<'a>(&'a self) -> Option<&'a T> {
-        match self.data.len() {
-            0 => None,
-            1 => Some(&self.data[0]),
-            _ => Some(&self.data[1])
-        }
-    }
-    /// returns a reference to the minimal and maximum item or None (if empty)
-    pub fn get_min_max<'a>(&'a self) -> Option<(&'a T, &'a T)> {
-        match self.data.len() {
-            0 => None,
-            1 => Some((&self.data[0],&self.data[0])),
-            _ => Some((&self.data[0],&self.data[1]))
-        }
-    }
-}
 
-impl<T: Ord> IntervalHeap<T> {
-    /// converts a vector into an interval heap in-place. No memory
-    /// allocation will be done. The time complexity is O(n log n) and
-    /// O(n) in case the vector already represents an interval heap.
+    /// Creates an `IntervalHeap` from a vector.
     pub fn from_vec(mut v: Vec<T>) -> IntervalHeap<T> {
         for to in range(2, v.len()) {
             inteval_heap_push(v.slice_to_mut(to));
         }
         IntervalHeap { data: v }
     }
-    /// inserts a new item into the queue, takes amortized
-    /// logarithmic time in the size of the heap
-    pub fn push(&mut self, x: T) {
-        self.data.push(x);
-        inteval_heap_push(self.data.as_mut_slice());
+
+    /// An iterator visiting all values in underlying vector,
+    /// in arbitrary order.
+    pub fn iter(&self) -> Items<T> {
+        self.data.iter()
     }
-    /// pushes a new element into the interval heap and immediately
-    /// pops the minimum (possibly returning the new element).
-    /// This is expected to be a little more efficient than separate
-    /// calls to `push` and `pop_min`. So, no matter
-    /// what, the size of the heap will not change.
-    pub fn push_and_pop_min(&mut self, x: T) -> T {
+
+    /// Returns a reference to the smallest item or None (if empty).
+    pub fn get_min(&self) -> Option<&T> {
         match self.data.len() {
-            0 => x,
-            _ => if self.data[0] >= x { x }
-                 else { replace_and_down(self.data.as_mut_slice(), 0, x) }
+            0 => None,
+            _ => Some(&self.data[0])
         }
     }
-    /// pushes a new element into the interval heap and immediately
-    /// pops the maximum (possibly returning the new element).
-    /// This is expected to be a little more efficient than separate
-    /// calls to `push` and `pop_max`. So, no matter
-    /// what, the size of the heap will not change.
-    pub fn push_and_pop_max(&mut self, x: T) -> T {
+
+    /// Returns a reference to the greatest item or None (if empty).
+    pub fn get_max(&self) -> Option<&T> {
         match self.data.len() {
-            0 => x,
-            l => {
-                let index = if l==1 { 0u } else { 1u };
-                replace_and_down(self.data.as_mut_slice(), index, x)
-            }
+            0 => None,
+            1 => Some(&self.data[0]),
+            _ => Some(&self.data[1])
         }
     }
-    /// replaces the minimum item with the given `x`. If the heap is
-    /// empty, this function will return `Err(x)`. If the heap is
-    /// not empty, the function returns `Ok(old_min)`. So, no matter
-    /// what, the size of the heap will not change.
-    pub fn replace_min(&mut self, x: T) -> Result<T,T> {
+
+    /// Returns references to the smallest and greatest item or None (if empty).
+    pub fn get_min_max(&self) -> Option<(&T, &T)> {
         match self.data.len() {
-            0 => Err(x),
-            _ => Ok(replace_and_down(self.data.as_mut_slice(), 0, x))
+            0 => None,
+            1 => Some((&self.data[0],&self.data[0])),
+            _ => Some((&self.data[0],&self.data[1]))
         }
     }
-    /// replaces the maximum item with the given `x`. If the heap is
-    /// empty, this function will return `Err(x)`. If the heap is
-    /// not empty, the function returns `Ok(old_min)`. So, no matter
-    /// what, the size of the heap will not change.
-    pub fn replace_max(&mut self, x: T) -> Result<T,T> {
-        match self.data.len() {
-            0 => Err(x),
-            1 => Ok(mem::replace(&mut self.data[0], x)),
-            _ => Ok(replace_and_down(self.data.as_mut_slice(), 1, x))
-        }
+
+    /// Returns the number of items the interval heap could hold
+    /// without reallocation.
+    pub fn capacity(&self) -> uint {
+        self.data.capacity()
     }
-    /// removes the minimum item and returns it (or None if empty),
-    /// takes logarithmic time in the size of the heap
+
+    /// Reserves the minimum capacity for exactly `additional` more elements
+    /// to be inserted in the given `IntervalHeap`. Does nothing if the capacity
+    /// is already sufficient.
+    ///
+    /// Note that the allocator may give the collection more space than it
+    /// requests. Therefore capacity can not be relied upon to be precisely
+    /// minimal. Prefer `reserve` if future insertions are expected.
+    pub fn reserve_exact(&mut self, additional: uint) {
+        self.data.reserve_exact(additional);
+    }
+
+    /// Reserves capacity for at least `additional` more elements to be inserted
+    /// in the `IntervalHeap`. The collection may reserve more space to avoid
+    /// frequent reallocations.
+    pub fn reserve(&mut self, additional: uint) {
+        self.data.reserve(additional);
+    }
+
+    /// Discards as much additional capacity as possible.
+    pub fn shrink_to_fit(&mut self) {
+        self.data.shrink_to_fit()
+    }
+
+    /// Removes the smallest item and returns it, or None if is empty.
     pub fn pop_min(&mut self) -> Option<T> {
         match self.data.len() {
             0 => None,
             1...2 => self.data.swap_remove(0),
-            _ => { // length 3 or higher
+            _ => {
                 let res = self.data.swap_remove(0);
-                down_min(self.data.as_mut_slice(), 0);
+                update_min(self.data.as_mut_slice());
                 res
             }
         }
     }
-    /// removes the maximum item and returns it (or None if empty),
-    /// takes logarithmic time in the size of the heap
+
+    /// Removes the greatest item and returns it, or None if is empty.
     pub fn pop_max(&mut self) -> Option<T> {
         match self.data.len() {
-            0 => None,
-            1...2 => self.data.pop(),
-            _ => { // length 3 or higher
+            0...2 => self.data.pop(),
+            _ => {
                 let res = self.data.swap_remove(1);
-                down_max(self.data.as_mut_slice(), 1);
+                update_max(self.data.as_mut_slice());
                 res
             }
         }
     }
-}
 
-impl<T> Deref<[T]> for IntervalHeap<T> {
-    /// allows all the immutable slice methods on the interval heap
-    fn deref(&self) -> &[T] {
-        self.as_slice()
+    /// Pushes an item onto the queue.
+    pub fn push(&mut self, x: T) {
+        self.data.push(x);
+        inteval_heap_push(self.data.as_mut_slice());
+    }
+
+    /// Consumes the `IntervalHeap` and returns the underlying vector
+    /// in arbitrary order.
+    pub fn into_vec(self) -> Vec<T> { self.data }
+
+    /// Consumes the `IntervalHeap` and returns a vector in sorted
+    /// (ascending) order.
+    pub fn into_sorted_vec(self) -> Vec<T> {
+        let mut vec = self.data;
+        for hsize in range(2, vec.len()).rev() {
+            vec.swap(1, hsize);
+            update_max(vec.slice_to_mut(hsize));
+        }
+        vec
+    }
+
+    /// Returns the number of items in the interval heap
+    pub fn len(&self) -> uint {
+        self.data.len()
+    }
+
+    /// Returns true if the queue contains no items.
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
+    }
+
+    /// Drops all items from the queue.
+    pub fn clear(&mut self) {
+        self.data.clear();
     }
 }
 
 impl<T: Ord> FromIterator<T> for IntervalHeap<T> {
-    /// creates an interval heap with all the items from an iterator
+    /// Creates an interval heap with all the items from an iterator
     fn from_iter<Iter: Iterator<T>>(mut iter: Iter) -> IntervalHeap<T> {
         let vec: Vec<T> = iter.collect();
         IntervalHeap::from_vec(vec)
@@ -300,7 +296,7 @@ impl<T: Ord> FromIterator<T> for IntervalHeap<T> {
 }
 
 impl<T: Ord> Extend<T> for IntervalHeap<T> {
-    /// extends the interval heap by a new chunk of items given by
+    /// Extends the interval heap by a new chunk of items given by
     /// an iterator.
     fn extend<Iter: Iterator<T>>(&mut self, mut iter: Iter) {
         let (lower, _) = iter.size_hint();
@@ -312,11 +308,14 @@ impl<T: Ord> Extend<T> for IntervalHeap<T> {
 }
 
 #[cfg(test)]
-mod ih_test {
-    use std::rand::{task_rng, Rng};
-    use super::IntervalHeap;
+pub fn as_slice<T>(x: &IntervalHeap<T>) -> &[T] {
+    x.data.as_slice()
+}
 
-    // TODO: more testing (push_and_pop_xxx, replace_xxx)
+#[cfg(test)]
+mod test {
+    use std::rand::{ task_rng, Rng };
+    use super::{ IntervalHeap, as_slice };
 
     fn is_interval_heap<T: Ord>(x: &[T]) -> bool {
         if x.len() < 2 { return true; }
@@ -334,29 +333,37 @@ mod ih_test {
     }
 
     #[test]
-    fn random_check_push() {
+    fn fuzz_push_into_sorted_vec() {
         let mut rng = task_rng();
-        for _ in range(0, 1000u) {
-            let mut ih: IntervalHeap<u32> = IntervalHeap::new();
+        let mut tmp = Vec::with_capacity(100);
+        for _ in range(0, 100u) {
+            tmp.clear();
+            let mut ih: IntervalHeap<u32> = IntervalHeap::from_vec(tmp);
             for _ in range(0, 100u) {
                 ih.push(rng.next_u32());
-                assert!(is_interval_heap(ih.as_slice()));
+                assert!(is_interval_heap(as_slice(&ih)));
+            }
+            tmp = ih.into_sorted_vec();
+            for pair in tmp.windows(2) {
+                assert!(pair[0] <= pair[1]);
             }
         }
     }
 
     #[test]
-    fn random_check_pop_min() {
+    fn fuzz_pop_min() {
         let mut rng = task_rng();
-        for _ in range(0, 1000u) {
-            let mut ih: IntervalHeap<u32> = IntervalHeap::new();
+        let mut tmp = Vec::with_capacity(100);
+        for _ in range(0, 100u) {
+            tmp.clear();
+            let mut ih: IntervalHeap<u32> = IntervalHeap::from_vec(tmp);
             for _ in range(0, 100u) {
                 ih.push(rng.next_u32());
             }
             let mut tmpx: Option<u32> = None;
             loop {
                 let tmpy = ih.pop_min();
-                assert!(is_interval_heap(ih.as_slice()));
+                assert!(is_interval_heap(as_slice(&ih)));
                 match (tmpx, tmpy) {
                     (_, None) => break,
                     (Some(x), Some(y)) => assert!(x <= y),
@@ -364,21 +371,24 @@ mod ih_test {
                 }
                 tmpx = tmpy;
             }
+            tmp = ih.into_vec();
         }
     }
 
     #[test]
-    fn random_check_pop_max() {
+    fn fuzz_pop_max() {
         let mut rng = task_rng();
-        for _ in range(0, 1000u) {
-            let mut ih: IntervalHeap<u32> = IntervalHeap::new();
+        let mut tmp = Vec::with_capacity(100);
+        for _ in range(0, 100u) {
+            tmp.clear();
+            let mut ih: IntervalHeap<u32> = IntervalHeap::from_vec(tmp);
             for _ in range(0, 100u) {
                 ih.push(rng.next_u32());
             }
             let mut tmpx: Option<u32> = None;
             loop {
                 let tmpy = ih.pop_max();
-                assert!(is_interval_heap(ih.as_slice()));
+                assert!(is_interval_heap(as_slice(&ih)));
                 match (tmpx, tmpy) {
                     (_, None) => break,
                     (Some(x), Some(y)) => assert!(x >= y),
@@ -386,6 +396,7 @@ mod ih_test {
                 }
                 tmpx = tmpy;
             }
+            tmp = ih.into_vec();
         }
     }
 
