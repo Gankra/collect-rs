@@ -1,7 +1,11 @@
+// An Iterator adapter that walks through all the elements in the Iterator,
+// converts them to Strings and joins them to one big String, seperated by
+// some seperator string slice.
 trait JoinIterator {
   fn join(&mut self, sep: &str) -> String;
 }
 
+// Implement it for all Iterators with Elements convertable into a String
 impl<A: ToString, T: Iterator<A>> JoinIterator for T {
   fn join(&mut self, sep: &str) -> String {
     match self.next() {
