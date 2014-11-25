@@ -1,6 +1,6 @@
-// An Iterator adapter that walks through all the elements in the Iterator,
-// converts them to Strings and joins them to one big String, seperated by
-// some seperator string slice.
+/// An Iterator adapter that walks through all the elements in the Iterator,
+/// converts them to Strings and joins them to one big String, seperated by
+/// some seperator string slice.
 pub trait StringJoiner {
   /// Converts all elements the Iterator yields to Strings,
   /// then combines them all into one String, seperated by sep.
