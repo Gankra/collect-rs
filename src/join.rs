@@ -25,7 +25,7 @@ impl<A: ToString, T: Iterator<A>> StringJoiner for T {
 #[test]
 fn test_join() {
   let many = vec![1u,2,3];
-  let one  = vec![1u];
+  let  one = vec![1u];
   let none: Vec<uint> = vec![];
 
   assert_eq!(many.iter().join(", ").as_slice(), "1, 2, 3");
