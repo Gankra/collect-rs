@@ -6,11 +6,11 @@ trait StringJoiner {
 }
 
 // Implement it for all Iterators with Elements convertable into a String
-impl<A: ToString, T: Extend<A>> StringJoiner for T {
+impl<A: ToString, T: Iterator<A>> StringJoiner for T {
   fn join(&mut self, sep: &str) -> String {
     match self.next() {
       Some(elem) => {
-        let mut output = String::from_str(elem.to_string().as_slice());
+        let mut output = elem.to_string();
         for elem in *self {
           output.push_str(sep);
           output.push_str(elem.to_string().as_slice());
