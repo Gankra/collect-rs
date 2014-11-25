@@ -1,7 +1,18 @@
 // An Iterator adapter that walks through all the elements in the Iterator,
 // converts them to Strings and joins them to one big String, seperated by
 // some seperator string slice.
-trait StringJoiner {
+pub trait StringJoiner {
+  /// Converts all elements the Iterator yields to Strings,
+  /// then combines them all into one String, seperated by sep.
+  ///
+  /// # Example
+  ///
+  /// ```
+  /// use collect::iter::StringJoiner;
+  ///
+  /// let vec = vec![1u,2,3];
+  /// assert_eq!(vec.iter().join(", ").as_slice(), "1, 2, 3");
+  /// ```
   fn join(&mut self, sep: &str) -> String;
 }
 
