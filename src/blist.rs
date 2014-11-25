@@ -5,7 +5,7 @@ use std::mem;
 use std::hash::{Hash, Writer};
 use std::num::Int;
 
-/// A skeleton implementation of a BList, based on the [Space-Effecient Linked List]
+/// A skeleton implementation of a BList, based on the [Space-Efficient Linked List]
 /// (http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html) described in
 /// Open Data Structures.
 ///
