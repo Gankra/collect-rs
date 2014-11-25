@@ -5,16 +5,20 @@ use std::mem;
 use std::hash::{Hash, Writer};
 use std::num::Int;
 
-#[deriving(Clone)]
+/// A skeleton implementation of a BList, based on the [Space-Effecient Linked List]
+/// (http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html) described in
+/// Open Data Structures.
+///
 /// A BList is a hybrid between an array and a doubly-linked-list. It consists of arrays in a
 /// doubly-linked-list. In this way we get many of the nice properties of a DList, but with
 /// improved cache properties and less allocations.
 ///
-/// A BList's B-factor is analgous to the same factor in a BTree. It guarantees that all nodes
-/// contain B-1 and B+1 elements (except the ends). Once a position has been identified to
-/// perform an insertion or deletion, it will take amortized O(B) time to perform, with a
-/// worst-case cost of O(B^2). Insertion and deletion on either end will always take
-/// O(1) time, though (assuming it takes O(1) time to allocate an array of size B).
+/// A BList's B-factor is analogous to the same factor in a BTree. It guarantees that all nodes
+/// contain `B-1` and `B+1` elements (except the ends). Once a position has been identified to
+/// perform an insertion or deletion, it will take amortized `O(B)` time to perform, with a
+/// worst-case cost of `O(B^2)`. Insertion and deletion on either end will always take
+/// `O(1)` time, though (assuming it takes `O(1)` time to allocate an array of size `B`).
+#[deriving(Clone)]
 pub struct BList<T> {
     list: DList<RingBuf<T>>,
     b: uint,
@@ -25,7 +29,8 @@ pub struct BList<T> {
 impl<T> BList<T> {
     /// Creates a new BList with a reasonable choice for B.
     pub fn new() -> BList<T> {
-        // RingBuf always has capacity = 2^k - 1; b = 6 gets us len = 7 = 2^3 - 1
+        // RingBuf always has capacity = 2^k - 1, for some k;
+        // b = 6 gets us max_len = b + 1 = 7 = 2^3 - 1
         BList::with_b(6)
     }
 
@@ -152,35 +157,35 @@ impl<T> BList<T> {
     /// Gets a by-reference iterator over the elements in the list.
     pub fn iter(&self) -> Items<T> {
         let len = self.len();
-        AbsItems {
+        Items { iter: AbsItems {
             list_iter: self.list.iter(),
             right_block_iter: None,
             left_block_iter: None,
             len: len,
-        }
+        } }
     }
 
     /// Gets a by-mutable-reference iterator over the elements in the list.
     pub fn iter_mut(&mut self) -> MutItems<T> {
         let len = self.len();
-        AbsItems {
+        MutItems { iter: AbsItems {
             list_iter: self.list.iter_mut(),
             right_block_iter: None,
             left_block_iter: None,
             len: len,
-        }
+        } }
     }
 
     /* FIXME: uncomment into_iter stuff when RingBuf gets into_iter
     /// Gets a by-value iterator over the elements in the list.
     pub fn into_iter(self) -> MoveItems<T> {
         let len = self.len();
-        AbsItems {
+        MoveItems { iter: AbsItems {
             list_iter: self.list.into_iter(),
             right_block_iter: None,
             left_block_iter: None,
             len: len,
-        }
+        } }
     }*/
 
     /// Lazily moves the contents of `other` to the end of `self`, in the sense that it makes no
@@ -232,11 +237,20 @@ impl<T> Traverse<ring_buf::MoveItems<T>> for RingBuf<T> {
 */
 
 /// A by-ref iterator for a BList
-pub type Items<'a, T> = AbsItems<dlist::Items<'a, RingBuf<T>>, ring_buf::Items<'a, T>>;
+pub struct Items<'a, T: 'a> {
+    iter: AbsItems<dlist::Items<'a, RingBuf<T>>, ring_buf::Items<'a, T>>,
+}
+
 /// A by-mut-ref iterator for a BList
-pub type MutItems<'a, T> = AbsItems<dlist::MutItems<'a, RingBuf<T>>, ring_buf::MutItems<'a, T>>;
-// A by-value iterator for a BList
-//pub type MoveItems<T> = AbsItems<dlist::MoveItems<RingBuf<T>>, ring_buf::MoveItems<T>>;
+pub struct MutItems<'a, T: 'a> {
+    iter: AbsItems<dlist::MutItems<'a, RingBuf<T>>, ring_buf::MutItems<'a, T>>,
+}
+/*
+/// A by-value iterator for a BList
+pub struct MoveItems<T> {
+    iter: AbsItems<dlist::MoveItems<RingBuf<T>>, ring_buf::MoveItems<T>>,
+}
+*/
 
 /// An iterator that abstracts over all three kinds of ownership for a BList
 struct AbsItems<DListIter, RingBufIter> {
@@ -329,12 +343,34 @@ impl<A,
     }
 }
 
-impl<A,
-    RingBufIter: ExactSize<A>,
-    DListIter: ExactSize<T>,
-    T: Traverse<RingBufIter>> ExactSize<A> for AbsItems<DListIter, RingBufIter> { }
+impl<'a, T> Iterator<&'a T> for Items<'a, T> {
+    fn next(&mut self) -> Option<&'a T> { self.iter.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+}
+impl<'a, T> DoubleEndedIterator<&'a T> for Items<'a, T> {
+    fn next_back(&mut self) -> Option<&'a T> { self.iter.next_back() }
+}
+impl<'a, T> ExactSize<&'a T> for Items<'a, T> {}
 
+impl<'a, T> Iterator<&'a mut T> for MutItems<'a, T> {
+    fn next(&mut self) -> Option<&'a mut T> { self.iter.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+}
+impl<'a, T> DoubleEndedIterator<&'a mut T> for MutItems<'a, T> {
+    fn next_back(&mut self) -> Option<&'a mut T> { self.iter.next_back() }
+}
+impl<'a, T> ExactSize<&'a mut T> for MutItems<'a, T> {}
 
+/*
+impl<T> Iterator<T> for MoveItems<T> {
+    fn next(&mut self) -> Option<T> { self.iter.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+}
+impl<T> DoubleEndedIterator<T> for MoveItems<T> {
+    fn next_back(&mut self) -> Option<T> { self.iter.next_back() }
+}
+impl<T> ExactSize<T> for MoveItems<T> {}
+*/
 
 
 impl<A> FromIterator<A> for BList<A> {
