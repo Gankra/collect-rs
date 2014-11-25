@@ -24,6 +24,9 @@
 
 extern crate test;
 
+pub mod join;
+
 pub mod blist;
-pub mod immutslist;pub mod intervalheap;
+pub mod immutslist;
+pub mod intervalheap;
 
