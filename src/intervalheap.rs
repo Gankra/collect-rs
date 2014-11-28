@@ -289,7 +289,7 @@ impl<T: Ord> IntervalHeap<T> {
 
 impl<T: Ord> FromIterator<T> for IntervalHeap<T> {
     /// Creates an interval heap with all the items from an iterator
-    fn from_iter<Iter: Iterator<T>>(mut iter: Iter) -> IntervalHeap<T> {
+    fn from_iter<Iter: Iterator<T>>(iter: Iter) -> IntervalHeap<T> {
         let vec: Vec<T> = iter.collect();
         IntervalHeap::from_vec(vec)
     }

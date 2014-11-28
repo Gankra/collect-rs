@@ -350,7 +350,7 @@ impl<'a, T> Iterator<&'a T> for Items<'a, T> {
 impl<'a, T> DoubleEndedIterator<&'a T> for Items<'a, T> {
     fn next_back(&mut self) -> Option<&'a T> { self.iter.next_back() }
 }
-impl<'a, T> ExactSize<&'a T> for Items<'a, T> {}
+impl<'a, T> ExactSizeIterator<&'a T> for Items<'a, T> {}
 
 impl<'a, T> Iterator<&'a mut T> for MutItems<'a, T> {
     fn next(&mut self) -> Option<&'a mut T> { self.iter.next() }
@@ -359,7 +359,7 @@ impl<'a, T> Iterator<&'a mut T> for MutItems<'a, T> {
 impl<'a, T> DoubleEndedIterator<&'a mut T> for MutItems<'a, T> {
     fn next_back(&mut self) -> Option<&'a mut T> { self.iter.next_back() }
 }
-impl<'a, T> ExactSize<&'a mut T> for MutItems<'a, T> {}
+impl<'a, T> ExactSizeIterator<&'a mut T> for MutItems<'a, T> {}
 
 /*
 impl<T> Iterator<T> for MoveItems<T> {
