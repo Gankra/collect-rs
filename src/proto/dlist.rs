@@ -27,40 +27,38 @@ use std::iter;
 use std::mem;
 use std::ptr;
 use std::hash::{Writer, Hash};
+use std::kinds::marker::NoCopy;
 
 /// A doubly-linked list.
 pub struct DList<T> {
     length: uint,
     list_head: Link<T>,
-    list_tail: Rawlink<Node<T>>,
+    list_tail: Rawlink<T>,
 }
 
 type Link<T> = Option<Box<Node<T>>>;
-struct Rawlink<T> { p: *mut T }
+
+struct Rawlink<T> { p: *mut Node<T>, marker: NoCopy }
 
 struct Node<T> {
     next: Link<T>,
-    prev: Rawlink<Node<T>>,
+    prev: Rawlink<T>,
     value: T,
 }
 
 /// An iterator over references to the items of a `DList`.
+#[deriving(Clone)]
 pub struct Items<'a, T:'a> {
     head: &'a Link<T>,
-    tail: Rawlink<Node<T>>,
+    tail: &'a Rawlink<T>,
     nelem: uint,
-}
-
-// FIXME #11820: the &'a Option<> of the Link stops clone working.
-impl<'a, T> Clone for Items<'a, T> {
-    fn clone(&self) -> Items<'a, T> { *self }
 }
 
 /// An iterator over mutable references to the items of a `DList`.
 pub struct MutItems<'a, T:'a> {
     list: &'a mut DList<T>,
-    head: Rawlink<Node<T>>,
-    tail: Rawlink<Node<T>>,
+    head: Rawlink<T>,
+    tail: Rawlink<T>,
     nelem: uint,
 }
 
@@ -74,27 +72,25 @@ pub struct MoveItems<T> {
 impl<T> Rawlink<T> {
     /// Like Option::None for Rawlink
     fn none() -> Rawlink<T> {
-        Rawlink{p: ptr::null_mut()}
+        Rawlink{p: ptr::null_mut(), marker: NoCopy}
     }
 
     /// Like Option::Some for Rawlink
-    fn some(n: &mut T) -> Rawlink<T> {
-        Rawlink{p: n}
+    fn some(n: &mut Node<T>) -> Rawlink<T> {
+        Rawlink{p: n, marker: NoCopy}
     }
 
     /// Convert the `Rawlink` into an Option value
-    fn resolve_immut<'a>(&self) -> Option<&'a T> {
+    fn resolve_immut<'a>(&self) -> Option<&'a Node<T>> {
         unsafe {
             self.p.as_ref()
         }
     }
 
     /// Convert the `Rawlink` into an Option value
-    fn resolve<'a>(&mut self) -> Option<&'a mut T> {
-        if self.p.is_null() {
-            None
-        } else {
-            Some(unsafe { mem::transmute(self.p) })
+    fn resolve<'a>(&mut self) -> Option<&'a mut Node<T>> {
+        unsafe {
+            self.p.as_mut()
         }
     }
 
@@ -102,12 +98,9 @@ impl<T> Rawlink<T> {
     fn take(&mut self) -> Rawlink<T> {
         mem::replace(self, Rawlink::none())
     }
-}
 
-impl<T> Clone for Rawlink<T> {
-    #[inline]
-    fn clone(&self) -> Rawlink<T> {
-        Rawlink{p: self.p}
+    fn clone(&mut self) ->  Rawlink<T> {
+        Rawlink{p: self.p, marker: NoCopy}
     }
 }
 
@@ -118,8 +111,7 @@ impl<T> Node<T> {
 }
 
 /// Set the .prev field on `next`, then return `Some(next)`
-fn link_with_prev<T>(mut next: Box<Node<T>>, prev: Rawlink<Node<T>>)
-                  -> Link<T> {
+fn link_with_prev<T>(mut next: Box<Node<T>>, prev: Rawlink<T>) -> Link<T> {
     next.prev = prev;
     Some(next)
 }
@@ -132,7 +124,7 @@ impl<T> DList<T> {
         match self.list_head {
             None => {
                 self.list_tail = Rawlink::some(&mut *new_head);
-                self.list_head = link_with_prev(new_head, Rawlink::none());
+                self.list_head = Some(new_head);
             }
             Some(ref mut head) => {
                 new_head.prev = Rawlink::none();
@@ -175,8 +167,8 @@ impl<T> DList<T> {
     fn pop_back_node(&mut self) -> Option<Box<Node<T>>> {
         self.list_tail.resolve().map_or(None, |tail| {
             self.length -= 1;
-            self.list_tail = tail.prev;
-            match tail.prev.resolve() {
+            self.list_tail = tail.prev.take();
+            match self.list_tail.resolve() {
                 None => self.list_head.take(),
                 Some(tail_prev) => tail_prev.next.take()
             }
@@ -283,7 +275,7 @@ impl<T> DList<T> {
                 match other.list_head.take() {
                     None => return,
                     Some(node) => {
-                        tail.next = link_with_prev(node, self.list_tail);
+                        tail.next = link_with_prev(node, self.list_tail.take());
                         self.list_tail = o_tail;
                         self.length += o_length;
                     }
@@ -387,7 +379,7 @@ impl<T> DList<T> {
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn iter<'a>(&'a self) -> Items<'a, T> {
-        Items{nelem: self.len(), head: &self.list_head, tail: self.list_tail}
+        Items{nelem: self.len(), head: &self.list_head, tail: &self.list_tail}
     }
 
     /// Provides a forward iterator with mutable references.
@@ -401,7 +393,7 @@ impl<T> DList<T> {
         MutItems{
             nelem: self.len(),
             head: head_raw,
-            tail: self.list_tail,
+            tail: self.list_tail.clone(),
             list: self
         }
     }
@@ -554,13 +546,13 @@ impl<T> Drop for DList<T> {
         // Dissolve the dlist in backwards direction
         // Just dropping the list_head can lead to stack exhaustion
         // when length is >> 1_000_000
-        let mut tail = self.list_tail;
+        let mut tail = self.list_tail.clone();
         loop {
             match tail.resolve() {
                 None => break,
                 Some(prev) => {
                     prev.next.take(); // release Box<Node<T>>
-                    tail = prev.prev;
+                    tail = prev.prev.clone();
                 }
             }
         }
@@ -598,7 +590,7 @@ impl<'a, A> DoubleEndedIterator<&'a A> for Items<'a, A> {
         }
         self.tail.resolve_immut().as_ref().map(|prev| {
             self.nelem -= 1;
-            self.tail = prev.prev;
+            self.tail = & prev.prev;
             &prev.value
         })
     }
@@ -636,7 +628,7 @@ impl<'a, A> DoubleEndedIterator<&'a mut A> for MutItems<'a, A> {
         }
         self.tail.resolve().map(|prev| {
             self.nelem -= 1;
-            self.tail = prev.prev;
+            self.tail = prev.prev.clone();
             &mut prev.value
         })
     }
