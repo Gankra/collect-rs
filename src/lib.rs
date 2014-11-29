@@ -24,6 +24,7 @@
 extern crate test;
 
 pub mod iter;
+pub mod inner_join;
 
 pub mod blist;
 pub mod immutslist;
