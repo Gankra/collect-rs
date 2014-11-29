@@ -3,10 +3,11 @@
 /// tables of items
 
 use std::collections::{
-    btree_map,
+    btree_map, btree_set,
     tree_map, tree_set,
     trie_map, trie_set,
-    vec_map
+    vec_map,
+    bitv_set
 };
 
 /// Allows an iterator to be do an inner join with another
@@ -176,13 +177,15 @@ impl<K: Ord,
     }
 }
 
-impl<'a, K: Ord, V> InnerJoinSet<&'a K> for btree_map::Keys<'a, K, V> {}
+impl<'a, K: Ord> InnerJoinSet<&'a K> for btree_set::Items<'a, K> {}
 impl<'a, K: Ord, V> InnerJoinMap<&'a K, &'a V> for btree_map::Entries<'a, K, V> {}
 impl<'a, K: Ord> InnerJoinSet<&'a K> for tree_set::SetItems<'a, K> {}
 impl<'a, K: Ord, V> InnerJoinMap<&'a K, &'a V> for tree_map::Entries<'a, K, V> {}
 impl<'a> InnerJoinSet<uint> for trie_set::SetItems<'a> {}
 impl<'a, V> InnerJoinMap<uint, &'a V> for trie_map::Entries<'a, V> {}
 impl<'a, V> InnerJoinMap<uint, &'a V> for vec_map::Entries<'a, V> {}
+impl<'a> InnerJoinSet<uint> for bitv_set::BitPositions<'a> {}
+
 
 impl<K: Ord, VA, VB,
      A: InnerJoinMap<K, VA>,
