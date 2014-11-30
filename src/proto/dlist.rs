@@ -13,6 +13,7 @@ struct Node<T> {
 
 impl<T> Node<T> {
     /// Makes a node with the given element.
+    #[inline]
     fn new(elem: T) -> Node<T> {
         Node {
             prev: Raw::none(),
@@ -22,6 +23,7 @@ impl<T> Node<T> {
     }
 
     /// Joins two lists.
+    #[inline]
     fn link(&mut self, mut next: Box<Node<T>>) {
         next.prev = Raw::some(self);
         self.next = Some(next);
@@ -29,6 +31,7 @@ impl<T> Node<T> {
 
     /// Makes the given node come after this one, appropriately setting all other links.
     /// Assuming that self has a `next`.
+    #[inline]
     fn splice_next(&mut self, mut next: Box<Node<T>>) {
         let mut old_next = self.next.take();
         old_next.as_mut().map(|node| node.prev = Raw::some(&mut *next));
@@ -38,6 +41,7 @@ impl<T> Node<T> {
     }
 
     /// Takes the next node from this one, breaking the list into two correctly linked lists.
+    #[inline]
     fn take_next(&mut self) -> Option<Box<Node<T>>> {
         let mut next = self.next.take();
         next.as_mut().map(|node| {
@@ -58,32 +62,38 @@ struct Raw<T> {
 
 impl<T> Raw<T> {
     /// Makes a null reference.
+    #[inline]
     fn none() -> Raw<T> {
         Raw { ptr: ptr::null_mut(), marker: NoCopy }
     }
 
     /// Makes a reference to the given node.
+    #[inline]
     fn some(ptr: &mut Node<T>) -> Raw<T> {
         Raw { ptr: ptr, marker: NoCopy }
     }
 
     /// Converts the ref to an Option containing a reference.
+    #[inline]
     fn as_ref(&self) -> Option<& Node<T>> {
         unsafe { self.ptr.as_ref() }
     }
 
     /// Converts the ref to an Option containing a mutable reference.
+    #[inline]
     fn as_mut(&mut self) -> Option<&mut Node<T>> {
         unsafe { self.ptr.as_mut() }
     }
 
     /// Takes the reference out and nulls out this one.
+    #[inline]
     fn take(&mut self) -> Raw<T> {
         mem::replace(self, Raw::none())
     }
 
     /// Clones this reference. Note that mutability differs from standard clone.
     /// We don't want these to be cloned in the immutable case.
+    #[inline]
     fn clone(&mut self) -> Raw<T> {
         Raw { ptr: self.ptr, marker: NoCopy }
     }
@@ -98,6 +108,7 @@ pub struct DList<T> {
 
 impl<T> DList<T> {
     /// Makes a new DList.
+    #[inline]
     pub fn new() -> DList<T> {
         DList { head: None, tail: Raw::none(), len: 0 }
     }
@@ -168,21 +179,25 @@ impl<T> DList<T> {
     }
 
     /// Gets the element at the front of the list, or None if empty.
+    #[inline]
     pub fn front(&self) -> Option<&T> {
         self.head.as_ref().map(|node| &node.elem)
     }
 
     /// Gets the element at the back of the list, or None if empty.
+    #[inline]
     pub fn back(&self) -> Option<&T> {
         self.tail.as_ref().map(|node| &node.elem)
     }
 
     /// Gets the element at the front of the list mutably, or None if empty.
+    #[inline]
     pub fn front_mut(&mut self) -> Option<&mut T> {
         self.head.as_mut().map(|node| &mut node.elem)
     }
 
     /// Gets the element at the back of the list mutably, or None if empty.
+    #[inline]
     pub fn back_mut(&mut self) -> Option<&mut T> {
         self.tail.as_mut().map(|node| &mut node.elem)
     }
@@ -192,6 +207,7 @@ impl<T> DList<T> {
     /// # Panics
     ///
     /// Panics if the index is greater than the length of the list.
+    #[inline]
     pub fn insert(&mut self, mut index: uint, elem: T) {
         assert!(index <= self.len(), "index out of bounds");
         let mut cursor = self.cursor();
@@ -200,6 +216,7 @@ impl<T> DList<T> {
     }
 
     /// Removes the element at the given index. Returns None if the index is out of bounds.
+    #[inline]
     pub fn remove(&mut self, mut index: uint) -> Option<T> {
         if index >= self.len() {
             None
@@ -210,17 +227,46 @@ impl<T> DList<T> {
         }
     }
 
+    /// Splits the list into two lists at the given index. Returns the right side of the split.
+    /// Returns an empty list if index is out of bounds.
+    pub fn split_at(&mut self, mut index: uint) -> DList<T> {
+        if index >= self.len() {
+            DList::new()
+        } else {
+            let mut cursor = self.cursor();
+            while index > 0 { cursor.next(); index -= 1; }
+            cursor.split()
+        }
+    }
+
+    /// Appends the given list to the end of this one. The old list will be empty afterwards.
+    pub fn append(&mut self, other: &mut DList<T>) {
+        let mut cursor = self.cursor();
+        cursor.prev();
+        cursor.splice(other);
+    }
+
+    /// Inserts the given list at the given index. The old list will be empty afterwards.
+    pub fn splice(&mut self, mut index: uint, other: &mut DList<T>) {
+        let mut cursor = self.cursor();
+        while index > 0 { cursor.next(); index -= 1; }
+        cursor.splice(other);
+    }
+
     /// Gets the number of elements in the list.
+    #[inline]
     pub fn len(&self) -> uint {
         self.len
     }
 
     /// Whether the list is empty.
+    #[inline]
     pub fn is_empty(&self) -> bool {
         self.len == 0
     }
 
     /// Removes all elements from the list.
+    #[inline]
     pub fn clear(&mut self) {
         while !self.is_empty() {
             self.pop_front();
@@ -228,19 +274,23 @@ impl<T> DList<T> {
     }
 
     /// Gets a cursor over the list.
+    #[inline]
     pub fn cursor(&mut self) -> Cursor<T> {
         Cursor {
             list: self,
             prev: Raw::none(),
+            index: 0,
         }
     }
 
     /// Provides a forward iterator.
+    #[inline]
     pub fn iter<'a>(&'a self) -> Items<'a, T> {
         Items{nelem: self.len(), head: &self.head, tail: &self.tail}
     }
 
     /// Provides a forward iterator with mutable references.
+    #[inline]
     pub fn iter_mut<'a>(&'a mut self) -> MutItems<'a, T> {
         let head_raw = match self.head.as_mut() {
             Some(head) => Raw::some(&mut **head),
@@ -254,6 +304,7 @@ impl<T> DList<T> {
     }
 
     /// Consumes the list into an iterator yielding elements by.elem.
+    #[inline]
     pub fn into_iter(self) -> MoveItems<T> {
         MoveItems{list: self}
     }
@@ -275,22 +326,35 @@ impl<T> DList<T> {
 pub struct Cursor<'a, T: 'a> {
     list: &'a mut DList<T>,
     prev: Raw<T>,
+    // index of `next`, where the ghost is at `len`.
+    index: uint,
 }
+
+// Note, the Cursor's ops and repr are specifically designed so that the cursor's reference
+// into the list never needs to update after an operation. It always mutates in front of
+// itself. Also to gain ownership of a node, we generally need a ref to the previous Node.
+// This is why we hold `prev` rather than `next`.
 
 impl<'a, T> Cursor<'a, T> {
     /// Resets the cursor to lie between the first and last element in the list.
+    #[inline]
     pub fn reset(&mut self) {
         self.prev = Raw::none();
+        self.index = 0;
     }
 
     /// Gets the next element in the list.
     pub fn next(&mut self) -> Option<&mut T> {
+        self.index += 1;
         match self.prev.take().as_mut() {
             // We had no previous element; the cursor was sitting at the start position
             // Next element should be the head of the list
             None => match self.list.head.as_mut() {
                 // No head. No elements.
-                None => None,
+                None => {
+                    self.index = 0;
+                    None
+                }
                 // Got the head. Set it as prev and yield its element
                 Some(head) => {
                     self.prev = Raw::some(&mut **head);
@@ -301,6 +365,7 @@ impl<'a, T> Cursor<'a, T> {
             Some(prev) => match prev.next.as_mut() {
                 // No next. We're back at the start point, null the prev and yield None
                 None => {
+                    self.index = 0;
                     self.prev = Raw::none();
                     None
                 }
@@ -321,10 +386,12 @@ impl<'a, T> Cursor<'a, T> {
             // No prev. We're at the start of the list. Yield None and jump to the end.
             None => {
                 self.prev = self.list.tail.clone();
+                self.index = self.list.len();
                 None
             },
             // Have a prev. Yield it and go to the previous element.
             Some(prev) => {
+                self.index -= 1;
                 self.prev = prev.prev.clone();
                  unsafe {
                     Some(mem::copy_mut_lifetime(self, &mut prev.elem))
@@ -335,7 +402,7 @@ impl<'a, T> Cursor<'a, T> {
 
     /// Gets the next element in the list, without moving the cursor head.
     pub fn peek_next(&mut self) -> Option<&mut T> {
-        let Cursor{ref mut list, ref mut prev} = *self;
+        let Cursor{ref mut list, ref mut prev, ..} = *self;
         match prev.as_mut() {
             None => list.front_mut(),
             Some(prev) => prev.next.as_mut().map(|next| &mut next.elem),
@@ -351,7 +418,7 @@ impl<'a, T> Cursor<'a, T> {
     /// lie before it. Therefore, the new element will be yielded by the next call to `next`.
     pub fn insert(&mut self, elem: T) {
         // destructure so that we can mutate list while working with prev
-        let Cursor{ref mut list, ref mut prev} = *self;
+        let Cursor{ref mut list, ref mut prev, ..} = *self;
         match prev.as_mut() {
             // No prev, we're at the start of the list
             // Also covers empty list
@@ -370,7 +437,7 @@ impl<'a, T> Cursor<'a, T> {
     /// Removes the next element in the list, without moving the cursor. Returns None if the list
     /// is empty, or if `next` is the ghost element
     pub fn remove(&mut self) -> Option<T> {
-        let Cursor{ref mut list, ref mut prev} = *self;
+        let Cursor{ref mut list, ref mut prev, ..} = *self;
         match prev.as_mut() {
             // No prev, we're at the start of the list
             // Also covers empty list
@@ -388,6 +455,73 @@ impl<'a, T> Cursor<'a, T> {
                         Some(next_next) => prev.link(next_next),
                     }
                     Some(next.elem)
+                }
+            }
+        }
+    }
+
+    // Splits the list into two at the cursor's current position. This will return a new list
+    // consisting of everything after the cursor, with the original list retaining everything
+    // before. The cursor will then lie between the tail and the ghost.
+    pub fn split(&mut self) -> DList<T> {
+        let Cursor{ref mut list, ref mut prev, index} = *self;
+        let new_tail = prev.clone();
+        let len = list.len();
+        match prev.as_mut() {
+            // We're at index 0. The new list is the whole list, so just swap
+            None => mem::replace(*list, DList::new()),
+            // We're not at index 0. This means we don't have to worry about fixing
+            // the old list's head.
+            Some(prev) => {
+                let next_tail = list.tail.clone();
+                list.len = index;
+                list.tail = new_tail; // == prev
+                let next_head = prev.take_next();
+
+                DList {
+                    head: next_head,
+                    tail: next_tail,
+                    len: len - index
+                }
+            }
+        }
+    }
+
+    /// Inserts the entire list's contents right after the cursor.
+    pub fn splice(&mut self, other: &mut DList<T>) {
+        if other.is_empty() { return; }
+        let len = other.len;
+        other.len = 0;
+        let mut head = other.head.take();
+        let mut tail = other.tail.take();
+        let Cursor{ref mut list, ref mut prev, ..} = *self;
+
+        list.len += len;
+        match prev.as_mut() {
+            // We're at the head of the list
+            None => match list.head.take() {
+                // self list is empty, should just be the other list
+                None => {
+                    list.head = head;
+                    list.tail = tail;
+                },
+                // self list isn't empty
+                Some(self_head) => {
+                    list.head = head;
+                    tail.as_mut().unwrap().link(self_head);
+                }
+            },
+            // Middle or end
+            Some(prev) => match prev.take_next() {
+                // We're at the end of the list
+                None => {
+                    prev.link(head.take().unwrap());
+                    list.tail = tail;
+                }
+                // We're strictly in the middle. Self's head and tail won't change
+                Some(next) => {
+                    prev.link(head.take().unwrap());
+                    tail.as_mut().unwrap().link(next);
                 }
             }
         }
