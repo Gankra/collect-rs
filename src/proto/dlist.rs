@@ -1088,6 +1088,80 @@ mod test {
         }
         assert_eq!(list.len(), 2);
     }
+
+    #[test]
+    fn test_append() {
+        let mut list1 = list_from(&[0i,1,2,3]);
+        let mut list2 = list_from(&[4,5,6,7]);
+
+        // Normal append
+        list1.append(&mut list2);
+        assert_eq!(&list1, &list_from(&[0i,1,2,3,4,5,6,7]));
+        assert_eq!(&list2, &DList::new());
+        assert_eq!(list1.len(), 8);
+        assert_eq!(list2.len(), 0);
+
+        // Append to an empty list
+        list2.append(&mut list1);
+        assert_eq!(&list2, &list_from(&[0i,1,2,3,4,5,6,7]));
+        assert_eq!(&list1, &DList::new());
+        assert_eq!(list2.len(), 8);
+        assert_eq!(list1.len(), 0);
+
+        // Append an empty list
+        list2.append(&mut list1);
+        assert_eq!(&list2, &list_from(&[0i,1,2,3,4,5,6,7]));
+        assert_eq!(&list1, &DList::new());
+        assert_eq!(list2.len(), 8);
+        assert_eq!(list1.len(), 0);
+    }
+
+    #[test]
+    fn test_split_at() {
+        let mut list2 = list_from(&[4i,5,6,7]);
+
+        // split at front; basically just move the list
+        let mut list3 = list2.split_at(0);
+        assert_eq!(&list3, &list_from(&[4,5,6,7]));
+        assert_eq!(&list2, &DList::new());
+        assert_eq!(list3.len(), 4);
+        assert_eq!(list2.len(), 0);
+
+        // split at end; convoluted DList::new()
+        let list4 = list3.split_at(4);
+        assert_eq!(&list3, &list_from(&[4,5,6,7]));
+        assert_eq!(&list4, &DList::new());
+        assert_eq!(list3.len(), 4);
+        assert_eq!(list4.len(), 0);
+
+        // split in middle
+        let list5 = list3.split_at(2);
+        assert_eq!(&list3, &list_from(&[4,5]));
+        assert_eq!(&list5, &list_from(&[6,7]));
+        assert_eq!(list3.len(), 2);
+        assert_eq!(list5.len(), 2);
+    }
+
+    #[test]
+    fn test_splice() {
+        let mut list1 = list_from(&[3i,4,5]);
+        let mut list2 = list_from(&[1,2,6,7]);
+        let mut list3 = DList::new();
+
+        // splice empty list
+        list1.splice(2, &mut list3);
+        assert_eq!(&list1, &list_from(&[3,4,5]));
+        assert_eq!(&list3, &DList::new());
+        assert_eq!(list1.len(), 3);
+        assert_eq!(list3.len(), 0);
+
+        // splice normal
+        list2.splice(2, &mut list1);
+        assert_eq!(&list2, &list_from(&[1,2,3,4,5,6,7]));
+        assert_eq!(&list1, &DList::new());
+        assert_eq!(list2.len(), 7);
+        assert_eq!(list1.len(), 0);
+    }
 }
 
 
