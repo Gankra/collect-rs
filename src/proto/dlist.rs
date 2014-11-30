@@ -1,8 +1,8 @@
 use std::kinds::marker::NoCopy;
 use std::{ptr, mem};
 use std::iter;
-use std::fmt;
-use std::hash::Hash;
+use std::fmt::{mod, Show};
+use std::hash::{Hash, Writer};
 
 /// A DList node.
 struct Node<T> {
@@ -21,8 +21,15 @@ impl<T> Node<T> {
         }
     }
 
+    /// Joins two lists.
+    fn link(&mut self, mut next: Box<Node<T>>) {
+        next.prev = Raw::some(self);
+        self.next = Some(next);
+    }
+
     /// Makes the given node come after this one, appropriately setting all other links.
-    fn set_next(&mut self, mut next: Box<Node<T>>) {
+    /// Assuming that self has a `next`.
+    fn splice_next(&mut self, mut next: Box<Node<T>>) {
         let mut old_next = self.next.take();
         old_next.as_mut().map(|node| node.prev = Raw::some(&mut *next));
         next.prev = Raw::some(self);
@@ -99,16 +106,15 @@ impl<T> DList<T> {
     pub fn push_back(&mut self, elem: T) {
         self.len += 1;
         let mut node = box Node::new(elem);
-        match self.tail.take().as_mut() {
-            None => {
-                self.tail = Raw::some(&mut *node);
-                self.head = Some(node);
-            }
-            Some(tail) => {
-                self.tail = Raw::some(&mut *node);
-                tail.set_next(node);
-            }
+        // unconditionally make the new node the new tail
+        let mut old_tail = mem::replace(&mut self.tail, Raw::some(&mut *node));
+        match old_tail.as_mut() {
+            // List was empty, so the new node is the new head
+            None => self.head = Some(node),
+            // List wasn't empty, just need to append this to the old tail
+            Some(tail) => tail.link(node),
         }
+
     }
 
     /// Appends an element to the front of the list.
@@ -116,47 +122,49 @@ impl<T> DList<T> {
         self.len += 1;
         let mut node = box Node::new(elem);
         match self.head.take() {
-            None => {
-                self.tail = Raw::some(&mut *node);
-                self.head = Some(node);
-            }
-            Some(head) => {
-                node.set_next(head);
-                self.head = Some(node);
-            }
+            // List was empty, so the new node is the new tail
+            None => self.tail = Raw::some(&mut *node),
+            // List wasn't empty, append the old head to the new node
+            Some(head) => node.link(head),
         }
+        // unconditionally make the new node the new head
+        self.head = Some(node);
     }
 
     /// Removes the element at back of the list. Returns None if the list is empty.
     pub fn pop_back(&mut self) -> Option<T> {
-        match self.tail.take().as_mut() {
-            None => None,
-            Some(tail) => {
-                self.len -= 1;
-                match tail.prev.take().as_mut() {
-                    None => self.head.take().map(|box node| node.elem),
-                    Some(prev) => {
-                        self.tail = Raw::some(prev);
-                        prev.next.take().map(|box node| node.elem)
-                    }
+        // null out the list's tail pointer unconditionally
+        self.tail.take().as_mut().and_then(|tail| {
+            // tail pointer wasn't null, so decrease the len
+            self.len -= 1;
+            match tail.prev.take().as_mut() {
+                // tail had no previous value, so the list only contained this node.
+                // So we have to take this node out by removing the head itself
+                None => self.head.take().map(|box node| node.elem),
+                // tail had a previous value, so we need to make that the new tail
+                // and take the node out of its next field
+                Some(prev) => {
+                    self.tail = Raw::some(prev);
+                    prev.next.take().map(|box node| node.elem)
                 }
             }
-        }
+        })
     }
 
     /// Removes the element at front of the list. Returns None if the list is empty.
     pub fn pop_front(&mut self) -> Option<T> {
-        match self.head.take() {
-            None => None,
-            Some(mut head) => {
-                self.len -= 1;
-                match head.take_next() {
-                    None => self.tail = Raw::none(),
-                    Some(next) => self.head = Some(next),
-                }
-                Some(head.elem)
+        // null out the list's head pointer unconditionally
+        self.head.take().map(|mut head| {
+            // head wasn't null, so decrease the len
+            self.len -= 1;
+            match head.take_next() {
+                // head had no next value, so just null out the tail
+                None => self.tail = Raw::none(),
+                // head had a next value, which should be the new head
+                Some(next) => self.head = Some(next),
             }
-        }
+            head.elem
+        })
     }
 
     /// Gets the element at the front of the list, or None if empty.
@@ -242,11 +250,10 @@ impl<T> DList<T> {
             nelem: self.len(),
             head: head_raw,
             tail: self.tail.clone(),
-            list: self
         }
     }
 
-    /// Consumes the list into an iterator yielding elements by value.
+    /// Consumes the list into an iterator yielding elements by.elem.
     pub fn into_iter(self) -> MoveItems<T> {
         MoveItems{list: self}
     }
@@ -340,7 +347,7 @@ impl<'a, T> Cursor<'a, T> {
                 list.push_back(elem);
             } else {
                 list.len += 1;
-                node.set_next(box Node::new(elem));
+                node.splice_next(box Node::new(elem));
             }
         }
     }
@@ -356,7 +363,7 @@ impl<'a, T> Cursor<'a, T> {
             Some(prev) => match prev.take_next() {
                 None => list.pop_back(),
                 Some(box mut next) => {
-                    next.next.take().map(|next_next| prev.set_next(next_next));
+                    next.next.take().map(|next_next| prev.splice_next(next_next));
                     Some(next.elem)
                 }
             }
@@ -368,7 +375,7 @@ impl<'a, T> Cursor<'a, T> {
 /// An iterator over references to the items of a `DList`.
 pub struct Items<'a, T:'a> {
     head: &'a Link<T>,
-    tail: &'a Raw<Node<T>>,
+    tail: &'a Raw<T>,
     nelem: uint,
 }
 
@@ -379,9 +386,8 @@ impl<'a, T> Clone for Items<'a, T> {
 
 /// An iterator over mutable references to the items of a `DList`.
 pub struct MutItems<'a, T:'a> {
-    list: &'a mut DList<T>,
-    head: Raw<Node<T>>,
-    tail: Raw<Node<T>>,
+    head: Raw<T>,
+    tail: Raw<T>,
     nelem: uint,
 }
 
@@ -400,7 +406,7 @@ impl<'a, A> Iterator<&'a A> for Items<'a, A> {
         self.head.as_ref().map(|head| {
             self.nelem -= 1;
             self.head = &head.next;
-            &head.value
+            &head.elem
         })
     }
 
@@ -416,10 +422,10 @@ impl<'a, A> DoubleEndedIterator<&'a A> for Items<'a, A> {
         if self.nelem == 0 {
             return None;
         }
-        self.tail.resolve_immut().as_ref().map(|prev| {
+        self.tail.as_ref().map(|tail| {
             self.nelem -= 1;
-            self.tail = prev.prev;
-            &prev.value
+            self.tail = &tail.prev;
+            &tail.elem
         })
     }
 }
@@ -432,13 +438,16 @@ impl<'a, A> Iterator<&'a mut A> for MutItems<'a, A> {
         if self.nelem == 0 {
             return None;
         }
-        self.head.resolve().map(|next| {
+        self.head.take().as_mut().map(|next| {
             self.nelem -= 1;
             self.head = match next.next {
                 Some(ref mut node) => Raw::some(&mut **node),
                 None => Raw::none(),
             };
-            &mut next.value
+            unsafe {
+                //upgrade ref to the necessary lifetime
+                &mut *((&mut next.elem) as *mut _)
+            }
         })
     }
 
@@ -454,10 +463,13 @@ impl<'a, A> DoubleEndedIterator<&'a mut A> for MutItems<'a, A> {
         if self.nelem == 0 {
             return None;
         }
-        self.tail.resolve().map(|prev| {
+        self.tail.take().as_mut().map(|prev| {
             self.nelem -= 1;
-            self.tail = prev.prev;
-            &mut prev.value
+            self.tail = prev.prev.clone();
+            unsafe {
+                //upgrade ref to the necessary lifetime
+                &mut *((&mut prev.elem) as *mut _)
+            }
         })
     }
 }
@@ -470,7 +482,7 @@ impl<A> Iterator<A> for MoveItems<A> {
 
     #[inline]
     fn size_hint(&self) -> (uint, Option<uint>) {
-        (self.list.length, Some(self.list.length))
+        (self.list.len(), Some(self.list.len()))
     }
 }
 
@@ -478,14 +490,15 @@ impl<A> DoubleEndedIterator<A> for MoveItems<A> {
     #[inline]
     fn next_back(&mut self) -> Option<A> { self.list.pop_back() }
 }
-
+/*
 #[unsafe_destructor]
+
 impl<T> Drop for DList<T> {
     fn drop(&mut self) {
         self.clear()
     }
 }
-
+*/
 impl<A> FromIterator<A> for DList<A> {
     fn from_iter<T: Iterator<A>>(iterator: T) -> DList<A> {
         let mut ret = DList::new();
@@ -550,6 +563,11 @@ impl<S: Writer, A: Hash<S>> Hash<S> for DList<A> {
     }
 }
 
+impl<T: Clone> Clone for DList<T> {
+    fn clone(&self) -> DList<T> {
+        self.iter().cloned().collect()
+    }
+}
 
 
 
@@ -785,8 +803,12 @@ mod test {
                                                                    .collect();
         assert!(list.to_string().as_slice() == "[just, one, test, more]");
     }
-
 }
+
+
+
+
+
 
 #[cfg(test)]
 mod bench{
