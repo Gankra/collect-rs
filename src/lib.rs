@@ -22,9 +22,11 @@
 //! libcollections. As such, this project is licensed under the same terms as Rust itself.
 
 extern crate test;
+extern crate core;
 
 pub mod iter;
 pub mod inner_join;
+pub mod outer_join;
 
 pub mod blist;
 pub mod immutslist;
