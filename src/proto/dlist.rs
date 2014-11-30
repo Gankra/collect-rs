@@ -513,15 +513,14 @@ impl<A> DoubleEndedIterator<A> for MoveItems<A> {
     #[inline]
     fn next_back(&mut self) -> Option<A> { self.list.pop_back() }
 }
-/*
-#[unsafe_destructor]
 
+#[unsafe_destructor]
 impl<T> Drop for DList<T> {
     fn drop(&mut self) {
         self.clear()
     }
 }
-*/
+
 impl<A> FromIterator<A> for DList<A> {
     fn from_iter<T: Iterator<A>>(iterator: T) -> DList<A> {
         let mut ret = DList::new();
