@@ -266,9 +266,12 @@ impl<T> DList<T> {
 /// cursors cannot yield multiple elements at once.
 ///
 /// Cursors always rest between two elements in the list, and index in a logically circular way.
-/// When created, they start between the first and last element in the list. That is, `next` will
-/// yield the front of the list, and `prev` will yield the back. None will be yielded whenever
-/// this starting point is visited.
+/// To accomadate this, there is a "ghost" non-element that yields None between the head and tail
+/// of the List.
+///
+/// When created, cursors start between the ghost and the front of the list. That is, `next` will
+/// yield the front of the list, and `prev` will yield None. Calling `prev` again will yield
+/// the tail.
 pub struct Cursor<'a, T: 'a> {
     list: &'a mut DList<T>,
     prev: Raw<T>,
@@ -283,18 +286,25 @@ impl<'a, T> Cursor<'a, T> {
     /// Gets the next element in the list.
     pub fn next(&mut self) -> Option<&mut T> {
         match self.prev.take().as_mut() {
+            // We had no previous element; the cursor was sitting at the start position
+            // Next element should be the head of the list
             None => match self.list.head.as_mut() {
+                // No head. No elements.
                 None => None,
+                // Got the head. Set it as prev and yield its element
                 Some(head) => {
                     self.prev = Raw::some(&mut **head);
                     Some(&mut head.elem)
                 }
             },
+            // We had a previous element, so let's go to its next
             Some(prev) => match prev.next.as_mut() {
+                // No next. We're back at the start point, null the prev and yield None
                 None => {
                     self.prev = Raw::none();
                     None
                 }
+                // Got a next. Set it as prev and yield its element
                 Some(next) => {
                     self.prev = Raw::some(&mut **next);
                     unsafe {
@@ -308,10 +318,12 @@ impl<'a, T> Cursor<'a, T> {
     /// Gets the previous element in the list.
     pub fn prev(&mut self) -> Option<&mut T> {
         match self.prev.take().as_mut() {
+            // No prev. We're at the start of the list. Yield None and jump to the end.
             None => {
                 self.prev = self.list.tail.clone();
                 None
             },
+            // Have a prev. Yield it and go to the previous element.
             Some(prev) => {
                 self.prev = prev.prev.clone();
                  unsafe {
@@ -338,14 +350,17 @@ impl<'a, T> Cursor<'a, T> {
     /// Inserts an element at the cursor's location in the list, and moves the cursor head to
     /// lie before it. Therefore, the new element will be yielded by the next call to `next`.
     pub fn insert(&mut self, elem: T) {
+        // destructure so that we can mutate list while working with prev
         let Cursor{ref mut list, ref mut prev} = *self;
         match prev.as_mut() {
-            None => {
-                list.push_front(elem);
-            },
+            // No prev, we're at the start of the list
+            // Also covers empty list
+            None =>  list.push_front(elem),
             Some(node) => if node.next.as_mut().is_none() {
+                // No prev.next, we're at the end of the list
                 list.push_back(elem);
             } else {
+                // We're somewhere in the middle, splice in the new node
                 list.len += 1;
                 node.splice_next(box Node::new(elem));
             }
@@ -353,17 +368,25 @@ impl<'a, T> Cursor<'a, T> {
     }
 
     /// Removes the next element in the list, without moving the cursor. Returns None if the list
-    /// is empty.
+    /// is empty, or if `next` is the ghost element
     pub fn remove(&mut self) -> Option<T> {
         let Cursor{ref mut list, ref mut prev} = *self;
         match prev.as_mut() {
-            None => {
-                list.pop_front()
-            },
+            // No prev, we're at the start of the list
+            // Also covers empty list
+            None => list.pop_front(),
             Some(prev) => match prev.take_next() {
-                None => list.pop_back(),
+                // No prev.next, we're at the ghost, yield None
+                None => None,
+                // We're somewhere in the middle, rip out prev.next
                 Some(box mut next) => {
-                    next.next.take().map(|next_next| prev.splice_next(next_next));
+                    list.len -= 1;
+                    match next.next.take() {
+                        // We were actually at the end of the list, so fix the list's tail
+                        None => list.tail = Raw::some(prev),
+                        // Really in the middle, link the results of removing next
+                        Some(next_next) => prev.link(next_next),
+                    }
                     Some(next.elem)
                 }
             }
@@ -802,6 +825,135 @@ mod test {
                                                                    .map(|&s| s)
                                                                    .collect();
         assert!(list.to_string().as_slice() == "[just, one, test, more]");
+    }
+
+    #[test]
+    fn test_cursor_seek() {
+        let mut list = list_from(&[0i,1,2,3,4]);
+        let mut curs = list.cursor();
+        // forward iteration
+        assert_eq!(*curs.peek_next().unwrap(), 0);
+        assert_eq!(*curs.next().unwrap(), 0);
+        assert_eq!(*curs.peek_next().unwrap(), 1);
+        assert_eq!(*curs.next().unwrap(), 1);
+        assert_eq!(*curs.next().unwrap(), 2);
+        assert_eq!(*curs.next().unwrap(), 3);
+        assert_eq!(*curs.next().unwrap(), 4);
+        assert_eq!(curs.peek_next(), None);
+        assert_eq!(curs.next(), None);
+        assert_eq!(*curs.next().unwrap(), 0);
+
+        // reverse iteration
+        assert_eq!(*curs.peek_prev().unwrap(), 0);
+        assert_eq!(*curs.prev().unwrap(), 0);
+        assert_eq!(curs.peek_prev(), None);
+        assert_eq!(curs.prev(), None);
+        assert_eq!(*curs.peek_prev().unwrap(), 4);
+        assert_eq!(*curs.prev().unwrap(), 4);
+        assert_eq!(*curs.prev().unwrap(), 3);
+        assert_eq!(*curs.prev().unwrap(), 2);
+        assert_eq!(*curs.prev().unwrap(), 1);
+        assert_eq!(*curs.prev().unwrap(), 0);
+        assert_eq!(curs.prev(), None);
+    }
+
+    #[test]
+    fn test_cursor_insert() {
+        let mut list = list_from(&[0i,1,2,3,4]);
+        {
+            let mut curs = list.cursor();
+
+            // insertion to back
+            curs.prev();
+            curs.insert(6);
+            curs.insert(5);
+
+            assert_eq!(*curs.next().unwrap(), 5);
+            assert_eq!(*curs.next().unwrap(), 6);
+            assert_eq!(curs.next(), None);
+
+            // insertion to front
+            curs.insert(-1);
+            curs.insert(-2);
+
+            assert_eq!(*curs.next().unwrap(), -2);
+            assert_eq!(*curs.next().unwrap(), -1);
+            assert_eq!(*curs.next().unwrap(), 0);
+
+            assert_eq!(*curs.prev().unwrap(), 0);
+            assert_eq!(*curs.prev().unwrap(), -1);
+            assert_eq!(*curs.prev().unwrap(), -2);
+            assert_eq!(curs.prev(), None);
+            assert_eq!(*curs.prev().unwrap(), 6);
+            assert_eq!(*curs.prev().unwrap(), 5);
+            assert_eq!(*curs.prev().unwrap(), 4);
+            assert_eq!(*curs.prev().unwrap(), 3);
+
+            // insertion in the middle
+            curs.insert(275); // fake decimal 2.75
+            curs.insert(250);
+            curs.insert(225);
+
+            assert_eq!(*curs.next().unwrap(), 225);
+            assert_eq!(*curs.next().unwrap(), 250);
+            assert_eq!(*curs.next().unwrap(), 275);
+            assert_eq!(*curs.next().unwrap(), 3);
+            assert_eq!(*curs.next().unwrap(), 4);
+
+            assert_eq!(*curs.prev().unwrap(), 4);
+            assert_eq!(*curs.prev().unwrap(), 3);
+            assert_eq!(*curs.prev().unwrap(), 275);
+            assert_eq!(*curs.prev().unwrap(), 250);
+            assert_eq!(*curs.prev().unwrap(), 225);
+            assert_eq!(*curs.prev().unwrap(), 2);
+            assert_eq!(*curs.prev().unwrap(), 1);
+        }
+        assert_eq!(list.len(), 12);
+    }
+
+    #[test]
+    fn test_cursor_remove() {
+        let mut list = list_from(&[0i,1,2,3,4,5,6,7]);
+        {
+            let mut curs = list.cursor();
+            // remove from front
+            assert_eq!(curs.remove().unwrap(), 0);
+            assert_eq!(curs.remove().unwrap(), 1);
+
+            assert_eq!(*curs.next().unwrap(), 2);
+            assert_eq!(*curs.next().unwrap(), 3);
+
+            assert_eq!(*curs.prev().unwrap(), 3);
+            assert_eq!(*curs.prev().unwrap(), 2);
+            assert_eq!(curs.prev(), None)
+            assert_eq!(*curs.prev().unwrap(), 7)
+
+            // remove from back
+            assert_eq!(curs.remove().unwrap(), 7);
+            assert_eq!(curs.remove(), None); // g-g-g-ghost!
+            assert_eq!(*curs.prev().unwrap(), 6);
+            assert_eq!(curs.remove().unwrap(), 6);
+            assert_eq!(*curs.prev().unwrap(), 5);
+            assert_eq!(*curs.prev().unwrap(), 4);
+
+            assert_eq!(*curs.next().unwrap(), 4);
+            assert_eq!(*curs.next().unwrap(), 5);
+            assert_eq!(curs.next(), None)
+            assert_eq!(*curs.next().unwrap(), 2)
+
+            // remove from middle
+            assert_eq!(curs.remove().unwrap(), 3);
+            assert_eq!(curs.remove().unwrap(), 4);
+            assert_eq!(*curs.next().unwrap(), 5);
+            assert_eq!(curs.next(), None);
+            assert_eq!(*curs.next().unwrap(), 2);
+            assert_eq!(*curs.next().unwrap(), 5);
+            assert_eq!(*curs.prev().unwrap(), 5);
+            assert_eq!(*curs.prev().unwrap(), 2);
+            assert_eq!(curs.prev(), None);
+            assert_eq!(*curs.prev().unwrap(), 5);
+        }
+        assert_eq!(list.len(), 2);
     }
 }
 
