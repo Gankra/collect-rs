@@ -28,4 +28,4 @@ pub mod iter;
 pub mod blist;
 pub mod immutslist;
 pub mod intervalheap;
-
+pub mod splay;
