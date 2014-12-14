@@ -22,8 +22,22 @@
 //! libcollections. As such, this project is licensed under the same terms as Rust itself.
 
 extern crate test;
+extern crate core;
 
-pub mod iter;
+mod ordered_iter;
+mod string_joiner;
+
+pub mod iter {
+    pub use string_joiner::StringJoiner;
+    pub use ordered_iter::{
+        OrderedMapIterator,
+        OrderedSetIterator,
+        InnerJoinMapIterator,
+        InnerJoinMapSetIterator,
+        InnerJoinSetIterator,
+        OuterJoinIterator
+    };
+}
 
 pub mod blist;
 pub mod immutslist;
