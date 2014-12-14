@@ -4,6 +4,7 @@ use std::fmt;
 use std::mem;
 use std::hash::{Hash, Writer};
 use std::num::Int;
+use traverse::Traversal;
 
 /// A skeleton implementation of a BList, based on the [Space-Efficient Linked List]
 /// (http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html) described in
@@ -188,6 +189,18 @@ impl<T> BList<T> {
         } }
     }*/
 
+    pub fn traversal(&self) -> Trav<T> {
+        Trav { list: self }
+    }
+
+    pub fn traversal_mut(&mut self) -> MutTrav<T> {
+        MutTrav { list: self }
+    }
+
+    pub fn into_traversal(self) -> MoveTrav<T> {
+        MoveTrav { list: self }
+    }
+
     /// Lazily moves the contents of `other` to the end of `self`, in the sense that it makes no
     /// effort to preserve the node-size lower-bound invariant. This can have negative effects
     /// on the effeciency of the resulting list, but is otherwise much faster than a proper
@@ -371,6 +384,49 @@ impl<T> DoubleEndedIterator<T> for MoveItems<T> {
 }
 impl<T> ExactSize<T> for MoveItems<T> {}
 */
+
+
+pub struct Trav<'a, T: 'a> {
+    list: &'a BList<T>,
+}
+
+pub struct MutTrav<'a, T: 'a> {
+    list: &'a mut BList<T>,
+}
+
+pub struct MoveTrav<T> {
+    list: BList<T>,
+}
+
+impl<'a, T> Traversal<&'a T> for Trav<'a, T> {
+    fn foreach<F: FnMut(&'a T) -> bool>(self, mut f: F) {
+        for node in self.list.list.iter() {
+            for elem in node.iter() {
+                if f(elem) { return; }
+            }
+        }
+    }
+}
+
+impl<'a, T> Traversal<&'a mut T> for MutTrav<'a, T> {
+    fn foreach<F: FnMut(&'a mut T) -> bool>(self, mut f: F) {
+        for node in self.list.list.iter_mut() {
+            for elem in node.iter_mut() {
+                if f(elem) { return; }
+            }
+        }
+    }
+}
+
+impl<T> Traversal<T> for MoveTrav<T> {
+    fn foreach<F: FnMut(T) -> bool>(self, mut f: F) {
+        for node in self.list.list.into_iter() {
+            for elem in node.into_iter() {
+                if f(elem) { return; }
+            }
+        }
+    }
+}
 
 
 impl<A> FromIterator<A> for BList<A> {
@@ -672,6 +728,7 @@ mod test {
 mod bench{
     use super::BList;
     use test;
+    use traverse::Traversal;
 
     #[bench]
     fn bench_collect_into(b: &mut test::Bencher) {
@@ -731,6 +788,7 @@ mod bench{
             assert!(m.iter_mut().count() == 128);
         })
     }
+
     #[bench]
     fn bench_iter_rev(b: &mut test::Bencher) {
         let v = &[0i, ..128];
@@ -745,6 +803,15 @@ mod bench{
         let mut m: BList<int> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().rev().count() == 128);
+        })
+    }
+
+    #[bench]
+    fn bench_trav(b: &mut test::Bencher) {
+        let v = &[0i, ..128];
+        let m: BList<int> = v.iter().map(|&x|x).collect();
+        b.iter(|| {
+            assert!(m.traversal().count() == 128);
         })
     }
 }

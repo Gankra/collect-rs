@@ -1,5 +1,6 @@
 #![feature(unsafe_destructor)]
 #![feature(default_type_params)]
+#![feature(unboxed_closures)]
 
 //! collect-rs is intended as an experimental extension of the Rust standard library's
 //! libcollections. Ideas that are too niche, crazy, or experimental to land in libcollections
@@ -23,6 +24,7 @@
 
 extern crate test;
 extern crate core;
+extern crate traverse;
 
 mod ordered_iter;
 mod string_joiner;
