@@ -2,7 +2,7 @@
 
 name = "collect"
 version = "0.0.3"
-license = "MIT/Apache"
+license = "APACHE/MIT"
 description = "An experimental extension of std::collections"
 authors = ["Alexis Beingessner <a.beingessner@gmail.com>",
            "Sebastian Gesemann <s.gesemann@gmail.com>"]
