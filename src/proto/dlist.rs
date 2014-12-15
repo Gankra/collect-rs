@@ -4,6 +4,10 @@ use std::iter;
 use std::fmt::{mod, Show};
 use std::hash::{Hash, Writer};
 
+// FIXME(Gankro): Although the internal interface we have here is *safer* than std's DList,
+// it's still by no means safe. Any claims we make here about safety in the internal APIs
+// are complete hand-waving. For now I'm leaving it like this while we work on better solutions.
+
 /// A DList node.
 struct Node<T> {
     prev: Raw<T>,
@@ -530,15 +534,11 @@ impl<'a, T> Cursor<'a, T> {
 
 
 /// An iterator over references to the items of a `DList`.
+#[deriving(Clone)]
 pub struct Items<'a, T:'a> {
     head: &'a Link<T>,
     tail: &'a Raw<T>,
     nelem: uint,
-}
-
-// FIXME #11820: the &'a Option<> of the Link stops clone working.
-impl<'a, T> Clone for Items<'a, T> {
-    fn clone(&self) -> Items<'a, T> { *self }
 }
 
 /// An iterator over mutable references to the items of a `DList`.
