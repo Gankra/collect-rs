@@ -1,7 +1,3 @@
-#![feature(unsafe_destructor)]
-#![feature(default_type_params)]
-#![feature(unboxed_closures)]
-#![feature(globs)]
 
 //! collect-rs is intended as an experimental extension of the Rust standard library's
 //! libcollections. Ideas that are too niche, crazy, or experimental to land in libcollections
@@ -23,27 +19,68 @@
 //! Note that anything include in collect-rs is theoretically a candidate for inclusion in
 //! libcollections. As such, this project is licensed under the same terms as Rust itself.
 
+
+#![feature(unsafe_destructor)]
+#![feature(default_type_params)]
+#![feature(unboxed_closures)]
+#![feature(globs)]
+#![feature(macro_rules)]
+
 extern crate test;
 extern crate core;
 extern crate traverse;
 
-mod ordered_iter;
-mod string_joiner;
 
-pub mod iter {
-    pub use string_joiner::StringJoiner;
-    pub use ordered_iter::{
-        OrderedMapIterator,
-        OrderedSetIterator,
-        InnerJoinMapIterator,
-        InnerJoinMapSetIterator,
-        InnerJoinSetIterator,
-        OuterJoinIterator
-    };
-}
+
+
+// Re-Exports
+
+pub use blist::BList;
+pub use enum_set::EnumSet;
+pub use immut_slist::ImmutSList;
+pub use interval_heap::IntervalHeap;
+pub use tree_map::TreeMap;
+pub use tree_set::TreeSet;
+pub use trie_map::TrieMap;
+pub use trie_set::TrieSet;
+
+
+
+
+// privates
+
+mod tree;
+mod trie;
+mod bench;
+
+
+
+// publics
+
+pub mod iter;
 
 pub mod blist;
-pub mod immutslist;
-pub mod intervalheap;
+pub mod enum_set;
+pub mod immut_slist;
+pub mod interval_heap;
+
+pub mod tree_map {
+    pub use tree::map::*;
+}
+
+pub mod tree_set {
+    pub use tree::set::*;
+}
+
+pub mod trie_map {
+    pub use trie::map::*;
+}
+
+pub mod trie_set {
+    pub use trie::set::*;
+}
+
+
 
 pub mod proto;
+
