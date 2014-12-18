@@ -80,12 +80,12 @@ impl<Sized? T: Ord> Cmp<T> for Natural<T> {
     }
 }
 
-// TODO: replace with `deriving(Copy)` once
+// FIXME: replace with `deriving(Copy)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<Sized? T: Ord> Copy for Natural<T> {
 }
 
-// TODO: replace with `deriving(Clone)` once
+// FIXME: replace with `deriving(Clone)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<Sized? T: Ord> Clone for Natural<T> {
     fn clone(&self) -> Natural<T> {

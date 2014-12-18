@@ -159,12 +159,15 @@ use std::default::Default;
 use std::mem::{zeroed, replace, swap};
 use std::{slice, ptr, vec};
 
+use cmp::{mod, Cmp};
+
 /// A priority queue implemented with a binary heap.
 ///
 /// This will be a max-heap.
 #[deriving(Clone)]
-pub struct BinaryHeap<T> {
+pub struct BinaryHeap<T, C: Cmp<T> = cmp::Natural<T>> {
     data: Vec<T>,
+    cmp: C,
 }
 
 #[stable]
@@ -184,7 +187,9 @@ impl<T: Ord> BinaryHeap<T> {
     /// let heap: BinaryHeap<uint> = BinaryHeap::new();
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn new() -> BinaryHeap<T> { BinaryHeap{data: vec!(),} }
+    pub fn new() -> BinaryHeap<T> {
+        BinaryHeap::with_cmp(cmp::Natural)
+    }
 
     /// Creates an empty `BinaryHeap` with a specific capacity.
     /// This preallocates enough memory for `capacity` elements,
@@ -199,7 +204,7 @@ impl<T: Ord> BinaryHeap<T> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn with_capacity(capacity: uint) -> BinaryHeap<T> {
-        BinaryHeap { data: Vec::with_capacity(capacity) }
+        BinaryHeap::with_capacity_and_cmp(capacity, cmp::Natural)
     }
 
     /// Creates a `BinaryHeap` from a vector. This is sometimes called
@@ -212,7 +217,21 @@ impl<T: Ord> BinaryHeap<T> {
     /// let heap = BinaryHeap::from_vec(vec![9i, 1, 2, 7, 3, 2]);
     /// ```
     pub fn from_vec(xs: Vec<T>) -> BinaryHeap<T> {
-        let mut q = BinaryHeap{data: xs,};
+        BinaryHeap::from_vec_cmp(xs, cmp::Natural)
+    }
+}
+
+impl<T, C: Cmp<T>> BinaryHeap<T, C> {
+    pub fn with_cmp(cmp: C) -> BinaryHeap<T, C> {
+        BinaryHeap { data: vec![], cmp: cmp }
+    }
+
+    pub fn with_capacity_and_cmp(capacity: uint, cmp: C) -> BinaryHeap<T, C> {
+        BinaryHeap { data: Vec::with_capacity(capacity), cmp: cmp }
+    }
+
+    pub fn from_vec_cmp(xs: Vec<T>, cmp: C) -> BinaryHeap<T, C> {
+        let mut q = BinaryHeap { data: xs, cmp: cmp };
         let mut n = q.len() / 2;
         while n > 0 {
             n -= 1;
@@ -414,7 +433,7 @@ impl<T: Ord> BinaryHeap<T> {
     pub fn push_pop(&mut self, mut item: T) -> T {
         match self.data.get_mut(0) {
             None => return item,
-            Some(top) => if *top > item {
+            Some(top) => if self.cmp.gt(top, &item) {
                 swap(&mut item, top);
             } else {
                 return item;
@@ -506,7 +525,7 @@ impl<T: Ord> BinaryHeap<T> {
 
             while pos > start {
                 let parent = (pos - 1) >> 1;
-                if new > self.data[parent] {
+                if self.cmp.gt(&new, &self.data[parent]) {
                     let x = replace(&mut self.data[parent], zeroed());
                     ptr::write(&mut self.data[pos], x);
                     pos = parent;
@@ -526,7 +545,7 @@ impl<T: Ord> BinaryHeap<T> {
             let mut child = 2 * pos + 1;
             while child < end {
                 let right = child + 1;
-                if right < end && !(self.data[child] > self.data[right]) {
+                if right < end && !self.cmp.gt(&self.data[child], &self.data[right]) {
                     child = right;
                 }
                 let x = replace(&mut self.data[child], zeroed());
@@ -604,7 +623,7 @@ impl<T: Ord> FromIterator<T> for BinaryHeap<T> {
     }
 }
 
-impl<T: Ord> Extend<T> for BinaryHeap<T> {
+impl<T, C: Cmp<T>> Extend<T> for BinaryHeap<T, C> {
     fn extend<Iter: Iterator<T>>(&mut self, mut iter: Iter) {
         let (lower, _) = iter.size_hint();
 
@@ -816,6 +835,18 @@ mod tests {
 
         for &x in xs.iter() {
             assert_eq!(q.pop().unwrap(), x);
+        }
+    }
+
+    #[test]
+    fn test_comparator() {
+        use cmp::{mod, CmpExt};
+
+        let xs = vec![2u, 3, 4, 5, 8, 9];
+        let mut heap = BinaryHeap::from_vec_cmp(xs.clone(), cmp::Natural.rev());
+
+        for &x in xs.iter() {
+            assert_eq!(heap.pop().unwrap(), x);
         }
     }
 }
