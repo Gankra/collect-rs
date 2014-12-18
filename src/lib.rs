@@ -59,6 +59,7 @@ mod bench;
 
 // publics
 
+pub mod cmp;
 pub mod iter;
 
 pub mod binary_heap;
