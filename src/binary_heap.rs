@@ -155,14 +155,9 @@
 
 #![allow(missing_docs)]
 
-use core::prelude::*;
-
-use core::default::Default;
-use core::mem::{zeroed, replace, swap};
-use core::ptr;
-
-use slice;
-use vec::{mod, Vec};
+use std::default::Default;
+use std::mem::{zeroed, replace, swap};
+use std::{slice, ptr, vec};
 
 /// A priority queue implemented with a binary heap.
 ///
@@ -623,10 +618,7 @@ impl<T: Ord> Extend<T> for BinaryHeap<T> {
 
 #[cfg(test)]
 mod tests {
-    use std::prelude::*;
-
     use super::BinaryHeap;
-    use vec::Vec;
 
     #[test]
     fn test_iterator() {
