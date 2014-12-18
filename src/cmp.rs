@@ -78,6 +78,30 @@ impl<Sized? T: Ord> Cmp<T> for Natural<T> {
     fn cmp(&self, lhs: &T, rhs: &T) -> Ordering {
         lhs.cmp(rhs)
     }
+
+    fn lt(&self, lhs: &T, rhs: &T) -> bool {
+        lhs.lt(rhs)
+    }
+
+    fn le(&self, lhs: &T, rhs: &T) -> bool {
+        lhs.le(rhs)
+    }
+
+    fn ge(&self, lhs: &T, rhs: &T) -> bool {
+        lhs.ge(rhs)
+    }
+
+    fn gt(&self, lhs: &T, rhs: &T) -> bool {
+        lhs.gt(rhs)
+    }
+
+    fn eq(&self, lhs: &T, rhs: &T) -> bool {
+        lhs.eq(rhs)
+    }
+
+    fn ne(&self, lhs: &T, rhs: &T) -> bool {
+        lhs.ne(rhs)
+    }
 }
 
 // FIXME: replace with `deriving(Copy)` once
@@ -100,6 +124,30 @@ pub struct Rev<C>(C);
 impl<Sized? T, C: Cmp<T>> Cmp<T> for Rev<C> {
     fn cmp(&self, lhs: &T, rhs: &T) -> Ordering {
         self.0.cmp(rhs, lhs)
+    }
+
+    fn lt(&self, lhs: &T, rhs: &T) -> bool {
+        self.0.lt(rhs, lhs)
+    }
+
+    fn le(&self, lhs: &T, rhs: &T) -> bool {
+        self.0.le(rhs, lhs)
+    }
+
+    fn ge(&self, lhs: &T, rhs: &T) -> bool {
+        self.0.ge(rhs, lhs)
+    }
+
+    fn gt(&self, lhs: &T, rhs: &T) -> bool {
+        self.0.gt(rhs, lhs)
+    }
+
+    fn eq(&self, lhs: &T, rhs: &T) -> bool {
+        self.0.eq(rhs, lhs)
+    }
+
+    fn ne(&self, lhs: &T, rhs: &T) -> bool {
+        self.0.ne(rhs, lhs)
     }
 }
 
