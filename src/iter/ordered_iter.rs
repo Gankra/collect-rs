@@ -307,10 +307,10 @@ mod tests {
             powers_of_two.iter().inner_join_map(powers_of_three.iter())
             .map(|(&k, (&a, &b))| (k, a, b));
 
-        assert_eq!(Some((6, 3, 2)), powers_of_two_and_three.next())
-        assert_eq!(Some((12, 6, 4)), powers_of_two_and_three.next())
-        assert_eq!(Some((18, 9, 6)), powers_of_two_and_three.next())
-        assert_eq!(None, powers_of_two_and_three.next())
+        assert_eq!(Some((6, 3, 2)), powers_of_two_and_three.next());
+        assert_eq!(Some((12, 6, 4)), powers_of_two_and_three.next());
+        assert_eq!(Some((18, 9, 6)), powers_of_two_and_three.next());
+        assert_eq!(None, powers_of_two_and_three.next());
     }
 
     #[test]
@@ -324,10 +324,10 @@ mod tests {
             powers_of_two.iter().inner_join_map(powers_of_three.iter())
             .map(|(&k, &a)| (k, a));
 
-        assert_eq!(Some((6, 2)), powers_of_two_and_three.next())
-        assert_eq!(Some((12, 4)), powers_of_two_and_three.next())
-        assert_eq!(Some((18, 6)), powers_of_two_and_three.next())
-        assert_eq!(None, powers_of_two_and_three.next())
+        assert_eq!(Some((6, 2)), powers_of_two_and_three.next());
+        assert_eq!(Some((12, 4)), powers_of_two_and_three.next());
+        assert_eq!(Some((18, 6)), powers_of_two_and_three.next());
+        assert_eq!(None, powers_of_two_and_three.next());
     }
 
     #[test]
