@@ -26,38 +26,19 @@
 //! [dir_graph]: http://en.wikipedia.org/wiki/Directed_graph
 //!
 //! ```
-//! use std::collections::BinaryHeap;
+//! use collect::BinaryHeap;
 //! use std::uint;
 //!
-//! #[deriving(Eq, PartialEq)]
+//! #[deriving(Copy, Eq, PartialEq)]
 //! struct State {
 //!     cost: uint,
-//!     position: uint
-//! }
-//!
-//! impl Copy for State {}
-//!
-//! // The priority queue depends on `Ord`.
-//! // Explicitly implement the trait so the queue becomes a min-heap
-//! // instead of a max-heap.
-//! impl Ord for State {
-//!     fn cmp(&self, other: &State) -> Ordering {
-//!         // Notice that the we flip the ordering here
-//!         other.cost.cmp(&self.cost)
-//!     }
-//! }
-//!
-//! // `PartialOrd` needs to be implemented as well.
-//! impl PartialOrd for State {
-//!     fn partial_cmp(&self, other: &State) -> Option<Ordering> {
-//!         Some(self.cmp(other))
-//!     }
+//!     position: uint,
 //! }
 //!
 //! // Each node is represented as an `uint`, for a shorter implementation.
 //! struct Edge {
 //!     node: uint,
-//!     cost: uint
+//!     cost: uint,
 //! }
 //!
 //! // Dijkstra's shortest path algorithm.
@@ -70,7 +51,8 @@
 //!     // dist[node] = current shortest distance from `start` to `node`
 //!     let mut dist = Vec::from_elem(adj_list.len(), uint::MAX);
 //!
-//!     let mut heap = BinaryHeap::new();
+//!     let mut heap =
+//!         BinaryHeap::with_cmp(|&: s1: &State, s2: &State| s2.cost.cmp(&s1.cost));
 //!
 //!     // We're at `start`, with a zero cost
 //!     dist[start] = 0u;
