@@ -39,6 +39,7 @@ pub use blist::BList;
 pub use enum_set::EnumSet;
 pub use immut_slist::ImmutSList;
 pub use interval_heap::IntervalHeap;
+pub use lru_cache::LruCache;
 pub use tree_map::TreeMap;
 pub use tree_set::TreeSet;
 pub use trie_map::TrieMap;
@@ -63,6 +64,7 @@ pub mod blist;
 pub mod enum_set;
 pub mod immut_slist;
 pub mod interval_heap;
+pub mod lru_cache;
 
 pub mod tree_map {
     pub use tree::map::*;
