@@ -37,18 +37,18 @@ pub trait Cmp<Sized? Lhs, Sized? Rhs = Lhs> for Sized? {
     fn ne(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         self.cmp(lhs, rhs) != Equal
     }
-}
 
-pub trait OneTypeCmp<Sized? T> for Sized? : Cmp<T> {
+    /* FIXME: uncomment once where clauses permit equality constraints
     /// Returns the maximum of two values, or `lhs` if the values are equal.
-    fn max<'a>(&self, lhs: &'a T, rhs: &'a T) -> &'a T {
+    fn max<'a>(&self, lhs: &'a Lhs, rhs: &'a Rhs) -> &'a Lhs where Lhs = Rhs {
         if self.ge(lhs, rhs) { lhs } else { rhs }
     }
 
     /// Returns the minimum of two values, or `lhs` if the values are equal.
-    fn min<'a>(&self, lhs: &'a T, rhs: &'a T) -> &'a T {
+    fn min<'a>(&self, lhs: &'a Lhs, rhs: &'a Rhs) -> &'a Lhs where Lhs = Rhs {
         if self.le(lhs, rhs) { lhs } else { rhs }
     }
+    */
 }
 
 /// An extension trait providing methods applicable to all comparators.
@@ -68,9 +68,6 @@ impl<Sized? Lhs, Sized? Rhs, Sized? F: Fn(&Lhs, &Rhs) -> Ordering> Cmp<Lhs, Rhs>
     fn cmp(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
         (*self)(lhs, rhs)
     }
-}
-
-impl<Sized? T, Sized? C: Cmp<T>> OneTypeCmp<T> for C {
 }
 
 impl<Sized? Lhs, Sized? Rhs, C: Cmp<Lhs, Rhs>> CmpExt<Lhs, Rhs> for C {
@@ -173,7 +170,7 @@ impl<Sized? Lhs, Sized? Rhs, C, D> Cmp<Lhs, Rhs> for Lexicographic<C, D>
 
 #[cfg(test)]
 mod test {
-    use super::{Cmp, CmpExt, Natural, OneTypeCmp};
+    use super::{Cmp, CmpExt, Natural};
 
     struct Foo(u8, u8);
 
@@ -185,6 +182,7 @@ mod test {
         assert_eq!(c.cmp(&Foo(1, 2), &Foo(0, 1)), Greater);
     }
 
+    /* FIXME: uncomment once where clauses permit equality constraints
     #[test]
     fn test_min_max() {
         let c = |&: lhs: &Foo, rhs: &Foo| lhs.0.cmp(&rhs.0);
@@ -199,6 +197,7 @@ mod test {
         assert_eq!(c.min(&a, &b).1, 2);
         assert_eq!(c.max(&a, &b).1, 2);
     }
+    */
 
     #[test]
     fn test_natural() {
