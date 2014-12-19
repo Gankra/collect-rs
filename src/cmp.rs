@@ -1,43 +1,45 @@
 //! Comparators.
 
 /// A comparator.
-pub trait Cmp<Sized? T> for Sized? {
+pub trait Cmp<Sized? Lhs, Sized? Rhs = Lhs> for Sized? {
     /// Compares two values.
     ///
     /// Returns `Less` if `lhs` is less than `rhs`, `Equal` if `lhs` is equal to `rhs`,
     /// or `Greater` if `lhs` is greater than `rhs`.
-    fn cmp(&self, lhs: &T, rhs: &T) -> Ordering;
+    fn cmp(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering;
 
     /// Checks if `lhs` is less than `rhs`.
-    fn lt(&self, lhs: &T, rhs: &T) -> bool {
+    fn lt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         self.cmp(lhs, rhs) == Less
     }
 
     /// Checks if `lhs` is less than or equal to `rhs`.
-    fn le(&self, lhs: &T, rhs: &T) -> bool {
+    fn le(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         self.cmp(lhs, rhs) != Greater
     }
 
     /// Checks if `lhs` is greater than or equal to `rhs`.
-    fn ge(&self, lhs: &T, rhs: &T) -> bool {
+    fn ge(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         self.cmp(lhs, rhs) != Less
     }
 
     /// Checks if `lhs` is greater than `rhs`.
-    fn gt(&self, lhs: &T, rhs: &T) -> bool {
+    fn gt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         self.cmp(lhs, rhs) == Greater
     }
 
     /// Checks if `lhs` is equal to `rhs`.
-    fn eq(&self, lhs: &T, rhs: &T) -> bool {
+    fn eq(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         self.cmp(lhs, rhs) == Equal
     }
 
     /// Checks if `lhs` is not equal to `rhs`.
-    fn ne(&self, lhs: &T, rhs: &T) -> bool {
+    fn ne(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         self.cmp(lhs, rhs) != Equal
     }
+}
 
+pub trait OneTypeCmp<Sized? T> for Sized? : Cmp<T> {
     /// Returns the maximum of two values, or `lhs` if the values are equal.
     fn max<'a>(&self, lhs: &'a T, rhs: &'a T) -> &'a T {
         if self.ge(lhs, rhs) { lhs } else { rhs }
@@ -50,9 +52,9 @@ pub trait Cmp<Sized? T> for Sized? {
 }
 
 /// An extension trait providing methods applicable to all comparators.
-pub trait CmpExt<Sized? T> : Cmp<T> {
+pub trait CmpExt<Sized? Lhs, Sized? Rhs = Lhs> : Cmp<Lhs, Rhs> {
     /// Lexicographically orders the comparator with another comparator.
-    fn then<D: Cmp<T>>(self, other: D) -> Lexicographic<Self, D> {
+    fn then<D: Cmp<Lhs, Rhs>>(self, other: D) -> Lexicographic<Self, D> {
         Lexicographic(self, other)
     }
 
@@ -62,57 +64,60 @@ pub trait CmpExt<Sized? T> : Cmp<T> {
     }
 }
 
-impl<Sized? T, Sized? F: Fn(&T, &T) -> Ordering> Cmp<T> for F {
-    fn cmp(&self, lhs: &T, rhs: &T) -> Ordering {
+impl<Sized? Lhs, Sized? Rhs, Sized? F: Fn(&Lhs, &Rhs) -> Ordering> Cmp<Lhs, Rhs> for F {
+    fn cmp(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
         (*self)(lhs, rhs)
     }
 }
 
-impl<Sized? T, C: Cmp<T>> CmpExt<T> for C {
+impl<Sized? T, Sized? C: Cmp<T>> OneTypeCmp<T> for C {
+}
+
+impl<Sized? Lhs, Sized? Rhs, C: Cmp<Lhs, Rhs>> CmpExt<Lhs, Rhs> for C {
 }
 
 /// A comparator that delegates to `Ord::cmp`.
-pub struct Natural<Sized? T: Ord>;
+pub struct Natural<Sized? Lhs: Ord<Rhs>, Sized? Rhs = Lhs>;
 
-impl<Sized? T: Ord> Cmp<T> for Natural<T> {
-    fn cmp(&self, lhs: &T, rhs: &T) -> Ordering {
+impl<Sized? Lhs: Ord<Rhs>, Sized? Rhs> Cmp<Lhs, Rhs> for Natural<Lhs, Rhs> {
+    fn cmp(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
         lhs.cmp(rhs)
     }
 
-    fn lt(&self, lhs: &T, rhs: &T) -> bool {
+    fn lt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         lhs.lt(rhs)
     }
 
-    fn le(&self, lhs: &T, rhs: &T) -> bool {
+    fn le(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         lhs.le(rhs)
     }
 
-    fn ge(&self, lhs: &T, rhs: &T) -> bool {
+    fn ge(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         lhs.ge(rhs)
     }
 
-    fn gt(&self, lhs: &T, rhs: &T) -> bool {
+    fn gt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         lhs.gt(rhs)
     }
 
-    fn eq(&self, lhs: &T, rhs: &T) -> bool {
+    fn eq(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         lhs.eq(rhs)
     }
 
-    fn ne(&self, lhs: &T, rhs: &T) -> bool {
+    fn ne(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         lhs.ne(rhs)
     }
 }
 
 // FIXME: replace with `deriving(Copy)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<Sized? T: Ord> Copy for Natural<T> {
+impl<Sized? Lhs: Ord<Rhs>, Sized? Rhs> Copy for Natural<Lhs, Rhs> {
 }
 
 // FIXME: replace with `deriving(Clone)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<Sized? T: Ord> Clone for Natural<T> {
-    fn clone(&self) -> Natural<T> {
+impl<Sized? Lhs: Ord<Rhs>, Sized? Rhs> Clone for Natural<Lhs, Rhs> {
+    fn clone(&self) -> Natural<Lhs, Rhs> {
         Natural
     }
 }
@@ -121,33 +126,33 @@ impl<Sized? T: Ord> Clone for Natural<T> {
 #[deriving(Copy, Clone)]
 pub struct Rev<C>(C);
 
-impl<Sized? T, C: Cmp<T>> Cmp<T> for Rev<C> {
-    fn cmp(&self, lhs: &T, rhs: &T) -> Ordering {
-        self.0.cmp(rhs, lhs)
+impl<Sized? Lhs, Sized? Rhs, C: Cmp<Lhs, Rhs>> Cmp<Lhs, Rhs> for Rev<C> {
+    fn cmp(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
+        self.0.cmp(lhs, rhs).reverse()
     }
 
-    fn lt(&self, lhs: &T, rhs: &T) -> bool {
-        self.0.lt(rhs, lhs)
+    fn lt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.gt(lhs, rhs)
     }
 
-    fn le(&self, lhs: &T, rhs: &T) -> bool {
-        self.0.le(rhs, lhs)
+    fn le(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.ge(lhs, rhs)
     }
 
-    fn ge(&self, lhs: &T, rhs: &T) -> bool {
-        self.0.ge(rhs, lhs)
+    fn ge(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.le(lhs, rhs)
     }
 
-    fn gt(&self, lhs: &T, rhs: &T) -> bool {
-        self.0.gt(rhs, lhs)
+    fn gt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.lt(lhs, rhs)
     }
 
-    fn eq(&self, lhs: &T, rhs: &T) -> bool {
-        self.0.eq(rhs, lhs)
+    fn eq(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.eq(lhs, rhs)
     }
 
-    fn ne(&self, lhs: &T, rhs: &T) -> bool {
-        self.0.ne(rhs, lhs)
+    fn ne(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.ne(lhs, rhs)
     }
 }
 
@@ -155,8 +160,10 @@ impl<Sized? T, C: Cmp<T>> Cmp<T> for Rev<C> {
 #[deriving(Copy, Clone)]
 pub struct Lexicographic<C, D>(C, D);
 
-impl<Sized? T, C: Cmp<T>, D: Cmp<T>> Cmp<T> for Lexicographic<C, D> {
-    fn cmp(&self, lhs: &T, rhs: &T) -> Ordering {
+impl<Sized? Lhs, Sized? Rhs, C, D> Cmp<Lhs, Rhs> for Lexicographic<C, D>
+    where C: Cmp<Lhs, Rhs>, D: Cmp<Lhs, Rhs> {
+
+    fn cmp(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
         match self.0.cmp(lhs, rhs) {
             Equal => self.1.cmp(lhs, rhs),
             ord => ord,
@@ -166,7 +173,7 @@ impl<Sized? T, C: Cmp<T>, D: Cmp<T>> Cmp<T> for Lexicographic<C, D> {
 
 #[cfg(test)]
 mod test {
-    use super::{Cmp, CmpExt, Natural};
+    use super::{Cmp, CmpExt, Natural, OneTypeCmp};
 
     struct Foo(u8, u8);
 
