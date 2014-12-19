@@ -37,18 +37,13 @@
 //! assert!(cache.get(&2).is_none());
 //! ```
 
-use cmp::{PartialEq, Eq};
-use collections::HashMap;
-use fmt;
-use hash::Hash;
-use iter::{range, Iterator, Extend};
-use mem;
-use ops::Drop;
-use option::Option;
-use option::Option::{Some, None};
-use boxed::Box;
-use ptr;
-use result::Result::{Ok, Err};
+use std::cmp::{PartialEq, Eq};
+use std::collections::HashMap;
+use std::fmt;
+use std::hash::Hash;
+use std::iter::{range, Iterator, Extend};
+use std::mem;
+use std::ptr;
 
 // FIXME(conventions): implement iterators?
 // FIXME(conventions): implement indexing?
@@ -378,7 +373,6 @@ impl<K, V> Drop for LruCache<K, V> {
 
 #[cfg(test)]
 mod tests {
-    use prelude::*;
     use super::LruCache;
 
     fn assert_opt_eq<V: PartialEq>(opt: Option<&V>, v: V) {
