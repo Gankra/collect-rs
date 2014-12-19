@@ -1209,7 +1209,7 @@ macro_rules! iterator_impl {
                 fn size_hint(&self) -> (uint, Option<uint>) {
                     (self.remaining_min, Some(self.remaining_max))
                 }
-            })
+            });
     }
 }
 

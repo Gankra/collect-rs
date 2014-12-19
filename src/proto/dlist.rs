@@ -1058,8 +1058,8 @@ mod test {
 
             assert_eq!(*curs.prev().unwrap(), 3);
             assert_eq!(*curs.prev().unwrap(), 2);
-            assert_eq!(curs.prev(), None)
-            assert_eq!(*curs.prev().unwrap(), 7)
+            assert_eq!(curs.prev(), None);
+            assert_eq!(*curs.prev().unwrap(), 7);
 
             // remove from back
             assert_eq!(curs.remove().unwrap(), 7);
@@ -1071,8 +1071,8 @@ mod test {
 
             assert_eq!(*curs.next().unwrap(), 4);
             assert_eq!(*curs.next().unwrap(), 5);
-            assert_eq!(curs.next(), None)
-            assert_eq!(*curs.next().unwrap(), 2)
+            assert_eq!(curs.next(), None);
+            assert_eq!(*curs.next().unwrap(), 2);
 
             // remove from middle
             assert_eq!(curs.remove().unwrap(), 3);
