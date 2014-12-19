@@ -5,11 +5,11 @@
 use std::iter::Peekable;
 use std::collections::{
     btree_map, btree_set,
-    tree_map, tree_set,
-    trie_map, trie_set,
     vec_map,
     bitv_set
 };
+
+use super::super::{tree_set, tree_map, trie_set, trie_map};
 
 /// Allows an iterator to be do an inner join with another
 /// iterator to combine their values or filter based on their keys.

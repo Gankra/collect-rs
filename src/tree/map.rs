@@ -960,7 +960,7 @@ macro_rules! define_iterator {
                     self.node = ptr::RawPtr::null();
                 }
             }
-        })
+        });
 
         // the forward Iterator impl.
         item!(impl<'a, K, V> Iterator<(&'a K, &'a $($addr_mut)* V)> for $name<'a, K, V> {
@@ -975,7 +975,7 @@ macro_rules! define_iterator {
             fn size_hint(&self) -> (uint, Option<uint>) {
                 (self.remaining_min, Some(self.remaining_max))
             }
-        })
+        });
 
         // the reverse Iterator impl.
         item!(impl<'a, K, V> Iterator<(&'a K, &'a $($addr_mut)* V)> for $rev_name<'a, K, V> {
@@ -987,7 +987,7 @@ macro_rules! define_iterator {
             fn size_hint(&self) -> (uint, Option<uint>) {
                 self.iter.size_hint()
             }
-        })
+        });
     }
 } // end of define_iterator
 
