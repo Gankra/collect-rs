@@ -165,7 +165,7 @@ impl<T: Ord> BinaryHeap<T> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     /// let heap: BinaryHeap<uint> = BinaryHeap::new();
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -181,7 +181,7 @@ impl<T: Ord> BinaryHeap<T> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     /// let heap: BinaryHeap<uint> = BinaryHeap::with_capacity(10u);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -195,7 +195,7 @@ impl<T: Ord> BinaryHeap<T> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     /// let heap = BinaryHeap::from_vec(vec![9i, 1, 2, 7, 3, 2]);
     /// ```
     pub fn from_vec(xs: Vec<T>) -> BinaryHeap<T> {
@@ -228,7 +228,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     /// let heap = BinaryHeap::from_vec(vec![1i, 2, 3, 4]);
     ///
     /// // Print 1, 2, 3, 4 in arbitrary order
@@ -248,7 +248,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     /// let pq = BinaryHeap::from_vec(vec![1i, 2, 3, 4]);
     ///
     /// // Print 1, 2, 3, 4 in arbitrary order
@@ -267,7 +267,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let mut heap = BinaryHeap::new();
     /// assert_eq!(heap.top(), None);
@@ -287,7 +287,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let heap: BinaryHeap<uint> = BinaryHeap::with_capacity(100u);
     /// assert!(heap.capacity() >= 100u);
@@ -309,7 +309,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let mut heap: BinaryHeap<uint> = BinaryHeap::new();
     /// heap.reserve_exact(100u);
@@ -328,7 +328,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let mut heap: BinaryHeap<uint> = BinaryHeap::new();
     /// heap.reserve(100u);
@@ -351,7 +351,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let mut heap = BinaryHeap::from_vec(vec![1i, 3]);
     ///
@@ -378,7 +378,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let mut heap = BinaryHeap::new();
     /// heap.push(3i);
@@ -401,7 +401,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let mut heap = BinaryHeap::new();
     /// heap.push(1i);
@@ -433,7 +433,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let mut heap = BinaryHeap::new();
     ///
@@ -459,7 +459,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let heap = BinaryHeap::from_vec(vec![1i, 2, 3, 4, 5, 6, 7]);
     /// let vec = heap.into_vec();
@@ -477,7 +477,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     /// # Examples
     ///
     /// ```
-    /// use std::collections::BinaryHeap;
+    /// use collect::BinaryHeap;
     ///
     /// let mut heap = BinaryHeap::from_vec(vec![1i, 2, 4, 5, 7]);
     /// heap.push(6);
