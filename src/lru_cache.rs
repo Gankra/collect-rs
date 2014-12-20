@@ -222,12 +222,12 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn remove(&mut self, k: &K) -> Option<V> {
-        let mut removed = self.map.remove(&KeyRef{k: k});
-        removed.as_mut().map(|node| {
-            let node_ptr: *mut LruEntry<K,V> = &mut **node;
+        let removed = self.map.remove(&KeyRef{k: k});
+        removed.map(|mut node| {
+            let node_ptr: *mut LruEntry<K,V> = &mut *node;
             self.detach(node_ptr);
-        });
-        removed.map(|node| node.value)
+            node.value
+        })
     }
 
     /// Return the maximum number of key-value pairs the cache can hold.
