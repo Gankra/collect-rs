@@ -36,6 +36,7 @@ extern crate traverse;
 // Re-Exports
 
 pub use blist::BList;
+pub use slist::SList;
 pub use enum_set::EnumSet;
 pub use immut_slist::ImmutSList;
 pub use interval_heap::IntervalHeap;
