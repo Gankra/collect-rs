@@ -12,25 +12,25 @@ struct Element<T> {
     next: Link<T>
 }
 
-struct SList<T> {
+pub struct SList<T> {
     head: Link<T>,
     tail: *mut Element<T>
 }
 
 // Until Some(T) has been returned by next, curr will be null
-struct Items<'a, T: 'a> {
+pub struct Items<'a, T: 'a> {
     list: &'a SList<T>,
     curr: *mut Element<T>
 }
 
 // Until Some(T) has been returned by next, curr will be null
-struct MutItems<'a, T: 'a> {
+pub struct MutItems<'a, T: 'a> {
     list: &'a mut SList<T>,
     prev: *mut Element<T>,
     curr: *mut Element<T>
 }
 
-struct MoveItems<'a, T: 'a> {
+pub struct MoveItems<'a, T: 'a> {
     list: &'a mut SList<T>
 }
 
