@@ -222,10 +222,12 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn remove(&mut self, k: &K) -> Option<V> {
-        match self.map.remove(&KeyRef{k: k}) {
-            None => None,
-            Some(lru_entry) => Some(lru_entry.value)
-        }
+        let mut removed = self.map.remove(&KeyRef{k: k});
+        removed.as_mut().map(|node| {
+            let node_ptr: *mut LruEntry<K,V> = &mut **node;
+            self.detach(node_ptr);
+        });
+        removed.map(|node| node.value)
     }
 
     /// Return the maximum number of key-value pairs the cache can hold.
@@ -450,6 +452,27 @@ mod tests {
         assert_eq!(cache.to_string(), "{3: 30, 6: 60, 2: 22}");
         cache.set_capacity(2);
         assert_eq!(cache.to_string(), "{3: 30, 6: 60}");
+    }
+
+    #[test]
+    fn test_remove() {
+        let mut cache: LruCache<int, int> = LruCache::new(3);
+        cache.insert(1, 10);
+        cache.insert(2, 20);
+        cache.insert(3, 30);
+        cache.insert(4, 40);
+        cache.insert(5, 50);
+        cache.remove(&3);
+        cache.remove(&4);
+        assert!(cache.get(&3).is_none());
+        assert!(cache.get(&4).is_none());
+        cache.insert(6, 60);
+        cache.insert(7, 70);
+        cache.insert(8, 80);
+        assert!(cache.get(&5).is_none());
+        assert_opt_eq(cache.get(&6), 60);
+        assert_opt_eq(cache.get(&7), 70);
+        assert_opt_eq(cache.get(&8), 80);
     }
 
     #[test]
