@@ -1,7 +1,7 @@
-// Singly Linked List.
+//! Singly Linked List.
 
-#![feature(unsafe_destructor)]
 #![allow(dead_code)]
+#![feature(unsafe_destructor)]
 
 use std::{ptr, mem, fmt};
 
