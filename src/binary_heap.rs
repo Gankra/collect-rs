@@ -141,13 +141,13 @@ use std::default::Default;
 use std::mem::{zeroed, replace, swap};
 use std::{slice, ptr, vec};
 
-use cmp::{mod, Cmp};
+use cmp::{mod, Compare};
 
 /// A priority queue implemented with a binary heap.
 ///
 /// This will be a max-heap.
 #[deriving(Clone)]
-pub struct BinaryHeap<T, C: Cmp<T> = cmp::Natural<T>> {
+pub struct BinaryHeap<T, C: Compare<T> = cmp::Natural<T>> {
     data: Vec<T>,
     cmp: C,
 }
@@ -203,7 +203,7 @@ impl<T: Ord> BinaryHeap<T> {
     }
 }
 
-impl<T, C: Cmp<T>> BinaryHeap<T, C> {
+impl<T, C: Compare<T>> BinaryHeap<T, C> {
     pub fn with_cmp(cmp: C) -> BinaryHeap<T, C> {
         BinaryHeap { data: vec![], cmp: cmp }
     }
@@ -415,7 +415,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
     pub fn push_pop(&mut self, mut item: T) -> T {
         match self.data.get_mut(0) {
             None => return item,
-            Some(top) => if self.cmp.gt(top, &item) {
+            Some(top) => if self.cmp.compares_gt(top, &item) {
                 swap(&mut item, top);
             } else {
                 return item;
@@ -507,7 +507,7 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
 
             while pos > start {
                 let parent = (pos - 1) >> 1;
-                if self.cmp.gt(&new, &self.data[parent]) {
+                if self.cmp.compares_gt(&new, &self.data[parent]) {
                     let x = replace(&mut self.data[parent], zeroed());
                     ptr::write(&mut self.data[pos], x);
                     pos = parent;
@@ -527,7 +527,8 @@ impl<T, C: Cmp<T>> BinaryHeap<T, C> {
             let mut child = 2 * pos + 1;
             while child < end {
                 let right = child + 1;
-                if right < end && !self.cmp.gt(&self.data[child], &self.data[right]) {
+                if right < end &&
+                        !self.cmp.compares_gt(&self.data[child], &self.data[right]) {
                     child = right;
                 }
                 let x = replace(&mut self.data[child], zeroed());
@@ -605,7 +606,7 @@ impl<T: Ord> FromIterator<T> for BinaryHeap<T> {
     }
 }
 
-impl<T, C: Cmp<T>> Extend<T> for BinaryHeap<T, C> {
+impl<T, C: Compare<T>> Extend<T> for BinaryHeap<T, C> {
     fn extend<Iter: Iterator<T>>(&mut self, mut iter: Iter) {
         let (lower, _) = iter.size_hint();
 
@@ -822,7 +823,7 @@ mod tests {
 
     #[test]
     fn test_comparator() {
-        use cmp::{mod, CmpExt};
+        use cmp::{mod, CompareExt};
 
         let xs = vec![2u, 3, 4, 5, 8, 9];
         let mut heap = BinaryHeap::from_vec_cmp(xs.clone(), cmp::Natural.rev());
