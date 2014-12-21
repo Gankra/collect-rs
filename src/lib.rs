@@ -62,6 +62,7 @@ mod bench;
 pub mod iter;
 
 pub mod blist;
+pub mod slist;
 pub mod enum_set;
 pub mod immut_slist;
 pub mod interval_heap;
