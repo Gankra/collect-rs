@@ -10,7 +10,7 @@
 
 //! Slim task-local reference-counted boxes (the `SRc<T>` type).
 //!
-//! `SRc` is similar to `Rc`, except it only has 8 bytes of overhead instead of 16.
+//! Compared to an `Rc<T>`, `SRc<T>` has half of the memory overhead.
 //! This is done in the spirit of paying only for what you use. Most people don't
 //! use the weak reference count, and it's silly to bloat all reference counts with
 //! a rarely used feature.
@@ -260,9 +260,9 @@ impl<T> Deref<T> for SRc<T> {
 }
 
 // kept out of line to guide inlining.
-unsafe fn do_drop<T>(t: &mut SRc<T>) {
-    ptr::read(&**t); // destroy the contained object
-    deallocate(t._ptr as *mut u8, size_of::<RcBox<T>>(), min_align_of::<RcBox<T>>());
+unsafe fn do_drop<T>(this: &mut SRc<T>) {
+    ptr::read(&**this); // destroy the contained object
+    deallocate(this._ptr as *mut u8, size_of::<RcBox<T>>(), min_align_of::<RcBox<T>>());
 }
 
 #[unsafe_destructor]
