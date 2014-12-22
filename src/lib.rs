@@ -35,6 +35,7 @@ extern crate traverse;
 
 // Re-Exports
 
+pub use binary_heap::BinaryHeap;
 pub use blist::BList;
 pub use enum_set::EnumSet;
 pub use immut_slist::ImmutSList;
@@ -58,8 +59,10 @@ mod bench;
 
 // publics
 
+pub mod cmp;
 pub mod iter;
 
+pub mod binary_heap;
 pub mod blist;
 pub mod enum_set;
 pub mod immut_slist;
