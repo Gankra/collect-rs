@@ -30,6 +30,8 @@
 #![feature(old_orphan_check)]
 
 #[cfg(test)] extern crate test;
+
+extern crate alloc;
 extern crate core;
 extern crate traverse;
 
@@ -43,6 +45,8 @@ pub use enum_set::EnumSet;
 pub use immut_slist::ImmutSList;
 pub use interval_heap::IntervalHeap;
 pub use lru_cache::LruCache;
+//pub use sarc::SArc;
+pub use src::SRc;
 pub use tree_map::TreeMap;
 pub use tree_set::TreeSet;
 pub use trie_map::TrieMap;
@@ -69,6 +73,8 @@ pub mod enum_set;
 pub mod immut_slist;
 pub mod interval_heap;
 pub mod lru_cache;
+//pub mod sarc;
+pub mod src;
 
 pub mod tree_map {
     pub use tree::map::*;
@@ -89,4 +95,3 @@ pub mod trie_set {
 
 
 pub mod proto;
-
