@@ -26,7 +26,7 @@
 #![feature(globs)]
 #![feature(macro_rules)]
 
-extern crate test;
+#[cfg(test)] extern crate test;
 extern crate core;
 extern crate traverse;
 
@@ -52,7 +52,7 @@ pub use trie_set::TrieSet;
 
 mod tree;
 mod trie;
-mod bench;
+#[cfg(test)] mod bench;
 
 
 
