@@ -17,19 +17,19 @@ pub struct SList<T> {
 }
 
 // Until Some(T) has been returned by next, curr will be null
-pub struct Items<'a, T: 'a> {
+pub struct Iter<'a, T: 'a> {
     list: &'a SList<T>,
     curr: *mut Element<T>
 }
 
 // Until Some(T) has been returned by next, curr will be null
-pub struct MutItems<'a, T: 'a> {
+pub struct IterMut<'a, T: 'a> {
     list: &'a mut SList<T>,
     prev: *mut Element<T>,
     curr: *mut Element<T>
 }
 
-pub struct MoveItems<'a, T: 'a> {
+pub struct IntoIter<'a, T: 'a> {
     list: &'a mut SList<T>
 }
 
@@ -114,16 +114,16 @@ impl<T> SList<T> {
         }
     }
     #[inline]
-    pub fn iter<'a>(&'a self) -> Items<'a, T> {
-        Items{list: self, curr: ptr::null_mut()}
+    pub fn iter<'a>(&'a self) -> Iter<'a, T> {
+        Iter{list: self, curr: ptr::null_mut()}
     }
     #[inline]
-    pub fn iter_mut<'a>(&'a mut self) -> MutItems<'a, T> {
-        MutItems{list: self, prev: ptr::null_mut(), curr: ptr::null_mut()}
+    pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, T> {
+        IterMut{list: self, prev: ptr::null_mut(), curr: ptr::null_mut()}
     }
     #[inline]
-    pub fn into_iter<'a>(&'a mut self) -> MoveItems<'a, T> {
-        MoveItems{list: self}
+    pub fn into_iter<'a>(&'a mut self) -> IntoIter<'a, T> {
+        IntoIter{list: self}
     }
 }
 
@@ -181,7 +181,7 @@ impl<T> Drop for SList<T> {
     }
 }
 
-impl<'a, T> Iterator<&'a T> for Items<'a, T> {
+impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
     fn next(&mut self) -> Option<&'a T> {
         if self.curr == self.list.tail {
             None
@@ -199,13 +199,13 @@ impl<'a, T> Iterator<&'a T> for Items<'a, T> {
     }
 }
 
-impl<'a, T> Clone for Items<'a, T> {
-    fn clone(&self) -> Items<'a, T> {
-        Items{list: &*self.list, curr: self.curr}
+impl<'a, T> Clone for Iter<'a, T> {
+    fn clone(&self) -> Iter<'a, T> {
+        Iter{list: &*self.list, curr: self.curr}
     }
 }
 
-impl<'a, T> Iterator<&'a mut T> for MutItems<'a, T> {
+impl<'a, T> Iterator<&'a mut T> for IterMut<'a, T> {
     fn next(&mut self) -> Option<&'a mut T> {
         // Check to see if the iterator is empty or if the iterator is at the
         // end of the list.
@@ -226,7 +226,7 @@ impl<'a, T> Iterator<&'a mut T> for MutItems<'a, T> {
     }
 }
 
-impl<'a, T> MutItems<'a, T> {
+impl<'a, T> IterMut<'a, T> {
     pub fn insert_after(&mut self, value: T) {
         if self.curr.is_null() {
             self.list.push_front(value);
@@ -262,7 +262,7 @@ impl<'a, T> MutItems<'a, T> {
     }
 }
 
-impl<'a, T> Iterator<T> for MoveItems<'a, T> {
+impl<'a, T> Iterator<T> for IntoIter<'a, T> {
     fn next(&mut self) -> Option<T> {
         self.list.pop_front()
     }
