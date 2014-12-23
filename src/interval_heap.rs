@@ -140,7 +140,7 @@ impl<T: Ord> Default for IntervalHeap<T> {
 }
 
 /// `IntervalHeap` iterator.
-pub type Items<'a, T> = slice::Items<'a, T>;
+pub type Items<'a, T> = slice::Iter<'a, T>;
 
 impl<T: Ord> IntervalHeap<T> {
     /// Creates an empty `IntervalHeap`.

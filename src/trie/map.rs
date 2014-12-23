@@ -23,7 +23,7 @@ use std::iter;
 use std::ptr;
 use std::hash::{Writer, Hash};
 
-use std::slice::{Items, MutItems};
+use std::slice::{Iter, IterMut};
 use std::slice;
 
 // FIXME(conventions): implement bounded iterators
@@ -196,6 +196,7 @@ impl<T> TrieMap<T> {
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn keys<'r>(&'r self) -> Keys<'r, T> {
         fn first<A, B>((a, _): (A, B)) -> A { a }
+        let first: fn((uint, &'r T)) -> uint = first; // coerce to fn pointer
 
         self.iter().map(first)
     }
@@ -205,6 +206,7 @@ impl<T> TrieMap<T> {
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn values<'r>(&'r self) -> Values<'r, T> {
         fn second<A, B>((_, b): (A, B)) -> B { b }
+        let second: fn((uint, &'r T)) -> &'r T = second; // coerce to fn pointer
 
         self.iter().map(second)
     }
@@ -1077,7 +1079,7 @@ impl<'a, T> VacantEntry<'a, T> {
 
 /// A forward iterator over a map.
 pub struct Entries<'a, T:'a> {
-    stack: [slice::Items<'a, TrieNode<T>>, .. MAX_DEPTH],
+    stack: [slice::Iter<'a, TrieNode<T>>, .. MAX_DEPTH],
     length: uint,
     remaining_min: uint,
     remaining_max: uint
@@ -1086,7 +1088,7 @@ pub struct Entries<'a, T:'a> {
 /// A forward iterator over the key-value pairs of a map, with the
 /// values being mutable.
 pub struct MutEntries<'a, T:'a> {
-    stack: [slice::MutItems<'a, TrieNode<T>>, .. MAX_DEPTH],
+    stack: [slice::IterMut<'a, TrieNode<T>>, .. MAX_DEPTH],
     length: uint,
     remaining_min: uint,
     remaining_max: uint

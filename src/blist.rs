@@ -235,12 +235,12 @@ trait Traverse<I> {
     fn traverse(self) -> I;
 }
 
-impl<'a, T> Traverse<ring_buf::Items<'a, T>> for &'a RingBuf<T> {
-    fn traverse(self) -> ring_buf::Items<'a, T> { self.iter() }
+impl<'a, T> Traverse<ring_buf::Iter<'a, T>> for &'a RingBuf<T> {
+    fn traverse(self) -> ring_buf::Iter<'a, T> { self.iter() }
 }
 
-impl<'a, T> Traverse<ring_buf::MutItems<'a, T>> for &'a mut RingBuf<T> {
-    fn traverse(self) -> ring_buf::MutItems<'a, T> { self.iter_mut() }
+impl<'a, T> Traverse<ring_buf::IterMut<'a, T>> for &'a mut RingBuf<T> {
+    fn traverse(self) -> ring_buf::IterMut<'a, T> { self.iter_mut() }
 }
 
 /*
@@ -251,12 +251,12 @@ impl<T> Traverse<ring_buf::MoveItems<T>> for RingBuf<T> {
 
 /// A by-ref iterator for a BList
 pub struct Items<'a, T: 'a> {
-    iter: AbsItems<dlist::Items<'a, RingBuf<T>>, ring_buf::Items<'a, T>>,
+    iter: AbsItems<dlist::Iter<'a, RingBuf<T>>, ring_buf::Iter<'a, T>>,
 }
 
 /// A by-mut-ref iterator for a BList
 pub struct MutItems<'a, T: 'a> {
-    iter: AbsItems<dlist::MutItems<'a, RingBuf<T>>, ring_buf::MutItems<'a, T>>,
+    iter: AbsItems<dlist::IterMut<'a, RingBuf<T>>, ring_buf::IterMut<'a, T>>,
 }
 /*
 /// A by-value iterator for a BList
