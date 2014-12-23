@@ -231,13 +231,13 @@ impl<K: Ord+Eq,
     }
 }
 
-impl<'a, K: Ord> OrderedSetIterator<&'a K> for btree_set::Items<'a, K> {}
-impl<'a, K: Ord, V> OrderedMapIterator<&'a K, &'a V> for btree_map::Entries<'a, K, V> {}
+impl<'a, K: Ord> OrderedSetIterator<&'a K> for btree_set::Iter<'a, K> {}
+impl<'a, K: Ord, V> OrderedMapIterator<&'a K, &'a V> for btree_map::Iter<'a, K, V> {}
 impl<'a, K: Ord> OrderedSetIterator<&'a K> for tree_set::SetItems<'a, K> {}
 impl<'a, K: Ord, V> OrderedMapIterator<&'a K, &'a V> for tree_map::Entries<'a, K, V> {}
 impl<'a> OrderedSetIterator<uint> for trie_set::SetItems<'a> {}
 impl<'a, V> OrderedMapIterator<uint, &'a V> for trie_map::Entries<'a, V> {}
-impl<'a, V> OrderedMapIterator<uint, &'a V> for vec_map::Entries<'a, V> {}
+impl<'a, V> OrderedMapIterator<uint, &'a V> for vec_map::Iter<'a, V> {}
 impl<'a> OrderedSetIterator<uint> for bitv_set::BitPositions<'a> {}
 
 

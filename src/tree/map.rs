@@ -229,6 +229,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn keys<'a>(&'a self) -> Keys<'a, K, V> {
         fn first<A, B>((a, _): (A, B)) -> A { a }
+        let first: fn((&'a K, &'a V)) -> &'a K = first; // coerce to fn pointer
 
         self.iter().map(first)
     }
@@ -253,6 +254,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn values<'a>(&'a self) -> Values<'a, K, V> {
         fn second<A, B>((_, b): (A, B)) -> B { b }
+        let second: fn((&'a K, &'a V)) -> &'a V = second; // coerce to fn pointer
 
         self.iter().map(second)
     }

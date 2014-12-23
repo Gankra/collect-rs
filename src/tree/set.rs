@@ -204,6 +204,7 @@ impl<T: Ord> TreeSet<T> {
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn into_iter(self) -> MoveSetItems<T> {
         fn first<A, B>((a, _): (A, B)) -> A { a }
+        let first: fn((T, ())) -> T = first; // coerce to fn pointer
 
         self.map.into_iter().map(first)
     }
