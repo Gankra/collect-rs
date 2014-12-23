@@ -8,5 +8,11 @@ pub use self::ordered_iter::{
     OuterJoinIterator
 };
 
+pub use self::sample::{
+    Sample,
+    SampleIterator,
+};
+
 mod string_joiner;
 mod ordered_iter;
+mod sample;
