@@ -53,7 +53,7 @@ const MAX_DEPTH: uint = uint::BITS / SHIFT;
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// use collect::TrieMap;
 ///
 /// let mut map = TrieMap::new();
@@ -158,7 +158,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     /// let mut map: TrieMap<&str> = TrieMap::new();
     /// ```
@@ -173,7 +173,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     /// let map: TrieMap<&str> = [(1, "a"), (2, "b"), (3, "c")].iter().map(|&x| x).collect();
     ///
@@ -215,7 +215,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     /// let map: TrieMap<&str> = [(3, "c"), (1, "a"), (2, "b")].iter().map(|&x| x).collect();
     ///
@@ -239,7 +239,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     /// let mut map: TrieMap<int> = [(1, 2), (2, 4), (3, 6)].iter().map(|&x| x).collect();
     ///
@@ -266,7 +266,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     ///
     /// let mut a = TrieMap::new();
@@ -282,7 +282,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     ///
     /// let mut a = TrieMap::new();
@@ -298,7 +298,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     ///
     /// let mut a = TrieMap::new();
@@ -323,7 +323,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     ///
     /// let mut map = TrieMap::new();
@@ -356,7 +356,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     ///
     /// let mut map = TrieMap::new();
@@ -380,7 +380,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     ///
     /// let mut map = TrieMap::new();
@@ -408,7 +408,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     ///
     /// let mut map = TrieMap::new();
@@ -439,7 +439,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     ///
     /// let mut map = TrieMap::new();
@@ -557,7 +557,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     /// let map: TrieMap<&str> = [(2, "a"), (4, "b"), (6, "c")].iter().map(|&x| x).collect();
     ///
@@ -574,7 +574,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     /// let map: TrieMap<&str> = [(2, "a"), (4, "b"), (6, "c")].iter().map(|&x| x).collect();
     ///
@@ -599,7 +599,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     /// let mut map: TrieMap<&str> = [(2, "a"), (4, "b"), (6, "c")].iter().map(|&x| x).collect();
     ///
@@ -624,7 +624,7 @@ impl<T> TrieMap<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieMap;
     /// let mut map: TrieMap<&str> = [(2, "a"), (4, "b"), (6, "c")].iter().map(|&x| x).collect();
     ///
