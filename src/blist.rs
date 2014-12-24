@@ -6,6 +6,8 @@ use std::hash::{Hash, Writer};
 use std::num::Int;
 use traverse::Traversal;
 
+use quickcheck::{Arbitrary, Gen};
+
 /// A skeleton implementation of a BList, based on the [Space-Efficient Linked List]
 /// (http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html) described in
 /// Open Data Structures.
@@ -24,6 +26,13 @@ pub struct BList<T> {
     list: DList<RingBuf<T>>,
     b: uint,
     len: uint,
+}
+
+impl<T: Arbitrary> Arbitrary for BList<T> {
+    fn arbitrary<G: Gen>(g: &mut G) -> BList<T> {
+        let v: Vec<T> = Arbitrary::arbitrary(g);
+        v.into_iter().collect()
+    }
 }
 
 // Constructors

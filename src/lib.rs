@@ -25,9 +25,12 @@
 #![feature(unboxed_closures)]
 #![feature(globs)]
 #![feature(macro_rules)]
+#![feature(phase)]
 
 #[cfg(test)] extern crate test;
 extern crate core;
+extern crate quickcheck;
+#[cfg(test)] #[phase(plugin)] extern crate quickcheck_macros;
 extern crate traverse;
 
 
@@ -85,4 +88,3 @@ pub mod trie_set {
 
 
 pub mod proto;
-

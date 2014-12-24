@@ -4,6 +4,8 @@ use std::iter;
 use std::fmt::{mod, Show};
 use std::hash::{Hash, Writer};
 
+use quickcheck::{Arbitrary, Gen};
+
 // FIXME(Gankro): Although the internal interface we have here is *safer* than std's DList,
 // it's still by no means safe. Any claims we make here about safety in the internal APIs
 // are complete hand-waving. For now I'm leaving it like this while we work on better solutions.
@@ -108,6 +110,13 @@ pub struct DList<T> {
     len: uint,
     head: Link<T>,
     tail: Raw<T>,
+}
+
+impl<T: Arbitrary> Arbitrary for DList<T> {
+    fn arbitrary<G: Gen>(g: &mut G) -> DList<T> {
+        let v: Vec<T> = Arbitrary::arbitrary(g);
+        v.into_iter().collect()
+    }
 }
 
 impl<T> DList<T> {

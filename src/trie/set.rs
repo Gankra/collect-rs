@@ -18,6 +18,8 @@ use std::fmt::Show;
 use std::iter::Peekable;
 use std::hash::Hash;
 
+use quickcheck::{Arbitrary, Gen};
+
 use trie_map::{TrieMap, Entries};
 
 /// A set implemented as a radix trie.
@@ -52,6 +54,13 @@ use trie_map::{TrieMap, Entries};
 #[deriving(Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TrieSet {
     map: TrieMap<()>
+}
+
+impl Arbitrary for TrieSet {
+    fn arbitrary<G: Gen>(g: &mut G) -> TrieSet {
+        let v: Vec<uint> = Arbitrary::arbitrary(g);
+        v.into_iter().collect()
+    }
 }
 
 impl Show for TrieSet {

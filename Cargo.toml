@@ -9,10 +9,8 @@ authors = ["Alexis Beingessner <a.beingessner@gmail.com>",
 
 [dependencies]
 traverse = "*"
-
-
-
-# FIXME rust-lang/rust#20127: Refreshing ICE
+quickcheck = "*"
+quickcheck_macros = "*"
 
 [profile.dev]
 debug = false
