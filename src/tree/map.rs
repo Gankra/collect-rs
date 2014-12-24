@@ -27,7 +27,7 @@ use std::hash::{Writer, Hash};
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// use collect::TreeMap;
 ///
 /// let mut map = TreeMap::new();
@@ -72,7 +72,7 @@ use std::hash::{Writer, Hash};
 /// The easiest way to use `TreeMap` with a custom type as keys is to implement `Ord`.
 /// We must also implement `PartialEq`, `Eq` and `PartialOrd`.
 ///
-/// ```
+/// ```rust
 /// use collect::TreeMap;
 ///
 /// // We need `Eq` and `PartialEq`, these can be derived.
@@ -203,7 +203,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     /// let mut map: TreeMap<&str, int> = TreeMap::new();
     /// ```
@@ -214,7 +214,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
     /// map.insert("a", 1i);
@@ -239,7 +239,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
     /// map.insert("a", 1i);
@@ -263,7 +263,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
     /// map.insert("a", 1i);
@@ -289,7 +289,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
     /// map.insert("a", 1i);
@@ -310,7 +310,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
     /// map.insert("a", 1i);
@@ -342,7 +342,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
     /// map.insert("a", 1i);
@@ -367,7 +367,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
     /// map.insert("a", 1i);
@@ -395,7 +395,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut a = TreeMap::new();
@@ -410,7 +410,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut a = TreeMap::new();
@@ -426,7 +426,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut a = TreeMap::new();
@@ -453,7 +453,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
@@ -476,7 +476,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
@@ -505,7 +505,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
@@ -535,7 +535,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
@@ -567,7 +567,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
@@ -592,7 +592,7 @@ impl<K, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::tree_map::TreeMap;
     ///
     /// fn get_headers() -> TreeMap<String, String> {
@@ -622,7 +622,7 @@ impl<K, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// let mut t = collect::tree_map::TreeMap::new();
     /// t.insert("Content-Type", "application/xml");
     /// t.insert("User-Agent", "Curl-Rust/0.1");
@@ -695,7 +695,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
@@ -717,7 +717,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
@@ -753,7 +753,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
@@ -787,7 +787,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();

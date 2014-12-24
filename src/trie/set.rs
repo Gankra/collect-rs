@@ -24,7 +24,7 @@ use trie_map::{TrieMap, Entries};
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// use collect::TrieSet;
 ///
 /// let mut set = TrieSet::new();
@@ -77,7 +77,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     /// let mut set = TrieSet::new();
     /// ```
@@ -92,7 +92,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let set: TrieSet = [1, 2, 3, 4, 5].iter().map(|&x| x).collect();
@@ -115,7 +115,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let mut set = TrieSet::new();
@@ -140,7 +140,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let set: TrieSet = [2, 4, 6, 8].iter().map(|&x| x).collect();
@@ -157,7 +157,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let set: TrieSet = [2, 4, 6, 8].iter().map(|&x| x).collect();
@@ -173,7 +173,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = [1, 2, 3].iter().map(|&x| x).collect();
@@ -201,7 +201,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = [1, 2, 3].iter().map(|&x| x).collect();
@@ -227,7 +227,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = [1, 2, 3].iter().map(|&x| x).collect();
@@ -250,7 +250,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = [1, 2, 3].iter().map(|&x| x).collect();
@@ -273,7 +273,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let mut v = TrieSet::new();
@@ -289,7 +289,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let mut v = TrieSet::new();
@@ -304,7 +304,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let mut v = TrieSet::new();
@@ -320,7 +320,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let set: TrieSet = [1, 2, 3].iter().map(|&x| x).collect();
@@ -338,7 +338,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = [1, 2, 3].iter().map(|&x| x).collect();
@@ -360,7 +360,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let sup: TrieSet = [1, 2, 3].iter().map(|&x| x).collect();
@@ -382,7 +382,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let sub: TrieSet = [1, 2].iter().map(|&x| x).collect();
@@ -408,7 +408,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let mut set = TrieSet::new();
@@ -428,7 +428,7 @@ impl TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let mut set = TrieSet::new();
@@ -468,7 +468,7 @@ impl BitOr<TrieSet, TrieSet> for TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
@@ -490,7 +490,7 @@ impl<'a, 'b> BitOr<&'b TrieSet, TrieSet> for &'a TrieSet {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
@@ -513,7 +513,7 @@ impl BitAnd<TrieSet, TrieSet> for TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
@@ -535,7 +535,7 @@ impl<'a, 'b> BitAnd<&'b TrieSet, TrieSet> for &'a TrieSet {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
@@ -558,7 +558,7 @@ impl BitXor<TrieSet, TrieSet> for TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
@@ -580,7 +580,7 @@ impl<'a, 'b> BitXor<&'b TrieSet, TrieSet> for &'a TrieSet {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
@@ -603,7 +603,7 @@ impl Sub<TrieSet, TrieSet> for TrieSet {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
@@ -625,7 +625,7 @@ impl<'a, 'b> Sub<&'b TrieSet, TrieSet> for &'a TrieSet {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::TrieSet;
     ///
     /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();

@@ -7,7 +7,7 @@ pub trait StringJoiner {
   ///
   /// # Example
   ///
-  /// ```
+  /// ```rust
   /// use collect::iter::StringJoiner;
   ///
   /// let vec = vec![1u,2,3];

@@ -50,7 +50,7 @@ use tree_map::{TreeMap, Entries, RevEntries, MoveEntries};
 /// The easiest way to use `TreeSet` with a custom type is to implement `Ord`.
 /// We must also implement `PartialEq`, `Eq` and `PartialOrd`.
 ///
-/// ```
+/// ```rust
 /// use collect::TreeSet;
 ///
 /// // We need `Eq` and `PartialEq`, these can be derived.
@@ -142,7 +142,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     /// let mut set: TreeSet<int> = TreeSet::new();
     /// ```
@@ -154,7 +154,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     /// let set: TreeSet<int> = [1i, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
@@ -173,7 +173,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     /// let set: TreeSet<int> = [1i, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
@@ -192,7 +192,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     /// let set: TreeSet<int> = [1i, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
@@ -214,7 +214,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     /// let set: TreeSet<int> = [2, 4, 6, 8].iter().map(|&x| x).collect();
     ///
@@ -233,7 +233,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     /// let set: TreeSet<int> = [2, 4, 6, 8].iter().map(|&x| x).collect();
     ///
@@ -250,7 +250,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = [1, 2, 3].iter().map(|&x| x).collect();
@@ -278,7 +278,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = [1, 2, 3].iter().map(|&x| x).collect();
@@ -305,7 +305,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = [1, 2, 3].iter().map(|&x| x).collect();
@@ -329,7 +329,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = [1, 2, 3].iter().map(|&x| x).collect();
@@ -352,7 +352,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let mut v = TreeSet::new();
@@ -368,7 +368,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let mut v = TreeSet::new();
@@ -383,7 +383,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let mut v = TreeSet::new();
@@ -403,7 +403,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let set: TreeSet<int> = [1i, 2, 3].iter().map(|&x| x).collect();
@@ -423,7 +423,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = [1i, 2, 3].iter().map(|&x| x).collect();
@@ -444,7 +444,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let sup: TreeSet<int> = [1i, 2, 3].iter().map(|&x| x).collect();
@@ -485,7 +485,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let sub: TreeSet<int> = [1i, 2].iter().map(|&x| x).collect();
@@ -510,7 +510,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let mut set = TreeSet::new();
@@ -532,7 +532,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let mut set = TreeSet::new();
@@ -674,7 +674,7 @@ impl<T: Ord + Clone> BitOr<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
@@ -696,7 +696,7 @@ impl<'a, 'b, T: Ord + Clone> BitOr<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
@@ -719,7 +719,7 @@ impl<T: Ord + Clone> BitAnd<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
@@ -741,7 +741,7 @@ impl<'a, 'b, T: Ord + Clone> BitAnd<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
@@ -764,7 +764,7 @@ impl<T: Ord + Clone> BitXor<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
@@ -786,7 +786,7 @@ impl<'a, 'b, T: Ord + Clone> BitXor<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
@@ -809,7 +809,7 @@ impl<T: Ord + Clone> Sub<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
@@ -831,7 +831,7 @@ impl<'a, 'b, T: Ord + Clone> Sub<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> 
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust
     /// use collect::TreeSet;
     ///
     /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();

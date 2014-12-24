@@ -94,7 +94,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::LruCache;
     /// let mut cache: LruCache<int, &str> = LruCache::new(10);
     /// ```
@@ -123,7 +123,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::LruCache;
     /// let mut cache = LruCache::new(2);
     ///
@@ -168,7 +168,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::LruCache;
     /// let mut cache = LruCache::new(2);
     ///
@@ -209,7 +209,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::LruCache;
     /// let mut cache = LruCache::new(2);
     ///
@@ -234,7 +234,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::LruCache;
     /// let mut cache: LruCache<int, &str> = LruCache::new(2);
     /// assert_eq!(cache.capacity(), 2);
@@ -255,7 +255,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use collect::LruCache;
     /// let mut cache = LruCache::new(2);
     ///
