@@ -158,7 +158,7 @@ impl<T: Ord> IntervalHeap<T> {
 
     /// Creates an `IntervalHeap` from a vector.
     pub fn from_vec(mut v: Vec<T>) -> IntervalHeap<T> {
-        for to in range(2, v.len()) {
+        for to in 2 .. v.len() + 1 {
             inteval_heap_push(v.slice_to_mut(to));
         }
         IntervalHeap { data: v }
@@ -400,5 +400,19 @@ mod test {
         }
     }
 
+    #[test]
+    fn test_from_vec() {
+        let heap = IntervalHeap::<uint>::from_vec(vec![]);
+        assert_eq!(heap.get_min_max(), None);
+
+        let heap = IntervalHeap::from_vec(vec![2u]);
+        assert_eq!(heap.get_min_max(), Some((&2, &2)));
+
+        let heap = IntervalHeap::from_vec(vec![2u, 1]);
+        assert_eq!(heap.get_min_max(), Some((&1, &2)));
+
+        let heap = IntervalHeap::from_vec(vec![2u, 1, 3]);
+        assert_eq!(heap.get_min_max(), Some((&1, &3)));
+    }
 } // mod test
 
