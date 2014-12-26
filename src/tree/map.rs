@@ -17,6 +17,8 @@ use std::mem::{replace, swap};
 use std::ptr;
 use std::hash::{Writer, Hash};
 
+use quickcheck::{Arbitrary, Gen};
+
 // FIXME(conventions): implement bounded iterators
 // FIXME(conventions): replace rev_iter(_mut) by making iter(_mut) DoubleEnded
 
@@ -141,6 +143,13 @@ use std::hash::{Writer, Hash};
 pub struct TreeMap<K, V> {
     root: Option<Box<TreeNode<K, V>>>,
     length: uint
+}
+
+impl<K: Arbitrary + Ord, V: Arbitrary> Arbitrary for TreeMap<K, V> {
+    fn arbitrary<G: Gen>(g: &mut G) -> TreeMap<K, V> {
+        let v: Vec<(K, V)> = Arbitrary::arbitrary(g);
+        v.into_iter().collect()
+    }
 }
 
 impl<K: PartialEq + Ord, V: PartialEq> PartialEq for TreeMap<K, V> {

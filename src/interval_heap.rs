@@ -3,6 +3,8 @@
 use std::slice;
 use std::default::Default;
 
+use quickcheck::{Arbitrary, Gen};
+
 // An interval heap is a binary tree structure with the following properties:
 //
 // (1) Each node (except possibly the last leaf) contains two values
@@ -131,6 +133,13 @@ fn update_max<T: Ord>(v: &mut [T]) {
 #[deriving(Clone)]
 pub struct IntervalHeap<T> {
     data: Vec<T>
+}
+
+impl<T: Ord + Arbitrary> Arbitrary for IntervalHeap<T> {
+    fn arbitrary<G: Gen>(g: &mut G) -> IntervalHeap<T> {
+        let v: Vec<T> = Arbitrary::arbitrary(g);
+        IntervalHeap::from_vec(v)
+    }
 }
 
 impl<T: Ord> Default for IntervalHeap<T> {
@@ -415,4 +424,3 @@ mod test {
         assert_eq!(heap.get_min_max(), Some((&1, &3)));
     }
 } // mod test
-

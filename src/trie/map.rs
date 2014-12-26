@@ -15,16 +15,17 @@ use self::TrieNode::*;
 use std::default::Default;
 use std::fmt;
 use std::fmt::Show;
+use std::hash::{Writer, Hash};
 use std::mem::zeroed;
 use std::mem;
 use std::ops::{Slice, SliceMut};
 use std::uint;
 use std::iter;
 use std::ptr;
-use std::hash::{Writer, Hash};
-
 use std::slice::{Iter, IterMut};
 use std::slice;
+
+use quickcheck::{Arbitrary, Gen};
 
 // FIXME(conventions): implement bounded iterators
 // FIXME(conventions): implement into_iter
@@ -110,6 +111,13 @@ enum TrieNode<T> {
     Internal(Box<InternalNode<T>>),
     External(uint, T),
     Nothing
+}
+
+impl<T: Arbitrary> Arbitrary for TrieMap<T> {
+    fn arbitrary<G: Gen>(g: &mut G) -> TrieMap<T> {
+        let v: Vec<(uint, T)> = Arbitrary::arbitrary(g);
+        v.into_iter().collect()
+    }
 }
 
 impl<T: PartialEq> PartialEq for TrieMap<T> {

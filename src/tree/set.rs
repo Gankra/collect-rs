@@ -16,6 +16,8 @@ use std::iter::Peekable;
 use std::iter;
 use std::hash::{Writer, Hash};
 
+use quickcheck::{Arbitrary, Gen};
+
 use tree_map::{TreeMap, Entries, RevEntries, MoveEntries};
 
 // FIXME(conventions): implement bounded iterators
@@ -96,6 +98,13 @@ use tree_map::{TreeMap, Entries, RevEntries, MoveEntries};
 #[deriving(Clone)]
 pub struct TreeSet<T> {
     map: TreeMap<T, ()>
+}
+
+impl<T: Arbitrary + Ord> Arbitrary for TreeSet<T> {
+    fn arbitrary<G: Gen>(g: &mut G) -> TreeSet<T> {
+        let v: Vec<T> = Arbitrary::arbitrary(g);
+        v.into_iter().collect()
+    }
 }
 
 impl<T: PartialEq + Ord> PartialEq for TreeSet<T> {
@@ -976,6 +985,15 @@ mod test {
         }
     }
 
+    #[quickcheck]
+    fn test_sorted(xs: Vec<int>) -> bool {
+        let ys: TreeSet<int> = xs.iter().cloned().collect();
+        let ys: Vec<int> = ys.iter().cloned().collect();
+        let mut ys_sorted = ys.clone();
+        ys_sorted.sort();
+        ys == ys_sorted
+    }
+
     #[test]
     fn test_move_iter() {
         let s: TreeSet<int> = range(0i, 5).collect();
@@ -987,30 +1005,21 @@ mod test {
         }
     }
 
-    #[test]
-    fn test_move_iter_size_hint() {
-        let s: TreeSet<int> = vec!(0i, 1).into_iter().collect();
-
-        let mut it = s.into_iter();
-
-        assert_eq!(it.size_hint(), (2, Some(2)));
-        assert!(it.next() != None);
-
-        assert_eq!(it.size_hint(), (1, Some(1)));
-        assert!(it.next() != None);
-
-        assert_eq!(it.size_hint(), (0, Some(0)));
-        assert_eq!(it.next(), None);
+    #[quickcheck]
+    fn test_move_iter_size_hint(xs: TreeSet<int>) -> bool {
+        let mut k = xs.len();
+        let mut it = xs.into_iter();
+        loop {
+            assert_eq!(it.size_hint(), (k, Some(k)));
+            if it.next() == None { break }
+            k -= 1;
+        }
+        k == 0
     }
 
-    #[test]
-    fn test_clone_eq() {
-      let mut m = TreeSet::new();
-
-      m.insert(1i);
-      m.insert(2);
-
-      assert!(m.clone() == m);
+    #[quickcheck]
+    fn test_clone(xs: TreeSet<int>) -> bool {
+        xs == xs.clone()
     }
 
     #[test]
