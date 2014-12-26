@@ -3,6 +3,8 @@
 use std::slice;
 use std::default::Default;
 
+use compare::{Compare, Natural};
+
 // An interval heap is a binary tree structure with the following properties:
 //
 // (1) Each node (except possibly the last leaf) contains two values
@@ -44,7 +46,7 @@ fn parent_left(x: uint) -> uint {
 
 /// The first `v.len() - 1` elements are considered a valid interval heap
 /// and the last element is to be inserted.
-fn inteval_heap_push<T: Ord>(v: &mut [T]) {
+fn interval_heap_push<T, C: Compare<T>>(v: &mut [T], cmp: &C) {
     debug_assert!(v.len() > 0);
     // Start with the last new/modified node and work our way to
     // the root if necessary...
@@ -53,18 +55,18 @@ fn inteval_heap_push<T: Ord>(v: &mut [T]) {
     // The reason for using two variables instead of one is to
     // get around the special case of the last node only containing
     // one element (node_min == node_max).
-    if v[node_min] > v[node_max] { v.swap(node_min, node_max); }
+    if cmp.compares_gt(&v[node_min], &v[node_max]) { v.swap(node_min, node_max); }
     while !is_root(node_min) {
         let par_min = parent_left(node_min);
         let par_max = par_min + 1;
-        if v[node_min] < v[par_min] {
+        if cmp.compares_lt(&v[node_min], &v[par_min]) {
             v.swap(par_min, node_min);
-        } else if v[par_max] < v[node_max] {
+        } else if cmp.compares_lt(&v[par_max], &v[node_max]) {
             v.swap(par_max, node_max);
         } else {
             return; // nothing to do anymore
         }
-        debug_assert!(v[node_min] <= v[node_max]);
+        debug_assert!(cmp.compares_le(&v[node_min], &v[node_max]));
         node_min = par_min;
         node_max = par_max;
     }
@@ -73,23 +75,23 @@ fn inteval_heap_push<T: Ord>(v: &mut [T]) {
 /// The min element in the root node of an otherwise valid interval heap
 /// has been been replaced with some other value without violating rule (1)
 /// for the root node. This function restores the interval heap properties.
-fn update_min<T: Ord>(v: &mut [T]) {
+fn update_min<T, C: Compare<T>>(v: &mut [T], cmp: &C) {
     // Starting at the root, we go down the tree...
-    debug_assert!(v[0] <= v[1]);
+    debug_assert!(cmp.compares_le(&v[0], &v[1]));
     let mut left = 0;
     loop {
         let c1 = left * 2 + 2; // index of 1st child's left element
         let c2 = left * 2 + 4; // index of 2nd child's left element
         if v.len() <= c1 { return; } // No children. We're done.
         // Pick child with lowest min
-        let ch = if v.len() <= c2 || v[c1] < v[c2] { c1 }
+        let ch = if v.len() <= c2 || cmp.compares_lt(&v[c1], &v[c2]) { c1 }
                  else { c2 };
-        if v[ch] < v[left] {
+        if cmp.compares_lt(&v[ch], &v[left]) {
             v.swap(ch, left);
             left = ch;
             let right = left + 1;
             if right < v.len() {
-                if v[left] > v[right] { v.swap(left, right); }
+                if cmp.compares_gt(&v[left], &v[right]) { v.swap(left, right); }
             }
         } else {
             break;
@@ -100,8 +102,8 @@ fn update_min<T: Ord>(v: &mut [T]) {
 /// The max element in the root node of an otherwise valid interval heap
 /// has been been replaced with some other value without violating rule (1)
 /// for the root node. This function restores the interval heap properties.
-fn update_max<T: Ord>(v: &mut [T]) {
-    debug_assert!(v[0] <= v[1]);
+fn update_max<T, C: Compare<T>>(v: &mut [T], cmp: &C) {
+    debug_assert!(cmp.compares_le(&v[0], &v[1]));
     // Starting at the root, we go down the tree...
     let mut right = 1;
     loop {
@@ -109,13 +111,13 @@ fn update_max<T: Ord>(v: &mut [T]) {
         let c2 = right * 2 + 3; // index of 2nd child's right element
         if v.len() <= c1 { return; } // No children. We're done.
         // Pick child with greatest max
-        let ch = if v.len() <= c2 || v[c1] > v[c2] { c1 }
+        let ch = if v.len() <= c2 || cmp.compares_gt(&v[c1], &v[c2]) { c1 }
                  else { c2 };
-        if v[ch] > v[right] {
+        if cmp.compares_gt(&v[ch], &v[right]) {
             v.swap(ch, right);
             right = ch;
             let left = right - 1; // always exists
-            if v[left] > v[right] { v.swap(left, right); }
+            if cmp.compares_gt(&v[left], &v[right]) { v.swap(left, right); }
         } else {
             break;
         }
@@ -129,39 +131,96 @@ fn update_max<T: Ord>(v: &mut [T]) {
 /// be done in constant time. Also, other convenient functions are provided
 /// that handle conversion from and into vectors and allow iteration etc.
 #[deriving(Clone)]
-pub struct IntervalHeap<T> {
-    data: Vec<T>
+pub struct IntervalHeap<T, C: Compare<T> = Natural<T>> {
+    data: Vec<T>,
+    cmp: C,
 }
 
-impl<T: Ord> Default for IntervalHeap<T> {
-    /// Creates an empty `IntervalHeap`.
+impl<T, C: Compare<T> + Default> Default for IntervalHeap<T, C> {
+    /// Returns an empty heap ordered according to a default comparator.
     #[inline]
-    fn default() -> IntervalHeap<T> { IntervalHeap::new() }
+    fn default() -> IntervalHeap<T, C> { IntervalHeap::new() }
 }
 
 /// `IntervalHeap` iterator.
 pub type Items<'a, T> = slice::Iter<'a, T>;
 
-impl<T: Ord> IntervalHeap<T> {
-    /// Creates an empty `IntervalHeap`.
-    pub fn new() -> IntervalHeap<T> {
-        IntervalHeap { data: Vec::new() }
+impl<T, C: Compare<T> + Default> IntervalHeap<T, C> {
+    /// Returns an empty heap ordered according to a default comparator.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::compare::{Natural, Rev};
+    /// use collect::IntervalHeap;
+    ///
+    /// let heap = IntervalHeap::<u32, Rev<Natural<_>>>::new();
+    /// assert!(heap.is_empty());
+    /// ```
+    pub fn new() -> IntervalHeap<T, C> {
+        IntervalHeap::with_cmp(Default::default())
     }
 
-    /// Creates an empty `IntervalHeap` with a specific capacity. This
-    /// preallocates enough memory for capacity elements, so that the
-    /// `IntervalHeap` does not have to be reallocated until it contains at
-    /// least that many values.
-    pub fn with_capacity(c: uint) -> IntervalHeap<T> {
-        IntervalHeap { data: Vec::with_capacity(c) }
+    /// Returns an empty heap with the given capacity and ordered according to a default
+    /// comparator.
+    ///
+    /// The heap will be able to hold exactly `capacity` elements without reallocating.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::compare::{Natural, Rev};
+    /// use collect::IntervalHeap;
+    ///
+    /// let heap = IntervalHeap::<u32, Rev<Natural<_>>>::with_capacity(5);
+    /// assert!(heap.is_empty());
+    /// assert!(heap.capacity() >= 5);
+    /// ```
+    pub fn with_capacity(capacity: uint) -> IntervalHeap<T, C> {
+        IntervalHeap::with_capacity_and_cmp(capacity, Default::default())
     }
 
-    /// Creates an `IntervalHeap` from a vector.
-    pub fn from_vec(mut v: Vec<T>) -> IntervalHeap<T> {
-        for to in 2 .. v.len() + 1 {
-            inteval_heap_push(v.slice_to_mut(to));
+    /// Returns a heap containing all the elements of the given vector and ordered
+    /// according to a default comparator.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::compare::{Natural, Rev};
+    /// use collect::IntervalHeap;
+    ///
+    /// let heap = IntervalHeap::<_, Natural<_>>::from_vec(vec![5u32, 1, 6, 4]);
+    /// assert_eq!(heap.len(), 4);
+    /// assert_eq!(heap.get_min_max(), Some((&1, &6)));
+    ///
+    /// let heap = IntervalHeap::<_, Rev<Natural<_>>>::from_vec(vec![5u32, 1, 6, 4]);
+    /// assert_eq!(heap.len(), 4);
+    /// assert_eq!(heap.get_min_max(), Some((&6, &1)));
+    /// ```
+    pub fn from_vec(vec: Vec<T>) -> IntervalHeap<T, C> {
+        IntervalHeap::from_vec_and_cmp(vec, Default::default())
+    }
+}
+
+impl<T, C: Compare<T>> IntervalHeap<T, C> {
+    /// Returns an empty heap ordered according to the given comparator.
+    pub fn with_cmp(cmp: C) -> IntervalHeap<T, C> {
+        IntervalHeap { data: vec![], cmp: cmp }
+    }
+
+    /// Returns an empty heap with the given capacity and ordered according to the given
+    /// comparator.
+    pub fn with_capacity_and_cmp(capacity: uint, cmp: C) -> IntervalHeap<T, C> {
+        IntervalHeap { data: Vec::with_capacity(capacity), cmp: cmp }
+    }
+
+    /// Returns a heap containing all the elements of the given vector and ordered
+    /// according to the given comparator.
+    pub fn from_vec_and_cmp(mut vec: Vec<T>, cmp: C) -> IntervalHeap<T, C> {
+        for to in 2 .. vec.len() + 1 {
+            interval_heap_push(vec.slice_to_mut(to), &cmp);
         }
-        IntervalHeap { data: v }
+        IntervalHeap { data: vec, cmp: cmp }
     }
 
     /// An iterator visiting all values in underlying vector,
@@ -232,7 +291,7 @@ impl<T: Ord> IntervalHeap<T> {
             1...2 => Some(self.data.swap_remove(0)),
             _ => {
                 let res = self.data.swap_remove(0);
-                update_min(self.data.as_mut_slice());
+                update_min(self.data.as_mut_slice(), &self.cmp);
                 Some(res)
             }
         }
@@ -244,7 +303,7 @@ impl<T: Ord> IntervalHeap<T> {
             0...2 => self.data.pop(),
             _ => {
                 let res = self.data.swap_remove(1);
-                update_max(self.data.as_mut_slice());
+                update_max(self.data.as_mut_slice(), &self.cmp);
                 Some(res)
             }
         }
@@ -253,7 +312,7 @@ impl<T: Ord> IntervalHeap<T> {
     /// Pushes an item onto the queue.
     pub fn push(&mut self, x: T) {
         self.data.push(x);
-        inteval_heap_push(self.data.as_mut_slice());
+        interval_heap_push(self.data.as_mut_slice(), &self.cmp);
     }
 
     /// Consumes the `IntervalHeap` and returns the underlying vector
@@ -266,7 +325,7 @@ impl<T: Ord> IntervalHeap<T> {
         let mut vec = self.data;
         for hsize in range(2, vec.len()).rev() {
             vec.swap(1, hsize);
-            update_max(vec.slice_to_mut(hsize));
+            update_max(vec.slice_to_mut(hsize), &self.cmp);
         }
         vec
     }
@@ -287,15 +346,14 @@ impl<T: Ord> IntervalHeap<T> {
     }
 }
 
-impl<T: Ord> FromIterator<T> for IntervalHeap<T> {
+impl<T, C: Compare<T> + Default> FromIterator<T> for IntervalHeap<T, C> {
     /// Creates an interval heap with all the items from an iterator
-    fn from_iter<Iter: Iterator<T>>(iter: Iter) -> IntervalHeap<T> {
-        let vec: Vec<T> = iter.collect();
-        IntervalHeap::from_vec(vec)
+    fn from_iter<Iter: Iterator<T>>(iter: Iter) -> IntervalHeap<T, C> {
+        IntervalHeap::from_vec(iter.collect())
     }
 }
 
-impl<T: Ord> Extend<T> for IntervalHeap<T> {
+impl<T, C: Compare<T>> Extend<T> for IntervalHeap<T, C> {
     /// Extends the interval heap by a new chunk of items given by
     /// an iterator.
     fn extend<Iter: Iterator<T>>(&mut self, mut iter: Iter) {
@@ -308,7 +366,7 @@ impl<T: Ord> Extend<T> for IntervalHeap<T> {
 }
 
 #[cfg(test)]
-pub fn as_slice<T>(x: &IntervalHeap<T>) -> &[T] {
+pub fn as_slice<T, C: Compare<T>>(x: &IntervalHeap<T, C>) -> &[T] {
     x.data.as_slice()
 }
 
@@ -402,16 +460,18 @@ mod test {
 
     #[test]
     fn test_from_vec() {
-        let heap = IntervalHeap::<uint>::from_vec(vec![]);
+        use compare::Natural;
+
+        let heap = IntervalHeap::<uint, Natural<_>>::from_vec(vec![]);
         assert_eq!(heap.get_min_max(), None);
 
-        let heap = IntervalHeap::from_vec(vec![2u]);
+        let heap = IntervalHeap::<uint, Natural<_>>::from_vec(vec![2]);
         assert_eq!(heap.get_min_max(), Some((&2, &2)));
 
-        let heap = IntervalHeap::from_vec(vec![2u, 1]);
+        let heap = IntervalHeap::<uint, Natural<_>>::from_vec(vec![2, 1]);
         assert_eq!(heap.get_min_max(), Some((&1, &2)));
 
-        let heap = IntervalHeap::from_vec(vec![2u, 1, 3]);
+        let heap = IntervalHeap::<uint, Natural<_>>::from_vec(vec![2, 1, 3]);
         assert_eq!(heap.get_min_max(), Some((&1, &3)));
     }
 } // mod test
