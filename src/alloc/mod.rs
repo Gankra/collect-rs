@@ -2,6 +2,7 @@ pub use self::mem_descriptor::MemDescriptor;
 
 use rust_alloc::heap;
 
+pub mod vec;
 pub mod mem_descriptor;
 
 pub trait Allocator {
@@ -12,7 +13,7 @@ pub trait Allocator {
     fn usable_size(&self, descriptor: MemDescriptor) -> uint;
 }
 
-#[deriving(Copy, Clone)]
+#[deriving(Copy, Clone, Default)]
 pub struct RustAllocator;
 
 impl Allocator for RustAllocator {

@@ -46,10 +46,8 @@
 
 use core::prelude::*;
 
-use alloc::boxed::Box;
-use alloc::heap::{EMPTY, allocate, reallocate, deallocate};
-use core::borrow::{Cow, IntoCow};
-use core::cmp::max;
+use rust_alloc::heap::EMPTY;
+use core::borrow::{Cow, IntoCow, BorrowFrom, BorrowFromMut, ToOwned};
 use core::default::Default;
 use core::fmt;
 use core::hash::{mod, Hash};
@@ -63,7 +61,7 @@ use core::ptr;
 use core::raw::Slice as RawSlice;
 use core::uint;
 
-use slice::CloneSliceExt;
+use super::{MemDescriptor, RustAllocator, Allocator};
 
 /// A growable list type, written `Vec<T>` but pronounced 'vector.'
 ///
@@ -133,10 +131,11 @@ use slice::CloneSliceExt;
 /// `Vec::with_capacity` whenever possible to specify how big the vector is expected to get.
 #[unsafe_no_drop_flag]
 #[stable]
-pub struct Vec<T> {
+pub struct Vec<T, A: Allocator = RustAllocator> {
     ptr: NonZero<*mut T>,
     len: uint,
     cap: uint,
+    allocator: A,
 }
 
 unsafe impl<T: Send> Send for Vec<T> { }
@@ -176,11 +175,7 @@ impl<T> Vec<T> {
     #[inline]
     #[stable]
     pub fn new() -> Vec<T> {
-        // We want ptr to never be NULL so instead we set it to some arbitrary
-        // non-null value which is fine since we never call deallocate on the ptr
-        // if cap is 0. The reason for this is because the pointer of a slice
-        // being NULL would break the null pointer optimization for enums.
-        Vec { ptr: unsafe { NonZero::new(EMPTY as *mut T) }, len: 0, cap: 0 }
+        Vec::with_alloc(RustAllocator)
     }
 
     /// Constructs a new, empty `Vec<T>` with the specified capacity.
@@ -212,16 +207,108 @@ impl<T> Vec<T> {
     #[inline]
     #[stable]
     pub fn with_capacity(capacity: uint) -> Vec<T> {
+        Vec::with_capacity_and_alloc(capacity, RustAllocator)
+    }
+
+    /// Creates and initializes a `Vec<T>`.
+    ///
+    /// Creates a `Vec<T>` of size `length` and initializes the elements to the value returned by
+    /// the closure `op`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let vec = Vec::from_fn(3, |idx| idx * 2);
+    /// assert_eq!(vec, vec![0, 2, 4]);
+    /// ```
+    #[inline]
+    #[unstable = "the naming is uncertain as well as this migrating to unboxed \
+                  closures in the future"]
+    pub fn from_fn<F>(length: uint, op: F) -> Vec<T> where F: FnMut(uint) -> T {
+        Vec::from_fn_and_alloc(length, op, RustAllocator)
+    }
+
+    /// Creates a vector by copying the elements from a raw pointer.
+    ///
+    /// This function will copy `elts` contiguous elements starting at `ptr` into a new allocation
+    /// owned by the returned `Vec<T>`. The elements of the buffer are copied into the vector
+    /// without cloning, as if `ptr::read()` were called on them.
+    #[inline]
+    #[unstable = "just renamed from raw::from_buf"]
+    pub unsafe fn from_raw_buf(ptr: *const T, elts: uint) -> Vec<T> {
+        Vec::from_raw_buf_and_alloc(ptr, elts, RustAllocator)
+    }
+}
+
+impl<T, A: Allocator> Vec<T, A> {
+    /// Constructs a new, empty `Vec<T>`.
+    ///
+    /// The vector will not allocate until elements are pushed onto it.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut vec: Vec<int> = Vec::new();
+    /// ```
+    #[inline]
+    #[stable]
+    pub fn with_alloc(allocator: A) -> Vec<T, A> {
+        // We want ptr to never be NULL so instead we set it to some arbitrary
+        // non-null value which is fine since we never call deallocate on the ptr
+        // if cap is 0. The reason for this is because the pointer of a slice
+        // being NULL would break the null pointer optimization for enums.
+        Vec { ptr: unsafe { NonZero::new(EMPTY as *mut T) }, len: 0, cap: 0, allocator: allocator }
+    }
+
+    /// Constructs a new, empty `Vec<T>` with the specified capacity.
+    ///
+    /// The vector will be able to hold exactly `capacity` elements without reallocating. If
+    /// `capacity` is 0, the vector will not allocate.
+    ///
+    /// It is important to note that this function does not specify the *length* of the returned
+    /// vector, but only the *capacity*. (For an explanation of the difference between length and
+    /// capacity, see the main `Vec<T>` docs above, 'Capacity and reallocation'.) To create a
+    /// vector of a given length, use `Vec::from_elem` or `Vec::from_fn`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut vec: Vec<int> = Vec::with_capacity(10);
+    ///
+    /// // The vector contains no items, even though it has capacity for more
+    /// assert_eq!(vec.len(), 0);
+    ///
+    /// // These are all done without reallocating...
+    /// for i in range(0i, 10) {
+    ///     vec.push(i);
+    /// }
+    ///
+    /// // ...but this may make the vector reallocate
+    /// vec.push(11);
+    /// ```
+    #[inline]
+    #[stable]
+    pub fn with_capacity_and_alloc(capacity: uint, mut allocator: A) -> Vec<T, A> {
         if mem::size_of::<T>() == 0 {
-            Vec { ptr: unsafe { NonZero::new(EMPTY as *mut T) }, len: 0, cap: uint::MAX }
+            Vec {
+                ptr: unsafe { NonZero::new(EMPTY as *mut T) },
+                len: 0,
+                cap: uint::MAX,
+                allocator: allocator,
+            }
         } else if capacity == 0 {
-            Vec::new()
+            Vec::with_alloc(allocator)
         } else {
-            let size = capacity.checked_mul(mem::size_of::<T>())
-                               .expect("capacity overflow");
-            let ptr = unsafe { allocate(size, mem::min_align_of::<T>()) };
-            if ptr.is_null() { ::alloc::oom() }
-            Vec { ptr: unsafe { NonZero::new(ptr as *mut T) }, len: 0, cap: capacity }
+            let ptr = unsafe {
+                allocator.allocate(MemDescriptor::from_ty::<T>().array(capacity))
+            };
+            if ptr.is_null() { ::rust_alloc::oom() }
+            Vec {
+                ptr: unsafe { NonZero::new(ptr as *mut T) },
+                len: 0,
+                cap: capacity,
+                allocator: allocator,
+            }
         }
     }
 
@@ -239,9 +326,10 @@ impl<T> Vec<T> {
     #[inline]
     #[unstable = "the naming is uncertain as well as this migrating to unboxed \
                   closures in the future"]
-    pub fn from_fn<F>(length: uint, mut op: F) -> Vec<T> where F: FnMut(uint) -> T {
+    pub fn from_fn_and_alloc<F>(length: uint, mut op: F, allocator: A) -> Vec<T, A>
+                                                              where F: FnMut(uint) -> T {
         unsafe {
-            let mut xs = Vec::with_capacity(length);
+            let mut xs = Vec::with_capacity_and_alloc(length, allocator);
             while xs.len < length {
                 let len = xs.len;
                 ptr::write(xs.unsafe_mut(len), op(len));
@@ -287,8 +375,8 @@ impl<T> Vec<T> {
     /// ```
     #[unstable = "needs finalization"]
     pub unsafe fn from_raw_parts(ptr: *mut T, length: uint,
-                                 capacity: uint) -> Vec<T> {
-        Vec { ptr: NonZero::new(ptr), len: length, cap: capacity }
+                                 capacity: uint, allocator: A) -> Vec<T, A> {
+        Vec { ptr: NonZero::new(ptr), len: length, cap: capacity, allocator: allocator }
     }
 
     /// Creates a vector by copying the elements from a raw pointer.
@@ -298,8 +386,8 @@ impl<T> Vec<T> {
     /// without cloning, as if `ptr::read()` were called on them.
     #[inline]
     #[unstable = "just renamed from raw::from_buf"]
-    pub unsafe fn from_raw_buf(ptr: *const T, elts: uint) -> Vec<T> {
-        let mut dst = Vec::with_capacity(elts);
+    pub unsafe fn from_raw_buf_and_alloc(ptr: *const T, elts: uint, allocator: A) -> Vec<T, A> {
+        let mut dst = Vec::with_capacity_and_alloc(elts, allocator);
         dst.set_len(elts);
         ptr::copy_nonoverlapping_memory(dst.as_mut_ptr(), ptr, elts);
         dst
@@ -350,8 +438,26 @@ impl<T: Clone> Vec<T> {
     #[inline]
     #[unstable = "this functionality may become more generic over all collections"]
     pub fn from_elem(length: uint, value: T) -> Vec<T> {
+        Vec::from_elem_and_alloc(length, value, RustAllocator)
+    }
+}
+
+impl<T: Clone, A: Allocator> Vec<T, A> {
+    /// Constructs a `Vec<T>` with copies of a value.
+    ///
+    /// Creates a `Vec<T>` with `length` copies of `value`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let vec = Vec::from_elem(3, "hi");
+    /// println!("{}", vec); // prints [hi, hi, hi]
+    /// ```
+    #[inline]
+    #[unstable = "this functionality may become more generic over all collections"]
+    pub fn from_elem_and_alloc(length: uint, value: T, allocator: A) -> Vec<T, A> {
         unsafe {
-            let mut xs = Vec::with_capacity(length);
+            let mut xs = Vec::with_capacity_and_alloc(length, allocator);
             while xs.len < length {
                 let len = xs.len;
                 ptr::write(xs.unsafe_mut(len),
@@ -475,10 +581,14 @@ impl<T: Clone> Vec<T> {
 }
 
 #[stable]
-impl<T:Clone> Clone for Vec<T> {
-    fn clone(&self) -> Vec<T> { self.as_slice().to_vec() }
+impl<T:Clone, A: Clone + Allocator> Clone for Vec<T, A> {
+    fn clone(&self) -> Vec<T, A> {
+        let mut ret = Vec::with_capacity_and_alloc(self.len(), self.allocator.clone());
+        ret.push_all(self.as_slice());
+        ret
+    }
 
-    fn clone_from(&mut self, other: &Vec<T>) {
+    fn clone_from(&mut self, other: &Vec<T, A>) {
         // drop anything in self that will not be overwritten
         if self.len() > other.len() {
             self.truncate(other.len())
@@ -554,13 +664,33 @@ impl<T> ops::SliceMut<uint, [T]> for Vec<T> {
 }
 
 #[experimental = "waiting on Deref stability"]
-impl<T> ops::Deref<[T]> for Vec<T> {
+impl<T, A: Allocator> ops::Deref<[T]> for Vec<T, A> {
     fn deref<'a>(&'a self) -> &'a [T] { self.as_slice() }
 }
 
 #[experimental = "waiting on DerefMut stability"]
-impl<T> ops::DerefMut<[T]> for Vec<T> {
+impl<T, A: Allocator> ops::DerefMut<[T]> for Vec<T, A> {
     fn deref_mut<'a>(&'a mut self) -> &'a mut [T] { self.as_mut_slice() }
+}
+
+impl<T, A: Allocator> BorrowFrom<Vec<T, A>> for [T] {
+    fn borrow_from(vec: &Vec<T, A>) -> &[T] {
+        vec.as_slice()
+    }
+}
+
+impl<T, A: Allocator> BorrowFromMut<Vec<T, A>> for [T] {
+    fn borrow_from_mut(vec: &mut Vec<T, A>) -> &mut [T] {
+        vec.as_mut_slice()
+    }
+}
+
+impl<T: Clone, A: Default + Allocator> ToOwned<Vec<T, A>> for [T] {
+    fn to_owned(&self) -> Vec<T, A> {
+        let mut vector = Vec::with_capacity_and_alloc(self.len(), Default::default());
+        vector.push_all(self);
+        vector
+    }
 }
 
 #[experimental = "waiting on FromIterator stability"]
@@ -577,7 +707,7 @@ impl<T> FromIterator<T> for Vec<T> {
 }
 
 #[experimental = "waiting on Extend stability"]
-impl<T> Extend<T> for Vec<T> {
+impl<T, A: Allocator> Extend<T> for Vec<T, A> {
     #[inline]
     fn extend<I: Iterator<T>>(&mut self, mut iterator: I) {
         let (lower, _) = iterator.size_hint();
@@ -684,26 +814,7 @@ impl<S: hash::Writer, T: Hash<S>> Hash<S> for Vec<T> {
     }
 }
 
-// FIXME: #13996: need a way to mark the return value as `noalias`
-#[inline(never)]
-unsafe fn alloc_or_realloc<T>(ptr: *mut T, old_size: uint, size: uint) -> *mut T {
-    if old_size == 0 {
-        allocate(size, mem::min_align_of::<T>()) as *mut T
-    } else {
-        reallocate(ptr as *mut u8, old_size, size, mem::min_align_of::<T>()) as *mut T
-    }
-}
-
-#[inline]
-unsafe fn dealloc<T>(ptr: *mut T, len: uint) {
-    if mem::size_of::<T>() != 0 {
-        deallocate(ptr as *mut u8,
-                   len * mem::size_of::<T>(),
-                   mem::min_align_of::<T>())
-    }
-}
-
-impl<T> Vec<T> {
+impl<T, A: Allocator> Vec<T, A> {
     /// Returns the number of elements the vector can hold without reallocating.
     ///
     /// # Examples
@@ -796,23 +907,24 @@ impl<T> Vec<T> {
     pub fn shrink_to_fit(&mut self) {
         if mem::size_of::<T>() == 0 { return }
 
+        let old_descriptor = MemDescriptor::from_ty::<T>().array(self.cap);
+
         if self.len == 0 {
             if self.cap != 0 {
                 unsafe {
-                    dealloc(*self.ptr, self.cap)
+                    self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
                 }
                 self.cap = 0;
             }
         } else {
+            let new_descriptor = MemDescriptor::from_ty::<T>().array(self.len);
             unsafe {
-                // Overflow check is unnecessary as the vector is already at
-                // least this large.
-                let ptr = reallocate(*self.ptr as *mut u8,
-                                     self.cap * mem::size_of::<T>(),
-                                     self.len * mem::size_of::<T>(),
-                                     mem::min_align_of::<T>()) as *mut T;
-                if ptr.is_null() { ::alloc::oom() }
-                self.ptr = NonZero::new(ptr);
+                if !self.allocator.shrink(*self.ptr as *mut u8, old_descriptor, new_descriptor) {
+                    self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
+                    let ptr = self.allocator.allocate(new_descriptor) as *mut T;
+                    if ptr.is_null() { ::rust_alloc::oom() }
+                    self.ptr = NonZero::new(ptr);
+                }
             }
             self.cap = self.len;
         }
@@ -893,7 +1005,7 @@ impl<T> Vec<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn into_iter(self) -> IntoIter<T> {
+    pub fn into_iter(self) -> IntoIter<T, A> {
         unsafe {
             let ptr = *self.ptr;
             let cap = self.cap;
@@ -903,8 +1015,9 @@ impl<T> Vec<T> {
             } else {
                 ptr.offset(self.len() as int) as *const T
             };
+            let allocator = ptr::read(&self.allocator); // Eww...
             mem::forget(self);
-            IntoIter { allocation: ptr, cap: cap, ptr: begin, end: end }
+            IntoIter { allocation: ptr, cap: cap, ptr: begin, end: end, allocator: allocator }
         }
     }
 
@@ -1108,18 +1221,31 @@ impl<T> Vec<T> {
             // zero-size types consume no memory, so we can't rely on the address space running out
             self.len = self.len.checked_add(1).expect("length overflow");
             unsafe { mem::forget(value); }
-            return
+            return;
         }
         if self.len == self.cap {
-            let old_size = self.cap * mem::size_of::<T>();
-            let size = max(old_size, 2 * mem::size_of::<T>()) * 2;
-            if old_size > size { panic!("capacity overflow") }
-            unsafe {
-                let ptr = alloc_or_realloc(*self.ptr, old_size, size);
-                if ptr.is_null() { ::alloc::oom() }
-                self.ptr = NonZero::new(ptr);
+            if self.cap > 0 {
+                let old_descriptor = MemDescriptor::from_ty::<T>().array(self.cap);
+                let new_descriptor = old_descriptor.array(2);
+                unsafe {
+                    if !self.allocator.grow(*self.ptr as *mut u8, old_descriptor, new_descriptor) {
+                        self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
+                        let ptr = self.allocator.allocate(new_descriptor) as *mut T;
+                        if ptr.is_null() { ::rust_alloc::oom() }
+                        self.ptr = NonZero::new(ptr);
+                    }
+                }
+                self.cap = self.cap * 2;
+            } else {
+                let new_cap = 4;
+                let new_descriptor = MemDescriptor::from_ty::<T>().array(new_cap);
+                unsafe {
+                    let ptr = self.allocator.allocate(new_descriptor) as *mut T;
+                    if ptr.is_null() { ::rust_alloc::oom() }
+                    self.ptr = NonZero::new(ptr);
+                }
+                self.cap = new_cap;
             }
-            self.cap = max(self.cap, 2) * 2;
         }
 
         unsafe {
@@ -1234,12 +1360,21 @@ impl<T> Vec<T> {
         if mem::size_of::<T>() == 0 { return }
 
         if capacity > self.cap {
-            let size = capacity.checked_mul(mem::size_of::<T>())
-                               .expect("capacity overflow");
+            let old_descriptor = MemDescriptor::from_ty::<T>().array(self.cap);
+            let new_descriptor = MemDescriptor::from_ty::<T>().array(capacity);
             unsafe {
-                let ptr = alloc_or_realloc(*self.ptr, self.cap * mem::size_of::<T>(), size);
-                if ptr.is_null() { ::alloc::oom() }
-                self.ptr = NonZero::new(ptr);
+                if self.cap > 0 {
+                    if !self.allocator.grow(*self.ptr as *mut u8, old_descriptor, new_descriptor) {
+                        self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
+                        let ptr = self.allocator.allocate(new_descriptor) as *mut T;
+                        if ptr.is_null() { ::rust_alloc::oom() }
+                        self.ptr = NonZero::new(ptr);
+                    }
+                } else {
+                    let ptr = self.allocator.allocate(new_descriptor) as *mut T;
+                    if ptr.is_null() { ::rust_alloc::oom() }
+                    self.ptr = NonZero::new(ptr);
+                }
             }
             self.cap = capacity;
         }
@@ -1346,7 +1481,7 @@ impl<T: PartialEq> Vec<T> {
     }
 }
 
-impl<T> AsSlice<T> for Vec<T> {
+impl<T, A: Allocator> AsSlice<T> for Vec<T, A> {
     /// Returns a slice into `self`.
     ///
     /// # Examples
@@ -1387,7 +1522,10 @@ impl<T> Drop for Vec<T> {
                 for x in self.iter() {
                     ptr::read(x);
                 }
-                dealloc(*self.ptr, self.cap)
+                if mem::size_of::<T>() != 0 {
+                    let old_descriptor = MemDescriptor::from_ty::<T>().array(self.cap);
+                    self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
+                }
             }
         }
     }
@@ -1409,32 +1547,34 @@ impl<T:fmt::Show> fmt::Show for Vec<T> {
 }
 
 /// An iterator that moves out of a vector.
-pub struct IntoIter<T> {
+pub struct IntoIter<T, A: Allocator = RustAllocator> {
     allocation: *mut T, // the block of memory allocated for the vector
     cap: uint, // the capacity of the vector
     ptr: *const T,
-    end: *const T
+    end: *const T,
+    allocator: A,
 }
 
-impl<T> IntoIter<T> {
+impl<T, A: Allocator> IntoIter<T, A> {
     /// Drops all items that have not yet been moved and returns the empty vector.
     #[inline]
     #[unstable]
-    pub fn into_inner(mut self) -> Vec<T> {
+    pub fn into_inner(mut self) -> Vec<T, A> {
         unsafe {
             for _x in self { }
-            let IntoIter { allocation, cap, ptr: _ptr, end: _end } = self;
+            let allocator = ptr::read(&self.allocator); // Eww...
+            let IntoIter { allocation, cap, ptr: _ptr, end: _end, allocator: _ } = self;
             mem::forget(self);
-            Vec { ptr: NonZero::new(allocation), cap: cap, len: 0 }
+            Vec { ptr: NonZero::new(allocation), cap: cap, len: 0, allocator: allocator }
         }
     }
 
     /// Deprecated, use .into_inner() instead
     #[deprecated = "use .into_inner() instead"]
-    pub fn unwrap(self) -> Vec<T> { self.into_inner() }
+    pub fn unwrap(self) -> Vec<T, A> { self.into_inner() }
 }
 
-impl<T> Iterator<T> for IntoIter<T> {
+impl<T, A: Allocator> Iterator<T> for IntoIter<T, A> {
     #[inline]
     fn next<'a>(&'a mut self) -> Option<T> {
         unsafe {
@@ -1468,7 +1608,7 @@ impl<T> Iterator<T> for IntoIter<T> {
     }
 }
 
-impl<T> DoubleEndedIterator<T> for IntoIter<T> {
+impl<T, A: Allocator> DoubleEndedIterator<T> for IntoIter<T, A> {
     #[inline]
     fn next_back<'a>(&'a mut self) -> Option<T> {
         unsafe {
@@ -1491,16 +1631,19 @@ impl<T> DoubleEndedIterator<T> for IntoIter<T> {
     }
 }
 
-impl<T> ExactSizeIterator<T> for IntoIter<T> {}
+impl<T, A: Allocator> ExactSizeIterator<T> for IntoIter<T, A> {}
 
 #[unsafe_destructor]
-impl<T> Drop for IntoIter<T> {
+impl<T, A: Allocator> Drop for IntoIter<T, A> {
     fn drop(&mut self) {
         // destroy the remaining elements
         if self.cap != 0 {
             for _x in *self {}
             unsafe {
-                dealloc(self.allocation, self.cap);
+                if mem::size_of::<T>() != 0 {
+                    let old_descriptor = MemDescriptor::from_ty::<T>().array(self.cap);
+                    self.allocator.deallocate(self.allocation as *mut u8, old_descriptor);
+                }
             }
         }
     }
@@ -1628,7 +1771,7 @@ impl<'a, T> Drop for DerefVec<'a, T> {
 pub fn as_vec<'a, T>(x: &'a [T]) -> DerefVec<'a, T> {
     unsafe {
         DerefVec {
-            x: Vec::from_raw_parts(x.as_ptr() as *mut T, x.len(), x.len()),
+            x: Vec::from_raw_parts(x.as_ptr() as *mut T, x.len(), x.len(), RustAllocator),
             l: ContravariantLifetime::<'a>
         }
     }
@@ -1658,8 +1801,8 @@ pub mod raw {
 /// When the destructor of this struct runs, all `U`s from `start_u` (incl.) to
 /// `end_u` (excl.) and all `T`s from `start_t` (incl.) to `end_t` (excl.) are
 /// destructed. Additionally the underlying storage of `vec` will be freed.
-struct PartialVecNonZeroSized<T,U> {
-    vec: Vec<T>,
+struct PartialVecNonZeroSized<T, U, A: Allocator> {
+    vec: Vec<T, A>,
 
     start_u: *mut U,
     end_u: *mut U,
@@ -1679,7 +1822,7 @@ struct PartialVecZeroSized<T,U> {
 }
 
 #[unsafe_destructor]
-impl<T,U> Drop for PartialVecNonZeroSized<T,U> {
+impl<T, U, A: Allocator> Drop for PartialVecNonZeroSized<T, U, A> {
     fn drop(&mut self) {
         unsafe {
             // `vec` hasn't been modified until now. As it has a length
@@ -1705,7 +1848,7 @@ impl<T,U> Drop for PartialVecNonZeroSized<T,U> {
 }
 
 #[unsafe_destructor]
-impl<T,U> Drop for PartialVecZeroSized<T,U> {
+impl<T, U> Drop for PartialVecZeroSized<T, U> {
     fn drop(&mut self) {
         unsafe {
             // Destruct the instances of `T` and `U` this struct owns.
@@ -1721,7 +1864,7 @@ impl<T,U> Drop for PartialVecZeroSized<T,U> {
     }
 }
 
-impl<T> Vec<T> {
+impl<T, A: Allocator> Vec<T, A> {
     /// Converts a `Vec<T>` to a `Vec<U>` where `T` and `U` have the same
     /// size and in case they are not zero-sized the same minimal alignment.
     ///
@@ -1743,7 +1886,7 @@ impl<T> Vec<T> {
     /// let newtyped_bytes = bytes.map_in_place(|x| Newtype(x));
     /// assert_eq!(newtyped_bytes.as_slice(), [Newtype(0x11), Newtype(0x22)].as_slice());
     /// ```
-    pub fn map_in_place<U, F>(self, mut f: F) -> Vec<U> where F: FnMut(T) -> U {
+    pub fn map_in_place<U, F>(self, mut f: F) -> Vec<U, A> where F: FnMut(T) -> U {
         // FIXME: Assert statically that the types `T` and `U` have the same
         // size.
         assert!(mem::size_of::<T>() == mem::size_of::<U>());
@@ -1872,8 +2015,9 @@ impl<T> Vec<T> {
                 let vec_len = pv.vec.len();
                 let vec_cap = pv.vec.capacity();
                 let vec_ptr = pv.vec.as_mut_ptr() as *mut U;
+                let vec_allocator = ptr::read(&pv.vec.allocator); // Eww...
                 mem::forget(pv);
-                Vec::from_raw_parts(vec_ptr, vec_len, vec_cap)
+                Vec::from_raw_parts(vec_ptr, vec_len, vec_cap, vec_allocator)
             }
         } else {
             // Put the `Vec` into the `PartialVecZeroSized` structure and
@@ -1886,6 +2030,7 @@ impl<T> Vec<T> {
                 marker_t: InvariantType,
                 marker_u: InvariantType,
             };
+            let vec_allocator = unsafe { ptr::read(&vec.allocator) };
             unsafe { mem::forget(vec); }
 
             while pv.num_t != 0 {
@@ -1909,7 +2054,7 @@ impl<T> Vec<T> {
             }
             // Create a `Vec` from our `PartialVecZeroSized` and make sure the
             // destructor of the latter will not run. None of this can panic.
-            let mut result = Vec::new();
+            let mut result = Vec::with_alloc(vec_allocator);
             unsafe {
                 result.set_len(pv.num_u);
                 mem::forget(pv);
