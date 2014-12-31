@@ -25,9 +25,11 @@
 #![feature(unboxed_closures)]
 #![feature(globs)]
 #![feature(macro_rules)]
+#![feature(slicing_syntax)]
 
 #[cfg(test)] extern crate test;
 extern crate core;
+extern crate "alloc" as rust_alloc;
 extern crate traverse;
 
 
@@ -57,6 +59,8 @@ mod trie;
 
 
 // publics
+
+pub mod alloc;
 
 pub mod iter;
 

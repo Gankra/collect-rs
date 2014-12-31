@@ -20,18 +20,18 @@
 //! let xs: Vec<i32> = Vec::new();
 //! ```
 //!
-//! Using the `vec!` macro:
+//! Using the `alloc_vec!` macro:
 //!
 //! ```
-//! let ys: Vec<i32> = vec![];
+//! let ys: Vec<i32> = alloc_vec![];
 //!
-//! let zs = vec![1i32, 2, 3, 4, 5];
+//! let zs = alloc_vec![1i32, 2, 3, 4, 5];
 //! ```
 //!
 //! Push:
 //!
 //! ```
-//! let mut xs = vec![1i32, 2];
+//! let mut xs = alloc_vec![1i32, 2];
 //!
 //! xs.push(3);
 //! ```
@@ -39,7 +39,7 @@
 //! And pop:
 //!
 //! ```
-//! let mut xs = vec![1i32, 2];
+//! let mut xs = alloc_vec![1i32, 2];
 //!
 //! let two = xs.pop();
 //! ```
@@ -86,15 +86,15 @@ use super::{MemDescriptor, RustAllocator, Allocator};
 /// for x in vec.iter() {
 ///     println!("{}", x);
 /// }
-/// assert_eq!(vec, vec![7i, 1, 2, 3]);
+/// assert_eq!(vec, alloc_vec![7i, 1, 2, 3]);
 /// ```
 ///
-/// The `vec!` macro is provided to make initialization more convenient:
+/// The `alloc_vec!` macro is provided to make initialization more convenient:
 ///
 /// ```
-/// let mut vec = vec![1i, 2i, 3i];
+/// let mut vec = alloc_vec![1i, 2i, 3i];
 /// vec.push(4);
-/// assert_eq!(vec, vec![1, 2, 3, 4]);
+/// assert_eq!(vec, alloc_vec![1, 2, 3, 4]);
 /// ```
 ///
 /// Use a `Vec<T>` as an efficient stack:
@@ -219,7 +219,7 @@ impl<T> Vec<T> {
     ///
     /// ```
     /// let vec = Vec::from_fn(3, |idx| idx * 2);
-    /// assert_eq!(vec, vec![0, 2, 4]);
+    /// assert_eq!(vec, alloc_vec![0, 2, 4]);
     /// ```
     #[inline]
     #[unstable = "the naming is uncertain as well as this migrating to unboxed \
@@ -321,7 +321,7 @@ impl<T, A: Allocator> Vec<T, A> {
     ///
     /// ```
     /// let vec = Vec::from_fn(3, |idx| idx * 2);
-    /// assert_eq!(vec, vec![0, 2, 4]);
+    /// assert_eq!(vec, alloc_vec![0, 2, 4]);
     /// ```
     #[inline]
     #[unstable = "the naming is uncertain as well as this migrating to unboxed \
@@ -350,7 +350,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// use std::mem;
     ///
     /// fn main() {
-    ///     let mut v = vec![1i, 2, 3];
+    ///     let mut v = alloc_vec![1i, 2, 3];
     ///
     ///     // Pull out the various important pieces of information about `v`
     ///     let p = v.as_mut_ptr();
@@ -369,7 +369,7 @@ impl<T, A: Allocator> Vec<T, A> {
     ///
     ///         // Put everything back together into a Vec
     ///         let rebuilt = Vec::from_raw_parts(p, len, cap);
-    ///         assert_eq!(rebuilt, vec![4i, 5i, 6i]);
+    ///         assert_eq!(rebuilt, alloc_vec![4i, 5i, 6i]);
     ///     }
     /// }
     /// ```
@@ -401,10 +401,10 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let vec = vec![1i, 2i, 3i, 4i];
+    /// let vec = alloc_vec![1i, 2i, 3i, 4i];
     /// let (even, odd) = vec.partition(|&n| n % 2 == 0);
-    /// assert_eq!(even, vec![2, 4]);
-    /// assert_eq!(odd, vec![1, 3]);
+    /// assert_eq!(even, alloc_vec![2, 4]);
+    /// assert_eq!(odd, alloc_vec![1, 3]);
     /// ```
     #[inline]
     #[experimental]
@@ -476,9 +476,9 @@ impl<T: Clone, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec = vec![1i];
+    /// let mut vec = alloc_vec![1i];
     /// vec.push_all(&[2i, 3, 4]);
-    /// assert_eq!(vec, vec![1, 2, 3, 4]);
+    /// assert_eq!(vec, alloc_vec![1, 2, 3, 4]);
     /// ```
     #[inline]
     #[experimental]
@@ -507,9 +507,9 @@ impl<T: Clone, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec = vec!["hello"];
+    /// let mut vec = alloc_vec!["hello"];
     /// vec.grow(2, "world");
-    /// assert_eq!(vec, vec!["hello", "world", "world"]);
+    /// assert_eq!(vec, alloc_vec!["hello", "world", "world"]);
     /// ```
     #[stable]
     pub fn grow(&mut self, n: uint, value: T) {
@@ -530,13 +530,13 @@ impl<T: Clone, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec = vec!["hello"];
+    /// let mut vec = alloc_vec!["hello"];
     /// vec.resize(3, "world");
-    /// assert_eq!(vec, vec!["hello", "world", "world"]);
+    /// assert_eq!(vec, alloc_vec!["hello", "world", "world"]);
     ///
-    /// let mut vec = vec![1i, 2, 3, 4];
+    /// let mut vec = alloc_vec![1i, 2, 3, 4];
     /// vec.resize(2, 0);
-    /// assert_eq!(vec, vec![1, 2]);
+    /// assert_eq!(vec, alloc_vec![1, 2]);
     /// ```
     #[unstable = "matches collection reform specification; waiting for dust to settle"]
     pub fn resize(&mut self, new_len: uint, value: T) {
@@ -558,10 +558,10 @@ impl<T: Clone, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let vec = vec![1i, 2, 3, 4];
+    /// let vec = alloc_vec![1i, 2, 3, 4];
     /// let (even, odd) = vec.partitioned(|&n| n % 2 == 0);
-    /// assert_eq!(even, vec![2i, 4]);
-    /// assert_eq!(odd, vec![1i, 3]);
+    /// assert_eq!(even, alloc_vec![2i, 4]);
+    /// assert_eq!(odd, alloc_vec![1i, 3]);
     /// ```
     #[experimental]
     pub fn partitioned<F>(&self, mut f: F) -> (Vec<T>, Vec<T>) where F: FnMut(&T) -> bool {
@@ -845,7 +845,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec: Vec<int> = vec![1];
+    /// let mut vec: Vec<int> = alloc_vec![1];
     /// vec.reserve(10);
     /// assert!(vec.capacity() >= 11);
     /// ```
@@ -873,7 +873,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec: Vec<int> = vec![1];
+    /// let mut vec: Vec<int> = alloc_vec![1];
     /// vec.reserve_exact(10);
     /// assert!(vec.capacity() >= 11);
     /// ```
@@ -920,9 +920,12 @@ impl<T, A: Allocator> Vec<T, A> {
             let new_descriptor = MemDescriptor::from_ty::<T>().array(self.len);
             unsafe {
                 if !self.allocator.shrink(*self.ptr as *mut u8, old_descriptor, new_descriptor) {
-                    self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
                     let ptr = self.allocator.allocate(new_descriptor) as *mut T;
                     if ptr.is_null() { ::rust_alloc::oom() }
+
+                    ptr::copy_nonoverlapping_memory(ptr, *self.ptr, self.len);
+                    self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
+
                     self.ptr = NonZero::new(ptr);
                 }
             }
@@ -952,9 +955,9 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec = vec![1i, 2, 3, 4];
+    /// let mut vec = alloc_vec![1i, 2, 3, 4];
     /// vec.truncate(2);
-    /// assert_eq!(vec, vec![1, 2]);
+    /// assert_eq!(vec, alloc_vec![1, 2]);
     /// ```
     #[unstable = "matches collection reform specification; waiting on panic semantics"]
     pub fn truncate(&mut self, len: uint) {
@@ -976,7 +979,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// ```
     /// fn foo(slice: &mut [int]) {}
     ///
-    /// let mut vec = vec![1i, 2];
+    /// let mut vec = alloc_vec![1i, 2];
     /// foo(vec.as_mut_slice());
     /// ```
     #[inline]
@@ -996,7 +999,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let v = vec!["a".to_string(), "b".to_string()];
+    /// let v = alloc_vec!["a".to_string(), "b".to_string()];
     ///
     /// for s in v.into_iter() {
     ///     // s has type String, not &String
@@ -1029,7 +1032,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut v = vec![1u, 2, 3, 4];
+    /// let mut v = alloc_vec![1u, 2, 3, 4];
     /// unsafe {
     ///     v.set_len(1);
     /// }
@@ -1050,13 +1053,13 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut v = vec!["foo", "bar", "baz", "qux"];
+    /// let mut v = alloc_vec!["foo", "bar", "baz", "qux"];
     ///
     /// assert_eq!(v.swap_remove(1), Some("bar"));
-    /// assert_eq!(v, vec!["foo", "qux", "baz"]);
+    /// assert_eq!(v, alloc_vec!["foo", "qux", "baz"]);
     ///
     /// assert_eq!(v.swap_remove(0), Some("foo"));
-    /// assert_eq!(v, vec!["baz", "qux"]);
+    /// assert_eq!(v, alloc_vec!["baz", "qux"]);
     ///
     /// assert_eq!(v.swap_remove(2), None);
     /// ```
@@ -1082,11 +1085,11 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec = vec![1i, 2, 3];
+    /// let mut vec = alloc_vec![1i, 2, 3];
     /// vec.insert(1, 4);
-    /// assert_eq!(vec, vec![1, 4, 2, 3]);
+    /// assert_eq!(vec, alloc_vec![1, 4, 2, 3]);
     /// vec.insert(4, 5);
-    /// assert_eq!(vec, vec![1, 4, 2, 3, 5]);
+    /// assert_eq!(vec, alloc_vec![1, 4, 2, 3, 5]);
     /// ```
     #[unstable = "panic semantics need settling"]
     pub fn insert(&mut self, index: uint, element: T) {
@@ -1117,13 +1120,13 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut v = vec![1i, 2, 3];
+    /// let mut v = alloc_vec![1i, 2, 3];
     /// assert_eq!(v.remove(1), Some(2));
-    /// assert_eq!(v, vec![1, 3]);
+    /// assert_eq!(v, alloc_vec![1, 3]);
     ///
     /// assert_eq!(v.remove(4), None);
     /// // v is unchanged:
-    /// assert_eq!(v, vec![1, 3]);
+    /// assert_eq!(v, alloc_vec![1, 3]);
     /// ```
     #[unstable = "panic semantics need settling"]
     pub fn remove(&mut self, index: uint) -> Option<T> {
@@ -1157,9 +1160,9 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec = vec![1i, 2, 3, 4];
+    /// let mut vec = alloc_vec![1i, 2, 3, 4];
     /// vec.retain(|&x| x%2 == 0);
-    /// assert_eq!(vec, vec![2, 4]);
+    /// assert_eq!(vec, alloc_vec![2, 4]);
     /// ```
     #[unstable = "the closure argument may become an unboxed closure"]
     pub fn retain<F>(&mut self, mut f: F) where F: FnMut(&T) -> bool {
@@ -1189,9 +1192,9 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec = vec![0u, 1];
+    /// let mut vec = alloc_vec![0u, 1];
     /// vec.grow_fn(3, |i| i);
-    /// assert_eq!(vec, vec![0, 1, 0, 1, 2]);
+    /// assert_eq!(vec, alloc_vec![0, 1, 0, 1, 2]);
     /// ```
     #[unstable = "this function may be renamed or change to unboxed closures"]
     pub fn grow_fn<F>(&mut self, n: uint, mut f: F) where F: FnMut(uint) -> T {
@@ -1210,9 +1213,9 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```rust
-    /// let mut vec = vec!(1i, 2);
+    /// let mut vec = alloc_vec!(1i, 2);
     /// vec.push(3);
-    /// assert_eq!(vec, vec!(1, 2, 3));
+    /// assert_eq!(vec, alloc_vec!(1, 2, 3));
     /// ```
     #[inline]
     #[stable]
@@ -1229,9 +1232,12 @@ impl<T, A: Allocator> Vec<T, A> {
                 let new_descriptor = old_descriptor.array(2);
                 unsafe {
                     if !self.allocator.grow(*self.ptr as *mut u8, old_descriptor, new_descriptor) {
-                        self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
                         let ptr = self.allocator.allocate(new_descriptor) as *mut T;
                         if ptr.is_null() { ::rust_alloc::oom() }
+
+                        ptr::copy_nonoverlapping_memory(ptr, *self.ptr, self.len);
+                        self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
+
                         self.ptr = NonZero::new(ptr);
                     }
                 }
@@ -1260,9 +1266,9 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```rust
-    /// let mut vec = vec![1i, 2, 3];
+    /// let mut vec = alloc_vec![1i, 2, 3];
     /// assert_eq!(vec.pop(), Some(3));
-    /// assert_eq!(vec, vec![1, 2]);
+    /// assert_eq!(vec, alloc_vec![1, 2]);
     /// ```
     #[inline]
     #[stable]
@@ -1283,7 +1289,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut v = vec!["a".to_string(), "b".to_string()];
+    /// let mut v = alloc_vec!["a".to_string(), "b".to_string()];
     /// for s in v.drain() {
     ///     // s has type String, not &String
     ///     println!("{}", s);
@@ -1314,7 +1320,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let mut v = vec![1i, 2, 3];
+    /// let mut v = alloc_vec![1i, 2, 3];
     ///
     /// v.clear();
     ///
@@ -1331,7 +1337,7 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let a = vec![1i, 2, 3];
+    /// let a = alloc_vec![1i, 2, 3];
     /// assert_eq!(a.len(), 3);
     /// ```
     #[inline]
@@ -1365,9 +1371,12 @@ impl<T, A: Allocator> Vec<T, A> {
             unsafe {
                 if self.cap > 0 {
                     if !self.allocator.grow(*self.ptr as *mut u8, old_descriptor, new_descriptor) {
-                        self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
                         let ptr = self.allocator.allocate(new_descriptor) as *mut T;
                         if ptr.is_null() { ::rust_alloc::oom() }
+
+                        ptr::copy_nonoverlapping_memory(ptr, *self.ptr, self.len);
+                        self.allocator.deallocate(*self.ptr as *mut u8, old_descriptor);
+
                         self.ptr = NonZero::new(ptr);
                     }
                 } else {
@@ -1389,11 +1398,11 @@ impl<T: PartialEq> Vec<T> {
     /// # Examples
     ///
     /// ```
-    /// let mut vec = vec![1i, 2, 2, 3, 2];
+    /// let mut vec = alloc_vec![1i, 2, 2, 3, 2];
     ///
     /// vec.dedup();
     ///
-    /// assert_eq!(vec, vec![1i, 2, 3, 2]);
+    /// assert_eq!(vec, alloc_vec![1i, 2, 3, 2]);
     /// ```
     #[unstable = "this function may be renamed"]
     pub fn dedup(&mut self) {
@@ -1489,7 +1498,7 @@ impl<T, A: Allocator> AsSlice<T> for Vec<T, A> {
     /// ```
     /// fn foo(slice: &[int]) {}
     ///
-    /// let vec = vec![1i, 2];
+    /// let vec = alloc_vec![1i, 2];
     /// foo(vec.as_slice());
     /// ```
     #[inline]
@@ -1876,13 +1885,13 @@ impl<T, A: Allocator> Vec<T, A> {
     /// # Examples
     ///
     /// ```
-    /// let v = vec![0u, 1, 2];
+    /// let v = alloc_vec![0u, 1, 2];
     /// let w = v.map_in_place(|i| i + 3);
     /// assert_eq!(w.as_slice(), [3, 4, 5].as_slice());
     ///
     /// #[deriving(PartialEq, Show)]
     /// struct Newtype(u8);
-    /// let bytes = vec![0x11, 0x22];
+    /// let bytes = alloc_vec![0x11, 0x22];
     /// let newtyped_bytes = bytes.map_in_place(|x| Newtype(x));
     /// assert_eq!(newtyped_bytes.as_slice(), [Newtype(0x11), Newtype(0x22)].as_slice());
     /// ```
@@ -2073,10 +2082,20 @@ impl<'a> fmt::FormatWriter for Vec<u8> {
 
 #[cfg(test)]
 mod tests {
-    use prelude::*;
     use core::mem::size_of;
     use test::Bencher;
-    use super::{as_vec, unzip, raw};
+    use super::{Vec, as_vec, unzip, raw};
+
+    macro_rules! alloc_vec {
+        ($($e:expr),*) => ({
+            // leading _ to allow empty construction without a warning.
+            let mut _temp = Vec::new();
+            $(_temp.push($e);)*
+            _temp
+        });
+        ($($e:expr),+,) => (alloc_vec!($($e),+))
+    }
+
 
     struct DropCounter<'a> {
         count: &'a mut int
@@ -2179,7 +2198,7 @@ mod tests {
 
     #[test]
     fn test_slice_from_mut() {
-        let mut values = vec![1u8,2,3,4,5];
+        let mut values = alloc_vec![1u8,2,3,4,5];
         {
             let slice = values.slice_from_mut(2);
             assert!(slice == [3, 4, 5]);
@@ -2193,7 +2212,7 @@ mod tests {
 
     #[test]
     fn test_slice_to_mut() {
-        let mut values = vec![1u8,2,3,4,5];
+        let mut values = alloc_vec![1u8,2,3,4,5];
         {
             let slice = values.slice_to_mut(2);
             assert!(slice == [1, 2]);
@@ -2207,7 +2226,7 @@ mod tests {
 
     #[test]
     fn test_split_at_mut() {
-        let mut values = vec![1u8,2,3,4,5];
+        let mut values = alloc_vec![1u8,2,3,4,5];
         {
             let (left, right) = values.split_at_mut(2);
             {
@@ -2227,13 +2246,13 @@ mod tests {
             }
         }
 
-        assert!(values == vec![2u8, 3, 5, 6, 7]);
+        assert!(values == alloc_vec![2u8, 3, 5, 6, 7]);
     }
 
     #[test]
     fn test_clone() {
-        let v: Vec<int> = vec!();
-        let w = vec!(1i, 2, 3);
+        let v: Vec<int> = alloc_vec!();
+        let w = alloc_vec!(1i, 2, 3);
 
         assert_eq!(v, v.clone());
 
@@ -2245,9 +2264,9 @@ mod tests {
 
     #[test]
     fn test_clone_from() {
-        let mut v = vec!();
-        let three = vec!(box 1i, box 2, box 3);
-        let two = vec!(box 4i, box 5);
+        let mut v = alloc_vec!();
+        let three = alloc_vec!(box 1i, box 2, box 3);
+        let two = alloc_vec!(box 4i, box 5);
         // zero, long
         v.clone_from(&three);
         assert_eq!(v, three);
@@ -2267,16 +2286,16 @@ mod tests {
 
     #[test]
     fn test_grow_fn() {
-        let mut v = vec![0u, 1];
+        let mut v = alloc_vec![0u, 1];
         v.grow_fn(3, |i| i);
-        assert!(v == vec![0u, 1, 0, 1, 2]);
+        assert!(v == alloc_vec![0u, 1, 0, 1, 2]);
     }
 
     #[test]
     fn test_retain() {
-        let mut vec = vec![1u, 2, 3, 4];
+        let mut vec = alloc_vec![1u, 2, 3, 4];
         vec.retain(|&x| x % 2 == 0);
-        assert!(vec == vec![2u, 4]);
+        assert!(vec == alloc_vec![2u, 4]);
     }
 
     #[test]
@@ -2312,23 +2331,23 @@ mod tests {
 
     #[test]
     fn test_partition() {
-        assert_eq!(vec![].partition(|x: &int| *x < 3), (vec![], vec![]));
-        assert_eq!(vec![1i, 2, 3].partition(|x: &int| *x < 4), (vec![1, 2, 3], vec![]));
-        assert_eq!(vec![1i, 2, 3].partition(|x: &int| *x < 2), (vec![1], vec![2, 3]));
-        assert_eq!(vec![1i, 2, 3].partition(|x: &int| *x < 0), (vec![], vec![1, 2, 3]));
+        assert_eq!(alloc_vec![].partition(|x: &int| *x < 3), (alloc_vec![], alloc_vec![]));
+        assert_eq!(alloc_vec![1i, 2, 3].partition(|x: &int| *x < 4), (alloc_vec![1, 2, 3], alloc_vec![]));
+        assert_eq!(alloc_vec![1i, 2, 3].partition(|x: &int| *x < 2), (alloc_vec![1], alloc_vec![2, 3]));
+        assert_eq!(alloc_vec![1i, 2, 3].partition(|x: &int| *x < 0), (alloc_vec![], alloc_vec![1, 2, 3]));
     }
 
     #[test]
     fn test_partitioned() {
-        assert_eq!(vec![].partitioned(|x: &int| *x < 3), (vec![], vec![]));
-        assert_eq!(vec![1i, 2, 3].partitioned(|x: &int| *x < 4), (vec![1, 2, 3], vec![]));
-        assert_eq!(vec![1i, 2, 3].partitioned(|x: &int| *x < 2), (vec![1], vec![2, 3]));
-        assert_eq!(vec![1i, 2, 3].partitioned(|x: &int| *x < 0), (vec![], vec![1, 2, 3]));
+        assert_eq!(alloc_vec![].partitioned(|x: &int| *x < 3), (alloc_vec![], alloc_vec![]));
+        assert_eq!(alloc_vec![1i, 2, 3].partitioned(|x: &int| *x < 4), (alloc_vec![1, 2, 3], alloc_vec![]));
+        assert_eq!(alloc_vec![1i, 2, 3].partitioned(|x: &int| *x < 2), (alloc_vec![1], alloc_vec![2, 3]));
+        assert_eq!(alloc_vec![1i, 2, 3].partitioned(|x: &int| *x < 0), (alloc_vec![], alloc_vec![1, 2, 3]));
     }
 
     #[test]
     fn test_zip_unzip() {
-        let z1 = vec![(1i, 4i), (2, 5), (3, 6)];
+        let z1 = alloc_vec![(1i, 4i), (2, 5), (3, 6)];
 
         let (left, right) = unzip(z1.iter().map(|&x| x));
 
@@ -2344,13 +2363,13 @@ mod tests {
             let a = [1i, 2, 3];
             let ptr = a.as_ptr();
             let b = raw::from_buf(ptr, 3u);
-            assert_eq!(b, vec![1, 2, 3]);
+            assert_eq!(b, alloc_vec![1, 2, 3]);
 
             // Test on-heap copy-from-buf.
-            let c = vec![1i, 2, 3, 4, 5];
+            let c = alloc_vec![1i, 2, 3, 4, 5];
             let ptr = c.as_ptr();
             let d = raw::from_buf(ptr, 5u);
-            assert_eq!(d, vec![1, 2, 3, 4, 5]);
+            assert_eq!(d, alloc_vec![1, 2, 3, 4, 5]);
         }
     }
 
@@ -2364,7 +2383,7 @@ mod tests {
             }
         }
 
-        let mut v = vec![Elem(1), Elem(2), Elem(3), Elem(4), Elem(5)];
+        let mut v = alloc_vec![Elem(1), Elem(2), Elem(3), Elem(4), Elem(5)];
         assert_eq!(unsafe { drops }, 0);
         v.truncate(3);
         assert_eq!(unsafe { drops }, 2);
@@ -2385,61 +2404,61 @@ mod tests {
             }
         }
 
-        let mut v = vec![BadElem(1), BadElem(2), BadElem(0xbadbeef), BadElem(4)];
+        let mut v = alloc_vec![BadElem(1), BadElem(2), BadElem(0xbadbeef), BadElem(4)];
         v.truncate(0);
     }
 
     #[test]
     fn test_index() {
-        let vec = vec!(1i, 2, 3);
+        let vec = alloc_vec!(1i, 2, 3);
         assert!(vec[1] == 2);
     }
 
     #[test]
     #[should_fail]
     fn test_index_out_of_bounds() {
-        let vec = vec!(1i, 2, 3);
+        let vec = alloc_vec!(1i, 2, 3);
         let _ = vec[3];
     }
 
     #[test]
     #[should_fail]
     fn test_slice_out_of_bounds_1() {
-        let x: Vec<int> = vec![1, 2, 3, 4, 5];
+        let x: Vec<int> = alloc_vec![1, 2, 3, 4, 5];
         x[-1..];
     }
 
     #[test]
     #[should_fail]
     fn test_slice_out_of_bounds_2() {
-        let x: Vec<int> = vec![1, 2, 3, 4, 5];
+        let x: Vec<int> = alloc_vec![1, 2, 3, 4, 5];
         x[..6];
     }
 
     #[test]
     #[should_fail]
     fn test_slice_out_of_bounds_3() {
-        let x: Vec<int> = vec![1, 2, 3, 4, 5];
+        let x: Vec<int> = alloc_vec![1, 2, 3, 4, 5];
         x[-1..4];
     }
 
     #[test]
     #[should_fail]
     fn test_slice_out_of_bounds_4() {
-        let x: Vec<int> = vec![1, 2, 3, 4, 5];
+        let x: Vec<int> = alloc_vec![1, 2, 3, 4, 5];
         x[1..6];
     }
 
     #[test]
     #[should_fail]
     fn test_slice_out_of_bounds_5() {
-        let x: Vec<int> = vec![1, 2, 3, 4, 5];
+        let x: Vec<int> = alloc_vec![1, 2, 3, 4, 5];
         x[3..2];
     }
 
     #[test]
     fn test_swap_remove_empty() {
-        let mut vec: Vec<uint> = vec!();
+        let mut vec: Vec<uint> = alloc_vec!();
         assert_eq!(vec.swap_remove(0), None);
     }
 
@@ -2458,19 +2477,19 @@ mod tests {
     #[test]
     #[should_fail]
     fn test_map_in_place_incompatible_types_fail() {
-        let v = vec![0u, 1, 2];
+        let v = alloc_vec![0u, 1, 2];
         v.map_in_place(|_| ());
     }
 
     #[test]
     fn test_map_in_place() {
-        let v = vec![0u, 1, 2];
+        let v = alloc_vec![0u, 1, 2];
         assert_eq!(v.map_in_place(|i: uint| i as int - 1), [-1i, 0, 1]);
     }
 
     #[test]
     fn test_map_in_place_zero_sized() {
-        let v = vec![(), ()];
+        let v = alloc_vec![(), ()];
         #[deriving(PartialEq, Show)]
         struct ZeroSized;
         assert_eq!(v.map_in_place(|_| ZeroSized), [ZeroSized, ZeroSized]);
@@ -2507,38 +2526,38 @@ mod tests {
 
     #[test]
     fn test_move_items() {
-        let vec = vec![1, 2, 3];
-        let mut vec2 : Vec<i32> = vec![];
+        let vec = alloc_vec![1, 2, 3];
+        let mut vec2 : Vec<i32> = alloc_vec![];
         for i in vec.into_iter() {
             vec2.push(i);
         }
-        assert!(vec2 == vec![1, 2, 3]);
+        assert!(vec2 == alloc_vec![1, 2, 3]);
     }
 
     #[test]
     fn test_move_items_reverse() {
-        let vec = vec![1, 2, 3];
-        let mut vec2 : Vec<i32> = vec![];
+        let vec = alloc_vec![1, 2, 3];
+        let mut vec2 : Vec<i32> = alloc_vec![];
         for i in vec.into_iter().rev() {
             vec2.push(i);
         }
-        assert!(vec2 == vec![3, 2, 1]);
+        assert!(vec2 == alloc_vec![3, 2, 1]);
     }
 
     #[test]
     fn test_move_items_zero_sized() {
-        let vec = vec![(), (), ()];
-        let mut vec2 : Vec<()> = vec![];
+        let vec = alloc_vec![(), (), ()];
+        let mut vec2 : Vec<()> = alloc_vec![];
         for i in vec.into_iter() {
             vec2.push(i);
         }
-        assert!(vec2 == vec![(), (), ()]);
+        assert!(vec2 == alloc_vec![(), (), ()]);
     }
 
     #[test]
     fn test_drain_items() {
-        let mut vec = vec![1, 2, 3];
-        let mut vec2: Vec<i32> = vec![];
+        let mut vec = alloc_vec![1, 2, 3];
+        let mut vec2: Vec<i32> = alloc_vec![];
         for i in vec.drain() {
             vec2.push(i);
         }
@@ -2548,8 +2567,8 @@ mod tests {
 
     #[test]
     fn test_drain_items_reverse() {
-        let mut vec = vec![1, 2, 3];
-        let mut vec2: Vec<i32> = vec![];
+        let mut vec = alloc_vec![1, 2, 3];
+        let mut vec2: Vec<i32> = alloc_vec![];
         for i in vec.drain().rev() {
             vec2.push(i);
         }
@@ -2559,8 +2578,8 @@ mod tests {
 
     #[test]
     fn test_drain_items_zero_sized() {
-        let mut vec = vec![(), (), ()];
-        let mut vec2: Vec<()> = vec![];
+        let mut vec = alloc_vec![(), (), ()];
+        let mut vec2: Vec<()> = alloc_vec![];
         for i in vec.drain() {
             vec2.push(i);
         }
@@ -2570,7 +2589,7 @@ mod tests {
 
     #[test]
     fn test_into_boxed_slice() {
-        let xs = vec![1u, 2, 3];
+        let xs = alloc_vec![1u, 2, 3];
         let ys = xs.into_boxed_slice();
         assert_eq!(ys.as_slice(), [1u, 2, 3]);
     }
