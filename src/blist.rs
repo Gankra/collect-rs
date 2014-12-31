@@ -177,7 +177,6 @@ impl<T> BList<T> {
         } }
     }
 
-    /* FIXME: uncomment into_iter stuff when RingBuf gets into_iter
     /// Gets a by-value iterator over the elements in the list.
     pub fn into_iter(self) -> MoveItems<T> {
         let len = self.len();
@@ -187,7 +186,7 @@ impl<T> BList<T> {
             left_block_iter: None,
             len: len,
         } }
-    }*/
+    }
 
     pub fn traversal(&self) -> Trav<T> {
         Trav { list: self }
@@ -243,11 +242,9 @@ impl<'a, T> Traverse<ring_buf::IterMut<'a, T>> for &'a mut RingBuf<T> {
     fn traverse(self) -> ring_buf::IterMut<'a, T> { self.iter_mut() }
 }
 
-/*
-impl<T> Traverse<ring_buf::MoveItems<T>> for RingBuf<T> {
-    fn traverse(self) -> ring_buf::MoveItems<T> { self.into_iter() }
+impl<T> Traverse<ring_buf::IntoIter<T>> for RingBuf<T> {
+    fn traverse(self) -> ring_buf::IntoIter<T> { self.into_iter() }
 }
-*/
 
 /// A by-ref iterator for a BList
 pub struct Items<'a, T: 'a> {
@@ -258,12 +255,11 @@ pub struct Items<'a, T: 'a> {
 pub struct MutItems<'a, T: 'a> {
     iter: AbsItems<dlist::IterMut<'a, RingBuf<T>>, ring_buf::IterMut<'a, T>>,
 }
-/*
+
 /// A by-value iterator for a BList
 pub struct MoveItems<T> {
-    iter: AbsItems<dlist::MoveItems<RingBuf<T>>, ring_buf::MoveItems<T>>,
+    iter: AbsItems<dlist::IntoIter<RingBuf<T>>, ring_buf::IntoIter<T>>,
 }
-*/
 
 /// An iterator that abstracts over all three kinds of ownership for a BList
 struct AbsItems<DListIter, RingBufIter> {
@@ -374,7 +370,6 @@ impl<'a, T> DoubleEndedIterator<&'a mut T> for MutItems<'a, T> {
 }
 impl<'a, T> ExactSizeIterator<&'a mut T> for MutItems<'a, T> {}
 
-/*
 impl<T> Iterator<T> for MoveItems<T> {
     fn next(&mut self) -> Option<T> { self.iter.next() }
     fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
@@ -382,8 +377,7 @@ impl<T> Iterator<T> for MoveItems<T> {
 impl<T> DoubleEndedIterator<T> for MoveItems<T> {
     fn next_back(&mut self) -> Option<T> { self.iter.next_back() }
 }
-impl<T> ExactSize<T> for MoveItems<T> {}
-*/
+impl<T> ExactSizeIterator<T> for MoveItems<T> {}
 
 
 pub struct Trav<'a, T: 'a> {
