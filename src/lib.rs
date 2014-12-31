@@ -25,6 +25,7 @@
 #![feature(unboxed_closures)]
 #![feature(globs)]
 #![feature(macro_rules)]
+#![feature(slicing_syntax)]
 
 #[cfg(test)] extern crate test;
 extern crate core;
