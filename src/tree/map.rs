@@ -959,7 +959,7 @@ macro_rules! define_iterator {
                     unsafe {
                         self.stack.push(addr!(& $($addr_mut)* *self.node));
                     }
-                    self.node = ptr::RawPtr::null();
+                    self.node = ptr::null_mut();
                 }
             }
         });
