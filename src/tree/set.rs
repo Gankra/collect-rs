@@ -688,32 +688,10 @@ impl<'a, T, C> Iterator<&'a T> for UnionItems<'a, T, C> where C: Compare<T> {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
-impl<T: Ord + Clone> BitOr<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
-    /// Returns the union of `self` and `rhs` as a new `TreeSet<T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TreeSet;
-    ///
-    /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<int> = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TreeSet<int> = a | b;
-    /// let v: Vec<int> = set.into_iter().collect();
-    /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
-    /// ```
-    fn bitor(&self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.union(rhs).cloned().collect()
-    }
-}
+impl<'a, 'b, T, C> BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+    where T: Clone, C: Compare<T> + Eq + Clone {
 
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-impl<'a, 'b, T: Ord + Clone> BitOr<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> {
-    /// Returns the union of `self` and `rhs` as a new `TreeSet<T>`.
+    /// Returns the union of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
     /// # Examples
     ///
@@ -727,38 +705,19 @@ impl<'a, 'b, T: Ord + Clone> BitOr<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T
     /// let v: Vec<int> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
     /// ```
-    fn bitor(self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.union(rhs).cloned().collect()
+    fn bitor(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
+        let it = self.union(rhs).cloned();
+        let mut set = TreeSet::with_comparator(self.comparator().clone());
+        set.extend(it);
+        set
     }
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
-impl<T: Ord + Clone> BitAnd<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
-    /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TreeSet;
-    ///
-    /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<int> = vec![2, 3, 4].into_iter().collect();
-    ///
-    /// let set: TreeSet<int> = a & b;
-    /// let v: Vec<int> = set.into_iter().collect();
-    /// assert_eq!(v, vec![2, 3]);
-    /// ```
-    fn bitand(&self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.intersection(rhs).cloned().collect()
-    }
-}
+impl<'a, 'b, T, C> BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+    where T: Clone, C: Compare<T> + Eq + Clone {
 
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-impl<'a, 'b, T: Ord + Clone> BitAnd<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> {
-    /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T>`.
+    /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
     /// # Examples
     ///
@@ -772,38 +731,19 @@ impl<'a, 'b, T: Ord + Clone> BitAnd<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<
     /// let v: Vec<int> = set.into_iter().collect();
     /// assert_eq!(v, vec![2, 3]);
     /// ```
-    fn bitand(self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.intersection(rhs).cloned().collect()
+    fn bitand(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
+        let it = self.intersection(rhs).cloned();
+        let mut set = TreeSet::with_comparator(self.comparator().clone());
+        set.extend(it);
+        set
     }
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
-impl<T: Ord + Clone> BitXor<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
-    /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TreeSet;
-    ///
-    /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<int> = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TreeSet<int> = a ^ b;
-    /// let v: Vec<int> = set.into_iter().collect();
-    /// assert_eq!(v, vec![1, 2, 4, 5]);
-    /// ```
-    fn bitxor(&self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.symmetric_difference(rhs).cloned().collect()
-    }
-}
+impl<'a, 'b, T, C> BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+    where T: Clone, C: Compare<T> + Eq + Clone {
 
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-impl<'a, 'b, T: Ord + Clone> BitXor<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> {
-    /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T>`.
+    /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
     /// # Examples
     ///
@@ -817,38 +757,19 @@ impl<'a, 'b, T: Ord + Clone> BitXor<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<
     /// let v: Vec<int> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2, 4, 5]);
     /// ```
-    fn bitxor(self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.symmetric_difference(rhs).cloned().collect()
+    fn bitxor(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
+        let it = self.symmetric_difference(rhs).cloned();
+        let mut set = TreeSet::with_comparator(self.comparator().clone());
+        set.extend(it);
+        set
     }
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
-impl<T: Ord + Clone> Sub<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
-    /// Returns the difference of `self` and `rhs` as a new `TreeSet<T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TreeSet;
-    ///
-    /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<int> = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TreeSet<int> = a - b;
-    /// let v: Vec<int> = set.into_iter().collect();
-    /// assert_eq!(v, vec![1, 2]);
-    /// ```
-    fn sub(&self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.difference(rhs).cloned().collect()
-    }
-}
+impl<'a, 'b, T, C> Sub<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+    where T: Clone, C: Compare<T> + Eq + Clone {
 
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-impl<'a, 'b, T: Ord + Clone> Sub<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> {
-    /// Returns the difference of `self` and `rhs` as a new `TreeSet<T>`.
+    /// Returns the difference of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
     /// # Examples
     ///
@@ -862,8 +783,11 @@ impl<'a, 'b, T: Ord + Clone> Sub<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> 
     /// let v: Vec<int> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2]);
     /// ```
-    fn sub(self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.difference(rhs).cloned().collect()
+    fn sub(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
+        let it = self.difference(rhs).cloned();
+        let mut set = TreeSet::with_comparator(self.comparator().clone());
+        set.extend(it);
+        set
     }
 }
 
