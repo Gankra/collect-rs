@@ -212,33 +212,33 @@ impl<T> DList<T> {
     ///
     /// Panics if the index is greater than the length of the list.
     #[inline]
-    pub fn insert(&mut self, mut index: uint, elem: T) {
+    pub fn insert(&mut self, index: uint, elem: T) {
         assert!(index <= self.len(), "index out of bounds");
         let mut cursor = self.cursor();
-        while index > 0 { cursor.next(); index -= 1; }
+        cursor.seek_forward(index);
         cursor.insert(elem);
     }
 
     /// Removes the element at the given index. Returns None if the index is out of bounds.
     #[inline]
-    pub fn remove(&mut self, mut index: uint) -> Option<T> {
+    pub fn remove(&mut self, index: uint) -> Option<T> {
         if index >= self.len() {
             None
         } else {
             let mut cursor = self.cursor();
-            while index > 0 { cursor.next(); index -= 1; }
+            cursor.seek_forward(index);
             cursor.remove()
         }
     }
 
     /// Splits the list into two lists at the given index. Returns the right side of the split.
     /// Returns an empty list if index is out of bounds.
-    pub fn split_at(&mut self, mut index: uint) -> DList<T> {
+    pub fn split_at(&mut self, index: uint) -> DList<T> {
         if index >= self.len() {
             DList::new()
         } else {
             let mut cursor = self.cursor();
-            while index > 0 { cursor.next(); index -= 1; }
+            cursor.seek_forward(index);
             cursor.split()
         }
     }
@@ -251,9 +251,9 @@ impl<T> DList<T> {
     }
 
     /// Inserts the given list at the given index. The old list will be empty afterwards.
-    pub fn splice(&mut self, mut index: uint, other: &mut DList<T>) {
+    pub fn splice(&mut self, index: uint, other: &mut DList<T>) {
         let mut cursor = self.cursor();
-        while index > 0 { cursor.next(); index -= 1; }
+        cursor.seek_forward(index);
         cursor.splice(other);
     }
 
@@ -529,6 +529,14 @@ impl<'a, T> Cursor<'a, T> {
                 }
             }
         }
+    }
+
+    pub fn seek_forward(&mut self, by: uint) {
+        for _ in range(0, by) { self.next(); }
+    }
+
+    pub fn seek_backward(&mut self, by: uint) {
+        for _ in range(0, by) { self.prev(); }
     }
 }
 
