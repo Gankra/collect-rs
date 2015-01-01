@@ -238,7 +238,7 @@ pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> {
     /// let b_str = "b";
     /// let b_string = b_str.to_string();
     ///
-    /// let cmp = Natural.borrow();
+    /// let cmp = Natural::<str>.borrow();
     /// assert_eq!(cmp.compare(a_str, &a_string), Equal);
     /// assert_eq!(cmp.compare(a_str, b_str), Less);
     /// assert_eq!(cmp.compare(&b_string, a_str), Greater);

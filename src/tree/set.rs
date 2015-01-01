@@ -1284,7 +1284,7 @@ mod test {
     fn test_comparator_borrowed() {
         use compare::{CompareExt, Natural};
 
-        let mut m = TreeSet::with_comparator(Natural.borrow());
+        let mut m = TreeSet::with_comparator(Natural::<str>.borrow());
 
         assert!(m.insert("a".to_string()));
 
