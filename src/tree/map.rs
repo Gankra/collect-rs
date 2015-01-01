@@ -1511,7 +1511,7 @@ mod test_treemap {
 
             for _ in range(0u, 30) {
                 let r = rng.gen_range(0, ctrl.len());
-                let (key, _) = ctrl.remove(r).unwrap();
+                let (key, _) = ctrl.remove(r);
                 assert!(map.remove(&key).is_some());
                 check_structure(&map);
                 check_equal(ctrl.as_slice(), &map);

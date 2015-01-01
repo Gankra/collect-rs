@@ -70,7 +70,7 @@ pub fn find_rand_n<M, T, I, F>(n: uint,
 {
     // setup
     let mut rng = rand::weak_rng();
-    let mut keys = Vec::from_fn(n, |_| rng.gen::<uint>() % n);
+    let mut keys: Vec<_> = range(0, n).map(|_| rng.gen::<uint>() % n).collect();
 
     for k in keys.iter() {
         insert(map, *k);

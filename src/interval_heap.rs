@@ -229,11 +229,11 @@ impl<T: Ord> IntervalHeap<T> {
     pub fn pop_min(&mut self) -> Option<T> {
         match self.data.len() {
             0 => None,
-            1...2 => self.data.swap_remove(0),
+            1...2 => Some(self.data.swap_remove(0)),
             _ => {
                 let res = self.data.swap_remove(0);
                 update_min(self.data.as_mut_slice());
-                res
+                Some(res)
             }
         }
     }
@@ -245,7 +245,7 @@ impl<T: Ord> IntervalHeap<T> {
             _ => {
                 let res = self.data.swap_remove(1);
                 update_max(self.data.as_mut_slice());
-                res
+                Some(res)
             }
         }
     }
