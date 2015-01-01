@@ -8,7 +8,6 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use std::borrow::BorrowFrom;
 use std::default::Default;
 use std::fmt;
 use std::fmt::Show;
@@ -16,14 +15,13 @@ use std::iter::Peekable;
 use std::iter;
 use std::hash::{Writer, Hash};
 
+use compare::{Compare, Natural};
 use tree_map::{TreeMap, Entries, RevEntries, MoveEntries};
 
 // FIXME(conventions): implement bounded iterators
 // FIXME(conventions): replace rev_iter(_mut) by making iter(_mut) DoubleEnded
 
-/// An implementation of a set on top of the `TreeMap` container. The only
-/// requirement is that the type of the elements contained ascribes to the
-/// `Ord` trait.
+/// An implementation of a set on top of the `TreeMap` container.
 ///
 /// # Examples
 ///
@@ -47,35 +45,17 @@ use tree_map::{TreeMap, Entries, RevEntries, MoveEntries};
 /// }
 /// ```
 ///
-/// The easiest way to use `TreeSet` with a custom type is to implement `Ord`.
-/// We must also implement `PartialEq`, `Eq` and `PartialOrd`.
+/// A `TreeSet` can also be used with a custom ordering:
 ///
 /// ```rust
 /// use collect::TreeSet;
 ///
-/// // We need `Eq` and `PartialEq`, these can be derived.
-/// #[deriving(Eq, PartialEq)]
 /// struct Troll<'a> {
 ///     name: &'a str,
 ///     level: uint,
 /// }
 ///
-/// // Implement `Ord` and sort trolls by level.
-/// impl<'a> Ord for Troll<'a> {
-///     fn cmp(&self, other: &Troll) -> Ordering {
-///         // If we swap `self` and `other`, we get descending ordering.
-///         self.level.cmp(&other.level)
-///     }
-/// }
-///
-/// // `PartialOrd` needs to be implemented as well.
-/// impl<'a> PartialOrd for Troll<'a> {
-///     fn partial_cmp(&self, other: &Troll) -> Option<Ordering> {
-///         Some(self.cmp(other))
-///     }
-/// }
-///
-/// let mut trolls = TreeSet::new();
+/// let mut trolls = TreeSet::with_comparator(|&: l: &Troll, r: &Troll| l.level.cmp(&r.level));
 ///
 /// trolls.insert(Troll { name: "Orgarr", level: 2 });
 /// trolls.insert(Troll { name: "Blargarr", level: 3 });
@@ -94,17 +74,20 @@ use tree_map::{TreeMap, Entries, RevEntries, MoveEntries};
 /// assert_eq!(trolls.len(), 0);
 /// ```
 #[deriving(Clone)]
-pub struct TreeSet<T> {
-    map: TreeMap<T, ()>
+pub struct TreeSet<T, C: Compare<T> = Natural<T>> {
+    map: TreeMap<T, (), C>
 }
 
+// FIXME: determine what `PartialEq` means for comparator-based `TreeSet`s
 impl<T: PartialEq + Ord> PartialEq for TreeSet<T> {
     #[inline]
     fn eq(&self, other: &TreeSet<T>) -> bool { self.map == other.map }
 }
 
+// FIXME: determine what `Eq` means for comparator-based `TreeSet`s
 impl<T: Eq + Ord> Eq for TreeSet<T> {}
 
+// FIXME: determine what `PartialOrd` means for comparator-based `TreeSet`s
 impl<T: Ord> PartialOrd for TreeSet<T> {
     #[inline]
     fn partial_cmp(&self, other: &TreeSet<T>) -> Option<Ordering> {
@@ -112,6 +95,7 @@ impl<T: Ord> PartialOrd for TreeSet<T> {
     }
 }
 
+// FIXME: determine what `Ord` means for comparator-based `TreeSet`s
 impl<T: Ord> Ord for TreeSet<T> {
     #[inline]
     fn cmp(&self, other: &TreeSet<T>) -> Ordering {
@@ -119,7 +103,7 @@ impl<T: Ord> Ord for TreeSet<T> {
     }
 }
 
-impl<T: Ord + Show> Show for TreeSet<T> {
+impl<T: Show, C> Show for TreeSet<T, C> where C: Compare<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
 
@@ -132,13 +116,13 @@ impl<T: Ord + Show> Show for TreeSet<T> {
     }
 }
 
-impl<T: Ord> Default for TreeSet<T> {
+impl<T, C> Default for TreeSet<T, C> where C: Compare<T> + Default {
     #[inline]
-    fn default() -> TreeSet<T> { TreeSet::new() }
+    fn default() -> TreeSet<T, C> { TreeSet::with_comparator(Default::default()) }
 }
 
 impl<T: Ord> TreeSet<T> {
-    /// Creates an empty `TreeSet`.
+    /// Creates an empty `TreeSet` ordered according to the natural order of its values.
     ///
     /// # Examples
     ///
@@ -148,7 +132,17 @@ impl<T: Ord> TreeSet<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn new() -> TreeSet<T> { TreeSet{map: TreeMap::new()} }
+    pub fn new() -> TreeSet<T> { TreeSet::with_comparator(Natural) }
+}
+
+impl<T, C> TreeSet<T, C> where C: Compare<T> {
+    /// Creates an empty `TreeSet` ordered according to the given comparator.
+    pub fn with_comparator(cmp: C) -> TreeSet<T, C> {
+        TreeSet { map: TreeMap::with_comparator(cmp) }
+    }
+
+    /// Returns the comparator according to which the `TreeSet` is ordered.
+    pub fn comparator(&self) -> &C { self.map.comparator() }
 
     /// Gets a lazy iterator over the values in the set, in ascending order.
     ///
@@ -270,8 +264,14 @@ impl<T: Ord> TreeSet<T> {
     /// assert_eq!(diff, [4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn difference<'a>(&'a self, other: &'a TreeSet<T>) -> DifferenceItems<'a, T> {
-        DifferenceItems{a: self.iter().peekable(), b: other.iter().peekable()}
+    pub fn difference<'a>(&'a self, other: &'a TreeSet<T, C>)
+        -> DifferenceItems<'a, T, C> where C: Eq {
+        assert!(self.comparator() == other.comparator());
+        DifferenceItems {
+            a: self.iter().peekable(),
+            b: other.iter().peekable(),
+            cmp: self.comparator(),
+        }
     }
 
     /// Visits the values representing the symmetric difference, in ascending order.
@@ -296,9 +296,14 @@ impl<T: Ord> TreeSet<T> {
     /// assert_eq!(diff1, [1, 2, 4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn symmetric_difference<'a>(&'a self, other: &'a TreeSet<T>)
-        -> SymDifferenceItems<'a, T> {
-        SymDifferenceItems{a: self.iter().peekable(), b: other.iter().peekable()}
+    pub fn symmetric_difference<'a>(&'a self, other: &'a TreeSet<T, C>)
+        -> SymDifferenceItems<'a, T, C> where C: Eq {
+        assert!(self.comparator() == other.comparator());
+        SymDifferenceItems {
+            a: self.iter().peekable(),
+            b: other.iter().peekable(),
+            cmp: self.comparator(),
+        }
     }
 
     /// Visits the values representing the intersection, in ascending order.
@@ -320,9 +325,14 @@ impl<T: Ord> TreeSet<T> {
     /// assert_eq!(diff, [2, 3].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn intersection<'a>(&'a self, other: &'a TreeSet<T>)
-        -> IntersectionItems<'a, T> {
-        IntersectionItems{a: self.iter().peekable(), b: other.iter().peekable()}
+    pub fn intersection<'a>(&'a self, other: &'a TreeSet<T, C>)
+        -> IntersectionItems<'a, T, C> where C: Eq {
+        assert!(self.comparator() == other.comparator());
+        IntersectionItems {
+            a: self.iter().peekable(),
+            b: other.iter().peekable(),
+            cmp: self.comparator(),
+        }
     }
 
     /// Visits the values representing the union, in ascending order.
@@ -344,8 +354,14 @@ impl<T: Ord> TreeSet<T> {
     /// assert_eq!(diff, [1, 2, 3, 4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn union<'a>(&'a self, other: &'a TreeSet<T>) -> UnionItems<'a, T> {
-        UnionItems{a: self.iter().peekable(), b: other.iter().peekable()}
+    pub fn union<'a>(&'a self, other: &'a TreeSet<T, C>) -> UnionItems<'a, T, C>
+        where C: Eq {
+        assert!(self.comparator() == other.comparator());
+        UnionItems {
+            a: self.iter().peekable(),
+            b: other.iter().peekable(),
+            cmp: self.comparator(),
+        }
     }
 
     /// Return the number of elements in the set
@@ -413,7 +429,7 @@ impl<T: Ord> TreeSet<T> {
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn contains<Sized? Q>(&self, value: &Q) -> bool
-        where Q: Ord + BorrowFrom<T>
+        where C: Compare<Q, T>
     {
         self.map.contains_key(value)
     }
@@ -436,7 +452,7 @@ impl<T: Ord> TreeSet<T> {
     /// assert_eq!(a.is_disjoint(&b), false);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn is_disjoint(&self, other: &TreeSet<T>) -> bool {
+    pub fn is_disjoint(&self, other: &TreeSet<T, C>) -> bool where C: Eq {
         self.intersection(other).next().is_none()
     }
 
@@ -457,7 +473,8 @@ impl<T: Ord> TreeSet<T> {
     /// assert_eq!(set.is_subset(&sup), false);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn is_subset(&self, other: &TreeSet<T>) -> bool {
+    pub fn is_subset(&self, other: &TreeSet<T, C>) -> bool where C: Eq {
+        assert!(self.comparator() == other.comparator());
         let mut x = self.iter();
         let mut y = other.iter();
         let mut a = x.next();
@@ -470,10 +487,10 @@ impl<T: Ord> TreeSet<T> {
             let a1 = a.unwrap();
             let b1 = b.unwrap();
 
-            match b1.cmp(a1) {
+            match self.comparator().compare(b1, a1) {
                 Less => (),
                 Greater => return false,
-                Equal => a = x.next(),
+                Equal  => a = x.next(),
             }
 
             b = y.next();
@@ -501,7 +518,7 @@ impl<T: Ord> TreeSet<T> {
     /// assert_eq!(set.is_superset(&sub), true);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn is_superset(&self, other: &TreeSet<T>) -> bool {
+    pub fn is_superset(&self, other: &TreeSet<T, C>) -> bool where C: Eq {
         other.is_subset(self)
     }
 
@@ -544,7 +561,7 @@ impl<T: Ord> TreeSet<T> {
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn remove<Sized? Q>(&mut self, value: &Q) -> bool
-        where Q: Ord + BorrowFrom<T>
+        where C: Compare<Q, T>
     {
         self.map.remove(value).is_some()
     }
@@ -564,36 +581,40 @@ pub struct RevSetItems<'a, T:'a> {
 pub type MoveSetItems<T> = iter::Map<(T, ()), T, MoveEntries<T, ()>, fn((T, ())) -> T>;
 
 /// A lazy iterator producing elements in the set difference (in-order).
-pub struct DifferenceItems<'a, T:'a> {
+pub struct DifferenceItems<'a, T:'a, C:'a> {
     a: Peekable<&'a T, SetItems<'a, T>>,
     b: Peekable<&'a T, SetItems<'a, T>>,
+    cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set symmetric difference (in-order).
-pub struct SymDifferenceItems<'a, T:'a> {
+pub struct SymDifferenceItems<'a, T:'a, C:'a> {
     a: Peekable<&'a T, SetItems<'a, T>>,
     b: Peekable<&'a T, SetItems<'a, T>>,
+    cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set intersection (in-order).
-pub struct IntersectionItems<'a, T:'a> {
+pub struct IntersectionItems<'a, T:'a, C:'a> {
     a: Peekable<&'a T, SetItems<'a, T>>,
     b: Peekable<&'a T, SetItems<'a, T>>,
+    cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set union (in-order).
-pub struct UnionItems<'a, T:'a> {
+pub struct UnionItems<'a, T:'a, C:'a> {
     a: Peekable<&'a T, SetItems<'a, T>>,
     b: Peekable<&'a T, SetItems<'a, T>>,
+    cmp: &'a C,
 }
 
 /// Compare `x` and `y`, but return `short` if x is None and `long` if y is None
-fn cmp_opt<T: Ord>(x: Option<&T>, y: Option<&T>,
-                        short: Ordering, long: Ordering) -> Ordering {
+fn cmp_opt<T, C: Compare<T>>(x: Option<& &T>, y: Option<& &T>,
+                        short: Ordering, long: Ordering, cmp: &C) -> Ordering {
     match (x, y) {
         (None    , _       ) => short,
         (_       , None    ) => long,
-        (Some(x1), Some(y1)) => x1.cmp(y1),
+        (Some(x1), Some(y1)) => cmp.compare(*x1, *y1),
     }
 }
 
@@ -612,10 +633,10 @@ impl<'a, T> Iterator<&'a T> for RevSetItems<'a, T> {
     }
 }
 
-impl<'a, T: Ord> Iterator<&'a T> for DifferenceItems<'a, T> {
+impl<'a, T, C> Iterator<&'a T> for DifferenceItems<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
-            match cmp_opt(self.a.peek(), self.b.peek(), Less, Less) {
+            match cmp_opt(self.a.peek(), self.b.peek(), Less, Less, self.cmp) {
                 Less    => return self.a.next(),
                 Equal   => { self.a.next(); self.b.next(); }
                 Greater => { self.b.next(); }
@@ -624,10 +645,10 @@ impl<'a, T: Ord> Iterator<&'a T> for DifferenceItems<'a, T> {
     }
 }
 
-impl<'a, T: Ord> Iterator<&'a T> for SymDifferenceItems<'a, T> {
+impl<'a, T, C> Iterator<&'a T> for SymDifferenceItems<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
-            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
+            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp) {
                 Less    => return self.a.next(),
                 Equal   => { self.a.next(); self.b.next(); }
                 Greater => return self.b.next(),
@@ -636,13 +657,13 @@ impl<'a, T: Ord> Iterator<&'a T> for SymDifferenceItems<'a, T> {
     }
 }
 
-impl<'a, T: Ord> Iterator<&'a T> for IntersectionItems<'a, T> {
+impl<'a, T, C> Iterator<&'a T> for IntersectionItems<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
             let o_cmp = match (self.a.peek(), self.b.peek()) {
                 (None    , _       ) => None,
                 (_       , None    ) => None,
-                (Some(a1), Some(b1)) => Some(a1.cmp(b1)),
+                (Some(a1), Some(b1)) => Some(self.cmp.compare(*a1, *b1)),
             };
             match o_cmp {
                 None          => return None,
@@ -654,10 +675,10 @@ impl<'a, T: Ord> Iterator<&'a T> for IntersectionItems<'a, T> {
     }
 }
 
-impl<'a, T: Ord> Iterator<&'a T> for UnionItems<'a, T> {
+impl<'a, T, C> Iterator<&'a T> for UnionItems<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
-            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
+            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp) {
                 Less    => return self.a.next(),
                 Equal   => { self.b.next(); return self.a.next() }
                 Greater => return self.b.next(),
@@ -667,32 +688,10 @@ impl<'a, T: Ord> Iterator<&'a T> for UnionItems<'a, T> {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
-impl<T: Ord + Clone> BitOr<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
-    /// Returns the union of `self` and `rhs` as a new `TreeSet<T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TreeSet;
-    ///
-    /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<int> = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TreeSet<int> = a | b;
-    /// let v: Vec<int> = set.into_iter().collect();
-    /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
-    /// ```
-    fn bitor(&self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.union(rhs).cloned().collect()
-    }
-}
+impl<'a, 'b, T, C> BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+    where T: Clone, C: Compare<T> + Eq + Clone {
 
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-impl<'a, 'b, T: Ord + Clone> BitOr<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> {
-    /// Returns the union of `self` and `rhs` as a new `TreeSet<T>`.
+    /// Returns the union of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
     /// # Examples
     ///
@@ -706,38 +705,19 @@ impl<'a, 'b, T: Ord + Clone> BitOr<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T
     /// let v: Vec<int> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
     /// ```
-    fn bitor(self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.union(rhs).cloned().collect()
+    fn bitor(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
+        let it = self.union(rhs).cloned();
+        let mut set = TreeSet::with_comparator(self.comparator().clone());
+        set.extend(it);
+        set
     }
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
-impl<T: Ord + Clone> BitAnd<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
-    /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TreeSet;
-    ///
-    /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<int> = vec![2, 3, 4].into_iter().collect();
-    ///
-    /// let set: TreeSet<int> = a & b;
-    /// let v: Vec<int> = set.into_iter().collect();
-    /// assert_eq!(v, vec![2, 3]);
-    /// ```
-    fn bitand(&self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.intersection(rhs).cloned().collect()
-    }
-}
+impl<'a, 'b, T, C> BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+    where T: Clone, C: Compare<T> + Eq + Clone {
 
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-impl<'a, 'b, T: Ord + Clone> BitAnd<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> {
-    /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T>`.
+    /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
     /// # Examples
     ///
@@ -751,38 +731,19 @@ impl<'a, 'b, T: Ord + Clone> BitAnd<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<
     /// let v: Vec<int> = set.into_iter().collect();
     /// assert_eq!(v, vec![2, 3]);
     /// ```
-    fn bitand(self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.intersection(rhs).cloned().collect()
+    fn bitand(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
+        let it = self.intersection(rhs).cloned();
+        let mut set = TreeSet::with_comparator(self.comparator().clone());
+        set.extend(it);
+        set
     }
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
-impl<T: Ord + Clone> BitXor<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
-    /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TreeSet;
-    ///
-    /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<int> = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TreeSet<int> = a ^ b;
-    /// let v: Vec<int> = set.into_iter().collect();
-    /// assert_eq!(v, vec![1, 2, 4, 5]);
-    /// ```
-    fn bitxor(&self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.symmetric_difference(rhs).cloned().collect()
-    }
-}
+impl<'a, 'b, T, C> BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+    where T: Clone, C: Compare<T> + Eq + Clone {
 
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-impl<'a, 'b, T: Ord + Clone> BitXor<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> {
-    /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T>`.
+    /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
     /// # Examples
     ///
@@ -796,38 +757,19 @@ impl<'a, 'b, T: Ord + Clone> BitXor<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<
     /// let v: Vec<int> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2, 4, 5]);
     /// ```
-    fn bitxor(self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.symmetric_difference(rhs).cloned().collect()
+    fn bitxor(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
+        let it = self.symmetric_difference(rhs).cloned();
+        let mut set = TreeSet::with_comparator(self.comparator().clone());
+        set.extend(it);
+        set
     }
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
-impl<T: Ord + Clone> Sub<TreeSet<T>, TreeSet<T>> for TreeSet<T> {
-    /// Returns the difference of `self` and `rhs` as a new `TreeSet<T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TreeSet;
-    ///
-    /// let a: TreeSet<int> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<int> = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TreeSet<int> = a - b;
-    /// let v: Vec<int> = set.into_iter().collect();
-    /// assert_eq!(v, vec![1, 2]);
-    /// ```
-    fn sub(&self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.difference(rhs).cloned().collect()
-    }
-}
+impl<'a, 'b, T, C> Sub<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+    where T: Clone, C: Compare<T> + Eq + Clone {
 
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-impl<'a, 'b, T: Ord + Clone> Sub<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> {
-    /// Returns the difference of `self` and `rhs` as a new `TreeSet<T>`.
+    /// Returns the difference of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
     /// # Examples
     ///
@@ -841,20 +783,23 @@ impl<'a, 'b, T: Ord + Clone> Sub<&'b TreeSet<T>, TreeSet<T>> for &'a TreeSet<T> 
     /// let v: Vec<int> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2]);
     /// ```
-    fn sub(self, rhs: &TreeSet<T>) -> TreeSet<T> {
-        self.difference(rhs).cloned().collect()
+    fn sub(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
+        let it = self.difference(rhs).cloned();
+        let mut set = TreeSet::with_comparator(self.comparator().clone());
+        set.extend(it);
+        set
     }
 }
 
-impl<T: Ord> FromIterator<T> for TreeSet<T> {
-    fn from_iter<Iter: Iterator<T>>(iter: Iter) -> TreeSet<T> {
-        let mut set = TreeSet::new();
+impl<T, C> FromIterator<T> for TreeSet<T, C> where C: Compare<T> + Default {
+    fn from_iter<Iter: Iterator<T>>(iter: Iter) -> TreeSet<T, C> {
+        let mut set: TreeSet<T, C> = Default::default();
         set.extend(iter);
         set
     }
 }
 
-impl<T: Ord> Extend<T> for TreeSet<T> {
+impl<T, C> Extend<T> for TreeSet<T, C> where C: Compare<T> {
     #[inline]
     fn extend<Iter: Iterator<T>>(&mut self, mut iter: Iter) {
         for elem in iter {
@@ -863,7 +808,7 @@ impl<T: Ord> Extend<T> for TreeSet<T> {
     }
 }
 
-impl<S: Writer, T: Ord + Hash<S>> Hash<S> for TreeSet<T> {
+impl<S: Writer, T: Hash<S>, C> Hash<S> for TreeSet<T, C> where C: Compare<T> {
     fn hash(&self, state: &mut S) {
         for elt in self.iter() {
             elt.hash(state);
@@ -1209,5 +1154,42 @@ mod test {
 
         assert!(set_str == "{1, 2}");
         assert_eq!(format!("{}", empty), "{}");
+    }
+
+    #[test]
+    fn test_comparator_iterator() {
+        use compare::{CompareExt, Natural};
+
+        let mut m = TreeSet::with_comparator(Natural.rev());
+
+        assert!(m.insert(3i));
+        assert!(m.insert(0));
+        assert!(m.insert(4));
+        assert!(m.insert(2));
+        assert!(m.insert(1));
+
+        let mut n = 5;
+        for &t in m.iter() {
+            n -= 1;
+            assert_eq!(t, n);
+        }
+        assert_eq!(n, 0);
+    }
+
+    #[test]
+    fn test_comparator_borrowed() {
+        use compare::{CompareExt, Natural};
+
+        let mut m = TreeSet::with_comparator(Natural::<str>.borrow());
+
+        assert!(m.insert("a".to_string()));
+
+        assert!(m.contains("a"));
+        assert!(m.contains(&"a"));
+        assert!(m.contains(&"a".to_string()));
+
+        assert!(m.remove("a"));
+        assert!(!m.remove(&"a"));
+        assert!(!m.remove(&"a".to_string()));
     }
 }

@@ -59,6 +59,7 @@ mod trie;
 
 // publics
 
+pub mod compare;
 pub mod iter;
 
 pub mod blist;
