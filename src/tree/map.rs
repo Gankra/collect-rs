@@ -121,7 +121,7 @@ use compare::{Compare, Natural};
 // These would be convenient since the methods work like `each`
 
 #[deriving(Clone)]
-pub struct TreeMap<K, V, C = Natural<K>> {
+pub struct TreeMap<K, V, C: Compare<K> = Natural<K>> {
     root: Option<Box<TreeNode<K, V>>>,
     length: uint,
     cmp: C,

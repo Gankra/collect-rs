@@ -74,7 +74,7 @@ use tree_map::{TreeMap, Entries, RevEntries, MoveEntries};
 /// assert_eq!(trolls.len(), 0);
 /// ```
 #[deriving(Clone)]
-pub struct TreeSet<T, C = Natural<T>> {
+pub struct TreeSet<T, C: Compare<T> = Natural<T>> {
     map: TreeMap<T, (), C>
 }
 
