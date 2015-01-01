@@ -15,7 +15,7 @@ impl<T> Node<T> {
 
 /// An iterator over the items of an ImmutSList
 #[deriving(Clone)]
-pub struct Items<'a, T: 'a> {
+pub struct Iter<'a, T: 'a> {
     head: Option<&'a Node<T>>,
     nelem: uint,
 }
@@ -86,8 +86,8 @@ impl<T> ImmutSList<T> {
     }
 
     /// Returns an iterator over references to the elements of the list in order
-    pub fn iter <'a> (&'a self) -> Items<'a, T> {
-        Items{ head: self.front.as_ref().map(|x| &**x), nelem: self.len() }
+    pub fn iter <'a> (&'a self) -> Iter<'a, T> {
+        Iter{ head: self.front.as_ref().map(|x| &**x), nelem: self.len() }
     }
 
     pub fn len (&self) -> uint {
@@ -122,7 +122,7 @@ impl<T> Drop for ImmutSList<T> {
 }
 
 
-impl<'a, T> Iterator<&'a T> for Items<'a, T> {
+impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
     fn next(&mut self) -> Option<&'a T> {
         match self.head.take() {
             None => None,

@@ -531,10 +531,12 @@ impl<'a, T> Cursor<'a, T> {
         }
     }
 
+    /// Calls `next` the specified number of times.
     pub fn seek_forward(&mut self, by: uint) {
         for _ in range(0, by) { self.next(); }
     }
 
+    /// Calls `prev` the specified number of times.
     pub fn seek_backward(&mut self, by: uint) {
         for _ in range(0, by) { self.prev(); }
     }
