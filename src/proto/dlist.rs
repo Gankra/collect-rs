@@ -289,28 +289,28 @@ impl<T> DList<T> {
 
     /// Provides a forward iterator.
     #[inline]
-    pub fn iter<'a>(&'a self) -> Items<'a, T> {
-        Items{nelem: self.len(), head: &self.head, tail: &self.tail}
+    pub fn iter<'a>(&'a self) -> Iter<'a, T> {
+        Iter{nelem: self.len(), head: &self.head, tail: &self.tail}
     }
 
     /// Provides a forward iterator with mutable references.
     #[inline]
-    pub fn iter_mut<'a>(&'a mut self) -> MutItems<'a, T> {
+    pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, T> {
         let head_raw = match self.head.as_mut() {
             Some(head) => Raw::some(&mut **head),
             None => Raw::none(),
         };
-        MutItems{
+        IterMut{
             nelem: self.len(),
             head: head_raw,
             tail: self.tail.clone(),
         }
     }
 
-    /// Consumes the list into an iterator yielding elements by.elem.
+    /// Consumes the list into an iterator yielding elements by value.
     #[inline]
-    pub fn into_iter(self) -> MoveItems<T> {
-        MoveItems{list: self}
+    pub fn into_iter(self) -> IntoIter<T> {
+        IntoIter{list: self}
     }
 
 }
@@ -535,14 +535,14 @@ impl<'a, T> Cursor<'a, T> {
 
 /// An iterator over references to the items of a `DList`.
 #[deriving(Clone)]
-pub struct Items<'a, T:'a> {
+pub struct Iter<'a, T:'a> {
     head: &'a Link<T>,
     tail: &'a Raw<T>,
     nelem: uint,
 }
 
 /// An iterator over mutable references to the items of a `DList`.
-pub struct MutItems<'a, T:'a> {
+pub struct IterMut<'a, T:'a> {
     head: Raw<T>,
     tail: Raw<T>,
     nelem: uint,
@@ -550,11 +550,11 @@ pub struct MutItems<'a, T:'a> {
 
 /// An iterator over mutable references to the items of a `DList`.
 #[deriving(Clone)]
-pub struct MoveItems<T> {
+pub struct IntoIter<T> {
     list: DList<T>
 }
 
-impl<'a, A> Iterator<&'a A> for Items<'a, A> {
+impl<'a, A> Iterator<&'a A> for Iter<'a, A> {
     #[inline]
     fn next(&mut self) -> Option<&'a A> {
         if self.nelem == 0 {
@@ -573,7 +573,7 @@ impl<'a, A> Iterator<&'a A> for Items<'a, A> {
     }
 }
 
-impl<'a, A> DoubleEndedIterator<&'a A> for Items<'a, A> {
+impl<'a, A> DoubleEndedIterator<&'a A> for Iter<'a, A> {
     #[inline]
     fn next_back(&mut self) -> Option<&'a A> {
         if self.nelem == 0 {
@@ -587,9 +587,9 @@ impl<'a, A> DoubleEndedIterator<&'a A> for Items<'a, A> {
     }
 }
 
-impl<'a, A> ExactSizeIterator<&'a A> for Items<'a, A> {}
+impl<'a, A> ExactSizeIterator<&'a A> for Iter<'a, A> {}
 
-impl<'a, A> Iterator<&'a mut A> for MutItems<'a, A> {
+impl<'a, A> Iterator<&'a mut A> for IterMut<'a, A> {
     #[inline]
     fn next(&mut self) -> Option<&'a mut A> {
         if self.nelem == 0 {
@@ -614,7 +614,7 @@ impl<'a, A> Iterator<&'a mut A> for MutItems<'a, A> {
     }
 }
 
-impl<'a, A> DoubleEndedIterator<&'a mut A> for MutItems<'a, A> {
+impl<'a, A> DoubleEndedIterator<&'a mut A> for IterMut<'a, A> {
     #[inline]
     fn next_back(&mut self) -> Option<&'a mut A> {
         if self.nelem == 0 {
@@ -631,9 +631,9 @@ impl<'a, A> DoubleEndedIterator<&'a mut A> for MutItems<'a, A> {
     }
 }
 
-impl<'a, A> ExactSizeIterator<&'a mut A> for MutItems<'a, A> {}
+impl<'a, A> ExactSizeIterator<&'a mut A> for IterMut<'a, A> {}
 
-impl<A> Iterator<A> for MoveItems<A> {
+impl<A> Iterator<A> for IntoIter<A> {
     #[inline]
     fn next(&mut self) -> Option<A> { self.list.pop_front() }
 
@@ -643,7 +643,7 @@ impl<A> Iterator<A> for MoveItems<A> {
     }
 }
 
-impl<A> DoubleEndedIterator<A> for MoveItems<A> {
+impl<A> DoubleEndedIterator<A> for IntoIter<A> {
     #[inline]
     fn next_back(&mut self) -> Option<A> { self.list.pop_back() }
 }
