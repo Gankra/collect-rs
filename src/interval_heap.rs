@@ -314,7 +314,7 @@ pub fn as_slice<T>(x: &IntervalHeap<T>) -> &[T] {
 
 #[cfg(test)]
 mod test {
-    use std::rand::{ task_rng, Rng };
+    use std::rand::{ thread_rng, Rng };
     use super::{ IntervalHeap, as_slice };
 
     fn is_interval_heap<T: Ord>(x: &[T]) -> bool {
@@ -334,7 +334,7 @@ mod test {
 
     #[test]
     fn fuzz_push_into_sorted_vec() {
-        let mut rng = task_rng();
+        let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
         for _ in range(0, 100u) {
             tmp.clear();
@@ -352,7 +352,7 @@ mod test {
 
     #[test]
     fn fuzz_pop_min() {
-        let mut rng = task_rng();
+        let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
         for _ in range(0, 100u) {
             tmp.clear();
@@ -377,7 +377,7 @@ mod test {
 
     #[test]
     fn fuzz_pop_max() {
-        let mut rng = task_rng();
+        let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
         for _ in range(0, 100u) {
             tmp.clear();

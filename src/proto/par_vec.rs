@@ -113,7 +113,7 @@ mod test {
     use self::test::Bencher;
     use super::ParVec;
     use std::mem;
-    use std::rand::{task_rng, Rng};
+    use std::rand::{thread_rng, Rng};
     use std::iter::range_inclusive;
     
     const TEST_SLICES: uint = 8;
@@ -151,7 +151,7 @@ mod test {
     fn par_prime_factors_1000(b: &mut Bencher) {
         use std::sync::TaskPool;
 
-        let mut rng = task_rng();
+        let mut rng = thread_rng();
         let pool = TaskPool::new(TEST_SLICES);
 
         b.iter(|| {
