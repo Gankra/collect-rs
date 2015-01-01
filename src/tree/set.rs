@@ -264,13 +264,13 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(diff, [4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn difference<'a, D>(&'a self, other: &'a TreeSet<T, D>)
-        -> DifferenceItems<'a, T, C, D> where D: Compare<T> {
+    pub fn difference<'a>(&'a self, other: &'a TreeSet<T, C>)
+        -> DifferenceItems<'a, T, C> where C: Eq {
+        assert!(self.comparator() == other.comparator());
         DifferenceItems {
             a: self.iter().peekable(),
             b: other.iter().peekable(),
-            cmp_a: self.comparator(),
-            cmp_b: other.comparator(),
+            cmp: self.comparator(),
         }
     }
 
@@ -296,13 +296,13 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(diff1, [1, 2, 4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn symmetric_difference<'a, D>(&'a self, other: &'a TreeSet<T, D>)
-        -> SymDifferenceItems<'a, T, C, D> where D: Compare<T> {
+    pub fn symmetric_difference<'a>(&'a self, other: &'a TreeSet<T, C>)
+        -> SymDifferenceItems<'a, T, C> where C: Eq {
+        assert!(self.comparator() == other.comparator());
         SymDifferenceItems {
             a: self.iter().peekable(),
             b: other.iter().peekable(),
-            cmp_a: self.comparator(),
-            cmp_b: other.comparator(),
+            cmp: self.comparator(),
         }
     }
 
@@ -325,13 +325,13 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(diff, [2, 3].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn intersection<'a, D>(&'a self, other: &'a TreeSet<T, D>)
-        -> IntersectionItems<'a, T, C, D> where D: Compare<T> {
+    pub fn intersection<'a>(&'a self, other: &'a TreeSet<T, C>)
+        -> IntersectionItems<'a, T, C> where C: Eq {
+        assert!(self.comparator() == other.comparator());
         IntersectionItems {
             a: self.iter().peekable(),
             b: other.iter().peekable(),
-            cmp_a: self.comparator(),
-            cmp_b: other.comparator(),
+            cmp: self.comparator(),
         }
     }
 
@@ -354,13 +354,13 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(diff, [1, 2, 3, 4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn union<'a, D>(&'a self, other: &'a TreeSet<T, D>) -> UnionItems<'a, T, C, D>
-        where D: Compare<T> {
+    pub fn union<'a>(&'a self, other: &'a TreeSet<T, C>) -> UnionItems<'a, T, C>
+        where C: Eq {
+        assert!(self.comparator() == other.comparator());
         UnionItems {
             a: self.iter().peekable(),
             b: other.iter().peekable(),
-            cmp_a: self.comparator(),
-            cmp_b: other.comparator(),
+            cmp: self.comparator(),
         }
     }
 
@@ -452,7 +452,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(a.is_disjoint(&b), false);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn is_disjoint<D>(&self, other: &TreeSet<T, D>) -> bool where D: Compare<T> {
+    pub fn is_disjoint(&self, other: &TreeSet<T, C>) -> bool where C: Eq {
         self.intersection(other).next().is_none()
     }
 
@@ -473,7 +473,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(set.is_subset(&sup), false);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn is_subset<D>(&self, other: &TreeSet<T, D>) -> bool where D: Compare<T> {
+    pub fn is_subset(&self, other: &TreeSet<T, C>) -> bool where C: Eq {
+        assert!(self.comparator() == other.comparator());
         let mut x = self.iter();
         let mut y = other.iter();
         let mut a = x.next();
@@ -486,11 +487,10 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
             let a1 = a.unwrap();
             let b1 = b.unwrap();
 
-            match (self.comparator().compare(b1, a1), other.comparator().compare(b1, a1)) {
-                (Less, Less) => (),
-                (Greater, Greater) => return false,
-                (Equal, Equal) => a = x.next(),
-                _ => panic!("the sets' comparators disagreed"),
+            match self.comparator().compare(b1, a1) {
+                Less => (),
+                Greater => return false,
+                Equal  => a = x.next(),
             }
 
             b = y.next();
@@ -518,7 +518,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(set.is_superset(&sub), true);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn is_superset<D>(&self, other: &TreeSet<T, D>) -> bool where D: Compare<T> {
+    pub fn is_superset(&self, other: &TreeSet<T, C>) -> bool where C: Eq {
         other.is_subset(self)
     }
 
@@ -581,52 +581,40 @@ pub struct RevSetItems<'a, T:'a> {
 pub type MoveSetItems<T> = iter::Map<(T, ()), T, MoveEntries<T, ()>, fn((T, ())) -> T>;
 
 /// A lazy iterator producing elements in the set difference (in-order).
-pub struct DifferenceItems<'a, T:'a, C:'a, D:'a> {
+pub struct DifferenceItems<'a, T:'a, C:'a> {
     a: Peekable<&'a T, SetItems<'a, T>>,
     b: Peekable<&'a T, SetItems<'a, T>>,
-    cmp_a: &'a C,
-    cmp_b: &'a D,
+    cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set symmetric difference (in-order).
-pub struct SymDifferenceItems<'a, T:'a, C:'a, D:'a> {
+pub struct SymDifferenceItems<'a, T:'a, C:'a> {
     a: Peekable<&'a T, SetItems<'a, T>>,
     b: Peekable<&'a T, SetItems<'a, T>>,
-    cmp_a: &'a C,
-    cmp_b: &'a D,
+    cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set intersection (in-order).
-pub struct IntersectionItems<'a, T:'a, C:'a, D:'a> {
+pub struct IntersectionItems<'a, T:'a, C:'a> {
     a: Peekable<&'a T, SetItems<'a, T>>,
     b: Peekable<&'a T, SetItems<'a, T>>,
-    cmp_a: &'a C,
-    cmp_b: &'a D,
+    cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set union (in-order).
-pub struct UnionItems<'a, T:'a, C:'a, D:'a> {
+pub struct UnionItems<'a, T:'a, C:'a> {
     a: Peekable<&'a T, SetItems<'a, T>>,
     b: Peekable<&'a T, SetItems<'a, T>>,
-    cmp_a: &'a C,
-    cmp_b: &'a D,
+    cmp: &'a C,
 }
 
 /// Compare `x` and `y`, but return `short` if x is None and `long` if y is None
-fn cmp_opt<T, C: Compare<T>, D: Compare<T>>(x: Option<& &T>, y: Option<& &T>,
-                        short: Ordering, long: Ordering, cmp_a: &C, cmp_b: &D) -> Ordering {
+fn cmp_opt<T, C: Compare<T>>(x: Option<& &T>, y: Option<& &T>,
+                        short: Ordering, long: Ordering, cmp: &C) -> Ordering {
     match (x, y) {
         (None    , _       ) => short,
         (_       , None    ) => long,
-        (Some(x1), Some(y1)) => {
-            let order = cmp_a.compare(*x1, *y1);
-
-            if order != cmp_b.compare(*x1, *y1) {
-                panic!("the sets' comparators disagreed")
-            }
-
-            order
-        }
+        (Some(x1), Some(y1)) => cmp.compare(*x1, *y1),
     }
 }
 
@@ -645,12 +633,10 @@ impl<'a, T> Iterator<&'a T> for RevSetItems<'a, T> {
     }
 }
 
-impl<'a, T, C, D> Iterator<&'a T> for DifferenceItems<'a, T, C, D>
-    where C: Compare<T>, D: Compare<T> {
-
+impl<'a, T, C> Iterator<&'a T> for DifferenceItems<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
-            match cmp_opt(self.a.peek(), self.b.peek(), Less, Less, self.cmp_a, self.cmp_b) {
+            match cmp_opt(self.a.peek(), self.b.peek(), Less, Less, self.cmp) {
                 Less    => return self.a.next(),
                 Equal   => { self.a.next(); self.b.next(); }
                 Greater => { self.b.next(); }
@@ -659,12 +645,10 @@ impl<'a, T, C, D> Iterator<&'a T> for DifferenceItems<'a, T, C, D>
     }
 }
 
-impl<'a, T, C, D> Iterator<&'a T> for SymDifferenceItems<'a, T, C, D>
-    where C: Compare<T>, D: Compare<T> {
-
+impl<'a, T, C> Iterator<&'a T> for SymDifferenceItems<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
-            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp_a, self.cmp_b) {
+            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp) {
                 Less    => return self.a.next(),
                 Equal   => { self.a.next(); self.b.next(); }
                 Greater => return self.b.next(),
@@ -673,23 +657,13 @@ impl<'a, T, C, D> Iterator<&'a T> for SymDifferenceItems<'a, T, C, D>
     }
 }
 
-impl<'a, T, C, D> Iterator<&'a T> for IntersectionItems<'a, T, C, D>
-    where C: Compare<T>, D: Compare<T> {
-
+impl<'a, T, C> Iterator<&'a T> for IntersectionItems<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
             let o_cmp = match (self.a.peek(), self.b.peek()) {
                 (None    , _       ) => None,
                 (_       , None    ) => None,
-                (Some(a1), Some(b1)) => {
-                    let order = self.cmp_a.compare(*a1, *b1);
-
-                    if order != self.cmp_b.compare(*a1, *b1) {
-                        panic!("the sets' comparators disagreed");
-                    }
-
-                    Some(order)
-                }
+                (Some(a1), Some(b1)) => Some(self.cmp.compare(*a1, *b1)),
             };
             match o_cmp {
                 None          => return None,
@@ -701,12 +675,10 @@ impl<'a, T, C, D> Iterator<&'a T> for IntersectionItems<'a, T, C, D>
     }
 }
 
-impl<'a, T, C, D> Iterator<&'a T> for UnionItems<'a, T, C, D>
-    where C: Compare<T>, D: Compare<T> {
-
+impl<'a, T, C> Iterator<&'a T> for UnionItems<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
-            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp_a, self.cmp_b) {
+            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp) {
                 Less    => return self.a.next(),
                 Equal   => { self.b.next(); return self.a.next() }
                 Greater => return self.b.next(),
