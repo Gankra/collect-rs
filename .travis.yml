@@ -1,13 +1,14 @@
 
 language: rust
+sudo: false
 
 env:
   global:
-    - secure: PpEKh+WDvwzV22SQ/nP0C05v6/4/gl8e3ZeVUjtuLbbaheAncJbhEcOjL4QCqHsbobtnme+SiRwrIh1CBEMxcYv7JH7KwOkpFSUb2bl4Ea+Jy8sfuI9Z9Pge3j6NcSD6hsc6BH/FoDuWGin4C0vwRZ7WxqlfDN3SBzvIWxsLCJo=
+    - secure: "PdLSLIwcxQynRSxfkZrhYPQu8goMpbO3BUoIvUohRzF2xYFB6sS/4+uxyzCuy85TV+2Q6TYdh/G3GDcRVU24G4mMIV2AH3PwiRmC/bzclqbj6CWtBlgHkKP4WYsIaqxuLl4X/7W8EbNjAqW3bD/WuzESGbY26v3pu+MLoQvxduA="
 script:
 - cargo build
 - cargo test
 - cargo doc
 
-after_script:
-- if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then mv target/doc . && (curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh)
+after_success:
+  - test "$TRAVIS_PULL_REQUEST" == false && test "$TRAVIS_BRANCH" == "master" && bash deploy-docs.sh
