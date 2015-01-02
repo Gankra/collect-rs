@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.BList.html'>BList</a><a class='struct ' href='struct.Items.html'>Items</a><a class='struct ' href='struct.MoveTrav.html'>MoveTrav</a><a class='struct ' href='struct.MutItems.html'>MutItems</a><a class='struct ' href='struct.MutTrav.html'>MutTrav</a><a class='struct ' href='struct.Trav.html'>Trav</a></div>
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.BList.html'>BList</a><a class='struct ' href='struct.IntoIter.html'>IntoIter</a><a class='struct ' href='struct.IntoTrav.html'>IntoTrav</a><a class='struct ' href='struct.Iter.html'>Iter</a><a class='struct ' href='struct.IterMut.html'>IterMut</a><a class='struct ' href='struct.Trav.html'>Trav</a><a class='struct ' href='struct.TravMut.html'>TravMut</a></div>
     </section>
 
     <nav class="sub">
@@ -85,13 +85,15 @@ worst-case cost of <code>O(B^2)</code>. Insertion and deletion on either end wil
 <div class='docblock'><p>Returns <code>true</code> if the list contains no elements, or <code>false</code> otherwise.</p>
 </div><h4 id='method.clear' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self)</code></h4>
 <div class='docblock'><p>Drops everything in the list.</p>
-</div><h4 id='method.iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../../collect/blist/struct.Items.html' title='collect::blist::Items'>Items</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../../collect/blist/struct.Iter.html' title='collect::blist::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a by-reference iterator over the elements in the list.</p>
-</div><h4 id='method.iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/blist/struct.MutItems.html' title='collect::blist::MutItems'>MutItems</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/blist/struct.IterMut.html' title='collect::blist::IterMut'>IterMut</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a by-mutable-reference iterator over the elements in the list.</p>
+</div><h4 id='method.into_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../../collect/blist/struct.IntoIter.html' title='collect::blist::IntoIter'>IntoIter</a>&lt;T&gt;</code></h4>
+<div class='docblock'><p>Gets a by-value iterator over the elements in the list.</p>
 </div><h4 id='method.traversal' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.traversal' class='fnname'>traversal</a>(&amp;self) -&gt; <a class='struct' href='../../collect/blist/struct.Trav.html' title='collect::blist::Trav'>Trav</a>&lt;T&gt;</code></h4>
-<h4 id='method.traversal_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.traversal_mut' class='fnname'>traversal_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/blist/struct.MutTrav.html' title='collect::blist::MutTrav'>MutTrav</a>&lt;T&gt;</code></h4>
-<h4 id='method.into_traversal' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.into_traversal' class='fnname'>into_traversal</a>(self) -&gt; <a class='struct' href='../../collect/blist/struct.MoveTrav.html' title='collect::blist::MoveTrav'>MoveTrav</a>&lt;T&gt;</code></h4>
+<h4 id='method.traversal_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.traversal_mut' class='fnname'>traversal_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/blist/struct.TravMut.html' title='collect::blist::TravMut'>TravMut</a>&lt;T&gt;</code></h4>
+<h4 id='method.into_traversal' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.into_traversal' class='fnname'>into_traversal</a>(self) -&gt; <a class='struct' href='../../collect/blist/struct.IntoTrav.html' title='collect::blist::IntoTrav'>IntoTrav</a>&lt;T&gt;</code></h4>
 <h4 id='method.append_lazy' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.append_lazy' class='fnname'>append_lazy</a>(&amp;mut self, other: &amp;mut <a class='struct' href='../../collect/blist/struct.BList.html' title='collect::blist::BList'>BList</a>&lt;T&gt;)</code></h4>
 <div class='docblock'><p>Lazily moves the contents of <code>other</code> to the end of <code>self</code>, in the sense that it makes no
 effort to preserve the node-size lower-bound invariant. This can have negative effects

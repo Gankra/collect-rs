@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `MoveTrav` struct in crate `collect`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, MoveTrav">
+    <meta name="description" content="API documentation for the Rust `TravMut` struct in crate `collect`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, TravMut">
 
-    <title>collect::blist::MoveTrav - Rust</title>
+    <title>collect::blist::TravMut - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.BList.html'>BList</a><a class='struct ' href='struct.Items.html'>Items</a><a class='struct current' href='struct.MoveTrav.html'>MoveTrav</a><a class='struct ' href='struct.MutItems.html'>MutItems</a><a class='struct ' href='struct.MutTrav.html'>MutTrav</a><a class='struct ' href='struct.Trav.html'>Trav</a></div>
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.BList.html'>BList</a><a class='struct ' href='struct.IntoIter.html'>IntoIter</a><a class='struct ' href='struct.IntoTrav.html'>IntoTrav</a><a class='struct ' href='struct.Iter.html'>Iter</a><a class='struct ' href='struct.IterMut.html'>IterMut</a><a class='struct ' href='struct.Trav.html'>Trav</a><a class='struct current' href='struct.TravMut.html'>TravMut</a></div>
     </section>
 
     <nav class="sub">
@@ -41,13 +41,13 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a>::<wbr><a class='struct' href=''>MoveTrav</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a>::<wbr><a class='struct' href=''>TravMut</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-17040' href='../../src/collect/blist.rs.html#397-399'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct MoveTrav&lt;T&gt; {
+        </span><a id='src-17170' href='../../src/collect/blist.rs.html#382-384'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct TravMut&lt;'a, T: 'a&gt; {
     // some fields omitted
-}</pre><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='trait' href='../../traverse/trait.Traversal.html' title='traverse::Traversal'>Traversal</a>&lt;T&gt; for <a class='struct' href='../../collect/blist/struct.MoveTrav.html' title='collect::blist::MoveTrav'>MoveTrav</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.foreach' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.foreach' class='fnname'>foreach</a>&lt;F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(T) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>&gt;(self, f: F)</code></h4>
+}</pre><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;'a, T&gt; <a class='trait' href='../../traverse/trait.Traversal.html' title='traverse::Traversal'>Traversal</a>&lt;&amp;'a mut T&gt; for <a class='struct' href='../../collect/blist/struct.TravMut.html' title='collect::blist::TravMut'>TravMut</a>&lt;'a, T&gt;</code></h3><div class='impl-items'><h4 id='method.foreach' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.foreach' class='fnname'>foreach</a>&lt;F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;'a mut T) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>&gt;(self, f: F)</code></h4>
 <h4 id='method.run' class='tymethod'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.run' class='fnname'>run</a>&lt;F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(T)&gt;(self, f: F)</code></h4>
 <h4 id='method.map' class='tymethod'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.map' class='fnname'>map</a>&lt;O, F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(T) -&gt; O&gt;(self, f: F) -&gt; <a class='struct' href='../../traverse/struct.Map.html' title='traverse::Map'>Map</a>&lt;Self, F&gt;</code></h4>
 <h4 id='method.filter' class='tymethod'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.filter' class='fnname'>filter</a>&lt;F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>&gt;(self, pred: F) -&gt; <a class='struct' href='../../traverse/struct.Filter.html' title='traverse::Filter'>Filter</a>&lt;Self, F&gt;</code></h4>
