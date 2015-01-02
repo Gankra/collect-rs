@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Compare` trait in crate `collect`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Compare">
+
+    <title>collect::compare::Compare - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>compare</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Borrow.html'>Borrow</a><a class='struct ' href='struct.Extract.html'>Extract</a><a class='struct ' href='struct.Lexicographic.html'>Lexicographic</a><a class='struct ' href='struct.Natural.html'>Natural</a><a class='struct ' href='struct.Rev.html'>Rev</a><a class='struct ' href='struct.Swap.html'>Swap</a></div><div class='block trait'><h2>Traits</h2><a class='trait current' href='trait.Compare.html'>Compare</a><a class='trait ' href='trait.CompareExt.html'>CompareExt</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.max.html'>max</a><a class='fn ' href='fn.min.html'>min</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>collect</a>::<wbr><a href='index.html'>compare</a>::<wbr><a class='trait' href=''>Compare</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-12131' href='../../src/collect/compare.rs.html#184-218'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Compare&lt;Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a> = Lhs&gt;: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a> {
+    fn <a href='#tymethod.compare' class='fnname'>compare</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a>;
+
+    fn <a href='#method.compares_lt' class='fnname'>compares_lt</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
+    fn <a href='#method.compares_le' class='fnname'>compares_le</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
+    fn <a href='#method.compares_ge' class='fnname'>compares_ge</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
+    fn <a href='#method.compares_gt' class='fnname'>compares_gt</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
+    fn <a href='#method.compares_eq' class='fnname'>compares_eq</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
+    fn <a href='#method.compares_ne' class='fnname'>compares_ne</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
+}</pre><div class='docblock'><p>A comparator imposing a <a href="https://en.wikipedia.org/wiki/Total_order">total order</a>.</p>
+
+<p>See the <a href="index.html"><code>compare</code> module&#39;s documentation</a> for detailed usage.</p>
+
+<p>The <code>compares_*</code> methods may be overridden to provide more efficient implementations.</p>
+</div>
+            <h2 id='required-methods'>Required Methods</h2>
+            <div class='methods'>
+        <h3 id='tymethod.compare' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.compare' class='fnname'>compare</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></code></h3><div class='docblock'><p>Compares two values, returning <code>Less</code>, <code>Equal</code>, or <code>Greater</code> if <code>lhs</code> is less
+than, equal to, or greater than <code>rhs</code>, respectively.</p>
+</div></div>
+            <h2 id='provided-methods'>Provided Methods</h2>
+            <div class='methods'>
+        <h3 id='method.compares_lt' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_lt' class='fnname'>compares_lt</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Checks if <code>lhs</code> is less than <code>rhs</code>.</p>
+</div><h3 id='method.compares_le' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_le' class='fnname'>compares_le</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Checks if <code>lhs</code> is less than or equal to <code>rhs</code>.</p>
+</div><h3 id='method.compares_ge' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_ge' class='fnname'>compares_ge</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Checks if <code>lhs</code> is greater than or equal to <code>rhs</code>.</p>
+</div><h3 id='method.compares_gt' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_gt' class='fnname'>compares_gt</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Checks if <code>lhs</code> is greater than <code>rhs</code>.</p>
+</div><h3 id='method.compares_eq' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_eq' class='fnname'>compares_eq</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Checks if <code>lhs</code> is equal to <code>rhs</code>.</p>
+</div><h3 id='method.compares_ne' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_ne' class='fnname'>compares_ne</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Checks if <code>lhs</code> is not equal to <code>rhs</code>.</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;F: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt; for F <span class='where'>where F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(&amp;Lhs, &amp;Rhs) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></span></code></li>
+<li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;C, Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Lb: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rb: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt; for <a class='struct' href='../../collect/compare/struct.Borrow.html' title='collect::compare::Borrow'>Borrow</a>&lt;C&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lb, Rb&gt;, Lb: <a class='trait' href='http://doc.rust-lang.org/nightly/core/borrow/trait.BorrowFrom.html' title='core::borrow::BorrowFrom'>BorrowFrom</a>&lt;Lhs&gt;, Rb: <a class='trait' href='http://doc.rust-lang.org/nightly/core/borrow/trait.BorrowFrom.html' title='core::borrow::BorrowFrom'>BorrowFrom</a>&lt;Rhs&gt;</span></code></li>
+<li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;E, C, T: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, K&gt; <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;T&gt; for <a class='struct' href='../../collect/compare/struct.Extract.html' title='collect::compare::Extract'>Extract</a>&lt;E, C&gt; <span class='where'>where E: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(&amp;T) -&gt; K, C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></li>
+<li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;C, D, Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt; for <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt;, D: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt;</span></code></li>
+<li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> + ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;T&gt; for <a class='struct' href='../../collect/compare/struct.Natural.html' title='collect::compare::Natural'>Natural</a>&lt;T&gt;</code></li>
+<li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;C, Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt; for <a class='struct' href='../../collect/compare/struct.Rev.html' title='collect::compare::Rev'>Rev</a>&lt;C&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt;</span></code></li>
+<li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;C, Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Rhs, Lhs&gt; for <a class='struct' href='../../collect/compare/struct.Swap.html' title='collect::compare::Swap'>Swap</a>&lt;C&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt;</span></code></li>
+</ul><script type="text/javascript" async
+                              src="../../implementors/collect/compare/trait.Compare.js">
+                      </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "collect";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>

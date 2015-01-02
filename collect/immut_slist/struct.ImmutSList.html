@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `ImmutSList` struct in crate `collect`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ImmutSList">
+
+    <title>collect::immut_slist::ImmutSList - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>immut_slist</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.ImmutSList.html'>ImmutSList</a><a class='struct ' href='struct.Items.html'>Items</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>immut_slist</a>::<wbr><a class='struct' href=''>ImmutSList</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-19027' href='../../src/collect/immut_slist.rs.html#24-27'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct ImmutSList&lt;T&gt; {
+    // some fields omitted
+}</pre><div class='docblock'><p>An immutable singly-linked list, as seen in basically every functional language</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h4>
+<div class='docblock'><p>Constructs a new, empty <code>ImmutSList</code></p>
+</div><h4 id='method.append' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.append' class='fnname'>append</a>(&amp;self, elem: T) -&gt; <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h4>
+<div class='docblock'><p>Returns a copy of the list, with <code>elem</code> appended to the front</p>
+</div><h4 id='method.head' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.head' class='fnname'>head</a>(&amp;self) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code></h4>
+<div class='docblock'><p>Returns a reference to the first element in the list</p>
+</div><h4 id='method.tail' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.tail' class='fnname'>tail</a>(&amp;self) -&gt; <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h4>
+<div class='docblock'><p>Returns a copy of the list, with the first element removed</p>
+</div><h4 id='method.tailn' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.tailn' class='fnname'>tailn</a>(&amp;self, n: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h4>
+<div class='docblock'><p>Returns a copy of the list, with the first <code>n</code> elements removed</p>
+</div><h4 id='method.last' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.last' class='fnname'>last</a>(&amp;self) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code></h4>
+<div class='docblock'><p>Returns the last element in the list</p>
+</div><h4 id='method.lastn' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lastn' class='fnname'>lastn</a>(&amp;self, n: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h4>
+<div class='docblock'><p>Returns a copy of the list, with only the last <code>n</code> elements remaining</p>
+</div><h4 id='method.iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/immut_slist/struct.Items.html' title='collect::immut_slist::Items'>Items</a>&lt;'a, T&gt;</code></h4>
+<div class='docblock'><p>Returns an iterator over references to the elements of the list in order</p>
+</div><h4 id='method.len' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a></code></h4>
+<h4 id='method.is_empty' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.drop' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: may be replaced by a more general conversion trait'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.FromIterator.html' title='core::iter::FromIterator'>FromIterator</a>&lt;T&gt; for <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.from_iter' class='method'><a class='stability Unstable' title='Unstable: may be replaced by a more general conversion trait'></a><code>fn <a href='#method.from_iter' class='fnname'>from_iter</a>&lt;I: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;T&gt;&gt;(iterator: I) -&gt; <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.eq' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;<a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;<a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a> for <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.partial_cmp' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.partial_cmp' class='fnname'>partial_cmp</a>(&amp;self, other: &amp;<a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a>&gt;</code></h4>
+<h4 id='method.lt' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.lt' class='fnname'>lt</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.le' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.le' class='fnname'>le</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.gt' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.gt' class='fnname'>gt</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ge' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.ge' class='fnname'>ge</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.clone' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h4>
+<h4 id='method.clone_from' class='tymethod'><a class='stability Unstable' title='Unstable: this function is rarely used'></a><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> for <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;S: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Writer.html' title='core::hash::Writer'>Writer</a>, A: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a>&lt;S&gt;&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a>&lt;S&gt; for <a class='struct' href='../../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>&lt;A&gt;</code></h3><div class='impl-items'><h4 id='method.hash' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.hash' class='fnname'>hash</a>(&amp;self, state: &amp;mut S)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "collect";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>

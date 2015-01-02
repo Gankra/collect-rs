@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `compare` mod in crate `collect`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, compare">
+
+    <title>collect::compare - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../index.html'>collect</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='../blist/index.html'>blist</a><a class='mod current' href='../compare/index.html'>compare</a><a class='mod ' href='../enum_set/index.html'>enum_set</a><a class='mod ' href='../immut_slist/index.html'>immut_slist</a><a class='mod ' href='../interval_heap/index.html'>interval_heap</a><a class='mod ' href='../iter/index.html'>iter</a><a class='mod ' href='../lru_cache/index.html'>lru_cache</a><a class='mod ' href='../proto/index.html'>proto</a><a class='mod ' href='../tree_map/index.html'>tree_map</a><a class='mod ' href='../tree_set/index.html'>tree_set</a><a class='mod ' href='../trie_map/index.html'>trie_map</a><a class='mod ' href='../trie_set/index.html'>trie_set</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='../struct.TreeMap.html'>TreeMap</a><a class='struct ' href='../struct.TreeSet.html'>TreeSet</a><a class='struct ' href='../struct.TrieMap.html'>TrieMap</a><a class='struct ' href='../struct.TrieSet.html'>TrieSet</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>collect</a>::<wbr><a class='mod' href=''>compare</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-12039' href='../../src/collect/compare.rs.html#1-516'>[src]</a></span></h1>
+<div class='docblock'><p>Comparators.</p>
+
+<p>A comparator is any type that implements the <a href="trait.Compare.html"><code>Compare</code></a> trait,
+which imposes a <a href="https://en.wikipedia.org/wiki/Total_order">total order</a>. Its
+<a href="trait.Compare.html#tymethod.compare"><code>compare</code></a> method accepts two values, which may
+be of the same type or different types, and returns an ordering on them.</p>
+
+<p>Comparators are useful for parameterizing the behavior of sort methods and certain
+data structures.</p>
+
+<p>The most basic comparator is <a href="struct.Natural.html"><code>Natural</code></a>, which simply delegates
+to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/trait.Ord.html"><code>Ord</code></a>:</p>
+<pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
+
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1u8</span>;
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2u8</span>;
+
+<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>;
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='ident'>a</span>, <span class='ident'>b</span>), <span class='ident'>Less</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='ident'>b</span>, <span class='ident'>a</span>), <span class='ident'>Greater</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='ident'>a</span>, <span class='ident'>a</span>), <span class='ident'>Equal</span>);
+</pre>
+
+<p>There are convenience methods for checking each of the six relations:</p>
+<pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
+
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1u8</span>;
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2u8</span>;
+
+<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>;
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_lt</span>(<span class='ident'>a</span>, <span class='ident'>b</span>));
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_le</span>(<span class='ident'>a</span>, <span class='ident'>b</span>));
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_ge</span>(<span class='ident'>b</span>, <span class='ident'>a</span>));
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_gt</span>(<span class='ident'>b</span>, <span class='ident'>a</span>));
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_eq</span>(<span class='ident'>a</span>, <span class='ident'>a</span>));
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_ne</span>(<span class='ident'>a</span>, <span class='ident'>b</span>));
+</pre>
+
+<p>The <a href="trait.CompareExt.html"><code>CompareExt</code></a> trait provides extension methods that
+consume a comparator to produce a new one with different behavior, similar to
+<a href="http://doc.rust-lang.org/std/iter/trait.IteratorExt.html">iterator adaptors</a>. For
+example, all comparators can be <a href="trait.CompareExt.html#method.rev">reversed</a>:</p>
+<pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Natural</span>};
+
+<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>.<span class='ident'>rev</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='number'>1u8</span>, <span class='kw-2'>&amp;</span><span class='number'>2u8</span>), <span class='ident'>Greater</span>);
+</pre>
+
+<p>It is possible to implement a comparator that is not based on the natural ordering of
+a type by using a closure of type <code>Fn(&amp;Lhs, &amp;Rhs) -&gt; Ordering</code>. For example, vectors
+can be compared by their length instead of their contents:</p>
+<pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>};
+
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>4</span>, <span class='number'>5</span>];
+
+<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='op'>|</span><span class='kw-2'>&amp;</span>: <span class='ident'>lhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span><span class='op'>|</span> <span class='ident'>lhs</span>.<span class='ident'>len</span>().<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>rhs</span>.<span class='ident'>len</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='ident'>a</span>, <span class='kw-2'>&amp;</span><span class='ident'>b</span>), <span class='ident'>Greater</span>);
+
+<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>cmp</span>.<span class='ident'>rev</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='ident'>a</span>, <span class='kw-2'>&amp;</span><span class='ident'>b</span>), <span class='ident'>Less</span>);
+</pre>
+
+<p>Comparators can be combined <a href="https://en.wikipedia.org/wiki/Lexicographical_order">lexicographically</a> in order to compare values
+first by one key, <a href="trait.CompareExt.html#method.then">then</a>, if the first keys were
+equal, by another:</p>
+<pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>};
+
+<span class='kw'>struct</span> <span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>age</span>: <span class='ident'>u8</span> }
+
+<span class='kw'>let</span> <span class='ident'>fido4</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='string'>&quot;Fido&quot;</span>, <span class='ident'>age</span>: <span class='number'>4</span> };
+<span class='kw'>let</span> <span class='ident'>ruff2</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='string'>&quot;Ruff&quot;</span>, <span class='ident'>age</span>: <span class='number'>2</span> };
+<span class='kw'>let</span> <span class='ident'>fido3</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='string'>&quot;Fido&quot;</span>, <span class='ident'>age</span>: <span class='number'>3</span> };
+
+<span class='kw'>let</span> <span class='ident'>name_cmp</span> <span class='op'>=</span> <span class='op'>|</span><span class='kw-2'>&amp;</span>: <span class='ident'>lhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span><span class='op'>|</span> <span class='ident'>lhs</span>.<span class='ident'>name</span>.<span class='ident'>cmp</span>(<span class='ident'>rhs</span>.<span class='ident'>name</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>ruff2</span>), <span class='ident'>Less</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>fido3</span>), <span class='ident'>Equal</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>ruff2</span>, <span class='ident'>fido3</span>), <span class='ident'>Greater</span>);
+
+<span class='kw'>let</span> <span class='ident'>age_cmp</span> <span class='op'>=</span> <span class='op'>|</span><span class='kw-2'>&amp;</span>: <span class='ident'>lhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span><span class='op'>|</span> <span class='ident'>lhs</span>.<span class='ident'>age</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>rhs</span>.<span class='ident'>age</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>ruff2</span>), <span class='ident'>Greater</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>fido3</span>), <span class='ident'>Greater</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>ruff2</span>, <span class='ident'>fido3</span>), <span class='ident'>Less</span>);
+
+<span class='kw'>let</span> <span class='ident'>name_age_cmp</span> <span class='op'>=</span> <span class='ident'>name_cmp</span>.<span class='ident'>then</span>(<span class='ident'>age_cmp</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>ruff2</span>), <span class='ident'>Less</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>fido3</span>), <span class='ident'>Greater</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>ruff2</span>, <span class='ident'>fido3</span>), <span class='ident'>Greater</span>);
+</pre>
+
+<p>It is often repetitive to compare two values of the same type by the same key, so the
+<a href="struct.Extract.html">key-extraction logic</a> can be factored out, simplifying the
+previous example:</p>
+<pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Extract</span>, <span class='ident'>Natural</span>};
+
+<span class='kw'>struct</span> <span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>age</span>: <span class='ident'>u8</span> }
+
+<span class='kw'>let</span> <span class='ident'>fido4</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='string'>&quot;Fido&quot;</span>, <span class='ident'>age</span>: <span class='number'>4</span> };
+<span class='kw'>let</span> <span class='ident'>ruff2</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='string'>&quot;Ruff&quot;</span>, <span class='ident'>age</span>: <span class='number'>2</span> };
+<span class='kw'>let</span> <span class='ident'>fido3</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='string'>&quot;Fido&quot;</span>, <span class='ident'>age</span>: <span class='number'>3</span> };
+
+<span class='kw'>let</span> <span class='ident'>name_age_cmp</span> <span class='op'>=</span> <span class='ident'>Extract</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span><span class='op'>|</span> <span class='ident'>p</span>.<span class='ident'>name</span>, <span class='ident'>Natural</span>)
+             .<span class='ident'>then</span>(<span class='ident'>Extract</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span><span class='op'>|</span> <span class='ident'>p</span>.<span class='ident'>age</span>, <span class='ident'>Natural</span>));
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>ruff2</span>), <span class='ident'>Less</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>fido3</span>), <span class='ident'>Greater</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>ruff2</span>, <span class='ident'>fido3</span>), <span class='ident'>Greater</span>);
+</pre>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Borrow.html'
+                               title='collect::compare::Borrow'>Borrow</a></td>
+                        <td class='docblock short'><p>A comparator that borrows its parameters before comparing them.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Extract.html'
+                               title='collect::compare::Extract'>Extract</a></td>
+                        <td class='docblock short'><p>A comparator that extracts a sort key from a value.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Lexicographic.html'
+                               title='collect::compare::Lexicographic'>Lexicographic</a></td>
+                        <td class='docblock short'><p>A comparator that <a href="https://en.wikipedia.org/wiki/Lexicographical_order">lexicographically</a> combines two others.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Natural.html'
+                               title='collect::compare::Natural'>Natural</a></td>
+                        <td class='docblock short'><p>A comparator that delegates to <a href="http://doc.rust-lang.org/std/cmp/trait.Ord.html"><code>Ord</code></a>.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Rev.html'
+                               title='collect::compare::Rev'>Rev</a></td>
+                        <td class='docblock short'><p>A comparator that reverses the ordering of another.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Swap.html'
+                               title='collect::compare::Swap'>Swap</a></td>
+                        <td class='docblock short'><p>A comparator that swaps another&#39;s parameters, maintaining the underlying ordering.</p>
+</td>
+                    </tr>
+                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.Compare.html'
+                               title='collect::compare::Compare'>Compare</a></td>
+                        <td class='docblock short'><p>A comparator imposing a <a href="https://en.wikipedia.org/wiki/Total_order">total order</a>.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.CompareExt.html'
+                               title='collect::compare::CompareExt'>CompareExt</a></td>
+                        <td class='docblock short'><p>An extension trait with methods applicable to all comparators.</p>
+</td>
+                    </tr>
+                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.max.html'
+                               title='collect::compare::max'>max</a></td>
+                        <td class='docblock short'><p>Returns the maximum of two values according to the given comparator, or <code>lhs</code> if they
+are equal.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.min.html'
+                               title='collect::compare::min'>min</a></td>
+                        <td class='docblock short'><p>Returns the minimum of two values according to the given comparator, or <code>lhs</code> if they
+are equal.</p>
+</td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "collect";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>

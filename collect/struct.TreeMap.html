@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `TreeMap` struct in crate `collect`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, TreeMap">
+
+    <title>collect::TreeMap - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='index.html'>collect</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='blist/index.html'>blist</a><a class='mod ' href='compare/index.html'>compare</a><a class='mod ' href='enum_set/index.html'>enum_set</a><a class='mod ' href='immut_slist/index.html'>immut_slist</a><a class='mod ' href='interval_heap/index.html'>interval_heap</a><a class='mod ' href='iter/index.html'>iter</a><a class='mod ' href='lru_cache/index.html'>lru_cache</a><a class='mod ' href='proto/index.html'>proto</a><a class='mod ' href='tree_map/index.html'>tree_map</a><a class='mod ' href='tree_set/index.html'>tree_set</a><a class='mod ' href='trie_map/index.html'>trie_map</a><a class='mod ' href='trie_set/index.html'>trie_set</a></div><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.TreeMap.html'>TreeMap</a><a class='struct ' href='struct.TreeSet.html'>TreeSet</a><a class='struct ' href='struct.TrieMap.html'>TrieMap</a><a class='struct ' href='struct.TrieSet.html'>TrieSet</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>collect</a>::<wbr><a class='struct' href=''>TreeMap</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-33' href='../src/collect/tree/map.rs.html#124-128'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct TreeMap&lt;K, V, C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; = <a class='struct' href='../collect/compare/struct.Natural.html' title='collect::compare::Natural'>Natural</a>&lt;K&gt;&gt; {
+    // some fields omitted
+}</pre><div class='docblock'><p>This is implemented as an AA tree, which is a simplified variation of
+a red-black tree where red (horizontal) nodes can only be added
+as a right child. The time complexity is the same, and re-balancing
+operations are more frequent but also cheaper.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;bar&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1i</span>, <span class='string'>&quot;foo&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3i</span>, <span class='string'>&quot;quux&quot;</span>);
+
+<span class='comment'>// In ascending order by keys</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>iter</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
+}
+
+<span class='comment'>// Prints 1, 2, 3</span>
+<span class='kw'>for</span> <span class='ident'>key</span> <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>keys</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>key</span>);
+}
+
+<span class='comment'>// Prints `foo`, `bar`, `quux`</span>
+<span class='kw'>for</span> <span class='ident'>key</span> <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>values</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>key</span>);
+}
+
+<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>len</span>(), <span class='number'>2</span>);
+
+<span class='kw'>if</span> <span class='op'>!</span><span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;1 is no more&quot;</span>);
+}
+
+<span class='kw'>for</span> <span class='ident'>key</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0</span>, <span class='number'>4</span>) {
+    <span class='kw'>match</span> <span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>key</span>) {
+        <span class='prelude-val'>Some</span>(<span class='ident'>val</span>) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} has a value: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>val</span>),
+        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} not in map&quot;</span>, <span class='ident'>key</span>),
+    }
+}
+
+<span class='ident'>map</span>.<span class='ident'>clear</span>();
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>is_empty</span>());
+</pre>
+
+<p>A <code>TreeMap</code> can also be used with a custom ordering:</p>
+<pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>struct</span> <span class='ident'>Troll</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>,
+    <span class='ident'>level</span>: <span class='ident'>uint</span>,
+}
+
+<span class='comment'>// Use a map to store trolls, sorted by level, and track a list of</span>
+<span class='comment'>// heroes slain.</span>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>trolls</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>with_comparator</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>: <span class='ident'>l</span>: <span class='kw-2'>&amp;</span><span class='ident'>Troll</span>, <span class='ident'>r</span>: <span class='kw-2'>&amp;</span><span class='ident'>Troll</span><span class='op'>|</span> <span class='ident'>l</span>.<span class='ident'>level</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>r</span>.<span class='ident'>level</span>));
+
+<span class='ident'>trolls</span>.<span class='ident'>insert</span>(<span class='ident'>Troll</span> { <span class='ident'>name</span>: <span class='string'>&quot;Orgarr&quot;</span>, <span class='ident'>level</span>: <span class='number'>2</span> },
+              <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;King Karl&quot;</span>]);
+<span class='ident'>trolls</span>.<span class='ident'>insert</span>(<span class='ident'>Troll</span> { <span class='ident'>name</span>: <span class='string'>&quot;Blargarr&quot;</span>, <span class='ident'>level</span>: <span class='number'>3</span> },
+              <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;Odd&quot;</span>]);
+<span class='ident'>trolls</span>.<span class='ident'>insert</span>(<span class='ident'>Troll</span> { <span class='ident'>name</span>: <span class='string'>&quot;Kron the Smelly One&quot;</span>, <span class='ident'>level</span>: <span class='number'>4</span> },
+              <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;Omar the Brave&quot;</span>, <span class='string'>&quot;Peter: Slayer of Trolls&quot;</span>]);
+<span class='ident'>trolls</span>.<span class='ident'>insert</span>(<span class='ident'>Troll</span> { <span class='ident'>name</span>: <span class='string'>&quot;Wartilda&quot;</span>, <span class='ident'>level</span>: <span class='number'>1</span> },
+              <span class='macro'>vec</span><span class='macro'>!</span>[]);
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;You are facing {} trolls!&quot;</span>, <span class='ident'>trolls</span>.<span class='ident'>len</span>());
+
+<span class='comment'>// Print the trolls, ordered by level with smallest level first</span>
+<span class='kw'>for</span> (<span class='ident'>troll</span>, <span class='ident'>heroes</span>) <span class='kw'>in</span> <span class='ident'>trolls</span>.<span class='ident'>iter</span>() {
+    <span class='kw'>let</span> <span class='ident'>what</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>heroes</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>1u</span> { <span class='string'>&quot;hero&quot;</span> }
+               <span class='kw'>else</span> { <span class='string'>&quot;heroes&quot;</span> };
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;level {}: &#39;{}&#39; has slain {} {}&quot;</span>,
+             <span class='ident'>troll</span>.<span class='ident'>level</span>, <span class='ident'>troll</span>.<span class='ident'>name</span>, <span class='ident'>heroes</span>.<span class='ident'>len</span>(), <span class='ident'>what</span>);
+}
+
+<span class='comment'>// Kill all trolls</span>
+<span class='ident'>trolls</span>.<span class='ident'>clear</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>trolls</span>.<span class='ident'>len</span>(), <span class='number'>0</span>);
+</pre>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h4>
+<div class='docblock'><p>Creates an empty <code>TreeMap</code> ordered according to the natural order of its keys.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+</pre>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K, V, C&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.with_comparator' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.with_comparator' class='fnname'>with_comparator</a>(cmp: C) -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h4>
+<div class='docblock'><p>Creates an empty <code>TreeMap</code> ordered according to the given comparator.</p>
+</div><h4 id='method.comparator' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.comparator' class='fnname'>comparator</a>(&amp;self) -&gt; &amp;C</code></h4>
+<div class='docblock'><p>Returns the comparator according to which the <code>TreeMap</code> is ordered.</p>
+</div><h4 id='method.keys' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='type' href='../collect/tree_map/type.Keys.html' title='collect::tree_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy iterator over the keys in the map, in ascending order.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Print &quot;a&quot;, &quot;b&quot;, &quot;c&quot; in order.</span>
+<span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>keys</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+}
+</pre>
+</div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='type' href='../collect/tree_map/type.Values.html' title='collect::tree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy iterator over the values in the map, in ascending order
+with respect to the corresponding keys.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Print 1, 2, 3 ordered by keys.</span>
+<span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>values</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+}
+</pre>
+</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy iterator over the key-value pairs in the map, in ascending order.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Print contents in ascending order</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>iter</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
+}
+</pre>
+</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../collect/tree_map/struct.RevEntries.html' title='collect::tree_map::RevEntries'>RevEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy reverse iterator over the key-value pairs in the map, in descending order.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Print contents in descending order</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>rev_iter</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
+}
+</pre>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy forward iterator over the key-value pairs in the
+map, with the values being mutable.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Add 10 until we find &quot;b&quot;</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>iter_mut</span>() {
+    <span class='op'>*</span><span class='ident'>value</span> <span class='op'>+=</span> <span class='number'>10</span>;
+    <span class='kw'>if</span> <span class='ident'>key</span> <span class='op'>==</span> <span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span> { <span class='kw'>break</span> }
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>11</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>12</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>));
+</pre>
+</div><h4 id='method.rev_iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter_mut' class='fnname'>rev_iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../collect/tree_map/struct.RevMutEntries.html' title='collect::tree_map::RevMutEntries'>RevMutEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy reverse iterator over the key-value pairs in the
+map, with the values being mutable.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Add 10 until we find &quot;b&quot;</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>rev_iter_mut</span>() {
+    <span class='op'>*</span><span class='ident'>value</span> <span class='op'>+=</span> <span class='number'>10</span>;
+    <span class='kw'>if</span> <span class='ident'>key</span> <span class='op'>==</span> <span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span> { <span class='kw'>break</span> }
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>12</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>13</span>));
+</pre>
+</div><h4 id='method.into_iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../collect/tree_map/struct.MoveEntries.html' title='collect::tree_map::MoveEntries'>MoveEntries</a>&lt;K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy iterator that consumes the treemap.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Not possible with a regular `.iter()`</span>
+<span class='kw'>let</span> <span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>int</span>)<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>, <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='string'>&quot;a&quot;</span>, <span class='number'>1</span>), (<span class='string'>&quot;b&quot;</span>, <span class='number'>2</span>), (<span class='string'>&quot;c&quot;</span>, <span class='number'>3</span>)]);
+</pre>
+</div><h4 id='method.len' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a></code></h4>
+<div class='docblock'><p>Return the number of elements in the map.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>len</span>(), <span class='number'>0</span>);
+<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
+</pre>
+</div><h4 id='method.is_empty' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Return true if the map contains no elements.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>is_empty</span>());
+<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>is_empty</span>());
+</pre>
+</div><h4 id='method.clear' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Clears the map, removing all values.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>a</span>.<span class='ident'>clear</span>();
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>is_empty</span>());
+</pre>
+</div><h4 id='method.find' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `get`'></a><code>fn <a href='#method.find' class='fnname'>find</a>(&amp;self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt;</code></h4>
+<div class='docblock'><p>Deprecated: Renamed to <code>get</code>.</p>
+</div><h4 id='method.get' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get' class='fnname'>get</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt;(&amp;self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
+<div class='docblock'><p>Returns a reference to the value corresponding to the key.</p>
+
+<p>The key may be any borrowed form of the map&#39;s key type, but the ordering
+on the borrowed form <em>must</em> match the ordering on the key type.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>None</span>);
+</pre>
+</div><h4 id='method.contains_key' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.contains_key' class='fnname'>contains_key</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt;(&amp;self, key: &amp;Q) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
+<div class='docblock'><p>Returns true if the map contains a value for the specified key.</p>
+
+<p>The key may be any borrowed form of the map&#39;s key type, but the ordering
+on the borrowed form <em>must</em> match the ordering on the key type.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='boolval'>true</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='boolval'>false</span>);
+</pre>
+</div><h4 id='method.find_mut' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `get_mut`'></a><code>fn <a href='#method.find_mut' class='fnname'>find_mut</a>(&amp;mut self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut V&gt;</code></h4>
+<div class='docblock'><p>Deprecated: Renamed to <code>get_mut</code>.</p>
+</div><h4 id='method.get_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt;(&amp;mut self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
+<div class='docblock'><p>Returns a mutable reference to the value corresponding to the key.</p>
+
+<p>The key may be any borrowed form of the map&#39;s key type, but the ordering
+on the borrowed form <em>must</em> match the ordering on the key type.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='kw'>match</span> <span class='ident'>map</span>.<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>) {
+    <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>=</span> <span class='string'>&quot;b&quot;</span>,
+    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> (),
+}
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>1</span>], <span class='string'>&quot;b&quot;</span>);
+</pre>
+</div><h4 id='method.swap' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `insert`'></a><code>fn <a href='#method.swap' class='fnname'>swap</a>(&amp;mut self, key: K, value: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
+<div class='docblock'><p>Deprecated: Renamed to <code>insert</code>.</p>
+</div><h4 id='method.insert' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, key: K, value: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
+<div class='docblock'><p>Inserts a key-value pair from the map. If the key already had a value
+present in the map, that value is returned. Otherwise, <code>None</code> is returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37u</span>, <span class='string'>&quot;a&quot;</span>), <span class='prelude-val'>None</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>is_empty</span>(), <span class='boolval'>false</span>);
+
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37</span>, <span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>37</span>], <span class='string'>&quot;c&quot;</span>);
+</pre>
+</div><h4 id='method.pop' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `remove`'></a><code>fn <a href='#method.pop' class='fnname'>pop</a>(&amp;mut self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
+<div class='docblock'><p>Deprecated: Renamed to <code>remove</code>.</p>
+</div><h4 id='method.remove' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt;(&amp;mut self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
+<div class='docblock'><p>Removes a key from the map, returning the value at the key if the key
+was previously in the map.</p>
+
+<p>The key may be any borrowed form of the map&#39;s key type, but the ordering
+on the borrowed form <em>must</em> match the ordering on the key type.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>None</span>);
+</pre>
+</div><h4 id='method.find_with' class='method'><a class='stability Experimental' title='Experimental: likely to be renamed, may be removed'></a><code>fn <a href='#method.find_with' class='fnname'>find_with</a>&lt;F&gt;(&amp;self, f: F) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt; <span class='where'>where F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></span></code></h4>
+<div class='docblock'><p>Returns the value for which <code>f(key)</code> returns <code>Equal</code>. <code>f</code> is invoked
+with current key and guides tree navigation. That means <code>f</code> should
+be aware of natural ordering of the tree.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>tree_map</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>fn</span> <span class='ident'>get_headers</span>() <span class='op'>-&gt;</span> <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>String</span><span class='op'>&gt;</span> {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+    <span class='ident'>result</span>.<span class='ident'>insert</span>(<span class='string'>&quot;Content-Type&quot;</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;application/xml&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>result</span>.<span class='ident'>insert</span>(<span class='string'>&quot;User-Agent&quot;</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;Curl-Rust/0.1&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>result</span>
+}
+
+<span class='kw'>let</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>get_headers</span>();
+<span class='kw'>let</span> <span class='ident'>ua_key</span> <span class='op'>=</span> <span class='string'>&quot;User-Agent&quot;</span>;
+<span class='kw'>let</span> <span class='ident'>ua</span> <span class='op'>=</span> <span class='ident'>headers</span>.<span class='ident'>find_with</span>(<span class='op'>|</span><span class='ident'>k</span><span class='op'>|</span> {
+   <span class='ident'>ua_key</span>.<span class='ident'>cmp</span>(<span class='ident'>k</span>.<span class='ident'>as_slice</span>())
+});
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>ua</span>.<span class='ident'>unwrap</span>()).<span class='ident'>as_slice</span>(), <span class='string'>&quot;Curl-Rust/0.1&quot;</span>);
+</pre>
+</div><h4 id='method.find_with_mut' class='method'><a class='stability Experimental' title='Experimental: likely to be renamed, may be removed'></a><code>fn <a href='#method.find_with_mut' class='fnname'>find_with_mut</a>&lt;'a, F&gt;(&amp;'a mut self, f: F) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'a mut V&gt; <span class='where'>where F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></span></code></h4>
+<div class='docblock'><p>Returns the value for which <code>f(key)</code> returns <code>Equal</code>. <code>f</code> is invoked
+with current key and guides tree navigation. That means <code>f</code> should
+be aware of natural ordering of the tree.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>collect</span>::<span class='ident'>tree_map</span>::<span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>t</span>.<span class='ident'>insert</span>(<span class='string'>&quot;Content-Type&quot;</span>, <span class='string'>&quot;application/xml&quot;</span>);
+<span class='ident'>t</span>.<span class='ident'>insert</span>(<span class='string'>&quot;User-Agent&quot;</span>, <span class='string'>&quot;Curl-Rust/0.1&quot;</span>);
+
+<span class='kw'>let</span> <span class='ident'>new_ua</span> <span class='op'>=</span> <span class='string'>&quot;Safari/156.0&quot;</span>;
+<span class='kw'>match</span> <span class='ident'>t</span>.<span class='ident'>find_with_mut</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>k</span><span class='op'>|</span> <span class='string'>&quot;User-Agent&quot;</span>.<span class='ident'>cmp</span>(<span class='ident'>k</span>)) {
+   <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>new_ua</span>,
+   <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(),
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;User-Agent&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_ua</span>));
+</pre>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K, V, C&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Returns a lazy iterator to the first key-value pair whose key is not less than <code>k</code>
+If all keys in map are less than <code>k</code> an empty iterator is returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>8</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>4</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
+</pre>
+</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Returns a lazy iterator to the first key-value pair whose key is greater than <code>k</code>
+If all keys in map are less than or equal to <code>k</code> an empty iterator is returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>8</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
+</pre>
+</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Returns a lazy value iterator to the first key-value pair (with
+the value being mutable) whose key is not less than <code>k</code>.</p>
+
+<p>If all keys in map are less than <code>k</code> an empty iterator is
+returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>8</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>4</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='string'>&quot;b&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
+
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>lower_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>) {
+    <span class='op'>*</span><span class='ident'>value</span> <span class='op'>=</span> <span class='string'>&quot;changed&quot;</span>;
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>8</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+</pre>
+</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Returns a lazy iterator to the first key-value pair (with the
+value being mutable) whose key is greater than <code>k</code>.</p>
+
+<p>If all keys in map are less than or equal to <code>k</code> an empty iterator
+is returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>8</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
+
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>upper_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>) {
+    <span class='op'>*</span><span class='ident'>value</span> <span class='op'>=</span> <span class='string'>&quot;changed&quot;</span>;
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>8</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+</pre>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h4>
+<div class='docblock'><p>Creates an empty <code>TreeMap</code> ordered according to the natural order of its keys.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+</pre>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K, V, C&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.with_comparator' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.with_comparator' class='fnname'>with_comparator</a>(cmp: C) -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h4>
+<div class='docblock'><p>Creates an empty <code>TreeMap</code> ordered according to the given comparator.</p>
+</div><h4 id='method.comparator' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.comparator' class='fnname'>comparator</a>(&amp;self) -&gt; &amp;C</code></h4>
+<div class='docblock'><p>Returns the comparator according to which the <code>TreeMap</code> is ordered.</p>
+</div><h4 id='method.keys' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='type' href='../collect/tree_map/type.Keys.html' title='collect::tree_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy iterator over the keys in the map, in ascending order.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Print &quot;a&quot;, &quot;b&quot;, &quot;c&quot; in order.</span>
+<span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>keys</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+}
+</pre>
+</div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='type' href='../collect/tree_map/type.Values.html' title='collect::tree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy iterator over the values in the map, in ascending order
+with respect to the corresponding keys.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Print 1, 2, 3 ordered by keys.</span>
+<span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>values</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+}
+</pre>
+</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy iterator over the key-value pairs in the map, in ascending order.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Print contents in ascending order</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>iter</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
+}
+</pre>
+</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../collect/tree_map/struct.RevEntries.html' title='collect::tree_map::RevEntries'>RevEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy reverse iterator over the key-value pairs in the map, in descending order.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Print contents in descending order</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>rev_iter</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
+}
+</pre>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy forward iterator over the key-value pairs in the
+map, with the values being mutable.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Add 10 until we find &quot;b&quot;</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>iter_mut</span>() {
+    <span class='op'>*</span><span class='ident'>value</span> <span class='op'>+=</span> <span class='number'>10</span>;
+    <span class='kw'>if</span> <span class='ident'>key</span> <span class='op'>==</span> <span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span> { <span class='kw'>break</span> }
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>11</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>12</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>));
+</pre>
+</div><h4 id='method.rev_iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter_mut' class='fnname'>rev_iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../collect/tree_map/struct.RevMutEntries.html' title='collect::tree_map::RevMutEntries'>RevMutEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy reverse iterator over the key-value pairs in the
+map, with the values being mutable.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Add 10 until we find &quot;b&quot;</span>
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>rev_iter_mut</span>() {
+    <span class='op'>*</span><span class='ident'>value</span> <span class='op'>+=</span> <span class='number'>10</span>;
+    <span class='kw'>if</span> <span class='ident'>key</span> <span class='op'>==</span> <span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span> { <span class='kw'>break</span> }
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>12</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>13</span>));
+</pre>
+</div><h4 id='method.into_iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../collect/tree_map/struct.MoveEntries.html' title='collect::tree_map::MoveEntries'>MoveEntries</a>&lt;K, V&gt;</code></h4>
+<div class='docblock'><p>Gets a lazy iterator that consumes the treemap.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>1i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>3i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>2i</span>);
+
+<span class='comment'>// Not possible with a regular `.iter()`</span>
+<span class='kw'>let</span> <span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>int</span>)<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>, <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='string'>&quot;a&quot;</span>, <span class='number'>1</span>), (<span class='string'>&quot;b&quot;</span>, <span class='number'>2</span>), (<span class='string'>&quot;c&quot;</span>, <span class='number'>3</span>)]);
+</pre>
+</div><h4 id='method.len' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a></code></h4>
+<div class='docblock'><p>Return the number of elements in the map.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>len</span>(), <span class='number'>0</span>);
+<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
+</pre>
+</div><h4 id='method.is_empty' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Return true if the map contains no elements.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>is_empty</span>());
+<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>is_empty</span>());
+</pre>
+</div><h4 id='method.clear' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Clears the map, removing all values.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>a</span>.<span class='ident'>clear</span>();
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>is_empty</span>());
+</pre>
+</div><h4 id='method.find' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `get`'></a><code>fn <a href='#method.find' class='fnname'>find</a>(&amp;self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt;</code></h4>
+<div class='docblock'><p>Deprecated: Renamed to <code>get</code>.</p>
+</div><h4 id='method.get' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get' class='fnname'>get</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt;(&amp;self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
+<div class='docblock'><p>Returns a reference to the value corresponding to the key.</p>
+
+<p>The key may be any borrowed form of the map&#39;s key type, but the ordering
+on the borrowed form <em>must</em> match the ordering on the key type.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>None</span>);
+</pre>
+</div><h4 id='method.contains_key' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.contains_key' class='fnname'>contains_key</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt;(&amp;self, key: &amp;Q) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
+<div class='docblock'><p>Returns true if the map contains a value for the specified key.</p>
+
+<p>The key may be any borrowed form of the map&#39;s key type, but the ordering
+on the borrowed form <em>must</em> match the ordering on the key type.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='boolval'>true</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='boolval'>false</span>);
+</pre>
+</div><h4 id='method.find_mut' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `get_mut`'></a><code>fn <a href='#method.find_mut' class='fnname'>find_mut</a>(&amp;mut self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut V&gt;</code></h4>
+<div class='docblock'><p>Deprecated: Renamed to <code>get_mut</code>.</p>
+</div><h4 id='method.get_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt;(&amp;mut self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
+<div class='docblock'><p>Returns a mutable reference to the value corresponding to the key.</p>
+
+<p>The key may be any borrowed form of the map&#39;s key type, but the ordering
+on the borrowed form <em>must</em> match the ordering on the key type.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='kw'>match</span> <span class='ident'>map</span>.<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>) {
+    <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>=</span> <span class='string'>&quot;b&quot;</span>,
+    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> (),
+}
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>1</span>], <span class='string'>&quot;b&quot;</span>);
+</pre>
+</div><h4 id='method.swap' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `insert`'></a><code>fn <a href='#method.swap' class='fnname'>swap</a>(&amp;mut self, key: K, value: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
+<div class='docblock'><p>Deprecated: Renamed to <code>insert</code>.</p>
+</div><h4 id='method.insert' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, key: K, value: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
+<div class='docblock'><p>Inserts a key-value pair from the map. If the key already had a value
+present in the map, that value is returned. Otherwise, <code>None</code> is returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37u</span>, <span class='string'>&quot;a&quot;</span>), <span class='prelude-val'>None</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>is_empty</span>(), <span class='boolval'>false</span>);
+
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37</span>, <span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>37</span>], <span class='string'>&quot;c&quot;</span>);
+</pre>
+</div><h4 id='method.pop' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `remove`'></a><code>fn <a href='#method.pop' class='fnname'>pop</a>(&amp;mut self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
+<div class='docblock'><p>Deprecated: Renamed to <code>remove</code>.</p>
+</div><h4 id='method.remove' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt;(&amp;mut self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
+<div class='docblock'><p>Removes a key from the map, returning the value at the key if the key
+was previously in the map.</p>
+
+<p>The key may be any borrowed form of the map&#39;s key type, but the ordering
+on the borrowed form <em>must</em> match the ordering on the key type.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>None</span>);
+</pre>
+</div><h4 id='method.find_with' class='method'><a class='stability Experimental' title='Experimental: likely to be renamed, may be removed'></a><code>fn <a href='#method.find_with' class='fnname'>find_with</a>&lt;F&gt;(&amp;self, f: F) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt; <span class='where'>where F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></span></code></h4>
+<div class='docblock'><p>Returns the value for which <code>f(key)</code> returns <code>Equal</code>. <code>f</code> is invoked
+with current key and guides tree navigation. That means <code>f</code> should
+be aware of natural ordering of the tree.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>tree_map</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>fn</span> <span class='ident'>get_headers</span>() <span class='op'>-&gt;</span> <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>String</span><span class='op'>&gt;</span> {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+    <span class='ident'>result</span>.<span class='ident'>insert</span>(<span class='string'>&quot;Content-Type&quot;</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;application/xml&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>result</span>.<span class='ident'>insert</span>(<span class='string'>&quot;User-Agent&quot;</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;Curl-Rust/0.1&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>result</span>
+}
+
+<span class='kw'>let</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>get_headers</span>();
+<span class='kw'>let</span> <span class='ident'>ua_key</span> <span class='op'>=</span> <span class='string'>&quot;User-Agent&quot;</span>;
+<span class='kw'>let</span> <span class='ident'>ua</span> <span class='op'>=</span> <span class='ident'>headers</span>.<span class='ident'>find_with</span>(<span class='op'>|</span><span class='ident'>k</span><span class='op'>|</span> {
+   <span class='ident'>ua_key</span>.<span class='ident'>cmp</span>(<span class='ident'>k</span>.<span class='ident'>as_slice</span>())
+});
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>ua</span>.<span class='ident'>unwrap</span>()).<span class='ident'>as_slice</span>(), <span class='string'>&quot;Curl-Rust/0.1&quot;</span>);
+</pre>
+</div><h4 id='method.find_with_mut' class='method'><a class='stability Experimental' title='Experimental: likely to be renamed, may be removed'></a><code>fn <a href='#method.find_with_mut' class='fnname'>find_with_mut</a>&lt;'a, F&gt;(&amp;'a mut self, f: F) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'a mut V&gt; <span class='where'>where F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></span></code></h4>
+<div class='docblock'><p>Returns the value for which <code>f(key)</code> returns <code>Equal</code>. <code>f</code> is invoked
+with current key and guides tree navigation. That means <code>f</code> should
+be aware of natural ordering of the tree.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>collect</span>::<span class='ident'>tree_map</span>::<span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>t</span>.<span class='ident'>insert</span>(<span class='string'>&quot;Content-Type&quot;</span>, <span class='string'>&quot;application/xml&quot;</span>);
+<span class='ident'>t</span>.<span class='ident'>insert</span>(<span class='string'>&quot;User-Agent&quot;</span>, <span class='string'>&quot;Curl-Rust/0.1&quot;</span>);
+
+<span class='kw'>let</span> <span class='ident'>new_ua</span> <span class='op'>=</span> <span class='string'>&quot;Safari/156.0&quot;</span>;
+<span class='kw'>match</span> <span class='ident'>t</span>.<span class='ident'>find_with_mut</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>k</span><span class='op'>|</span> <span class='string'>&quot;User-Agent&quot;</span>.<span class='ident'>cmp</span>(<span class='ident'>k</span>)) {
+   <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>new_ua</span>,
+   <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(),
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;User-Agent&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_ua</span>));
+</pre>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K, V, C&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Returns a lazy iterator to the first key-value pair whose key is not less than <code>k</code>
+If all keys in map are less than <code>k</code> an empty iterator is returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>8</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>4</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
+</pre>
+</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Returns a lazy iterator to the first key-value pair whose key is greater than <code>k</code>
+If all keys in map are less than or equal to <code>k</code> an empty iterator is returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>8</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
+</pre>
+</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Returns a lazy value iterator to the first key-value pair (with
+the value being mutable) whose key is not less than <code>k</code>.</p>
+
+<p>If all keys in map are less than <code>k</code> an empty iterator is
+returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>8</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>4</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='string'>&quot;b&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
+
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>lower_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>) {
+    <span class='op'>*</span><span class='ident'>value</span> <span class='op'>=</span> <span class='string'>&quot;changed&quot;</span>;
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>8</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+</pre>
+</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>Returns a lazy iterator to the first key-value pair (with the
+value being mutable) whose key is greater than <code>k</code>.</p>
+
+<p>If all keys in map are less than or equal to <code>k</code> an empty iterator
+is returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>8</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='string'>&quot;c&quot;</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
+
+<span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>upper_bound_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>) {
+    <span class='op'>*</span><span class='ident'>value</span> <span class='op'>=</span> <span class='string'>&quot;changed&quot;</span>;
+}
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>8</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
+</pre>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.eq' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;<a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.assert_receiver_is_total_eq' class='tymethod'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#tymethod.assert_receiver_is_total_eq' class='fnname'>assert_receiver_is_total_eq</a>(&amp;self)</code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.partial_cmp' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.partial_cmp' class='fnname'>partial_cmp</a>(&amp;self, other: &amp;<a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a>&gt;</code></h4>
+<h4 id='method.lt' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.lt' class='fnname'>lt</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.le' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.le' class='fnname'>le</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.gt' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.gt' class='fnname'>gt</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ge' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.ge' class='fnname'>ge</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.cmp' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.cmp' class='fnname'>cmp</a>(&amp;self, other: &amp;<a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a>, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K, V, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; + <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a></span></code></h3><div class='impl-items'><h4 id='method.default' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h4>
+</div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;K, V, C, Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Index.html' title='core::ops::Index'>Index</a>&lt;Q, V&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; + <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h3><div class='impl-items'><h4 id='method.index' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.index' class='fnname'>index</a>&lt;'a&gt;(&amp;'a self, i: &amp;Q) -&gt; &amp;'a V</code></h4>
+</div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;K, V, C, Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.IndexMut.html' title='core::ops::IndexMut'>IndexMut</a>&lt;Q, V&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; + <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h3><div class='impl-items'><h4 id='method.index_mut' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.index_mut' class='fnname'>index_mut</a>&lt;'a&gt;(&amp;'a mut self, i: &amp;Q) -&gt; &amp;'a mut V</code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: may be replaced by a more general conversion trait'></a><code>impl&lt;K, V, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.FromIterator.html' title='core::iter::FromIterator'>FromIterator</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; + <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a></span></code></h3><div class='impl-items'><h4 id='method.from_iter' class='method'><a class='stability Unstable' title='Unstable: may be replaced by a more general conversion trait'></a><code>fn <a href='#method.from_iter' class='fnname'>from_iter</a>&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt;&gt;(iter: T) -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: just renamed as part of collections reform'></a><code>impl&lt;K, V, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Extend.html' title='core::iter::Extend'>Extend</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.extend' class='method'><a class='stability Unstable' title='Unstable: just renamed as part of collections reform'></a><code>fn <a href='#method.extend' class='fnname'>extend</a>&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt;&gt;(&amp;mut self, iter: T)</code></h4>
+</div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;S: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Writer.html' title='core::hash::Writer'>Writer</a>, K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a>&lt;S&gt;, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a>&lt;S&gt;, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a>&lt;S&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.hash' class='fnname'>hash</a>(&amp;self, state: &amp;mut S)</code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.eq' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;<a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.assert_receiver_is_total_eq' class='tymethod'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#tymethod.assert_receiver_is_total_eq' class='fnname'>assert_receiver_is_total_eq</a>(&amp;self)</code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.partial_cmp' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.partial_cmp' class='fnname'>partial_cmp</a>(&amp;self, other: &amp;<a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a>&gt;</code></h4>
+<h4 id='method.lt' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.lt' class='fnname'>lt</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.le' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.le' class='fnname'>le</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.gt' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.gt' class='fnname'>gt</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ge' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.ge' class='fnname'>ge</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.cmp' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.cmp' class='fnname'>cmp</a>(&amp;self, other: &amp;<a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V&gt;) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a>, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K, V, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; + <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a></span></code></h3><div class='impl-items'><h4 id='method.default' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h4>
+</div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;K, V, C, Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Index.html' title='core::ops::Index'>Index</a>&lt;Q, V&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; + <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h3><div class='impl-items'><h4 id='method.index' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.index' class='fnname'>index</a>&lt;'a&gt;(&amp;'a self, i: &amp;Q) -&gt; &amp;'a V</code></h4>
+</div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;K, V, C, Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.IndexMut.html' title='core::ops::IndexMut'>IndexMut</a>&lt;Q, V&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; + <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h3><div class='impl-items'><h4 id='method.index_mut' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.index_mut' class='fnname'>index_mut</a>&lt;'a&gt;(&amp;'a mut self, i: &amp;Q) -&gt; &amp;'a mut V</code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: may be replaced by a more general conversion trait'></a><code>impl&lt;K, V, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.FromIterator.html' title='core::iter::FromIterator'>FromIterator</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; + <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a></span></code></h3><div class='impl-items'><h4 id='method.from_iter' class='method'><a class='stability Unstable' title='Unstable: may be replaced by a more general conversion trait'></a><code>fn <a href='#method.from_iter' class='fnname'>from_iter</a>&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt;&gt;(iter: T) -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: just renamed as part of collections reform'></a><code>impl&lt;K, V, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Extend.html' title='core::iter::Extend'>Extend</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.extend' class='method'><a class='stability Unstable' title='Unstable: just renamed as part of collections reform'></a><code>fn <a href='#method.extend' class='fnname'>extend</a>&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt;&gt;(&amp;mut self, iter: T)</code></h4>
+</div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;S: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Writer.html' title='core::hash::Writer'>Writer</a>, K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a>&lt;S&gt;, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a>&lt;S&gt;, C&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a>&lt;S&gt; for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.hash' class='fnname'>hash</a>(&amp;self, state: &amp;mut S)</code></h4>
+</div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>, C: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> + <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h3><div class='impl-items'><h4 id='method.clone' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h4>
+<h4 id='method.clone_from' class='tymethod'><a class='stability Unstable' title='Unstable: this function is rarely used'></a><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>, C: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> + <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h3><div class='impl-items'><h4 id='method.clone' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt;</code></h4>
+<h4 id='method.clone_from' class='tymethod'><a class='stability Unstable' title='Unstable: this function is rarely used'></a><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "collect";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>

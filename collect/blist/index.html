@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `blist` mod in crate `collect`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, blist">
+
+    <title>collect::blist - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../index.html'>collect</a></p><div class='block mod'><h2>Modules</h2><a class='mod current' href='../blist/index.html'>blist</a><a class='mod ' href='../compare/index.html'>compare</a><a class='mod ' href='../enum_set/index.html'>enum_set</a><a class='mod ' href='../immut_slist/index.html'>immut_slist</a><a class='mod ' href='../interval_heap/index.html'>interval_heap</a><a class='mod ' href='../iter/index.html'>iter</a><a class='mod ' href='../lru_cache/index.html'>lru_cache</a><a class='mod ' href='../proto/index.html'>proto</a><a class='mod ' href='../tree_map/index.html'>tree_map</a><a class='mod ' href='../tree_set/index.html'>tree_set</a><a class='mod ' href='../trie_map/index.html'>trie_map</a><a class='mod ' href='../trie_set/index.html'>trie_set</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='../struct.TreeMap.html'>TreeMap</a><a class='struct ' href='../struct.TreeSet.html'>TreeSet</a><a class='struct ' href='../struct.TrieMap.html'>TrieMap</a><a class='struct ' href='../struct.TrieSet.html'>TrieSet</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>collect</a>::<wbr><a class='mod' href=''>blist</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-15598' href='../../src/collect/blist.rs.html#1-817'>[src]</a></span></h1>
+<h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.BList.html'
+                               title='collect::blist::BList'>BList</a></td>
+                        <td class='docblock short'><p>A skeleton implementation of a BList, based on the <a href="http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html">Space-Efficient Linked List</a> described in
+Open Data Structures.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Items.html'
+                               title='collect::blist::Items'>Items</a></td>
+                        <td class='docblock short'><p>A by-ref iterator for a BList</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.MoveTrav.html'
+                               title='collect::blist::MoveTrav'>MoveTrav</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.MutItems.html'
+                               title='collect::blist::MutItems'>MutItems</a></td>
+                        <td class='docblock short'><p>A by-mut-ref iterator for a BList</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.MutTrav.html'
+                               title='collect::blist::MutTrav'>MutTrav</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Trav.html'
+                               title='collect::blist::Trav'>Trav</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "collect";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>

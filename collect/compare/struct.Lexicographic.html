@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Lexicographic` struct in crate `collect`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Lexicographic">
+
+    <title>collect::compare::Lexicographic - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>compare</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Borrow.html'>Borrow</a><a class='struct ' href='struct.Extract.html'>Extract</a><a class='struct current' href='struct.Lexicographic.html'>Lexicographic</a><a class='struct ' href='struct.Natural.html'>Natural</a><a class='struct ' href='struct.Rev.html'>Rev</a><a class='struct ' href='struct.Swap.html'>Swap</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.Compare.html'>Compare</a><a class='trait ' href='trait.CompareExt.html'>CompareExt</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.max.html'>max</a><a class='fn ' href='fn.min.html'>min</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>compare</a>::<wbr><a class='struct' href=''>Lexicographic</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-13232' href='../../src/collect/compare.rs.html#394'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Lexicographic&lt;C, D&gt;(_, _);</pre><div class='docblock'><p>A comparator that <a href="https://en.wikipedia.org/wiki/Lexicographical_order">lexicographically</a> combines two others.</p>
+
+<p>See <a href="trait.CompareExt.html#method.then"><code>CompareExt::then</code></a> for an example.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;C, D, Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>&gt; <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt; for <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt;, D: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt;</span></code></h3><div class='impl-items'><h4 id='method.compare' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compare' class='fnname'>compare</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></code></h4>
+<h4 id='method.compares_lt' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_lt' class='fnname'>compares_lt</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.compares_le' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_le' class='fnname'>compares_le</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.compares_ge' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_ge' class='fnname'>compares_ge</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.compares_gt' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_gt' class='fnname'>compares_gt</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.compares_eq' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_eq' class='fnname'>compares_eq</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.compares_ne' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.compares_ne' class='fnname'>compares_ne</a>(&amp;self, lhs: &amp;Lhs, rhs: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;C: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>, D: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;</code></h3><div class='impl-items'><h4 id='method.assert_receiver_is_total_eq' class='tymethod'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#tymethod.assert_receiver_is_total_eq' class='fnname'>assert_receiver_is_total_eq</a>(&amp;self)</code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;C: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>, D: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;</code></h3><div class='impl-items'><h4 id='method.eq' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;C: <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a>, D: <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;</code></h3><div class='impl-items'><h4 id='method.default' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;</code></h4>
+</div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;C: <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Copy.html' title='core::kinds::Copy'>Copy</a>, D: <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Copy.html' title='core::kinds::Copy'>Copy</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Copy.html' title='core::kinds::Copy'>Copy</a> for <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;C: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>, D: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;</code></h3><div class='impl-items'><h4 id='method.clone' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../collect/compare/struct.Lexicographic.html' title='collect::compare::Lexicographic'>Lexicographic</a>&lt;C, D&gt;</code></h4>
+<h4 id='method.clone_from' class='tymethod'><a class='stability Unstable' title='Unstable: this function is rarely used'></a><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "collect";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>
