@@ -823,6 +823,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
 }
 
 /// Lazy forward iterator over a map
+#[deriving(Clone)]
+#[allow(raw_pointer_deriving)]
 pub struct Iter<'a, K:'a, V:'a> {
     stack: Vec<&'a TreeNode<K, V>>,
     // See the comment on IterMut; this is just to allow
@@ -834,6 +836,7 @@ pub struct Iter<'a, K:'a, V:'a> {
 }
 
 /// Lazy backward iterator over a map
+#[deriving(Clone)]
 pub struct RevIter<'a, K:'a, V:'a> {
     iter: Iter<'a, K, V>,
 }
@@ -872,10 +875,12 @@ pub struct RevIterMut<'a, K:'a, V:'a> {
 }
 
 /// TreeMap keys iterator.
+#[deriving(Clone)]
 pub struct Keys<'a, K: 'a, V: 'a>
     (iter::Map<(&'a K, &'a V), &'a K, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>);
 
 /// TreeMap values iterator.
+#[deriving(Clone)]
 pub struct Values<'a, K: 'a, V: 'a>
     (iter::Map<(&'a K, &'a V), &'a V, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>);
 

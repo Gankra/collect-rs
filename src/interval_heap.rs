@@ -145,6 +145,7 @@ impl<T, C: Compare<T> + Default> Default for IntervalHeap<T, C> {
 }
 
 /// `IntervalHeap` iterator.
+#[deriving(Clone)]
 pub struct Iter<'a, T: 'a>(slice::Iter<'a, T>);
 
 impl<T: Ord> IntervalHeap<T> {
