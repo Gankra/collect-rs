@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../../index.html'>collect</a>::<wbr><a href='../index.html'>proto</a>::<wbr><a href='index.html'>dlist</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.Cursor.html'>Cursor</a><a class='struct ' href='struct.DList.html'>DList</a><a class='struct ' href='struct.Items.html'>Items</a><a class='struct ' href='struct.MoveItems.html'>MoveItems</a><a class='struct ' href='struct.MutItems.html'>MutItems</a></div>
+        <p class='location'><a href='../../index.html'>collect</a>::<wbr><a href='../index.html'>proto</a>::<wbr><a href='index.html'>dlist</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.Cursor.html'>Cursor</a><a class='struct ' href='struct.DList.html'>DList</a><a class='struct ' href='struct.IntoIter.html'>IntoIter</a><a class='struct ' href='struct.Iter.html'>Iter</a><a class='struct ' href='struct.IterMut.html'>IterMut</a></div>
     </section>
 
     <nav class="sub">
@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>collect</a>::<wbr><a href='../index.html'>proto</a>::<wbr><a href='index.html'>dlist</a>::<wbr><a class='struct' href=''>Cursor</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-23435' href='../../../src/collect/proto/dlist.rs.html#330-335'>[src]</a></span></h1>
+        </span><a id='src-23627' href='../../../src/collect/proto/dlist.rs.html#330-335'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Cursor&lt;'a, T: 'a&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A Cursor is like an iterator, except that it can freely seek back-and-forth, and can
@@ -78,6 +78,10 @@ is empty, or if <code>next</code> is the ghost element</p>
 </div><h4 id='method.split' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.split' class='fnname'>split</a>(&amp;mut self) -&gt; <a class='struct' href='../../../collect/proto/dlist/struct.DList.html' title='collect::proto::dlist::DList'>DList</a>&lt;T&gt;</code></h4>
 <h4 id='method.splice' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.splice' class='fnname'>splice</a>(&amp;mut self, other: &amp;mut <a class='struct' href='../../../collect/proto/dlist/struct.DList.html' title='collect::proto::dlist::DList'>DList</a>&lt;T&gt;)</code></h4>
 <div class='docblock'><p>Inserts the entire list&#39;s contents right after the cursor.</p>
+</div><h4 id='method.seek_forward' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.seek_forward' class='fnname'>seek_forward</a>(&amp;mut self, by: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>)</code></h4>
+<div class='docblock'><p>Calls <code>next</code> the specified number of times.</p>
+</div><h4 id='method.seek_backward' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.seek_backward' class='fnname'>seek_backward</a>(&amp;mut self, by: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>)</code></h4>
+<div class='docblock'><p>Calls <code>prev</code> the specified number of times.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

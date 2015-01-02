@@ -756,8 +756,8 @@
 
     <span class='doccomment'>/// Returns an iterator over an `EnumSet`.</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Items</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>Items</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>bits</span>)
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+        <span class='ident'>Iter</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>bits</span>)
     }
 }
 
@@ -822,18 +822,18 @@
 }
 
 <span class='doccomment'>/// An iterator over an EnumSet</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Items</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='ident'>index</span>: <span class='ident'>uint</span>,
     <span class='ident'>bits</span>: <span class='ident'>uint</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>Items</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>bits</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Items</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>Items</span> { <span class='ident'>index</span>: <span class='number'>0</span>, <span class='ident'>bits</span>: <span class='ident'>bits</span> }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>bits</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+        <span class='ident'>Iter</span> { <span class='ident'>index</span>: <span class='number'>0</span>, <span class='ident'>bits</span>: <span class='ident'>bits</span> }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Items</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>bits</span> <span class='op'>==</span> <span class='number'>0</span> {
             <span class='kw'>return</span> <span class='prelude-val'>None</span>;

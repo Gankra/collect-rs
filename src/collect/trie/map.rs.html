@@ -1994,7 +1994,6 @@
 <span id='1952'>1952</span>
 <span id='1953'>1953</span>
 <span id='1954'>1954</span>
-<span id='1955'>1955</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -2021,7 +2020,6 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Writer</span>, <span class='ident'>Hash</span>};
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>::{<span class='ident'>Iter</span>, <span class='ident'>IterMut</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
 
 <span class='comment'>// FIXME(conventions): implement bounded iterators</span>
@@ -2222,8 +2220,8 @@
     <span class='doccomment'>/// }</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Entries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {<span class='ident'>Entries</span>::<span class='ident'>new</span>()};
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {<span class='ident'>Iter</span>::<span class='ident'>new</span>()};
         <span class='ident'>iter</span>.<span class='ident'>stack</span>[<span class='number'>0</span>] <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>children</span>.<span class='ident'>iter</span>();
         <span class='ident'>iter</span>.<span class='ident'>length</span> <span class='op'>=</span> <span class='number'>1</span>;
         <span class='ident'>iter</span>.<span class='ident'>remaining_min</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>length</span>;
@@ -2250,8 +2248,8 @@
     <span class='doccomment'>/// assert_eq!(map.get(&amp;3), Some(&amp;-3));</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>MutEntries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {<span class='ident'>MutEntries</span>::<span class='ident'>new</span>()};
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {<span class='ident'>IterMut</span>::<span class='ident'>new</span>()};
         <span class='ident'>iter</span>.<span class='ident'>stack</span>[<span class='number'>0</span>] <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>children</span>.<span class='ident'>iter_mut</span>();
         <span class='ident'>iter</span>.<span class='ident'>length</span> <span class='op'>=</span> <span class='number'>1</span>;
         <span class='ident'>iter</span>.<span class='ident'>remaining_min</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>length</span>;
@@ -2543,8 +2541,8 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='comment'>// If `upper` is true then returns upper_bound else returns lower_bound.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>Entries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='macro'>bound</span><span class='macro'>!</span>(<span class='ident'>Entries</span>, <span class='self'>self</span> <span class='op'>=</span> <span class='self'>self</span>,
+    <span class='kw'>fn</span> <span class='ident'>bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='macro'>bound</span><span class='macro'>!</span>(<span class='ident'>Iter</span>, <span class='self'>self</span> <span class='op'>=</span> <span class='self'>self</span>,
                <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>key</span>, <span class='ident'>is_upper</span> <span class='op'>=</span> <span class='ident'>upper</span>,
                <span class='ident'>slice_from</span> <span class='op'>=</span> <span class='ident'>slice_from_or_fail</span>, <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>,
                <span class='ident'>mutability</span> <span class='op'>=</span> )
@@ -2563,7 +2561,7 @@
     <span class='doccomment'>/// assert_eq!(map.lower_bound(5).next(), Some((6, &amp;&quot;c&quot;)));</span>
     <span class='doccomment'>/// assert_eq!(map.lower_bound(10).next(), None);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Entries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>bound</span>(<span class='ident'>key</span>, <span class='boolval'>false</span>)
     }
 
@@ -2580,13 +2578,13 @@
     <span class='doccomment'>/// assert_eq!(map.upper_bound(5).next(), Some((6, &amp;&quot;c&quot;)));</span>
     <span class='doccomment'>/// assert_eq!(map.upper_bound(10).next(), None);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Entries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>bound</span>(<span class='ident'>key</span>, <span class='boolval'>true</span>)
     }
     <span class='comment'>// If `upper` is true then returns upper_bound else returns lower_bound.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>MutEntries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='macro'>bound</span><span class='macro'>!</span>(<span class='ident'>MutEntries</span>, <span class='self'>self</span> <span class='op'>=</span> <span class='self'>self</span>,
+    <span class='kw'>fn</span> <span class='ident'>bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='macro'>bound</span><span class='macro'>!</span>(<span class='ident'>IterMut</span>, <span class='self'>self</span> <span class='op'>=</span> <span class='self'>self</span>,
                <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>key</span>, <span class='ident'>is_upper</span> <span class='op'>=</span> <span class='ident'>upper</span>,
                <span class='ident'>slice_from</span> <span class='op'>=</span> <span class='ident'>slice_from_or_fail_mut</span>, <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter_mut</span>,
                <span class='ident'>mutability</span> <span class='op'>=</span> <span class='kw-2'>mut</span>)
@@ -2613,7 +2611,7 @@
     <span class='doccomment'>/// assert_eq!(map.get(&amp;4), Some(&amp;&quot;changed&quot;));</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;6), Some(&amp;&quot;changed&quot;));</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>MutEntries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>bound_mut</span>(<span class='ident'>key</span>, <span class='boolval'>false</span>)
     }
 
@@ -2638,7 +2636,7 @@
     <span class='doccomment'>/// assert_eq!(map.get(&amp;4), Some(&amp;&quot;b&quot;));</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;6), Some(&amp;&quot;changed&quot;));</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>MutEntries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>bound_mut</span>(<span class='ident'>key</span>, <span class='boolval'>true</span>)
     }
 }
@@ -3076,7 +3074,7 @@
 }
 
 <span class='doccomment'>/// A forward iterator over a map.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Entries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>:<span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>:<span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>stack</span>: [<span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, .. <span class='ident'>MAX_DEPTH</span>],
     <span class='ident'>length</span>: <span class='ident'>uint</span>,
     <span class='ident'>remaining_min</span>: <span class='ident'>uint</span>,
@@ -3085,7 +3083,7 @@
 
 <span class='doccomment'>/// A forward iterator over the key-value pairs of a map, with the</span>
 <span class='doccomment'>/// values being mutable.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MutEntries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>:<span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>:<span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>stack</span>: [<span class='ident'>slice</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, .. <span class='ident'>MAX_DEPTH</span>],
     <span class='ident'>length</span>: <span class='ident'>uint</span>,
     <span class='ident'>remaining_min</span>: <span class='ident'>uint</span>,
@@ -3093,11 +3091,11 @@
 }
 
 <span class='doccomment'>/// A forward iterator over the keys of a map.</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Keys</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>iter</span>::<span class='ident'>Map</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>), <span class='ident'>uint</span>, <span class='ident'>Entries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>fn</span>((<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>uint</span><span class='op'>&gt;</span>;
+<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Keys</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>iter</span>::<span class='ident'>Map</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>), <span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>fn</span>((<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>uint</span><span class='op'>&gt;</span>;
 
 <span class='doccomment'>/// A forward iterator over the values of a map.</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Values</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span>
-    <span class='ident'>iter</span>::<span class='ident'>Map</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>), <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>, <span class='ident'>Entries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>fn</span>((<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span>;
+    <span class='ident'>iter</span>::<span class='ident'>Map</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>), <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>fn</span>((<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span>;
 
 <span class='comment'>// FIXME #5846: see `addr!` above.</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>item</span> { (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>item</span>) <span class='op'>=&gt;</span> {<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>}}
@@ -3213,8 +3211,8 @@
     }
 }
 
-<span class='macro'>iterator_impl</span><span class='macro'>!</span> { <span class='ident'>Entries</span>, <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>, <span class='ident'>mutability</span> <span class='op'>=</span> }
-<span class='macro'>iterator_impl</span><span class='macro'>!</span> { <span class='ident'>MutEntries</span>, <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter_mut</span>, <span class='ident'>mutability</span> <span class='op'>=</span> <span class='kw-2'>mut</span> }
+<span class='macro'>iterator_impl</span><span class='macro'>!</span> { <span class='ident'>Iter</span>, <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>, <span class='ident'>mutability</span> <span class='op'>=</span> }
+<span class='macro'>iterator_impl</span><span class='macro'>!</span> { <span class='ident'>IterMut</span>, <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter_mut</span>, <span class='ident'>mutability</span> <span class='op'>=</span> <span class='kw-2'>mut</span> }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {

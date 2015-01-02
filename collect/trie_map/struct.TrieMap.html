@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>trie_map</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Entries.html'>Entries</a><a class='struct ' href='struct.MutEntries.html'>MutEntries</a><a class='struct ' href='struct.OccupiedEntry.html'>OccupiedEntry</a><a class='struct current' href='struct.TrieMap.html'>TrieMap</a><a class='struct ' href='struct.VacantEntry.html'>VacantEntry</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='enum.Entry.html'>Entry</a></div>
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>trie_map</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Iter.html'>Iter</a><a class='struct ' href='struct.IterMut.html'>IterMut</a><a class='struct ' href='struct.OccupiedEntry.html'>OccupiedEntry</a><a class='struct current' href='struct.TrieMap.html'>TrieMap</a><a class='struct ' href='struct.VacantEntry.html'>VacantEntry</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='enum.Entry.html'>Entry</a></div>
     </section>
 
     <nav class="sub">
@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>trie_map</a>::<wbr><a class='struct' href=''>TrieMap</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-6578' href='../../src/collect/trie/map.rs.html#91-94'>[src]</a></span></h1>
+        </span><a id='src-6756' href='../../src/collect/trie/map.rs.html#90-93'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct TrieMap&lt;T&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A map implemented as a radix trie.</p>
@@ -128,7 +128,7 @@ The iterator&#39;s element type is <code>uint</code>.</p>
 </div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Values.html' title='collect::trie_map::Values'>Values</a>&lt;'r, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator visiting all values in ascending order by the keys.
 The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
-</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/trie_map/struct.Entries.html' title='collect::trie_map::Entries'>Entries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, ordered by keys.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -140,7 +140,7 @@ The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
 }
 </pre>
-</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/trie_map/struct.MutEntries.html' title='collect::trie_map::MutEntries'>MutEntries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, with the
 ability to mutate the values.</p>
 
@@ -269,7 +269,7 @@ was previously in the map.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>None</span>);
 </pre>
-</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.Entries.html' title='collect::trie_map::Entries'>Entries</a>&lt;'a, T&gt;</code></h4>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator pointing to the first key-value pair whose key is not less than <code>key</code>.
 If all keys in the map are less than <code>key</code> an empty iterator is returned.</p>
 
@@ -282,7 +282,7 @@ If all keys in the map are less than <code>key</code> an empty iterator is retur
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.Entries.html' title='collect::trie_map::Entries'>Entries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator pointing to the first key-value pair whose key is greater than <code>key</code>.
 If all keys in the map are not greater than <code>key</code> an empty iterator is returned.</p>
 
@@ -295,7 +295,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.MutEntries.html' title='collect::trie_map::MutEntries'>MutEntries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator pointing to the first key-value pair whose key is not less than <code>key</code>.
 If all keys in the map are less than <code>key</code> an empty iterator is returned.</p>
 
@@ -316,7 +316,7 @@ If all keys in the map are less than <code>key</code> an empty iterator is retur
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
 </pre>
-</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.MutEntries.html' title='collect::trie_map::MutEntries'>MutEntries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator pointing to the first key-value pair whose key is greater than <code>key</code>.
 If all keys in the map are not greater than <code>key</code> an empty iterator is returned.</p>
 
@@ -371,7 +371,7 @@ The iterator&#39;s element type is <code>uint</code>.</p>
 </div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Values.html' title='collect::trie_map::Values'>Values</a>&lt;'r, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator visiting all values in ascending order by the keys.
 The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
-</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/trie_map/struct.Entries.html' title='collect::trie_map::Entries'>Entries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, ordered by keys.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -383,7 +383,7 @@ The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
 }
 </pre>
-</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/trie_map/struct.MutEntries.html' title='collect::trie_map::MutEntries'>MutEntries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, with the
 ability to mutate the values.</p>
 
@@ -512,7 +512,7 @@ was previously in the map.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>None</span>);
 </pre>
-</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.Entries.html' title='collect::trie_map::Entries'>Entries</a>&lt;'a, T&gt;</code></h4>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator pointing to the first key-value pair whose key is not less than <code>key</code>.
 If all keys in the map are less than <code>key</code> an empty iterator is returned.</p>
 
@@ -525,7 +525,7 @@ If all keys in the map are less than <code>key</code> an empty iterator is retur
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.Entries.html' title='collect::trie_map::Entries'>Entries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator pointing to the first key-value pair whose key is greater than <code>key</code>.
 If all keys in the map are not greater than <code>key</code> an empty iterator is returned.</p>
 
@@ -538,7 +538,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.MutEntries.html' title='collect::trie_map::MutEntries'>MutEntries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator pointing to the first key-value pair whose key is not less than <code>key</code>.
 If all keys in the map are less than <code>key</code> an empty iterator is returned.</p>
 
@@ -559,7 +559,7 @@ If all keys in the map are less than <code>key</code> an empty iterator is retur
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
 </pre>
-</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.MutEntries.html' title='collect::trie_map::MutEntries'>MutEntries</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator pointing to the first key-value pair whose key is greater than <code>key</code>.
 If all keys in the map are not greater than <code>key</code> an empty iterator is returned.</p>
 

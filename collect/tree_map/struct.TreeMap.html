@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>tree_map</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Entries.html'>Entries</a><a class='struct ' href='struct.MoveEntries.html'>MoveEntries</a><a class='struct ' href='struct.MutEntries.html'>MutEntries</a><a class='struct ' href='struct.RevEntries.html'>RevEntries</a><a class='struct ' href='struct.RevMutEntries.html'>RevMutEntries</a><a class='struct current' href='struct.TreeMap.html'>TreeMap</a></div>
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>tree_map</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.IntoIter.html'>IntoIter</a><a class='struct ' href='struct.Iter.html'>Iter</a><a class='struct ' href='struct.IterMut.html'>IterMut</a><a class='struct ' href='struct.Keys.html'>Keys</a><a class='struct ' href='struct.RevIter.html'>RevIter</a><a class='struct ' href='struct.RevIterMut.html'>RevIterMut</a><a class='struct current' href='struct.TreeMap.html'>TreeMap</a><a class='struct ' href='struct.Values.html'>Values</a></div>
     </section>
 
     <nav class="sub">
@@ -144,7 +144,7 @@ operations are more frequent but also cheaper.</p>
 <div class='docblock'><p>Creates an empty <code>TreeMap</code> ordered according to the given comparator.</p>
 </div><h4 id='method.comparator' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.comparator' class='fnname'>comparator</a>(&amp;self) -&gt; &amp;C</code></h4>
 <div class='docblock'><p>Returns the comparator according to which the <code>TreeMap</code> is ordered.</p>
-</div><h4 id='method.keys' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='type' href='../../collect/tree_map/type.Keys.html' title='collect::tree_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.keys' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.Keys.html' title='collect::tree_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the keys in the map, in ascending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -160,7 +160,7 @@ operations are more frequent but also cheaper.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
 }
 </pre>
-</div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='type' href='../../collect/tree_map/type.Values.html' title='collect::tree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.Values.html' title='collect::tree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the values in the map, in ascending order
 with respect to the corresponding keys.</p>
 
@@ -177,7 +177,7 @@ with respect to the corresponding keys.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
 }
 </pre>
-</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.Iter.html' title='collect::tree_map::Iter'>Iter</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the key-value pairs in the map, in ascending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -193,7 +193,7 @@ with respect to the corresponding keys.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
 }
 </pre>
-</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.RevEntries.html' title='collect::tree_map::RevEntries'>RevEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.RevIter.html' title='collect::tree_map::RevIter'>RevIter</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy reverse iterator over the key-value pairs in the map, in descending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -209,7 +209,7 @@ with respect to the corresponding keys.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
 }
 </pre>
-</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/tree_map/struct.IterMut.html' title='collect::tree_map::IterMut'>IterMut</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy forward iterator over the key-value pairs in the
 map, with the values being mutable.</p>
 
@@ -231,7 +231,7 @@ map, with the values being mutable.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>12</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>));
 </pre>
-</div><h4 id='method.rev_iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter_mut' class='fnname'>rev_iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/tree_map/struct.RevMutEntries.html' title='collect::tree_map::RevMutEntries'>RevMutEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.rev_iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter_mut' class='fnname'>rev_iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/tree_map/struct.RevIterMut.html' title='collect::tree_map::RevIterMut'>RevIterMut</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy reverse iterator over the key-value pairs in the
 map, with the values being mutable.</p>
 
@@ -253,7 +253,7 @@ map, with the values being mutable.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>12</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>13</span>));
 </pre>
-</div><h4 id='method.into_iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../../collect/tree_map/struct.MoveEntries.html' title='collect::tree_map::MoveEntries'>MoveEntries</a>&lt;K, V&gt;</code></h4>
+</div><h4 id='method.into_iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../../collect/tree_map/struct.IntoIter.html' title='collect::tree_map::IntoIter'>IntoIter</a>&lt;K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator that consumes the treemap.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -435,7 +435,7 @@ be aware of natural ordering of the tree.</p>
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;User-Agent&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_ua</span>));
 </pre>
-</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K, V, C&gt; <a class='struct' href='../../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K, V, C&gt; <a class='struct' href='../../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.Iter.html' title='collect::tree_map::Iter'>Iter</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Returns a lazy iterator to the first key-value pair whose key is not less than <code>k</code>
 If all keys in map are less than <code>k</code> an empty iterator is returned.</p>
 
@@ -453,7 +453,7 @@ If all keys in map are less than <code>k</code> an empty iterator is returned.</
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.Iter.html' title='collect::tree_map::Iter'>Iter</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Returns a lazy iterator to the first key-value pair whose key is greater than <code>k</code>
 If all keys in map are less than or equal to <code>k</code> an empty iterator is returned.</p>
 
@@ -471,7 +471,7 @@ If all keys in map are less than or equal to <code>k</code> an empty iterator is
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.IterMut.html' title='collect::tree_map::IterMut'>IterMut</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Returns a lazy value iterator to the first key-value pair (with
 the value being mutable) whose key is not less than <code>k</code>.</p>
 
@@ -501,7 +501,7 @@ returned.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>8</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
 </pre>
-</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.IterMut.html' title='collect::tree_map::IterMut'>IterMut</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Returns a lazy iterator to the first key-value pair (with the
 value being mutable) whose key is greater than <code>k</code>.</p>
 
@@ -543,7 +543,7 @@ is returned.</p>
 <div class='docblock'><p>Creates an empty <code>TreeMap</code> ordered according to the given comparator.</p>
 </div><h4 id='method.comparator' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.comparator' class='fnname'>comparator</a>(&amp;self) -&gt; &amp;C</code></h4>
 <div class='docblock'><p>Returns the comparator according to which the <code>TreeMap</code> is ordered.</p>
-</div><h4 id='method.keys' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='type' href='../../collect/tree_map/type.Keys.html' title='collect::tree_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.keys' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.Keys.html' title='collect::tree_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the keys in the map, in ascending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -559,7 +559,7 @@ is returned.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
 }
 </pre>
-</div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='type' href='../../collect/tree_map/type.Values.html' title='collect::tree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.Values.html' title='collect::tree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the values in the map, in ascending order
 with respect to the corresponding keys.</p>
 
@@ -576,7 +576,7 @@ with respect to the corresponding keys.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
 }
 </pre>
-</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.Iter.html' title='collect::tree_map::Iter'>Iter</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the key-value pairs in the map, in ascending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -592,7 +592,7 @@ with respect to the corresponding keys.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
 }
 </pre>
-</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.RevEntries.html' title='collect::tree_map::RevEntries'>RevEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/tree_map/struct.RevIter.html' title='collect::tree_map::RevIter'>RevIter</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy reverse iterator over the key-value pairs in the map, in descending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -608,7 +608,7 @@ with respect to the corresponding keys.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
 }
 </pre>
-</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/tree_map/struct.IterMut.html' title='collect::tree_map::IterMut'>IterMut</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy forward iterator over the key-value pairs in the
 map, with the values being mutable.</p>
 
@@ -630,7 +630,7 @@ map, with the values being mutable.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>12</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>));
 </pre>
-</div><h4 id='method.rev_iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter_mut' class='fnname'>rev_iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/tree_map/struct.RevMutEntries.html' title='collect::tree_map::RevMutEntries'>RevMutEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.rev_iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter_mut' class='fnname'>rev_iter_mut</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='struct' href='../../collect/tree_map/struct.RevIterMut.html' title='collect::tree_map::RevIterMut'>RevIterMut</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy reverse iterator over the key-value pairs in the
 map, with the values being mutable.</p>
 
@@ -652,7 +652,7 @@ map, with the values being mutable.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>12</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>13</span>));
 </pre>
-</div><h4 id='method.into_iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../../collect/tree_map/struct.MoveEntries.html' title='collect::tree_map::MoveEntries'>MoveEntries</a>&lt;K, V&gt;</code></h4>
+</div><h4 id='method.into_iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../../collect/tree_map/struct.IntoIter.html' title='collect::tree_map::IntoIter'>IntoIter</a>&lt;K, V&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator that consumes the treemap.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -834,7 +834,7 @@ be aware of natural ordering of the tree.</p>
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;User-Agent&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_ua</span>));
 </pre>
-</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K, V, C&gt; <a class='struct' href='../../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K, V, C&gt; <a class='struct' href='../../collect/struct.TreeMap.html' title='collect::TreeMap'>TreeMap</a>&lt;K, V, C&gt; <span class='where'>where C: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt;</span></code></h3><div class='impl-items'><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.Iter.html' title='collect::tree_map::Iter'>Iter</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Returns a lazy iterator to the first key-value pair whose key is not less than <code>k</code>
 If all keys in map are less than <code>k</code> an empty iterator is returned.</p>
 
@@ -852,7 +852,7 @@ If all keys in map are less than <code>k</code> an empty iterator is returned.</
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.Entries.html' title='collect::tree_map::Entries'>Entries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.Iter.html' title='collect::tree_map::Iter'>Iter</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Returns a lazy iterator to the first key-value pair whose key is greater than <code>k</code>
 If all keys in map are less than or equal to <code>k</code> an empty iterator is returned.</p>
 
@@ -870,7 +870,7 @@ If all keys in map are less than or equal to <code>k</code> an empty iterator is
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>)));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.lower_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound_mut' class='fnname'>lower_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.IterMut.html' title='collect::tree_map::IterMut'>IterMut</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Returns a lazy value iterator to the first key-value pair (with
 the value being mutable) whose key is not less than <code>k</code>.</p>
 
@@ -900,7 +900,7 @@ returned.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>8</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;changed&quot;</span>));
 </pre>
-</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.MutEntries.html' title='collect::tree_map::MutEntries'>MutEntries</a>&lt;'a, K, V&gt;</code></h4>
+</div><h4 id='method.upper_bound_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound_mut' class='fnname'>upper_bound_mut</a>&lt;'a&gt;(&amp;'a mut self, k: &amp;K) -&gt; <a class='struct' href='../../collect/tree_map/struct.IterMut.html' title='collect::tree_map::IterMut'>IterMut</a>&lt;'a, K, V&gt;</code></h4>
 <div class='docblock'><p>Returns a lazy iterator to the first key-value pair (with the
 value being mutable) whose key is greater than <code>k</code>.</p>
 

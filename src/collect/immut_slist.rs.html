@@ -461,7 +461,7 @@
 
 <span class='doccomment'>/// An iterator over the items of an ImmutSList</span>
 <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Items</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>head</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Node</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>nelem</span>: <span class='ident'>uint</span>,
 }
@@ -532,8 +532,8 @@
     }
 
     <span class='doccomment'>/// Returns an iterator over references to the elements of the list in order</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span> <span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> (<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Items</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>Items</span>{ <span class='ident'>head</span>: <span class='self'>self</span>.<span class='ident'>front</span>.<span class='ident'>as_ref</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>x</span>), <span class='ident'>nelem</span>: <span class='self'>self</span>.<span class='ident'>len</span>() }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span> <span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> (<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='ident'>Iter</span>{ <span class='ident'>head</span>: <span class='self'>self</span>.<span class='ident'>front</span>.<span class='ident'>as_ref</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>x</span>), <span class='ident'>nelem</span>: <span class='self'>self</span>.<span class='ident'>len</span>() }
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>len</span> (<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>uint</span> {
@@ -568,7 +568,7 @@
 }
 
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Items</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>head</span>.<span class='ident'>take</span>() {
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,

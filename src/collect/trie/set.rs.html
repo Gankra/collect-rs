@@ -1027,7 +1027,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>Peekable</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hash</span>;
 
-<span class='kw'>use</span> <span class='ident'>trie_map</span>::{<span class='ident'>TrieMap</span>, <span class='ident'>Entries</span>};
+<span class='kw'>use</span> <span class='ident'>trie_map</span>::{<span class='ident'>TrieMap</span>, <span class='kw'>mod</span>};
 
 <span class='doccomment'>/// A set implemented as a radix trie.</span>
 <span class='doccomment'>///</span>
@@ -1140,8 +1140,8 @@
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>SetItems</span>{<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>iter</span>()}
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+        <span class='ident'>Iter</span> { <span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>iter</span>() }
     }
 
     <span class='doccomment'>/// Gets an iterator pointing to the first value that is not less than `val`.</span>
@@ -1157,8 +1157,8 @@
     <span class='doccomment'>/// assert_eq!(set.lower_bound(5).next(), Some(6));</span>
     <span class='doccomment'>/// assert_eq!(set.lower_bound(10).next(), None);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>val</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>SetItems</span>{<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='ident'>val</span>)}
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>val</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+        <span class='ident'>Iter</span> { <span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='ident'>val</span>) }
     }
 
     <span class='doccomment'>/// Gets an iterator pointing to the first value that key is greater than `val`.</span>
@@ -1174,8 +1174,8 @@
     <span class='doccomment'>/// assert_eq!(set.upper_bound(5).next(), Some(6));</span>
     <span class='doccomment'>/// assert_eq!(set.upper_bound(10).next(), None);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>val</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>SetItems</span>{<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='ident'>val</span>)}
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>val</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+        <span class='ident'>Iter</span> { <span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='ident'>val</span>) }
     }
 
     <span class='doccomment'>/// Visits the values representing the difference, in ascending order.</span>
@@ -1202,8 +1202,8 @@
     <span class='doccomment'>/// assert_eq!(diff2, [4, 5].iter().map(|&amp;x| x).collect());</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>difference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>DifferenceItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>DifferenceItems</span>{<span class='ident'>a</span>: <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>(), <span class='ident'>b</span>: <span class='ident'>other</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>()}
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>difference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>Difference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+        <span class='ident'>Difference</span> { <span class='ident'>a</span>: <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>(), <span class='ident'>b</span>: <span class='ident'>other</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>() }
     }
 
     <span class='doccomment'>/// Visits the values representing the symmetric difference, in ascending order.</span>
@@ -1228,8 +1228,8 @@
     <span class='doccomment'>/// assert_eq!(diff1, [1, 2, 4, 5].iter().map(|&amp;x| x).collect());</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle.&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>symmetric_difference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>SymDifferenceItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>SymDifferenceItems</span>{<span class='ident'>a</span>: <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>(), <span class='ident'>b</span>: <span class='ident'>other</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>()}
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>symmetric_difference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>SymmetricDifference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+        <span class='ident'>SymmetricDifference</span> { <span class='ident'>a</span>: <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>(), <span class='ident'>b</span>: <span class='ident'>other</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>() }
     }
 
     <span class='doccomment'>/// Visits the values representing the intersection, in ascending order.</span>
@@ -1251,8 +1251,8 @@
     <span class='doccomment'>/// assert_eq!(diff, [2, 3].iter().map(|&amp;x| x).collect());</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>intersection</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>IntersectionItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>IntersectionItems</span>{<span class='ident'>a</span>: <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>(), <span class='ident'>b</span>: <span class='ident'>other</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>()}
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>intersection</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>Intersection</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+        <span class='ident'>Intersection</span> { <span class='ident'>a</span>: <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>(), <span class='ident'>b</span>: <span class='ident'>other</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>() }
     }
 
     <span class='doccomment'>/// Visits the values representing the union, in ascending order.</span>
@@ -1274,8 +1274,8 @@
     <span class='doccomment'>/// assert_eq!(diff, [1, 2, 3, 4, 5].iter().map(|&amp;x| x).collect());</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>union</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>UnionItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>UnionItems</span>{<span class='ident'>a</span>: <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>(), <span class='ident'>b</span>: <span class='ident'>other</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>()}
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>union</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>Union</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+        <span class='ident'>Union</span> { <span class='ident'>a</span>: <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>(), <span class='ident'>b</span>: <span class='ident'>other</span>.<span class='ident'>iter</span>().<span class='ident'>peekable</span>() }
     }
 
     <span class='doccomment'>/// Return the number of elements in the set</span>
@@ -1650,32 +1650,32 @@
 }
 
 <span class='doccomment'>/// A forward iterator over a set.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>iter</span>: <span class='ident'>Entries</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, ()<span class='op'>&gt;</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>iter</span>: <span class='ident'>trie_map</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, ()<span class='op'>&gt;</span>
 }
 
 <span class='doccomment'>/// An iterator producing elements in the set difference (in-order).</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DifferenceItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>a</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
-    <span class='ident'>b</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Difference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>a</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
+    <span class='ident'>b</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
 }
 
 <span class='doccomment'>/// An iterator producing elements in the set symmetric difference (in-order).</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SymDifferenceItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>a</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
-    <span class='ident'>b</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SymmetricDifference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>a</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
+    <span class='ident'>b</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
 }
 
 <span class='doccomment'>/// An iterator producing elements in the set intersection (in-order).</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IntersectionItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>a</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
-    <span class='ident'>b</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Intersection</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>a</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
+    <span class='ident'>b</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
 }
 
 <span class='doccomment'>/// An iterator producing elements in the set union (in-order).</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>UnionItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>a</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
-    <span class='ident'>b</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Union</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>a</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
+    <span class='ident'>b</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span>,
 }
 
 <span class='doccomment'>/// Compare `x` and `y`, but return `short` if x is None and `long` if y is None</span>
@@ -1687,7 +1687,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SetItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span>(<span class='ident'>key</span>, _)<span class='op'>|</span> <span class='ident'>key</span>)
     }
@@ -1697,7 +1697,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DifferenceItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Difference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> {
         <span class='kw'>loop</span> {
             <span class='kw'>match</span> <span class='ident'>cmp_opt</span>(<span class='self'>self</span>.<span class='ident'>a</span>.<span class='ident'>peek</span>(), <span class='self'>self</span>.<span class='ident'>b</span>.<span class='ident'>peek</span>(), <span class='ident'>Less</span>, <span class='ident'>Less</span>) {
@@ -1709,7 +1709,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SymDifferenceItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SymmetricDifference</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> {
         <span class='kw'>loop</span> {
             <span class='kw'>match</span> <span class='ident'>cmp_opt</span>(<span class='self'>self</span>.<span class='ident'>a</span>.<span class='ident'>peek</span>(), <span class='self'>self</span>.<span class='ident'>b</span>.<span class='ident'>peek</span>(), <span class='ident'>Greater</span>, <span class='ident'>Less</span>) {
@@ -1721,7 +1721,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IntersectionItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Intersection</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> {
         <span class='kw'>loop</span> {
             <span class='kw'>let</span> <span class='ident'>o_cmp</span> <span class='op'>=</span> <span class='kw'>match</span> (<span class='self'>self</span>.<span class='ident'>a</span>.<span class='ident'>peek</span>(), <span class='self'>self</span>.<span class='ident'>b</span>.<span class='ident'>peek</span>()) {
@@ -1739,7 +1739,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>UnionItems</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Union</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> {
         <span class='kw'>loop</span> {
             <span class='kw'>match</span> <span class='ident'>cmp_opt</span>(<span class='self'>self</span>.<span class='ident'>a</span>.<span class='ident'>peek</span>(), <span class='self'>self</span>.<span class='ident'>b</span>.<span class='ident'>peek</span>(), <span class='ident'>Greater</span>, <span class='ident'>Less</span>) {
