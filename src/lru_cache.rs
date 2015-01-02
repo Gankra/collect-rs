@@ -359,6 +359,10 @@ impl<A: fmt::Show + Hash + Eq, B: fmt::Show> fmt::Show for LruCache<A, B> {
     }
 }
 
+unsafe impl<K: Send, V: Send> Send for LruCache<K, V> {}
+
+unsafe impl<K: Sync, V: Sync> Sync for LruCache<K, V> {}
+
 #[unsafe_destructor]
 impl<K, V> Drop for LruCache<K, V> {
     fn drop(&mut self) {
