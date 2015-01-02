@@ -156,49 +156,48 @@ impl<T> BList<T> {
     }
 
     /// Gets a by-reference iterator over the elements in the list.
-    pub fn iter(&self) -> Items<T> {
+    pub fn iter(&self) -> Iter<T> {
         let len = self.len();
-        Items { iter: AbsItems {
+        Iter(AbsIter {
             list_iter: self.list.iter(),
             right_block_iter: None,
             left_block_iter: None,
             len: len,
-        } }
+        })
     }
 
     /// Gets a by-mutable-reference iterator over the elements in the list.
-    pub fn iter_mut(&mut self) -> MutItems<T> {
+    pub fn iter_mut(&mut self) -> IterMut<T> {
         let len = self.len();
-        MutItems { iter: AbsItems {
+        IterMut(AbsIter {
             list_iter: self.list.iter_mut(),
             right_block_iter: None,
             left_block_iter: None,
             len: len,
-        } }
+        })
     }
 
-    /* FIXME: uncomment into_iter stuff when RingBuf gets into_iter
     /// Gets a by-value iterator over the elements in the list.
-    pub fn into_iter(self) -> MoveItems<T> {
+    pub fn into_iter(self) -> IntoIter<T> {
         let len = self.len();
-        MoveItems { iter: AbsItems {
+        IntoIter(AbsIter {
             list_iter: self.list.into_iter(),
             right_block_iter: None,
             left_block_iter: None,
             len: len,
-        } }
-    }*/
+        })
+    }
 
     pub fn traversal(&self) -> Trav<T> {
         Trav { list: self }
     }
 
-    pub fn traversal_mut(&mut self) -> MutTrav<T> {
-        MutTrav { list: self }
+    pub fn traversal_mut(&mut self) -> TravMut<T> {
+        TravMut { list: self }
     }
 
-    pub fn into_traversal(self) -> MoveTrav<T> {
-        MoveTrav { list: self }
+    pub fn into_traversal(self) -> IntoTrav<T> {
+        IntoTrav { list: self }
     }
 
     /// Lazily moves the contents of `other` to the end of `self`, in the sense that it makes no
@@ -243,30 +242,22 @@ impl<'a, T> Traverse<ring_buf::IterMut<'a, T>> for &'a mut RingBuf<T> {
     fn traverse(self) -> ring_buf::IterMut<'a, T> { self.iter_mut() }
 }
 
-/*
-impl<T> Traverse<ring_buf::MoveItems<T>> for RingBuf<T> {
-    fn traverse(self) -> ring_buf::MoveItems<T> { self.into_iter() }
+impl<T> Traverse<ring_buf::IntoIter<T>> for RingBuf<T> {
+    fn traverse(self) -> ring_buf::IntoIter<T> { self.into_iter() }
 }
-*/
 
 /// A by-ref iterator for a BList
-pub struct Items<'a, T: 'a> {
-    iter: AbsItems<dlist::Iter<'a, RingBuf<T>>, ring_buf::Iter<'a, T>>,
-}
-
+pub struct Iter<'a, T: 'a>
+    (AbsIter<dlist::Iter<'a, RingBuf<T>>, ring_buf::Iter<'a, T>>);
 /// A by-mut-ref iterator for a BList
-pub struct MutItems<'a, T: 'a> {
-    iter: AbsItems<dlist::IterMut<'a, RingBuf<T>>, ring_buf::IterMut<'a, T>>,
-}
-/*
+pub struct IterMut<'a, T: 'a>
+    (AbsIter<dlist::IterMut<'a, RingBuf<T>>, ring_buf::IterMut<'a, T>>);
 /// A by-value iterator for a BList
-pub struct MoveItems<T> {
-    iter: AbsItems<dlist::MoveItems<RingBuf<T>>, ring_buf::MoveItems<T>>,
-}
-*/
+pub struct IntoIter<T>
+    (AbsIter<dlist::IntoIter<RingBuf<T>>, ring_buf::IntoIter<T>>);
 
 /// An iterator that abstracts over all three kinds of ownership for a BList
-struct AbsItems<DListIter, RingBufIter> {
+struct AbsIter<DListIter, RingBufIter> {
     list_iter: DListIter,
     left_block_iter: Option<RingBufIter>,
     right_block_iter: Option<RingBufIter>,
@@ -276,7 +267,7 @@ struct AbsItems<DListIter, RingBufIter> {
 impl<A,
     RingBufIter: Iterator<A>,
     DListIter: Iterator<T>,
-    T: Traverse<RingBufIter>> Iterator<A> for AbsItems<DListIter, RingBufIter> {
+    T: Traverse<RingBufIter>> Iterator<A> for AbsIter<DListIter, RingBufIter> {
     // I would like to thank all my friends and the fact that Iterator::next doesn't
     // borrow self, for this passing borrowck with minimal gymnastics
     fn next(&mut self) -> Option<A> {
@@ -325,7 +316,7 @@ impl<A,
 impl<A,
     RingBufIter: DoubleEndedIterator<A>,
     DListIter: DoubleEndedIterator<T>,
-    T: Traverse<RingBufIter>> DoubleEndedIterator<A> for AbsItems<DListIter, RingBufIter> {
+    T: Traverse<RingBufIter>> DoubleEndedIterator<A> for AbsIter<DListIter, RingBufIter> {
     // see `next` for details. This should be an exact mirror.
     fn next_back(&mut self) -> Option<A> {
         if self.len > 0 { self.len -= 1; }
@@ -356,45 +347,43 @@ impl<A,
     }
 }
 
-impl<'a, T> Iterator<&'a T> for Items<'a, T> {
-    fn next(&mut self) -> Option<&'a T> { self.iter.next() }
-    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
+    fn next(&mut self) -> Option<&'a T> { self.0.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
-impl<'a, T> DoubleEndedIterator<&'a T> for Items<'a, T> {
-    fn next_back(&mut self) -> Option<&'a T> { self.iter.next_back() }
+impl<'a, T> DoubleEndedIterator<&'a T> for Iter<'a, T> {
+    fn next_back(&mut self) -> Option<&'a T> { self.0.next_back() }
 }
-impl<'a, T> ExactSizeIterator<&'a T> for Items<'a, T> {}
+impl<'a, T> ExactSizeIterator<&'a T> for Iter<'a, T> {}
 
-impl<'a, T> Iterator<&'a mut T> for MutItems<'a, T> {
-    fn next(&mut self) -> Option<&'a mut T> { self.iter.next() }
-    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+impl<'a, T> Iterator<&'a mut T> for IterMut<'a, T> {
+    fn next(&mut self) -> Option<&'a mut T> { self.0.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
-impl<'a, T> DoubleEndedIterator<&'a mut T> for MutItems<'a, T> {
-    fn next_back(&mut self) -> Option<&'a mut T> { self.iter.next_back() }
+impl<'a, T> DoubleEndedIterator<&'a mut T> for IterMut<'a, T> {
+    fn next_back(&mut self) -> Option<&'a mut T> { self.0.next_back() }
 }
-impl<'a, T> ExactSizeIterator<&'a mut T> for MutItems<'a, T> {}
+impl<'a, T> ExactSizeIterator<&'a mut T> for IterMut<'a, T> {}
 
-/*
-impl<T> Iterator<T> for MoveItems<T> {
-    fn next(&mut self) -> Option<T> { self.iter.next() }
-    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+impl<T> Iterator<T> for IntoIter<T> {
+    fn next(&mut self) -> Option<T> { self.0.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
-impl<T> DoubleEndedIterator<T> for MoveItems<T> {
-    fn next_back(&mut self) -> Option<T> { self.iter.next_back() }
+impl<T> DoubleEndedIterator<T> for IntoIter<T> {
+    fn next_back(&mut self) -> Option<T> { self.0.next_back() }
 }
-impl<T> ExactSize<T> for MoveItems<T> {}
-*/
+impl<T> ExactSizeIterator<T> for IntoIter<T> {}
 
 
 pub struct Trav<'a, T: 'a> {
     list: &'a BList<T>,
 }
 
-pub struct MutTrav<'a, T: 'a> {
+pub struct TravMut<'a, T: 'a> {
     list: &'a mut BList<T>,
 }
 
-pub struct MoveTrav<T> {
+pub struct IntoTrav<T> {
     list: BList<T>,
 }
 
@@ -408,7 +397,7 @@ impl<'a, T> Traversal<&'a T> for Trav<'a, T> {
     }
 }
 
-impl<'a, T> Traversal<&'a mut T> for MutTrav<'a, T> {
+impl<'a, T> Traversal<&'a mut T> for TravMut<'a, T> {
     fn foreach<F: FnMut(&'a mut T) -> bool>(self, mut f: F) {
         for node in self.list.list.iter_mut() {
             for elem in node.iter_mut() {
@@ -418,7 +407,7 @@ impl<'a, T> Traversal<&'a mut T> for MutTrav<'a, T> {
     }
 }
 
-impl<T> Traversal<T> for MoveTrav<T> {
+impl<T> Traversal<T> for IntoTrav<T> {
     fn foreach<F: FnMut(T) -> bool>(self, mut f: F) {
         for node in self.list.list.into_iter() {
             for elem in node.into_iter() {
