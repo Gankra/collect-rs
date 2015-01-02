@@ -721,7 +721,7 @@ mod bench{
 
     #[bench]
     fn bench_collect_into(b: &mut test::Bencher) {
-        let v = &[0i, ..64];
+        let v = &[0i; 64];
         b.iter(|| {
             let _: BList<int> = v.iter().map(|x| *x).collect();
         })
@@ -763,7 +763,7 @@ mod bench{
 
     #[bench]
     fn bench_iter(b: &mut test::Bencher) {
-        let v = &[0i, ..128];
+        let v = &[0i; 128];
         let m: BList<int> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().count() == 128);
@@ -771,7 +771,7 @@ mod bench{
     }
     #[bench]
     fn bench_iter_mut(b: &mut test::Bencher) {
-        let v = &[0i, ..128];
+        let v = &[0i; 128];
         let mut m: BList<int> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().count() == 128);
@@ -780,7 +780,7 @@ mod bench{
 
     #[bench]
     fn bench_iter_rev(b: &mut test::Bencher) {
-        let v = &[0i, ..128];
+        let v = &[0i; 128];
         let m: BList<int> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().rev().count() == 128);
@@ -788,7 +788,7 @@ mod bench{
     }
     #[bench]
     fn bench_iter_mut_rev(b: &mut test::Bencher) {
-        let v = &[0i, ..128];
+        let v = &[0i; 128];
         let mut m: BList<int> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().rev().count() == 128);
@@ -797,7 +797,7 @@ mod bench{
 
     #[bench]
     fn bench_trav(b: &mut test::Bencher) {
-        let v = &[0i, ..128];
+        let v = &[0i; 128];
         let m: BList<int> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.traversal().count() == 128);

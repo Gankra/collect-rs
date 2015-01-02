@@ -370,7 +370,7 @@ mod tests {
 
     #[bench]
     fn bench_collect_into(b: &mut test::Bencher) {
-        let v = &[0i, ..64];
+        let v = &[0i; 64];
         b.iter(|| {
             let _: ImmutSList<int> = v.iter().map(|x| *x).collect();
         })
@@ -394,7 +394,7 @@ mod tests {
 
     #[bench]
     fn bench_iter(b: &mut test::Bencher) {
-        let v = &[0i, ..128];
+        let v = &[0i; 128];
         let m: ImmutSList<int> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().count() == 128);

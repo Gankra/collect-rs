@@ -99,7 +99,7 @@ pub struct TrieMap<T> {
 struct InternalNode<T> {
     // The number of direct children which are external (i.e. that store a value).
     count: uint,
-    children: [TrieNode<T>, ..SIZE]
+    children: [TrieNode<T>; SIZE]
 }
 
 // Each child of an InternalNode may be internal, in which case nesting continues,
@@ -848,7 +848,7 @@ struct SearchStack<'a, T: 'a> {
     map: &'a mut TrieMap<T>,
     length: uint,
     key: uint,
-    items: [*mut TrieNode<T>, ..MAX_DEPTH]
+    items: [*mut TrieNode<T>; MAX_DEPTH]
 }
 
 impl<'a, T> SearchStack<'a, T> {
@@ -858,7 +858,7 @@ impl<'a, T> SearchStack<'a, T> {
             map: map,
             length: 0,
             key: key,
-            items: [ptr::null_mut(), ..MAX_DEPTH]
+            items: [ptr::null_mut(); MAX_DEPTH]
         }
     }
 
@@ -1078,7 +1078,7 @@ impl<'a, T> VacantEntry<'a, T> {
 
 /// A forward iterator over a map.
 pub struct Iter<'a, T:'a> {
-    stack: [slice::Iter<'a, TrieNode<T>>, .. MAX_DEPTH],
+    stack: [slice::Iter<'a, TrieNode<T>>; MAX_DEPTH],
     length: uint,
     remaining_min: uint,
     remaining_max: uint
@@ -1087,7 +1087,7 @@ pub struct Iter<'a, T:'a> {
 /// A forward iterator over the key-value pairs of a map, with the
 /// values being mutable.
 pub struct IterMut<'a, T:'a> {
-    stack: [slice::IterMut<'a, TrieNode<T>>, .. MAX_DEPTH],
+    stack: [slice::IterMut<'a, TrieNode<T>>; MAX_DEPTH],
     length: uint,
     remaining_min: uint,
     remaining_max: uint
@@ -1839,26 +1839,26 @@ mod bench {
 
     #[bench]
     fn bench_insert_large(b: &mut Bencher) {
-        let mut m = TrieMap::<[uint, .. 10]>::new();
+        let mut m = TrieMap::<[uint; 10]>::new();
         let mut rng = weak_rng();
 
         b.iter(|| {
             for _ in range(0u, MAP_SIZE) {
-                m.insert(rng.gen(), [1, .. 10]);
+                m.insert(rng.gen(), [1; 10]);
             }
         });
     }
 
     #[bench]
     fn bench_insert_large_entry(b: &mut Bencher) {
-        let mut m = TrieMap::<[uint, .. 10]>::new();
+        let mut m = TrieMap::<[uint; 10]>::new();
         let mut rng = weak_rng();
 
         b.iter(|| {
             for _ in range(0u, MAP_SIZE) {
                 match m.entry(rng.gen()) {
-                    Occupied(mut e) => { e.set([1, ..10]); },
-                    Vacant(e) => { e.set([1, ..10]); }
+                    Occupied(mut e) => { e.set([1; 10]); },
+                    Vacant(e) => { e.set([1; 10]); }
                 }
             }
         });
@@ -1866,13 +1866,13 @@ mod bench {
 
     #[bench]
     fn bench_insert_large_low_bits(b: &mut Bencher) {
-        let mut m = TrieMap::<[uint, .. 10]>::new();
+        let mut m = TrieMap::<[uint; 10]>::new();
         let mut rng = weak_rng();
 
         b.iter(|| {
             for _ in range(0u, MAP_SIZE) {
                 // only have the last few bits set.
-                m.insert(rng.gen::<uint>() & 0xff_ff, [1, .. 10]);
+                m.insert(rng.gen::<uint>() & 0xff_ff, [1; 10]);
             }
         });
     }
