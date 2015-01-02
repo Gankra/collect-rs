@@ -120,7 +120,7 @@ use compare::{Compare, Natural};
 //   * union: |
 // These would be convenient since the methods work like `each`
 
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct TreeMap<K, V, C: Compare<K> = Natural<K>> {
     root: Option<Box<TreeNode<K, V>>>,
     length: uint,
@@ -1101,7 +1101,7 @@ impl<'a, K, V> Iterator<&'a V> for Values<'a, K, V> {
 
 // Nodes keep track of their level in the tree, starting at 1 in the
 // leaves and with a red child sharing the level of the parent.
-#[deriving(Clone)]
+#[derive(Clone)]
 struct TreeNode<K, V> {
     key: K,
     value: V,

@@ -238,7 +238,7 @@ impl<'a, K, V> OrderedMapIterator<&'a K, &'a V> for tree_map::Iter<'a, K, V> {}
 impl<'a> OrderedSetIterator<uint> for trie_set::Iter<'a> {}
 impl<'a, V> OrderedMapIterator<uint, &'a V> for trie_map::Iter<'a, V> {}
 impl<'a, V> OrderedMapIterator<uint, &'a V> for vec_map::Iter<'a, V> {}
-impl<'a> OrderedSetIterator<uint> for bitv_set::BitPositions<'a> {}
+impl<'a> OrderedSetIterator<uint> for bitv_set::Iter<'a> {}
 
 
 impl<K: Ord, VA, VB,

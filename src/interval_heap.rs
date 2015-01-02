@@ -130,7 +130,7 @@ fn update_max<T, C: Compare<T>>(v: &mut [T], cmp: &C) {
 /// time, removal takes O(log n) time and accessing minimum and maximum can
 /// be done in constant time. Also, other convenient functions are provided
 /// that handle conversion from and into vectors and allow iteration etc.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct IntervalHeap<T, C: Compare<T> = Natural<T>> {
     data: Vec<T>,
     cmp: C,

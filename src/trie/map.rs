@@ -86,7 +86,7 @@ const MAX_DEPTH: uint = uint::BITS / SHIFT;
 /// map.clear();
 /// assert!(map.is_empty());
 /// ```
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct TrieMap<T> {
     root: InternalNode<T>,
     length: uint
@@ -104,7 +104,7 @@ struct InternalNode<T> {
 
 // Each child of an InternalNode may be internal, in which case nesting continues,
 // external (containing a value), or empty
-#[deriving(Clone)]
+#[derive(Clone)]
 enum TrieNode<T> {
     Internal(Box<InternalNode<T>>),
     External(uint, T),

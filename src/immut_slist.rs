@@ -14,7 +14,7 @@ impl<T> Node<T> {
 }
 
 /// An iterator over the items of an ImmutSList
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct Iter<'a, T: 'a> {
     head: Option<&'a Node<T>>,
     nelem: uint,

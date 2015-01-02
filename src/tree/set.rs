@@ -16,7 +16,7 @@ use std::iter;
 use std::hash::{Writer, Hash};
 
 use compare::{Compare, Natural};
-use tree_map::{mod, TreeMap};
+use tree_map::{self, TreeMap};
 
 // FIXME(conventions): implement bounded iterators
 // FIXME(conventions): replace rev_iter(_mut) by making iter(_mut) DoubleEnded
@@ -73,7 +73,7 @@ use tree_map::{mod, TreeMap};
 /// trolls.clear();
 /// assert_eq!(trolls.len(), 0);
 /// ```
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct TreeSet<T, C: Compare<T> = Natural<T>> {
     map: TreeMap<T, (), C>
 }

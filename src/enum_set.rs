@@ -19,7 +19,7 @@ use core::num::Int;
 
 // FIXME(contentions): implement union family of methods? (general design may be wrong here)
 
-#[deriving(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 /// A specialized set implementation to use enum types.
 pub struct EnumSet<E> {
     // We must maintain the invariant that no bits are set
@@ -301,7 +301,7 @@ mod test {
 
     use super::{EnumSet, CLike};
 
-    #[deriving(PartialEq, Show)]
+    #[derive(PartialEq, Show)]
     #[repr(uint)]
     enum Foo {
         A, B, C

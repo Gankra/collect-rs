@@ -18,7 +18,7 @@ use std::fmt::Show;
 use std::iter::Peekable;
 use std::hash::Hash;
 
-use trie_map::{TrieMap, mod};
+use trie_map::{TrieMap, self};
 
 /// A set implemented as a radix trie.
 ///
@@ -49,7 +49,7 @@ use trie_map::{TrieMap, mod};
 /// set.clear();
 /// assert!(set.is_empty());
 /// ```
-#[deriving(Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TrieSet {
     map: TrieMap<()>
 }

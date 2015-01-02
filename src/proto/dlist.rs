@@ -1,7 +1,7 @@
 use std::kinds::marker::NoCopy;
 use std::{ptr, mem};
 use std::iter;
-use std::fmt::{mod, Show};
+use std::fmt::{self, Show};
 use std::hash::{Hash, Writer};
 
 // FIXME(Gankro): Although the internal interface we have here is *safer* than std's DList,
@@ -544,7 +544,7 @@ impl<'a, T> Cursor<'a, T> {
 
 
 /// An iterator over references to the items of a `DList`.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct Iter<'a, T:'a> {
     head: &'a Link<T>,
     tail: &'a Raw<T>,
@@ -559,7 +559,7 @@ pub struct IterMut<'a, T:'a> {
 }
 
 /// An iterator over mutable references to the items of a `DList`.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct IntoIter<T> {
     list: DList<T>
 }
