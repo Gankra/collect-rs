@@ -23,7 +23,6 @@ use std::iter;
 use std::ptr;
 use std::hash::{Writer, Hash};
 
-use std::slice::{Iter, IterMut};
 use std::slice;
 
 // FIXME(conventions): implement bounded iterators
@@ -224,8 +223,8 @@ impl<T> TrieMap<T> {
     /// }
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> Entries<'a, T> {
-        let mut iter = unsafe {Entries::new()};
+    pub fn iter<'a>(&'a self) -> Iter<'a, T> {
+        let mut iter = unsafe {Iter::new()};
         iter.stack[0] = self.root.children.iter();
         iter.length = 1;
         iter.remaining_min = self.length;
@@ -252,8 +251,8 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.get(&3), Some(&-3));
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter_mut<'a>(&'a mut self) -> MutEntries<'a, T> {
-        let mut iter = unsafe {MutEntries::new()};
+    pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, T> {
+        let mut iter = unsafe {IterMut::new()};
         iter.stack[0] = self.root.children.iter_mut();
         iter.length = 1;
         iter.remaining_min = self.length;
@@ -545,8 +544,8 @@ macro_rules! bound {
 impl<T> TrieMap<T> {
     // If `upper` is true then returns upper_bound else returns lower_bound.
     #[inline]
-    fn bound<'a>(&'a self, key: uint, upper: bool) -> Entries<'a, T> {
-        bound!(Entries, self = self,
+    fn bound<'a>(&'a self, key: uint, upper: bool) -> Iter<'a, T> {
+        bound!(Iter, self = self,
                key = key, is_upper = upper,
                slice_from = slice_from_or_fail, iter = iter,
                mutability = )
@@ -565,7 +564,7 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.lower_bound(5).next(), Some((6, &"c")));
     /// assert_eq!(map.lower_bound(10).next(), None);
     /// ```
-    pub fn lower_bound<'a>(&'a self, key: uint) -> Entries<'a, T> {
+    pub fn lower_bound<'a>(&'a self, key: uint) -> Iter<'a, T> {
         self.bound(key, false)
     }
 
@@ -582,13 +581,13 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.upper_bound(5).next(), Some((6, &"c")));
     /// assert_eq!(map.upper_bound(10).next(), None);
     /// ```
-    pub fn upper_bound<'a>(&'a self, key: uint) -> Entries<'a, T> {
+    pub fn upper_bound<'a>(&'a self, key: uint) -> Iter<'a, T> {
         self.bound(key, true)
     }
     // If `upper` is true then returns upper_bound else returns lower_bound.
     #[inline]
-    fn bound_mut<'a>(&'a mut self, key: uint, upper: bool) -> MutEntries<'a, T> {
-        bound!(MutEntries, self = self,
+    fn bound_mut<'a>(&'a mut self, key: uint, upper: bool) -> IterMut<'a, T> {
+        bound!(IterMut, self = self,
                key = key, is_upper = upper,
                slice_from = slice_from_or_fail_mut, iter = iter_mut,
                mutability = mut)
@@ -615,7 +614,7 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.get(&4), Some(&"changed"));
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// ```
-    pub fn lower_bound_mut<'a>(&'a mut self, key: uint) -> MutEntries<'a, T> {
+    pub fn lower_bound_mut<'a>(&'a mut self, key: uint) -> IterMut<'a, T> {
         self.bound_mut(key, false)
     }
 
@@ -640,7 +639,7 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.get(&4), Some(&"b"));
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// ```
-    pub fn upper_bound_mut<'a>(&'a mut self, key: uint) -> MutEntries<'a, T> {
+    pub fn upper_bound_mut<'a>(&'a mut self, key: uint) -> IterMut<'a, T> {
         self.bound_mut(key, true)
     }
 }
@@ -1078,7 +1077,7 @@ impl<'a, T> VacantEntry<'a, T> {
 }
 
 /// A forward iterator over a map.
-pub struct Entries<'a, T:'a> {
+pub struct Iter<'a, T:'a> {
     stack: [slice::Iter<'a, TrieNode<T>>, .. MAX_DEPTH],
     length: uint,
     remaining_min: uint,
@@ -1087,7 +1086,7 @@ pub struct Entries<'a, T:'a> {
 
 /// A forward iterator over the key-value pairs of a map, with the
 /// values being mutable.
-pub struct MutEntries<'a, T:'a> {
+pub struct IterMut<'a, T:'a> {
     stack: [slice::IterMut<'a, TrieNode<T>>, .. MAX_DEPTH],
     length: uint,
     remaining_min: uint,
@@ -1095,11 +1094,11 @@ pub struct MutEntries<'a, T:'a> {
 }
 
 /// A forward iterator over the keys of a map.
-pub type Keys<'a, T> = iter::Map<(uint, &'a T), uint, Entries<'a, T>, fn((uint, &'a T)) -> uint>;
+pub type Keys<'a, T> = iter::Map<(uint, &'a T), uint, Iter<'a, T>, fn((uint, &'a T)) -> uint>;
 
 /// A forward iterator over the values of a map.
 pub type Values<'a, T> =
-    iter::Map<(uint, &'a T), &'a T, Entries<'a, T>, fn((uint, &'a T)) -> &'a T>;
+    iter::Map<(uint, &'a T), &'a T, Iter<'a, T>, fn((uint, &'a T)) -> &'a T>;
 
 // FIXME #5846: see `addr!` above.
 macro_rules! item { ($i:item) => {$i}}
@@ -1215,8 +1214,8 @@ macro_rules! iterator_impl {
     }
 }
 
-iterator_impl! { Entries, iter = iter, mutability = }
-iterator_impl! { MutEntries, iter = iter_mut, mutability = mut }
+iterator_impl! { Iter, iter = iter, mutability = }
+iterator_impl! { IterMut, iter = iter_mut, mutability = mut }
 
 #[cfg(test)]
 mod test {

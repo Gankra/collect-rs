@@ -229,7 +229,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
         fn first<A, B>((a, _): (A, B)) -> A { a }
         let first: fn((&'a K, &'a V)) -> &'a K = first; // coerce to fn pointer
 
-        self.iter().map(first)
+        Keys(self.iter().map(first))
     }
 
     /// Gets a lazy iterator over the values in the map, in ascending order
@@ -254,7 +254,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
         fn second<A, B>((_, b): (A, B)) -> B { b }
         let second: fn((&'a K, &'a V)) -> &'a V = second; // coerce to fn pointer
 
-        self.iter().map(second)
+        Values(self.iter().map(second))
     }
 
     /// Gets a lazy iterator over the key-value pairs in the map, in ascending order.
@@ -274,8 +274,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// }
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> Entries<'a, K, V> {
-        Entries {
+    pub fn iter<'a>(&'a self) -> Iter<'a, K, V> {
+        Iter {
             stack: vec!(),
             node: deref(&self.root),
             remaining_min: self.length,
@@ -299,8 +299,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     ///     println!("{}: {}", key, value);
     /// }
     /// ```
-    pub fn rev_iter<'a>(&'a self) -> RevEntries<'a, K, V> {
-        RevEntries{iter: self.iter()}
+    pub fn rev_iter<'a>(&'a self) -> RevIter<'a, K, V> {
+        RevIter{iter: self.iter()}
     }
 
     /// Gets a lazy forward iterator over the key-value pairs in the
@@ -326,8 +326,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&"c"), Some(&3));
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter_mut<'a>(&'a mut self) -> MutEntries<'a, K, V> {
-        MutEntries {
+    pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, K, V> {
+        IterMut {
             stack: vec!(),
             node: deref_mut(&mut self.root),
             remaining_min: self.length,
@@ -357,8 +357,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&"b"), Some(&12));
     /// assert_eq!(map.get(&"c"), Some(&13));
     /// ```
-    pub fn rev_iter_mut<'a>(&'a mut self) -> RevMutEntries<'a, K, V> {
-        RevMutEntries{iter: self.iter_mut()}
+    pub fn rev_iter_mut<'a>(&'a mut self) -> RevIterMut<'a, K, V> {
+        RevIterMut{iter: self.iter_mut()}
     }
 
     /// Gets a lazy iterator that consumes the treemap.
@@ -377,13 +377,13 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(vec, vec![("a", 1), ("b", 2), ("c", 3)]);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn into_iter(self) -> MoveEntries<K, V> {
+    pub fn into_iter(self) -> IntoIter<K, V> {
         let TreeMap { root, length, .. } = self;
         let stk = match root {
             None => vec!(),
             Some(box tn) => vec!(tn)
         };
-        MoveEntries {
+        IntoIter {
             stack: stk,
             remaining: length
         }
@@ -689,8 +689,8 @@ macro_rules! bound_setup {
 impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// Gets a lazy iterator that should be initialized using
     /// `traverse_left`/`traverse_right`/`traverse_complete`.
-    fn iter_for_traversal<'a>(&'a self) -> (Entries<'a, K, V>, &'a C) {
-        (Entries {
+    fn iter_for_traversal<'a>(&'a self) -> (Iter<'a, K, V>, &'a C) {
+        (Iter {
             stack: vec!(),
             node: deref(&self.root),
             remaining_min: 0,
@@ -716,7 +716,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.lower_bound(&5).next(), Some((&6, &"c")));
     /// assert_eq!(map.lower_bound(&10).next(), None);
     /// ```
-    pub fn lower_bound<'a>(&'a self, k: &K) -> Entries<'a, K, V> {
+    pub fn lower_bound<'a>(&'a self, k: &K) -> Iter<'a, K, V> {
         bound_setup!(self.iter_for_traversal(), k, true)
     }
 
@@ -738,14 +738,14 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.upper_bound(&5).next(), Some((&6, &"c")));
     /// assert_eq!(map.upper_bound(&10).next(), None);
     /// ```
-    pub fn upper_bound<'a>(&'a self, k: &K) -> Entries<'a, K, V> {
+    pub fn upper_bound<'a>(&'a self, k: &K) -> Iter<'a, K, V> {
         bound_setup!(self.iter_for_traversal(), k, false)
     }
 
     /// Gets a lazy iterator that should be initialized using
     /// `traverse_left`/`traverse_right`/`traverse_complete`.
-    fn iter_mut_for_traversal<'a>(&'a mut self) -> (MutEntries<'a, K, V>, &'a C) {
-        (MutEntries {
+    fn iter_mut_for_traversal<'a>(&'a mut self) -> (IterMut<'a, K, V>, &'a C) {
+        (IterMut {
             stack: vec!(),
             node: deref_mut(&mut self.root),
             remaining_min: 0,
@@ -783,7 +783,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// assert_eq!(map.get(&8), Some(&"changed"));
     /// ```
-    pub fn lower_bound_mut<'a>(&'a mut self, k: &K) -> MutEntries<'a, K, V> {
+    pub fn lower_bound_mut<'a>(&'a mut self, k: &K) -> IterMut<'a, K, V> {
         bound_setup!(self.iter_mut_for_traversal(), k, true)
     }
 
@@ -817,15 +817,15 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// assert_eq!(map.get(&8), Some(&"changed"));
     /// ```
-    pub fn upper_bound_mut<'a>(&'a mut self, k: &K) -> MutEntries<'a, K, V> {
+    pub fn upper_bound_mut<'a>(&'a mut self, k: &K) -> IterMut<'a, K, V> {
         bound_setup!(self.iter_mut_for_traversal(), k, false)
     }
 }
 
 /// Lazy forward iterator over a map
-pub struct Entries<'a, K:'a, V:'a> {
+pub struct Iter<'a, K:'a, V:'a> {
     stack: Vec<&'a TreeNode<K, V>>,
-    // See the comment on MutEntries; this is just to allow
+    // See the comment on IterMut; this is just to allow
     // code-sharing (for this immutable-values iterator it *could* very
     // well be Option<&'a TreeNode<K,V>>).
     node: *const TreeNode<K, V>,
@@ -834,13 +834,13 @@ pub struct Entries<'a, K:'a, V:'a> {
 }
 
 /// Lazy backward iterator over a map
-pub struct RevEntries<'a, K:'a, V:'a> {
-    iter: Entries<'a, K, V>,
+pub struct RevIter<'a, K:'a, V:'a> {
+    iter: Iter<'a, K, V>,
 }
 
 /// Lazy forward iterator over a map that allows for the mutation of
 /// the values.
-pub struct MutEntries<'a, K:'a, V:'a> {
+pub struct IterMut<'a, K:'a, V:'a> {
     stack: Vec<&'a mut TreeNode<K, V>>,
     // Unfortunately, we require some unsafe-ness to get around the
     // fact that we would be storing a reference *into* one of the
@@ -867,17 +867,17 @@ pub struct MutEntries<'a, K:'a, V:'a> {
 }
 
 /// Lazy backward iterator over a map
-pub struct RevMutEntries<'a, K:'a, V:'a> {
-    iter: MutEntries<'a, K, V>,
+pub struct RevIterMut<'a, K:'a, V:'a> {
+    iter: IterMut<'a, K, V>,
 }
 
 /// TreeMap keys iterator.
-pub type Keys<'a, K, V> =
-    iter::Map<(&'a K, &'a V), &'a K, Entries<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>;
+pub struct Keys<'a, K: 'a, V: 'a>
+    (iter::Map<(&'a K, &'a V), &'a K, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>);
 
 /// TreeMap values iterator.
-pub type Values<'a, K, V> =
-    iter::Map<(&'a K, &'a V), &'a V, Entries<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>;
+pub struct Values<'a, K: 'a, V: 'a>
+    (iter::Map<(&'a K, &'a V), &'a V, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>);
 
 
 // FIXME #5846 we want to be able to choose between &x and &mut x
@@ -936,13 +936,13 @@ macro_rules! define_iterator {
             }
 
             /// traverse_left, traverse_right and traverse_complete are
-            /// used to initialize Entries/MutEntries
+            /// used to initialize Iter/IterMut
             /// pointing to element inside tree structure.
             ///
             /// They should be used in following manner:
             ///   - create iterator using TreeMap::[mut_]iter_for_traversal
             ///   - find required node using `traverse_left`/`traverse_right`
-            ///     (current node is `Entries::node` field)
+            ///     (current node is `Iter::node` field)
             ///   - complete initialization with `traverse_complete`
             ///
             /// After this, iteration will start from `self.node`.  If
@@ -1002,16 +1002,16 @@ macro_rules! define_iterator {
 } // end of define_iterator
 
 define_iterator! {
-    Entries,
-    RevEntries,
+    Iter,
+    RevIter,
     deref = deref,
 
     // immutable, so no mut
     addr_mut =
 }
 define_iterator! {
-    MutEntries,
-    RevMutEntries,
+    IterMut,
+    RevIterMut,
     deref = deref_mut,
 
     addr_mut = mut
@@ -1039,12 +1039,12 @@ fn deref_mut<K, V>(x: &mut Option<Box<TreeNode<K, V>>>)
 }
 
 /// Lazy forward iterator over a map that consumes the map while iterating
-pub struct MoveEntries<K, V> {
+pub struct IntoIter<K, V> {
     stack: Vec<TreeNode<K, V>>,
     remaining: uint
 }
 
-impl<K, V> Iterator<(K, V)> for MoveEntries<K,V> {
+impl<K, V> Iterator<(K, V)> for IntoIter<K,V> {
     #[inline]
     fn next(&mut self) -> Option<(K, V)> {
         while !self.stack.is_empty() {
@@ -1088,6 +1088,15 @@ impl<K, V> Iterator<(K, V)> for MoveEntries<K,V> {
 
 }
 
+impl<'a, K, V> Iterator<&'a K> for Keys<'a, K, V> {
+    #[inline] fn next(&mut self) -> Option<&'a K> { self.0.next() }
+    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
+}
+
+impl<'a, K, V> Iterator<&'a V> for Values<'a, K, V> {
+    #[inline] fn next(&mut self) -> Option<&'a V> { self.0.next() }
+    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
+}
 
 
 // Nodes keep track of their level in the tree, starting at 1 in the

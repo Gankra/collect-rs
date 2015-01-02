@@ -145,7 +145,7 @@ impl<T, C: Compare<T> + Default> Default for IntervalHeap<T, C> {
 }
 
 /// `IntervalHeap` iterator.
-pub type Items<'a, T> = slice::Iter<'a, T>;
+pub struct Iter<'a, T: 'a>(slice::Iter<'a, T>);
 
 impl<T: Ord> IntervalHeap<T> {
     /// Returns an empty heap ordered according to the natural order of its elements.
@@ -218,8 +218,8 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
 
     /// An iterator visiting all values in underlying vector,
     /// in arbitrary order.
-    pub fn iter(&self) -> Items<T> {
-        self.data.iter()
+    pub fn iter(&self) -> Iter<T> {
+        Iter(self.data.iter())
     }
 
     /// Returns a reference to the smallest item or None (if empty).
@@ -356,6 +356,11 @@ impl<T, C: Compare<T>> Extend<T> for IntervalHeap<T, C> {
             self.push(elem);
         }
     }
+}
+
+impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
+    #[inline] fn next(&mut self) -> Option<&'a T> { self.0.next() }
+    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
 
 #[cfg(test)]

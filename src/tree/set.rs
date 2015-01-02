@@ -16,7 +16,7 @@ use std::iter;
 use std::hash::{Writer, Hash};
 
 use compare::{Compare, Natural};
-use tree_map::{TreeMap, Entries, RevEntries, MoveEntries};
+use tree_map::{mod, TreeMap};
 
 // FIXME(conventions): implement bounded iterators
 // FIXME(conventions): replace rev_iter(_mut) by making iter(_mut) DoubleEnded
@@ -159,8 +159,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> SetItems<'a, T> {
-        SetItems{iter: self.map.iter()}
+    pub fn iter<'a>(&'a self) -> Iter<'a, T> {
+        Iter { iter: self.map.iter() }
     }
 
     /// Gets a lazy iterator over the values in the set, in descending order.
@@ -177,8 +177,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// }
     /// ```
     #[inline]
-    pub fn rev_iter<'a>(&'a self) -> RevSetItems<'a, T> {
-        RevSetItems{iter: self.map.rev_iter()}
+    pub fn rev_iter<'a>(&'a self) -> RevIter<'a, T> {
+        RevIter { iter: self.map.rev_iter() }
     }
 
     /// Creates a consuming iterator, that is, one that moves each value out of the
@@ -196,11 +196,11 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn into_iter(self) -> MoveSetItems<T> {
+    pub fn into_iter(self) -> IntoIter<T> {
         fn first<A, B>((a, _): (A, B)) -> A { a }
         let first: fn((T, ())) -> T = first; // coerce to fn pointer
 
-        self.map.into_iter().map(first)
+        IntoIter(self.map.into_iter().map(first))
     }
 
     /// Gets a lazy iterator pointing to the first value not less than `v` (greater or equal).
@@ -217,8 +217,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(set.lower_bound(&10).next(), None);
     /// ```
     #[inline]
-    pub fn lower_bound<'a>(&'a self, v: &T) -> SetItems<'a, T> {
-        SetItems{iter: self.map.lower_bound(v)}
+    pub fn lower_bound<'a>(&'a self, v: &T) -> Iter<'a, T> {
+        Iter { iter: self.map.lower_bound(v) }
     }
 
     /// Gets a lazy iterator pointing to the first value greater than `v`.
@@ -236,8 +236,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(set.upper_bound(&10).next(), None);
     /// ```
     #[inline]
-    pub fn upper_bound<'a>(&'a self, v: &T) -> SetItems<'a, T> {
-        SetItems{iter: self.map.upper_bound(v)}
+    pub fn upper_bound<'a>(&'a self, v: &T) -> Iter<'a, T> {
+        Iter { iter: self.map.upper_bound(v) }
     }
 
     /// Visits the values representing the difference, in ascending order.
@@ -265,9 +265,9 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn difference<'a>(&'a self, other: &'a TreeSet<T, C>)
-        -> DifferenceItems<'a, T, C> where C: Eq {
+        -> Difference<'a, T, C> where C: Eq {
         assert!(self.comparator() == other.comparator());
-        DifferenceItems {
+        Difference {
             a: self.iter().peekable(),
             b: other.iter().peekable(),
             cmp: self.comparator(),
@@ -297,9 +297,9 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn symmetric_difference<'a>(&'a self, other: &'a TreeSet<T, C>)
-        -> SymDifferenceItems<'a, T, C> where C: Eq {
+        -> SymmetricDifference<'a, T, C> where C: Eq {
         assert!(self.comparator() == other.comparator());
-        SymDifferenceItems {
+        SymmetricDifference {
             a: self.iter().peekable(),
             b: other.iter().peekable(),
             cmp: self.comparator(),
@@ -326,9 +326,9 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn intersection<'a>(&'a self, other: &'a TreeSet<T, C>)
-        -> IntersectionItems<'a, T, C> where C: Eq {
+        -> Intersection<'a, T, C> where C: Eq {
         assert!(self.comparator() == other.comparator());
-        IntersectionItems {
+        Intersection {
             a: self.iter().peekable(),
             b: other.iter().peekable(),
             cmp: self.comparator(),
@@ -354,10 +354,10 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(diff, [1, 2, 3, 4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn union<'a>(&'a self, other: &'a TreeSet<T, C>) -> UnionItems<'a, T, C>
+    pub fn union<'a>(&'a self, other: &'a TreeSet<T, C>) -> Union<'a, T, C>
         where C: Eq {
         assert!(self.comparator() == other.comparator());
-        UnionItems {
+        Union {
             a: self.iter().peekable(),
             b: other.iter().peekable(),
             cmp: self.comparator(),
@@ -568,43 +568,43 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
 }
 
 /// A lazy forward iterator over a set.
-pub struct SetItems<'a, T:'a> {
-    iter: Entries<'a, T, ()>
+pub struct Iter<'a, T:'a> {
+    iter: tree_map::Iter<'a, T, ()>
 }
 
 /// A lazy backward iterator over a set.
-pub struct RevSetItems<'a, T:'a> {
-    iter: RevEntries<'a, T, ()>
+pub struct RevIter<'a, T:'a> {
+    iter: tree_map::RevIter<'a, T, ()>
 }
 
 /// A lazy forward iterator over a set that consumes the set while iterating.
-pub type MoveSetItems<T> = iter::Map<(T, ()), T, MoveEntries<T, ()>, fn((T, ())) -> T>;
+pub struct IntoIter<T>(iter::Map<(T, ()), T, tree_map::IntoIter<T, ()>, fn((T, ())) -> T>);
 
 /// A lazy iterator producing elements in the set difference (in-order).
-pub struct DifferenceItems<'a, T:'a, C:'a> {
-    a: Peekable<&'a T, SetItems<'a, T>>,
-    b: Peekable<&'a T, SetItems<'a, T>>,
+pub struct Difference<'a, T:'a, C:'a> {
+    a: Peekable<&'a T, Iter<'a, T>>,
+    b: Peekable<&'a T, Iter<'a, T>>,
     cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set symmetric difference (in-order).
-pub struct SymDifferenceItems<'a, T:'a, C:'a> {
-    a: Peekable<&'a T, SetItems<'a, T>>,
-    b: Peekable<&'a T, SetItems<'a, T>>,
+pub struct SymmetricDifference<'a, T:'a, C:'a> {
+    a: Peekable<&'a T, Iter<'a, T>>,
+    b: Peekable<&'a T, Iter<'a, T>>,
     cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set intersection (in-order).
-pub struct IntersectionItems<'a, T:'a, C:'a> {
-    a: Peekable<&'a T, SetItems<'a, T>>,
-    b: Peekable<&'a T, SetItems<'a, T>>,
+pub struct Intersection<'a, T:'a, C:'a> {
+    a: Peekable<&'a T, Iter<'a, T>>,
+    b: Peekable<&'a T, Iter<'a, T>>,
     cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set union (in-order).
-pub struct UnionItems<'a, T:'a, C:'a> {
-    a: Peekable<&'a T, SetItems<'a, T>>,
-    b: Peekable<&'a T, SetItems<'a, T>>,
+pub struct Union<'a, T:'a, C:'a> {
+    a: Peekable<&'a T, Iter<'a, T>>,
+    b: Peekable<&'a T, Iter<'a, T>>,
     cmp: &'a C,
 }
 
@@ -619,21 +619,22 @@ fn cmp_opt<T, C: Compare<T>>(x: Option<& &T>, y: Option<& &T>,
 }
 
 
-impl<'a, T> Iterator<&'a T> for SetItems<'a, T> {
-    #[inline]
-    fn next(&mut self) -> Option<&'a T> {
-        self.iter.next().map(|(value, _)| value)
-    }
+impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
+    #[inline] fn next(&mut self) -> Option<&'a T> { self.iter.next().map(|(value, _)| value) }
+    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
-impl<'a, T> Iterator<&'a T> for RevSetItems<'a, T> {
-    #[inline]
-    fn next(&mut self) -> Option<&'a T> {
-        self.iter.next().map(|(value, _)| value)
-    }
+impl<'a, T> Iterator<&'a T> for RevIter<'a, T> {
+    #[inline] fn next(&mut self) -> Option<&'a T> { self.iter.next().map(|(value, _)| value) }
+    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
-impl<'a, T, C> Iterator<&'a T> for DifferenceItems<'a, T, C> where C: Compare<T> {
+impl<T> Iterator<T> for IntoIter<T> {
+    #[inline] fn next(&mut self) -> Option<T> { self.0.next() }
+    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
+}
+
+impl<'a, T, C> Iterator<&'a T> for Difference<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Less, Less, self.cmp) {
@@ -645,7 +646,7 @@ impl<'a, T, C> Iterator<&'a T> for DifferenceItems<'a, T, C> where C: Compare<T>
     }
 }
 
-impl<'a, T, C> Iterator<&'a T> for SymDifferenceItems<'a, T, C> where C: Compare<T> {
+impl<'a, T, C> Iterator<&'a T> for SymmetricDifference<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp) {
@@ -657,7 +658,7 @@ impl<'a, T, C> Iterator<&'a T> for SymDifferenceItems<'a, T, C> where C: Compare
     }
 }
 
-impl<'a, T, C> Iterator<&'a T> for IntersectionItems<'a, T, C> where C: Compare<T> {
+impl<'a, T, C> Iterator<&'a T> for Intersection<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
             let o_cmp = match (self.a.peek(), self.b.peek()) {
@@ -675,7 +676,7 @@ impl<'a, T, C> Iterator<&'a T> for IntersectionItems<'a, T, C> where C: Compare<
     }
 }
 
-impl<'a, T, C> Iterator<&'a T> for UnionItems<'a, T, C> where C: Compare<T> {
+impl<'a, T, C> Iterator<&'a T> for Union<'a, T, C> where C: Compare<T> {
     fn next(&mut self) -> Option<&'a T> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp) {

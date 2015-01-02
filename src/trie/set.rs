@@ -18,7 +18,7 @@ use std::fmt::Show;
 use std::iter::Peekable;
 use std::hash::Hash;
 
-use trie_map::{TrieMap, Entries};
+use trie_map::{TrieMap, mod};
 
 /// A set implemented as a radix trie.
 ///
@@ -131,8 +131,8 @@ impl TrieSet {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> SetItems<'a> {
-        SetItems{iter: self.map.iter()}
+    pub fn iter<'a>(&'a self) -> Iter<'a> {
+        Iter { iter: self.map.iter() }
     }
 
     /// Gets an iterator pointing to the first value that is not less than `val`.
@@ -148,8 +148,8 @@ impl TrieSet {
     /// assert_eq!(set.lower_bound(5).next(), Some(6));
     /// assert_eq!(set.lower_bound(10).next(), None);
     /// ```
-    pub fn lower_bound<'a>(&'a self, val: uint) -> SetItems<'a> {
-        SetItems{iter: self.map.lower_bound(val)}
+    pub fn lower_bound<'a>(&'a self, val: uint) -> Iter<'a> {
+        Iter { iter: self.map.lower_bound(val) }
     }
 
     /// Gets an iterator pointing to the first value that key is greater than `val`.
@@ -165,8 +165,8 @@ impl TrieSet {
     /// assert_eq!(set.upper_bound(5).next(), Some(6));
     /// assert_eq!(set.upper_bound(10).next(), None);
     /// ```
-    pub fn upper_bound<'a>(&'a self, val: uint) -> SetItems<'a> {
-        SetItems{iter: self.map.upper_bound(val)}
+    pub fn upper_bound<'a>(&'a self, val: uint) -> Iter<'a> {
+        Iter { iter: self.map.upper_bound(val) }
     }
 
     /// Visits the values representing the difference, in ascending order.
@@ -193,8 +193,8 @@ impl TrieSet {
     /// assert_eq!(diff2, [4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn difference<'a>(&'a self, other: &'a TrieSet) -> DifferenceItems<'a> {
-        DifferenceItems{a: self.iter().peekable(), b: other.iter().peekable()}
+    pub fn difference<'a>(&'a self, other: &'a TrieSet) -> Difference<'a> {
+        Difference { a: self.iter().peekable(), b: other.iter().peekable() }
     }
 
     /// Visits the values representing the symmetric difference, in ascending order.
@@ -219,8 +219,8 @@ impl TrieSet {
     /// assert_eq!(diff1, [1, 2, 4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle."]
-    pub fn symmetric_difference<'a>(&'a self, other: &'a TrieSet) -> SymDifferenceItems<'a> {
-        SymDifferenceItems{a: self.iter().peekable(), b: other.iter().peekable()}
+    pub fn symmetric_difference<'a>(&'a self, other: &'a TrieSet) -> SymmetricDifference<'a> {
+        SymmetricDifference { a: self.iter().peekable(), b: other.iter().peekable() }
     }
 
     /// Visits the values representing the intersection, in ascending order.
@@ -242,8 +242,8 @@ impl TrieSet {
     /// assert_eq!(diff, [2, 3].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn intersection<'a>(&'a self, other: &'a TrieSet) -> IntersectionItems<'a> {
-        IntersectionItems{a: self.iter().peekable(), b: other.iter().peekable()}
+    pub fn intersection<'a>(&'a self, other: &'a TrieSet) -> Intersection<'a> {
+        Intersection { a: self.iter().peekable(), b: other.iter().peekable() }
     }
 
     /// Visits the values representing the union, in ascending order.
@@ -265,8 +265,8 @@ impl TrieSet {
     /// assert_eq!(diff, [1, 2, 3, 4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn union<'a>(&'a self, other: &'a TrieSet) -> UnionItems<'a> {
-        UnionItems{a: self.iter().peekable(), b: other.iter().peekable()}
+    pub fn union<'a>(&'a self, other: &'a TrieSet) -> Union<'a> {
+        Union { a: self.iter().peekable(), b: other.iter().peekable() }
     }
 
     /// Return the number of elements in the set
@@ -641,32 +641,32 @@ impl<'a, 'b> Sub<&'b TrieSet, TrieSet> for &'a TrieSet {
 }
 
 /// A forward iterator over a set.
-pub struct SetItems<'a> {
-    iter: Entries<'a, ()>
+pub struct Iter<'a> {
+    iter: trie_map::Iter<'a, ()>
 }
 
 /// An iterator producing elements in the set difference (in-order).
-pub struct DifferenceItems<'a> {
-    a: Peekable<uint, SetItems<'a>>,
-    b: Peekable<uint, SetItems<'a>>,
+pub struct Difference<'a> {
+    a: Peekable<uint, Iter<'a>>,
+    b: Peekable<uint, Iter<'a>>,
 }
 
 /// An iterator producing elements in the set symmetric difference (in-order).
-pub struct SymDifferenceItems<'a> {
-    a: Peekable<uint, SetItems<'a>>,
-    b: Peekable<uint, SetItems<'a>>,
+pub struct SymmetricDifference<'a> {
+    a: Peekable<uint, Iter<'a>>,
+    b: Peekable<uint, Iter<'a>>,
 }
 
 /// An iterator producing elements in the set intersection (in-order).
-pub struct IntersectionItems<'a> {
-    a: Peekable<uint, SetItems<'a>>,
-    b: Peekable<uint, SetItems<'a>>,
+pub struct Intersection<'a> {
+    a: Peekable<uint, Iter<'a>>,
+    b: Peekable<uint, Iter<'a>>,
 }
 
 /// An iterator producing elements in the set union (in-order).
-pub struct UnionItems<'a> {
-    a: Peekable<uint, SetItems<'a>>,
-    b: Peekable<uint, SetItems<'a>>,
+pub struct Union<'a> {
+    a: Peekable<uint, Iter<'a>>,
+    b: Peekable<uint, Iter<'a>>,
 }
 
 /// Compare `x` and `y`, but return `short` if x is None and `long` if y is None
@@ -678,7 +678,7 @@ fn cmp_opt(x: Option<&uint>, y: Option<&uint>, short: Ordering, long: Ordering) 
     }
 }
 
-impl<'a> Iterator<uint> for SetItems<'a> {
+impl<'a> Iterator<uint> for Iter<'a> {
     fn next(&mut self) -> Option<uint> {
         self.iter.next().map(|(key, _)| key)
     }
@@ -688,7 +688,7 @@ impl<'a> Iterator<uint> for SetItems<'a> {
     }
 }
 
-impl<'a> Iterator<uint> for DifferenceItems<'a> {
+impl<'a> Iterator<uint> for Difference<'a> {
     fn next(&mut self) -> Option<uint> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Less, Less) {
@@ -700,7 +700,7 @@ impl<'a> Iterator<uint> for DifferenceItems<'a> {
     }
 }
 
-impl<'a> Iterator<uint> for SymDifferenceItems<'a> {
+impl<'a> Iterator<uint> for SymmetricDifference<'a> {
     fn next(&mut self) -> Option<uint> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
@@ -712,7 +712,7 @@ impl<'a> Iterator<uint> for SymDifferenceItems<'a> {
     }
 }
 
-impl<'a> Iterator<uint> for IntersectionItems<'a> {
+impl<'a> Iterator<uint> for Intersection<'a> {
     fn next(&mut self) -> Option<uint> {
         loop {
             let o_cmp = match (self.a.peek(), self.b.peek()) {
@@ -730,7 +730,7 @@ impl<'a> Iterator<uint> for IntersectionItems<'a> {
     }
 }
 
-impl<'a> Iterator<uint> for UnionItems<'a> {
+impl<'a> Iterator<uint> for Union<'a> {
     fn next(&mut self) -> Option<uint> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
