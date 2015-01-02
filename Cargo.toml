@@ -10,6 +10,7 @@ authors = ["Alexis Beingessner <a.beingessner@gmail.com>",
 
 repository = "https://github.com/Gankro/collect-rs"
 homepage = "https://github.com/Gankro/collect-rs"
+documentation = "http://Gankro.github.io/collect-rs/collect"
 keywords = ["data-structures"]
 readme = "README.md"
 

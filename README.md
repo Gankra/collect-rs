@@ -13,6 +13,8 @@ iterator adapters? Heck yeah!
 
 Come on in!
 
+[Documentation](http://Gankro.github.io/collect-rs/collect)
+
 -----------
 
 Note that anything included in collect-rs is theoretically a candidate for inclusion in
