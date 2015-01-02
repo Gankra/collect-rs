@@ -244,6 +244,7 @@ impl<E:CLike> BitXor<EnumSet<E>, EnumSet<E>> for EnumSet<E> {
 }
 
 /// An iterator over an EnumSet
+#[deriving(Clone)]
 pub struct Iter<E> {
     index: uint,
     bits: uint,

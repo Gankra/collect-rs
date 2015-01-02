@@ -247,6 +247,7 @@ impl<T> Traverse<ring_buf::IntoIter<T>> for RingBuf<T> {
 }
 
 /// A by-ref iterator for a BList
+#[deriving(Clone)]
 pub struct Iter<'a, T: 'a>
     (AbsIter<dlist::Iter<'a, RingBuf<T>>, ring_buf::Iter<'a, T>>);
 /// A by-mut-ref iterator for a BList
@@ -257,6 +258,7 @@ pub struct IntoIter<T>
     (AbsIter<dlist::IntoIter<RingBuf<T>>, ring_buf::IntoIter<T>>);
 
 /// An iterator that abstracts over all three kinds of ownership for a BList
+#[deriving(Clone)]
 struct AbsIter<DListIter, RingBufIter> {
     list_iter: DListIter,
     left_block_iter: Option<RingBufIter>,

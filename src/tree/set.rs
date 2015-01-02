@@ -568,11 +568,13 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
 }
 
 /// A lazy forward iterator over a set.
+#[deriving(Clone)]
 pub struct Iter<'a, T:'a> {
     iter: tree_map::Iter<'a, T, ()>
 }
 
 /// A lazy backward iterator over a set.
+#[deriving(Clone)]
 pub struct RevIter<'a, T:'a> {
     iter: tree_map::RevIter<'a, T, ()>
 }
