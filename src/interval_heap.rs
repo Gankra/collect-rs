@@ -342,7 +342,7 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
 
 impl<T, C: Compare<T> + Default> iter::FromIterator<T> for IntervalHeap<T, C> {
     /// Creates an interval heap with all the items from an iterator
-    fn from_iter<Iter: Iterator<T>>(iter: Iter) -> IntervalHeap<T, C> {
+    fn from_iter<Iter: Iterator<Item=T>>(iter: Iter) -> IntervalHeap<T, C> {
         IntervalHeap::from_vec_and_comparator(iter.collect(), Default::default())
     }
 }
@@ -350,7 +350,7 @@ impl<T, C: Compare<T> + Default> iter::FromIterator<T> for IntervalHeap<T, C> {
 impl<T, C: Compare<T>> Extend<T> for IntervalHeap<T, C> {
     /// Extends the interval heap by a new chunk of items given by
     /// an iterator.
-    fn extend<Iter: Iterator<T>>(&mut self, mut iter: Iter) {
+    fn extend<Iter: Iterator<Item=T>>(&mut self, mut iter: Iter) {
         let (lower, _) = iter.size_hint();
         self.reserve(lower);
         for elem in iter {
@@ -359,7 +359,8 @@ impl<T, C: Compare<T>> Extend<T> for IntervalHeap<T, C> {
     }
 }
 
-impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
     #[inline] fn next(&mut self) -> Option<&'a T> { self.0.next() }
     #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }

@@ -977,7 +977,8 @@ macro_rules! define_iterator {
         });
 
         // the forward Iterator impl.
-        item!(impl<'a, K, V> Iterator<(&'a K, &'a $($addr_mut)* V)> for $name<'a, K, V> {
+        item!(impl<'a, K, V> Iterator for $name<'a, K, V> {
+            type Item = (&'a K, &'a $($addr_mut)* V);
             /// Advances the iterator to the next node (in order) and return a
             /// tuple with a reference to the key and value. If there are no
             /// more nodes, return `None`.
@@ -992,7 +993,8 @@ macro_rules! define_iterator {
         });
 
         // the reverse Iterator impl.
-        item!(impl<'a, K, V> Iterator<(&'a K, &'a $($addr_mut)* V)> for $rev_name<'a, K, V> {
+        item!(impl<'a, K, V> Iterator for $rev_name<'a, K, V> {
+            type Item = (&'a K, &'a $($addr_mut)* V);
             fn next(&mut self) -> Option<(&'a K, &'a $($addr_mut)* V)> {
                 self.iter.next_(false)
             }
@@ -1048,7 +1050,8 @@ pub struct IntoIter<K, V> {
     remaining: uint
 }
 
-impl<K, V> Iterator<(K, V)> for IntoIter<K,V> {
+impl<K, V> Iterator for IntoIter<K,V> {
+    type Item = (K, V);
     #[inline]
     fn next(&mut self) -> Option<(K, V)> {
         while !self.stack.is_empty() {
@@ -1092,12 +1095,14 @@ impl<K, V> Iterator<(K, V)> for IntoIter<K,V> {
 
 }
 
-impl<'a, K, V> Iterator<&'a K> for Keys<'a, K, V> {
+impl<'a, K, V> Iterator for Keys<'a, K, V> {
+    type Item = &'a K;
     #[inline] fn next(&mut self) -> Option<&'a K> { self.0.next() }
     #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
 
-impl<'a, K, V> Iterator<&'a V> for Values<'a, K, V> {
+impl<'a, K, V> Iterator for Values<'a, K, V> {
+    type Item = &'a V;
     #[inline] fn next(&mut self) -> Option<&'a V> { self.0.next() }
     #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
@@ -1310,7 +1315,7 @@ fn remove<K, V, C, Sized? Q>(node: &mut Option<Box<TreeNode<K, V>>>, key: &Q, cm
 }
 
 impl<K, V, C> iter::FromIterator<(K, V)> for TreeMap<K, V, C> where C: Compare<K> + Default {
-    fn from_iter<T: Iterator<(K, V)>>(iter: T) -> TreeMap<K, V, C> {
+    fn from_iter<T: Iterator<Item=(K, V)>>(iter: T) -> TreeMap<K, V, C> {
         let mut map: TreeMap<K, V, C> = Default::default();
         map.extend(iter);
         map
@@ -1319,7 +1324,7 @@ impl<K, V, C> iter::FromIterator<(K, V)> for TreeMap<K, V, C> where C: Compare<K
 
 impl<K, V, C> Extend<(K, V)> for TreeMap<K, V, C> where C: Compare<K> {
     #[inline]
-    fn extend<T: Iterator<(K, V)>>(&mut self, mut iter: T) {
+    fn extend<T: Iterator<Item=(K, V)>>(&mut self, mut iter: T) {
         for (k, v) in iter {
             self.insert(k, v);
         }
