@@ -201,25 +201,33 @@ impl<E:CLike> EnumSet<E> {
     }
 }
 
-impl<E:CLike> ops::Sub<EnumSet<E>, EnumSet<E>> for EnumSet<E> {
+impl<E:CLike> ops::Sub for EnumSet<E> {
+    type Output = EnumSet<E>;
+
     fn sub(self, e: EnumSet<E>) -> EnumSet<E> {
         EnumSet::new_with_bits(self.bits & !e.bits)
     }
 }
 
-impl<E:CLike> ops::BitOr<EnumSet<E>, EnumSet<E>> for EnumSet<E> {
+impl<E:CLike> ops::BitOr for EnumSet<E> {
+    type Output = EnumSet<E>;
+
     fn bitor(self, e: EnumSet<E>) -> EnumSet<E> {
         EnumSet::new_with_bits(self.bits | e.bits)
     }
 }
 
-impl<E:CLike> ops::BitAnd<EnumSet<E>, EnumSet<E>> for EnumSet<E> {
+impl<E:CLike> ops::BitAnd for EnumSet<E> {
+    type Output = EnumSet<E>;
+
     fn bitand(self, e: EnumSet<E>) -> EnumSet<E> {
         EnumSet::new_with_bits(self.bits & e.bits)
     }
 }
 
-impl<E:CLike> ops::BitXor<EnumSet<E>, EnumSet<E>> for EnumSet<E> {
+impl<E:CLike> ops::BitXor for EnumSet<E> {
+    type Output = EnumSet<E>;
+
     fn bitxor(self, e: EnumSet<E>) -> EnumSet<E> {
         EnumSet::new_with_bits(self.bits ^ e.bits)
     }

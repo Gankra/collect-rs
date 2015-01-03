@@ -691,8 +691,10 @@ impl<'a, T, C> Iterator<&'a T> for Union<'a, T, C> where C: Compare<T> {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> ops::BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitOr<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
+
+    type Output = TreeSet<T, C>;
 
     /// Returns the union of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
@@ -717,8 +719,10 @@ impl<'a, 'b, T, C> ops::BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> ops::BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitAnd<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
+
+    type Output = TreeSet<T, C>;
 
     /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
@@ -743,8 +747,10 @@ impl<'a, 'b, T, C> ops::BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> ops::BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitXor<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
+
+    type Output = TreeSet<T, C>;
 
     /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
@@ -769,8 +775,10 @@ impl<'a, 'b, T, C> ops::BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> ops::Sub<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::Sub<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
+
+    type Output = TreeSet<T, C>;
 
     /// Returns the difference of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///

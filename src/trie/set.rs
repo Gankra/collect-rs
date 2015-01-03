@@ -463,7 +463,9 @@ impl Extend<uint> for TrieSet {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> ops::BitOr<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitOr<&'b TrieSet> for &'a TrieSet {
+    type Output = TrieSet;
+
     /// Returns the union of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -484,7 +486,9 @@ impl<'a, 'b> ops::BitOr<&'b TrieSet, TrieSet> for &'a TrieSet {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> ops::BitAnd<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitAnd<&'b TrieSet> for &'a TrieSet {
+    type Output = TrieSet;
+
     /// Returns the intersection of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -505,7 +509,9 @@ impl<'a, 'b> ops::BitAnd<&'b TrieSet, TrieSet> for &'a TrieSet {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> ops::BitXor<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitXor<&'b TrieSet> for &'a TrieSet {
+    type Output = TrieSet;
+
     /// Returns the symmetric difference of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -526,7 +532,9 @@ impl<'a, 'b> ops::BitXor<&'b TrieSet, TrieSet> for &'a TrieSet {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> ops::Sub<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::Sub<&'b TrieSet> for &'a TrieSet {
+    type Output = TrieSet;
+
     /// Returns the difference of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example

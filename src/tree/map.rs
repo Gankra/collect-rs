@@ -174,14 +174,16 @@ impl<K, V, C> Default for TreeMap<K, V, C> where C: Compare<K> + Default {
     fn default() -> TreeMap<K, V, C> { TreeMap::with_comparator(Default::default()) }
 }
 
-impl<K, V, C, Sized? Q> ops::Index<Q, V> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+impl<K, V, C, Sized? Q> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+    type Output = V;
     #[inline]
     fn index<'a>(&'a self, i: &Q) -> &'a V {
         self.get(i).expect("no entry found for key")
     }
 }
 
-impl<K, V, C, Sized? Q> ops::IndexMut<Q, V> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+impl<K, V, C, Sized? Q> ops::IndexMut<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+    type Output = V;
     #[inline]
     fn index_mut<'a>(&'a mut self, i: &Q) -> &'a mut V {
         self.get_mut(i).expect("no entry found for key")

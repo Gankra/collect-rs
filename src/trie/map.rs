@@ -669,14 +669,16 @@ impl<S: Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
     }
 }
 
-impl<T> ops::Index<uint, T> for TrieMap<T> {
+impl<T> ops::Index<uint> for TrieMap<T> {
+    type Output = T;
     #[inline]
     fn index<'a>(&'a self, i: &uint) -> &'a T {
         self.get(i).expect("key not present")
     }
 }
 
-impl<T> ops::IndexMut<uint, T> for TrieMap<T> {
+impl<T> ops::IndexMut<uint> for TrieMap<T> {
+    type Output = T;
     #[inline]
     fn index_mut<'a>(&'a mut self, i: &uint) -> &'a mut T {
         self.get_mut(i).expect("key not present")
