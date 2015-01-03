@@ -846,7 +846,9 @@
 <span id='804'>804</span>
 <span id='805'>805</span>
 <span id='806'>806</span>
+<span id='807'>807</span>
 </pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>dlist</span>, <span class='ident'>ring_buf</span>, <span class='ident'>DList</span>, <span class='ident'>RingBuf</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
@@ -868,7 +870,7 @@
 <span class='doccomment'>/// perform an insertion or deletion, it will take amortized `O(B)` time to perform, with a</span>
 <span class='doccomment'>/// worst-case cost of `O(B^2)`. Insertion and deletion on either end will always take</span>
 <span class='doccomment'>/// `O(1)` time, though (assuming it takes `O(1)` time to allocate an array of size `B`).</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='ident'>list</span>: <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>b</span>: <span class='ident'>uint</span>,
@@ -1267,7 +1269,7 @@
 }
 
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iterator</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>BList</span>::<span class='ident'>new</span>();
         <span class='ident'>ret</span>.<span class='ident'>extend</span>(<span class='ident'>iterator</span>);

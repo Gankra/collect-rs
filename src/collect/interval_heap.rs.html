@@ -514,11 +514,13 @@
 <span id='472'>472</span>
 <span id='473'>473</span>
 <span id='474'>474</span>
+<span id='475'>475</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A double-ended priority queue implemented with an interval heap.</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
 
 <span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
 
@@ -647,7 +649,7 @@
 <span class='doccomment'>/// time, removal takes O(log n) time and accessing minimum and maximum can</span>
 <span class='doccomment'>/// be done in constant time. Also, other convenient functions are provided</span>
 <span class='doccomment'>/// that handle conversion from and into vectors and allow iteration etc.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IntervalHeap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Natural</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
     <span class='ident'>data</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
     <span class='ident'>cmp</span>: <span class='ident'>C</span>,
@@ -856,7 +858,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Default</span><span class='op'>&gt;</span> <span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IntervalHeap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Default</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IntervalHeap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Creates an interval heap with all the items from an iterator</span>
     <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>Iter</span>) <span class='op'>-&gt;</span> <span class='ident'>IntervalHeap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span><span class='op'>&gt;</span> {
         <span class='ident'>IntervalHeap</span>::<span class='ident'>from_vec_and_comparator</span>(<span class='ident'>iter</span>.<span class='ident'>collect</span>(), <span class='ident'>Default</span>::<span class='ident'>default</span>())

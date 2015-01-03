@@ -240,6 +240,9 @@
 <span id='198'>198</span>
 <span id='199'>199</span>
 <span id='200'>200</span>
+<span id='201'>201</span>
+<span id='202'>202</span>
+<span id='203'>203</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>alloc</span>;
 
@@ -251,6 +254,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>range_inclusive</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 
 <span class='doccomment'>/// A vector that can be operated on concurrently via non-overlapping slices.</span>
 <span class='doccomment'>///</span>
@@ -332,13 +336,15 @@
     <span class='ident'>data</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='kw-2'>mut</span> [<span class='ident'>T</span>],
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>Deref</span><span class='op'>&lt;</span>[<span class='ident'>T</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> [<span class='ident'>T</span>];
+
     <span class='kw'>fn</span> <span class='ident'>deref</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>T</span>] {
         <span class='self'>self</span>.<span class='ident'>data</span>
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>DerefMut</span><span class='op'>&lt;</span>[<span class='ident'>T</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>deref_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>T</span>] {
         <span class='self'>self</span>.<span class='ident'>data</span>
     }

@@ -556,6 +556,18 @@
 <span id='514'>514</span>
 <span id='515'>515</span>
 <span id='516'>516</span>
+<span id='517'>517</span>
+<span id='518'>518</span>
+<span id='519'>519</span>
+<span id='520'>520</span>
+<span id='521'>521</span>
+<span id='522'>522</span>
+<span id='523'>523</span>
+<span id='524'>524</span>
+<span id='525'>525</span>
+<span id='526'>526</span>
+<span id='527'>527</span>
+<span id='528'>528</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Comparators.</span>
 <span class='doccomment'>//!</span>
@@ -573,6 +585,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
 <span class='doccomment'>//! use collect::compare::{Compare, Natural};</span>
+<span class='doccomment'>//! use std::cmp::Ordering::{Less, Equal, Greater};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let a = &amp;1u8;</span>
 <span class='doccomment'>//! let b = &amp;2u8;</span>
@@ -607,6 +620,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
 <span class='doccomment'>//! use collect::compare::{Compare, CompareExt, Natural};</span>
+<span class='doccomment'>//! use std::cmp::Ordering::Greater;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let cmp = Natural.rev();</span>
 <span class='doccomment'>//! assert_eq!(cmp.compare(&amp;1u8, &amp;2u8), Greater);</span>
@@ -618,6 +632,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
 <span class='doccomment'>//! use collect::compare::{Compare, CompareExt};</span>
+<span class='doccomment'>//! use std::cmp::Ordering::{Less, Greater};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let a = vec![1, 2, 3];</span>
 <span class='doccomment'>//! let b = vec![4, 5];</span>
@@ -636,6 +651,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
 <span class='doccomment'>//! use collect::compare::{Compare, CompareExt};</span>
+<span class='doccomment'>//! use std::cmp::Ordering::{Less, Equal, Greater};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! struct Pet { name: &amp;&#39;static str, age: u8 }</span>
 <span class='doccomment'>//!</span>
@@ -665,6 +681,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
 <span class='doccomment'>//! use collect::compare::{Compare, CompareExt, Extract, Natural};</span>
+<span class='doccomment'>//! use std::cmp::Ordering::{Less, Greater};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! struct Pet { name: &amp;&#39;static str, age: u8 }</span>
 <span class='doccomment'>//!</span>
@@ -681,6 +698,7 @@
 <span class='doccomment'>//! ```</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>BorrowFrom</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='self'>self</span>, <span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
 
 <span class='doccomment'>/// Returns the maximum of two values according to the given comparator, or `lhs` if they</span>
@@ -740,7 +758,7 @@
 <span class='doccomment'>/// See the [`compare` module&#39;s documentation](index.html) for detailed usage.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// The `compares_*` methods may be overridden to provide more efficient implementations.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Sized</span>? <span class='ident'>Lhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Rhs</span> <span class='op'>=</span> <span class='ident'>Lhs</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Sized</span>? {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Sized</span>? <span class='ident'>Lhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Rhs</span> <span class='op'>=</span> <span class='ident'>Lhs</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Compares two values, returning `Less`, `Equal`, or `Greater` if `lhs` is less</span>
     <span class='doccomment'>/// than, equal to, or greater than `rhs`, respectively.</span>
     <span class='kw'>fn</span> <span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>lhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>Lhs</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>Rhs</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span>;
@@ -783,13 +801,14 @@
 }
 
 <span class='doccomment'>/// An extension trait with methods applicable to all comparators.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>CompareExt</span><span class='op'>&lt;</span><span class='ident'>Sized</span>? <span class='ident'>Lhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Rhs</span> <span class='op'>=</span> <span class='ident'>Lhs</span><span class='op'>&gt;</span> : <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>CompareExt</span><span class='op'>&lt;</span><span class='ident'>Sized</span>? <span class='ident'>Lhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Rhs</span> <span class='op'>=</span> <span class='ident'>Lhs</span><span class='op'>&gt;</span> : <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Sized</span> {
     <span class='doccomment'>/// Borrows the comparator&#39;s parameters before comparing them.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::compare::{Compare, CompareExt, Natural};</span>
+    <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal, Greater};</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let a_str = &quot;a&quot;;</span>
     <span class='doccomment'>/// let a_string = a_str.to_string();</span>
@@ -810,6 +829,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::compare::{Compare, CompareExt, Natural};</span>
+    <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal, Greater};</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let a = &amp;1u8;</span>
     <span class='doccomment'>/// let b = &amp;2u8;</span>
@@ -830,6 +850,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::compare::{Compare, CompareExt};</span>
+    <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal, Greater};</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let cmp = |&amp;: lhs: &amp;u8, rhs: &amp;u16| (*lhs as u16).cmp(rhs);</span>
     <span class='doccomment'>/// assert_eq!(cmp.compare(&amp;1u8, &amp;2u16), Less);</span>
@@ -853,6 +874,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::compare::{Compare, CompareExt};</span>
+    <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal};</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// struct Foo { key1: char, key2: u8 }</span>
     <span class='doccomment'>///</span>
@@ -875,7 +897,7 @@
 <span class='doccomment'>/// A comparator that borrows its parameters before comparing them.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// See [`CompareExt::borrow`](trait.CompareExt.html#method.borrow) for an example.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span><span class='op'>&gt;</span>(<span class='ident'>C</span>);
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Sized</span>? <span class='ident'>Lhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Rhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Lb</span>, <span class='ident'>Sized</span>? <span class='ident'>Rb</span><span class='op'>&gt;</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span><span class='op'>&gt;</span>
@@ -892,6 +914,7 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```rust</span>
 <span class='doccomment'>/// use collect::compare::{Compare, Extract, Natural};</span>
+<span class='doccomment'>/// use std::cmp::Ordering::Greater;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let a = vec![1, 2, 3];</span>
 <span class='doccomment'>/// let b = vec![4, 5];</span>
@@ -899,7 +922,7 @@
 <span class='doccomment'>/// let cmp = Extract::new(|vec: &amp;Vec&lt;u8&gt;| vec.len(), Natural);</span>
 <span class='doccomment'>/// assert_eq!(cmp.compare(&amp;a, &amp;b), Greater);</span>
 <span class='doccomment'>/// ```</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span><span class='op'>&gt;</span> {
     <span class='ident'>ext</span>: <span class='ident'>E</span>,
     <span class='ident'>cmp</span>: <span class='ident'>C</span>,
@@ -949,7 +972,7 @@
 <span class='doccomment'>/// (https://en.wikipedia.org/wiki/Lexicographical_order) combines two others.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// See [`CompareExt::then`](trait.CompareExt.html#method.then) for an example.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Lexicographic</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>C</span>, <span class='ident'>D</span>);
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>D</span>, <span class='ident'>Sized</span>? <span class='ident'>Lhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Lexicographic</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>D</span><span class='op'>&gt;</span>
@@ -970,6 +993,7 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```rust</span>
 <span class='doccomment'>/// use collect::compare::{Compare, Natural};</span>
+<span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal, Greater};</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let a = &amp;1u8;</span>
 <span class='doccomment'>/// let b = &amp;2u8;</span>
@@ -1026,7 +1050,7 @@
 <span class='doccomment'>/// A comparator that reverses the ordering of another.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// See [`CompareExt::rev`](trait.CompareExt.html#method.rev) for an example.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Rev</span><span class='op'>&lt;</span><span class='ident'>C</span><span class='op'>&gt;</span>(<span class='ident'>C</span>);
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Sized</span>? <span class='ident'>Lhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Rev</span><span class='op'>&lt;</span><span class='ident'>C</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> {
@@ -1053,7 +1077,7 @@
 <span class='doccomment'>/// expects `C: Compare&lt;U, T&gt;`.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// See [`CompareExt::swap`](trait.CompareExt.html#method.swap) for an example.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Swap</span><span class='op'>&lt;</span><span class='ident'>C</span><span class='op'>&gt;</span>(<span class='ident'>C</span>);
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Sized</span>? <span class='ident'>Lhs</span>, <span class='ident'>Sized</span>? <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Rhs</span>, <span class='ident'>Lhs</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Swap</span><span class='op'>&lt;</span><span class='ident'>C</span><span class='op'>&gt;</span>

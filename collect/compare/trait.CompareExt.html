@@ -44,8 +44,8 @@
 <h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>collect</a>::<wbr><a href='index.html'>compare</a>::<wbr><a class='trait' href=''>CompareExt</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-12529' href='../../src/collect/compare.rs.html#227-312'>[src]</a></span></h1>
-<pre class='rust trait'>pub trait CompareExt&lt;Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a> = Lhs&gt;: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt; {
+        </span><a id='src-12453' href='../../src/collect/compare.rs.html#233-322'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait CompareExt&lt;Lhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a>, Rhs: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a> = Lhs&gt;: <a class='trait' href='../../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Lhs, Rhs&gt; + <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sized.html' title='core::kinds::Sized'>Sized</a> {
     fn <a href='#method.borrow' class='fnname'>borrow</a>(self) -&gt; <a class='struct' href='../../collect/compare/struct.Borrow.html' title='collect::compare::Borrow'>Borrow</a>&lt;Self&gt; { ... }
     fn <a href='#method.rev' class='fnname'>rev</a>(self) -&gt; <a class='struct' href='../../collect/compare/struct.Rev.html' title='collect::compare::Rev'>Rev</a>&lt;Self&gt; { ... }
     fn <a href='#method.swap' class='fnname'>swap</a>(self) -&gt; <a class='struct' href='../../collect/compare/struct.Swap.html' title='collect::compare::Swap'>Swap</a>&lt;Self&gt; { ... }
@@ -59,6 +59,7 @@
 <h1 id="examples" class='section-header'><a
                            href="#examples">Examples</a></h1><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>let</span> <span class='ident'>a_str</span> <span class='op'>=</span> <span class='string'>&quot;a&quot;</span>;
 <span class='kw'>let</span> <span class='ident'>a_string</span> <span class='op'>=</span> <span class='ident'>a_str</span>.<span class='ident'>to_string</span>();
@@ -76,6 +77,7 @@
 <h1 id="examples" class='section-header'><a
                            href="#examples">Examples</a></h1><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1u8</span>;
 <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2u8</span>;
@@ -93,6 +95,7 @@ expects <code>C: Compare&lt;U, T&gt;</code>.</p>
 <h1 id="examples" class='section-header'><a
                            href="#examples">Examples</a></h1><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='op'>|</span><span class='kw-2'>&amp;</span>: <span class='ident'>lhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>u8</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>u16</span><span class='op'>|</span> (<span class='op'>*</span><span class='ident'>lhs</span> <span class='kw'>as</span> <span class='ident'>u16</span>).<span class='ident'>cmp</span>(<span class='ident'>rhs</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='number'>1u8</span>, <span class='kw-2'>&amp;</span><span class='number'>2u16</span>), <span class='ident'>Less</span>);
@@ -113,6 +116,7 @@ equal, using <code>then</code>.</p>
 <h1 id="examples" class='section-header'><a
                            href="#examples">Examples</a></h1><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>};
 
 <span class='kw'>struct</span> <span class='ident'>Foo</span> { <span class='ident'>key1</span>: <span class='ident'>char</span>, <span class='ident'>key2</span>: <span class='ident'>u8</span> }
 

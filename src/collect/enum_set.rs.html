@@ -540,41 +540,6 @@
 <span id='498'>498</span>
 <span id='499'>499</span>
 <span id='500'>500</span>
-<span id='501'>501</span>
-<span id='502'>502</span>
-<span id='503'>503</span>
-<span id='504'>504</span>
-<span id='505'>505</span>
-<span id='506'>506</span>
-<span id='507'>507</span>
-<span id='508'>508</span>
-<span id='509'>509</span>
-<span id='510'>510</span>
-<span id='511'>511</span>
-<span id='512'>512</span>
-<span id='513'>513</span>
-<span id='514'>514</span>
-<span id='515'>515</span>
-<span id='516'>516</span>
-<span id='517'>517</span>
-<span id='518'>518</span>
-<span id='519'>519</span>
-<span id='520'>520</span>
-<span id='521'>521</span>
-<span id='522'>522</span>
-<span id='523'>523</span>
-<span id='524'>524</span>
-<span id='525'>525</span>
-<span id='526'>526</span>
-<span id='527'>527</span>
-<span id='528'>528</span>
-<span id='529'>529</span>
-<span id='530'>530</span>
-<span id='531'>531</span>
-<span id='532'>532</span>
-<span id='533'>533</span>
-<span id='534'>534</span>
-<span id='535'>535</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2012 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -594,10 +559,12 @@
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>num</span>::<span class='ident'>Int</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 
 <span class='comment'>// FIXME(contentions): implement union family of methods? (general design may be wrong here)</span>
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>, <span class='ident'>Hash</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>, <span class='ident'>Hash</span>)]</span>
 <span class='doccomment'>/// A specialized set implementation to use enum types.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='comment'>// We must maintain the invariant that no bits are set</span>
@@ -761,61 +728,25 @@
     }
 }
 
-<span class='comment'>// NOTE(stage0): Remove impl after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>stage0</span>)]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>Sub</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>sub</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>e</span>: <span class='kw-2'>&amp;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>EnumSet</span> {<span class='ident'>bits</span>: <span class='self'>self</span>.<span class='ident'>bits</span> <span class='kw-2'>&amp;</span> <span class='op'>!</span><span class='ident'>e</span>.<span class='ident'>bits</span>}
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>stage0</span>))]</span>  <span class='comment'>// NOTE(stage0): Remove cfg after a snapshot</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>Sub</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>Sub</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>sub</span>(<span class='self'>self</span>, <span class='ident'>e</span>: <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='ident'>EnumSet</span> {<span class='ident'>bits</span>: <span class='self'>self</span>.<span class='ident'>bits</span> <span class='kw-2'>&amp;</span> <span class='op'>!</span><span class='ident'>e</span>.<span class='ident'>bits</span>}
     }
 }
 
-<span class='comment'>// NOTE(stage0): Remove impl after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>stage0</span>)]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>BitOr</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>bitor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>e</span>: <span class='kw-2'>&amp;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>EnumSet</span> {<span class='ident'>bits</span>: <span class='self'>self</span>.<span class='ident'>bits</span> <span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>bits</span>}
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>stage0</span>))]</span>  <span class='comment'>// NOTE(stage0): Remove cfg after a snapshot</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>BitOr</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>BitOr</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>bitor</span>(<span class='self'>self</span>, <span class='ident'>e</span>: <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='ident'>EnumSet</span> {<span class='ident'>bits</span>: <span class='self'>self</span>.<span class='ident'>bits</span> <span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>bits</span>}
     }
 }
 
-<span class='comment'>// NOTE(stage0): Remove impl after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>stage0</span>)]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>BitAnd</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>bitand</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>e</span>: <span class='kw-2'>&amp;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>EnumSet</span> {<span class='ident'>bits</span>: <span class='self'>self</span>.<span class='ident'>bits</span> <span class='kw-2'>&amp;</span> <span class='ident'>e</span>.<span class='ident'>bits</span>}
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>stage0</span>))]</span>  <span class='comment'>// NOTE(stage0): Remove cfg after a snapshot</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>BitAnd</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>BitAnd</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>bitand</span>(<span class='self'>self</span>, <span class='ident'>e</span>: <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='ident'>EnumSet</span> {<span class='ident'>bits</span>: <span class='self'>self</span>.<span class='ident'>bits</span> <span class='kw-2'>&amp;</span> <span class='ident'>e</span>.<span class='ident'>bits</span>}
     }
 }
 
-<span class='comment'>// NOTE(stage0): Remove impl after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>stage0</span>)]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>BitXor</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>bitxor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>e</span>: <span class='kw-2'>&amp;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>EnumSet</span> {<span class='ident'>bits</span>: <span class='self'>self</span>.<span class='ident'>bits</span> <span class='op'>^</span> <span class='ident'>e</span>.<span class='ident'>bits</span>}
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>stage0</span>))]</span>  <span class='comment'>// NOTE(stage0): Remove cfg after a snapshot</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>BitXor</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>BitXor</span><span class='op'>&lt;</span><span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>bitxor</span>(<span class='self'>self</span>, <span class='ident'>e</span>: <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='ident'>EnumSet</span> {<span class='ident'>bits</span>: <span class='self'>self</span>.<span class='ident'>bits</span> <span class='op'>^</span> <span class='ident'>e</span>.<span class='ident'>bits</span>}
     }
@@ -855,7 +786,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>I</span>:<span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iterator</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>EnumSet</span>::<span class='ident'>new</span>();
         <span class='ident'>ret</span>.<span class='ident'>extend</span>(<span class='ident'>iterator</span>);
@@ -873,13 +804,12 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Foo</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 
     <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>EnumSet</span>, <span class='ident'>CLike</span>};
 
-    <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Show</span>)]</span>
+    <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Show</span>)]</span>
     <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>uint</span>)]</span>
     <span class='kw'>enum</span> <span class='ident'>Foo</span> {
         <span class='ident'>A</span>, <span class='ident'>B</span>, <span class='ident'>C</span>

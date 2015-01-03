@@ -912,100 +912,6 @@
 <span id='870'>870</span>
 <span id='871'>871</span>
 <span id='872'>872</span>
-<span id='873'>873</span>
-<span id='874'>874</span>
-<span id='875'>875</span>
-<span id='876'>876</span>
-<span id='877'>877</span>
-<span id='878'>878</span>
-<span id='879'>879</span>
-<span id='880'>880</span>
-<span id='881'>881</span>
-<span id='882'>882</span>
-<span id='883'>883</span>
-<span id='884'>884</span>
-<span id='885'>885</span>
-<span id='886'>886</span>
-<span id='887'>887</span>
-<span id='888'>888</span>
-<span id='889'>889</span>
-<span id='890'>890</span>
-<span id='891'>891</span>
-<span id='892'>892</span>
-<span id='893'>893</span>
-<span id='894'>894</span>
-<span id='895'>895</span>
-<span id='896'>896</span>
-<span id='897'>897</span>
-<span id='898'>898</span>
-<span id='899'>899</span>
-<span id='900'>900</span>
-<span id='901'>901</span>
-<span id='902'>902</span>
-<span id='903'>903</span>
-<span id='904'>904</span>
-<span id='905'>905</span>
-<span id='906'>906</span>
-<span id='907'>907</span>
-<span id='908'>908</span>
-<span id='909'>909</span>
-<span id='910'>910</span>
-<span id='911'>911</span>
-<span id='912'>912</span>
-<span id='913'>913</span>
-<span id='914'>914</span>
-<span id='915'>915</span>
-<span id='916'>916</span>
-<span id='917'>917</span>
-<span id='918'>918</span>
-<span id='919'>919</span>
-<span id='920'>920</span>
-<span id='921'>921</span>
-<span id='922'>922</span>
-<span id='923'>923</span>
-<span id='924'>924</span>
-<span id='925'>925</span>
-<span id='926'>926</span>
-<span id='927'>927</span>
-<span id='928'>928</span>
-<span id='929'>929</span>
-<span id='930'>930</span>
-<span id='931'>931</span>
-<span id='932'>932</span>
-<span id='933'>933</span>
-<span id='934'>934</span>
-<span id='935'>935</span>
-<span id='936'>936</span>
-<span id='937'>937</span>
-<span id='938'>938</span>
-<span id='939'>939</span>
-<span id='940'>940</span>
-<span id='941'>941</span>
-<span id='942'>942</span>
-<span id='943'>943</span>
-<span id='944'>944</span>
-<span id='945'>945</span>
-<span id='946'>946</span>
-<span id='947'>947</span>
-<span id='948'>948</span>
-<span id='949'>949</span>
-<span id='950'>950</span>
-<span id='951'>951</span>
-<span id='952'>952</span>
-<span id='953'>953</span>
-<span id='954'>954</span>
-<span id='955'>955</span>
-<span id='956'>956</span>
-<span id='957'>957</span>
-<span id='958'>958</span>
-<span id='959'>959</span>
-<span id='960'>960</span>
-<span id='961'>961</span>
-<span id='962'>962</span>
-<span id='963'>963</span>
-<span id='964'>964</span>
-<span id='965'>965</span>
-<span id='966'>966</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -1021,13 +927,15 @@
 <span class='comment'>// FIXME(conventions): replace each_reverse by making iter DoubleEnded</span>
 <span class='comment'>// FIXME(conventions): implement iter_mut and into_iter</span>
 
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='self'>self</span>, <span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Show</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>Peekable</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::{<span class='self'>self</span>, <span class='ident'>Peekable</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hash</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 
-<span class='kw'>use</span> <span class='ident'>trie_map</span>::{<span class='ident'>TrieMap</span>, <span class='kw'>mod</span>};
+<span class='kw'>use</span> <span class='ident'>trie_map</span>::{<span class='ident'>TrieMap</span>, <span class='self'>self</span>};
 
 <span class='doccomment'>/// A set implemented as a radix trie.</span>
 <span class='doccomment'>///</span>
@@ -1058,7 +966,7 @@
 <span class='doccomment'>/// set.clear();</span>
 <span class='doccomment'>/// assert!(set.is_empty());</span>
 <span class='doccomment'>/// ```</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>, <span class='ident'>Hash</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Hash</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TrieSet</span> {
     <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
 }
@@ -1453,7 +1361,7 @@
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
+<span class='kw'>impl</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
     <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>Iter</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieSet</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>set</span> <span class='op'>=</span> <span class='ident'>TrieSet</span>::<span class='ident'>new</span>();
         <span class='ident'>set</span>.<span class='ident'>extend</span>(<span class='ident'>iter</span>);
@@ -1469,32 +1377,8 @@
     }
 }
 
-<span class='comment'>// NOTE(stage0): Remove impl after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>stage0</span>)]</span>
 <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-<span class='kw'>impl</span> <span class='ident'>BitOr</span><span class='op'>&lt;</span><span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
-    <span class='doccomment'>/// Returns the union of `self` and `rhs` as a new `TrieSet`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use collect::TrieSet;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let a: TrieSet = vec![1, 2, 3].into_iter().collect();</span>
-    <span class='doccomment'>/// let b: TrieSet = vec![3, 4, 5].into_iter().collect();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let set: TrieSet = a | b;</span>
-    <span class='doccomment'>/// let v: Vec&lt;uint&gt; = set.iter().collect();</span>
-    <span class='doccomment'>/// assert_eq!(v, vec![1u, 2, 3, 4, 5]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>bitor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieSet</span> {
-        <span class='self'>self</span>.<span class='ident'>union</span>(<span class='ident'>rhs</span>).<span class='ident'>collect</span>()
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>stage0</span>))]</span>  <span class='comment'>// NOTE(stage0): Remove cfg after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>BitOr</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>BitOr</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span> {
     <span class='doccomment'>/// Returns the union of `self` and `rhs` as a new `TrieSet`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Example</span>
@@ -1514,32 +1398,8 @@
     }
 }
 
-<span class='comment'>// NOTE(stage0): Remove impl after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>stage0</span>)]</span>
 <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-<span class='kw'>impl</span> <span class='ident'>BitAnd</span><span class='op'>&lt;</span><span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
-    <span class='doccomment'>/// Returns the intersection of `self` and `rhs` as a new `TrieSet`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use collect::TrieSet;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let a: TrieSet = vec![1, 2, 3].into_iter().collect();</span>
-    <span class='doccomment'>/// let b: TrieSet = vec![2, 3, 4].into_iter().collect();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let set: TrieSet = a &amp; b;</span>
-    <span class='doccomment'>/// let v: Vec&lt;uint&gt; = set.iter().collect();</span>
-    <span class='doccomment'>/// assert_eq!(v, vec![2u, 3]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>bitand</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieSet</span> {
-        <span class='self'>self</span>.<span class='ident'>intersection</span>(<span class='ident'>rhs</span>).<span class='ident'>collect</span>()
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>stage0</span>))]</span>  <span class='comment'>// NOTE(stage0): Remove cfg after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>BitAnd</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>BitAnd</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span> {
     <span class='doccomment'>/// Returns the intersection of `self` and `rhs` as a new `TrieSet`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Example</span>
@@ -1559,32 +1419,8 @@
     }
 }
 
-<span class='comment'>// NOTE(stage0): Remove impl after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>stage0</span>)]</span>
 <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-<span class='kw'>impl</span> <span class='ident'>BitXor</span><span class='op'>&lt;</span><span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
-    <span class='doccomment'>/// Returns the symmetric difference of `self` and `rhs` as a new `TrieSet`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use collect::TrieSet;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let a: TrieSet = vec![1, 2, 3].into_iter().collect();</span>
-    <span class='doccomment'>/// let b: TrieSet = vec![3, 4, 5].into_iter().collect();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let set: TrieSet = a ^ b;</span>
-    <span class='doccomment'>/// let v: Vec&lt;uint&gt; = set.iter().collect();</span>
-    <span class='doccomment'>/// assert_eq!(v, vec![1u, 2, 4, 5]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>bitxor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieSet</span> {
-        <span class='self'>self</span>.<span class='ident'>symmetric_difference</span>(<span class='ident'>rhs</span>).<span class='ident'>collect</span>()
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>stage0</span>))]</span>  <span class='comment'>// NOTE(stage0): Remove cfg after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>BitXor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>BitXor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span> {
     <span class='doccomment'>/// Returns the symmetric difference of `self` and `rhs` as a new `TrieSet`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Example</span>
@@ -1604,32 +1440,8 @@
     }
 }
 
-<span class='comment'>// NOTE(stage0): Remove impl after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>stage0</span>)]</span>
 <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-<span class='kw'>impl</span> <span class='ident'>Sub</span><span class='op'>&lt;</span><span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
-    <span class='doccomment'>/// Returns the difference of `self` and `rhs` as a new `TrieSet`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use collect::TrieSet;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let a: TrieSet = vec![1, 2, 3].into_iter().collect();</span>
-    <span class='doccomment'>/// let b: TrieSet = vec![3, 4, 5].into_iter().collect();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let set: TrieSet = a - b;</span>
-    <span class='doccomment'>/// let v: Vec&lt;uint&gt; = set.iter().collect();</span>
-    <span class='doccomment'>/// assert_eq!(v, vec![1u, 2]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>sub</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>TrieSet</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieSet</span> {
-        <span class='self'>self</span>.<span class='ident'>difference</span>(<span class='ident'>rhs</span>).<span class='ident'>collect</span>()
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>stage0</span>))]</span>  <span class='comment'>// NOTE(stage0): Remove cfg after a snapshot</span>
-<span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>Sub</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>Sub</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>TrieSet</span>, <span class='ident'>TrieSet</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TrieSet</span> {
     <span class='doccomment'>/// Returns the difference of `self` and `rhs` as a new `TrieSet`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Example</span>

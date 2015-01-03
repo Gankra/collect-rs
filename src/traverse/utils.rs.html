@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.2/src/utils.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.3/src/utils.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>utils.rs.html -- source</title>
@@ -310,13 +310,15 @@
 <span id='268'>268</span>
 <span id='269'>269</span>
 <span id='270'>270</span>
+<span id='271'>271</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>Traversal</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>num</span>::<span class='ident'>Int</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>num</span>::{<span class='ident'>Int</span>, <span class='ident'>ToPrimitive</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Add</span>;
 
 <span class='doccomment'>/// An infinite iterator starting at `start` and advancing by `step` with each</span>
 <span class='doccomment'>/// iteration</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Counter</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// The current state the counter is at (next value to be yielded)</span>
     <span class='ident'>start</span>: <span class='ident'>A</span>,
@@ -344,7 +346,7 @@
 }
 
 <span class='doccomment'>/// An iterator over the range [start, stop)</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='ident'>start</span>: <span class='ident'>A</span>,
     <span class='ident'>stop</span>: <span class='ident'>A</span>,
@@ -372,7 +374,7 @@
 }
 
 <span class='doccomment'>/// An iterator over the range [start, stop]</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RangeInclusive</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='ident'>start</span>: <span class='ident'>A</span>,
     <span class='ident'>stop</span>: <span class='ident'>A</span>,
@@ -398,7 +400,7 @@
 }
 
 <span class='doccomment'>/// An iterator over the range [start, stop) by `step`. It handles overflow by stopping.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RangeStep</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='ident'>start</span>: <span class='ident'>A</span>,
     <span class='ident'>stop</span>: <span class='ident'>A</span>,
@@ -435,7 +437,7 @@
 }
 
 <span class='doccomment'>/// An iterator over the range [start, stop] by `step`. It handles overflow by stopping.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RangeStepInclusive</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='ident'>start</span>: <span class='ident'>A</span>,
     <span class='ident'>stop</span>: <span class='ident'>A</span>,
@@ -478,7 +480,7 @@
 }
 
 <span class='doccomment'>/// An iterator that repeats an element endlessly</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Repeat</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='ident'>element</span>: <span class='ident'>A</span>
 }
@@ -494,7 +496,7 @@
 
 <span class='doccomment'>/// An iterator that repeatedly applies a given function, starting</span>
 <span class='doccomment'>/// from a given seed value.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iterate</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>seed</span>: <span class='ident'>T</span>,
     <span class='ident'>iter</span>: <span class='ident'>F</span>,

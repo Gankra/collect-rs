@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.2/src/ext.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.3/src/ext.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ext.rs.html -- source</title>
@@ -202,8 +202,10 @@
 <span id='160'>160</span>
 <span id='161'>161</span>
 <span id='162'>162</span>
+<span id='163'>163</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Deref</span>;
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>O</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
@@ -357,7 +359,7 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>D</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Cloned</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
 <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>,
-      <span class='ident'>D</span>: <span class='ident'>Deref</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
+      <span class='ident'>D</span>: <span class='ident'>Deref</span><span class='op'>&lt;</span><span class='ident'>Target</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>,
       <span class='ident'>T</span>: <span class='ident'>Clone</span> {
     <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F</span>) {
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {

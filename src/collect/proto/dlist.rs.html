@@ -1302,11 +1302,13 @@
 <span id='1260'>1260</span>
 <span id='1261'>1261</span>
 <span id='1262'>1262</span>
+<span id='1263'>1263</span>
 </pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>kinds</span>::<span class='ident'>marker</span>::<span class='ident'>NoCopy</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>ptr</span>, <span class='ident'>mem</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::{<span class='kw'>mod</span>, <span class='ident'>Show</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::{<span class='self'>self</span>, <span class='ident'>Show</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Hash</span>, <span class='ident'>Writer</span>};
 
 <span class='comment'>// FIXME(Gankro): Although the internal interface we have here is *safer* than std&#39;s DList,</span>
@@ -1849,7 +1851,7 @@
 
 
 <span class='doccomment'>/// An iterator over references to the items of a `DList`.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>:<span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>head</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Link</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
     <span class='ident'>tail</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Raw</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
@@ -1864,7 +1866,7 @@
 }
 
 <span class='doccomment'>/// An iterator over mutable references to the items of a `DList`.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='ident'>list</span>: <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
 }
@@ -1970,7 +1972,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iterator</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>DList</span>::<span class='ident'>new</span>();
         <span class='ident'>ret</span>.<span class='ident'>extend</span>(<span class='ident'>iterator</span>);

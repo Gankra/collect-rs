@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>compare</a>::<wbr><a class='struct' href=''>Extract</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-12867' href='../../src/collect/compare.rs.html#344-347'>[src]</a></span></h1>
+        </span><a id='src-12792' href='../../src/collect/compare.rs.html#355-358'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Extract&lt;E, C&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A comparator that extracts a sort key from a value.</p>
@@ -52,6 +52,7 @@
 <h1 id="examples" class='section-header'><a
                            href="#examples">Examples</a></h1><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Extract</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::<span class='ident'>Greater</span>;
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
 <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>4</span>, <span class='number'>5</span>];

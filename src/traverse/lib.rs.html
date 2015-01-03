@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.2/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.3/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -230,7 +230,7 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>test</span>;
 
 <span class='doccomment'>/// An iterator that runs all at once</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>: <span class='ident'>Sized</span> {
     <span class='doccomment'>/// Run this Iterator using the provided closure.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Return false from the closure to end the iteration.</span>
@@ -330,70 +330,70 @@
 
 <span class='doccomment'>/// An Traversal that maps over the contents of</span>
 <span class='doccomment'>/// another Traversal.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>closure</span>: <span class='ident'>F</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>predicate</span>: <span class='ident'>F</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FilterMap</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>predicate</span>: <span class='ident'>F</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Enumerate</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='ident'>I</span>);
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Skip</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>n</span>: <span class='ident'>uint</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Take</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>n</span>: <span class='ident'>uint</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SkipWhile</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>predicate</span>: <span class='ident'>F</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TakeWhile</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>predicate</span>: <span class='ident'>F</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Inspect</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>closure</span>: <span class='ident'>F</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Chain</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>O</span><span class='op'>&gt;</span> {
     <span class='ident'>one</span>: <span class='ident'>I</span>,
     <span class='ident'>two</span>: <span class='ident'>O</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FlatMap</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>producer</span>: <span class='ident'>F</span>
 }
 
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Cloned</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
 }

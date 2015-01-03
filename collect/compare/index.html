@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>collect</a>::<wbr><a class='mod' href=''>compare</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-12217' href='../../src/collect/compare.rs.html#1-516'>[src]</a></span></h1>
+        </span><a id='src-12137' href='../../src/collect/compare.rs.html#1-528'>[src]</a></span></h1>
 <div class='docblock'><p>Comparators.</p>
 
 <p>A comparator is any type that implements the <a href="trait.Compare.html"><code>Compare</code></a> trait,
@@ -59,6 +59,7 @@ data structures.</p>
 to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/trait.Ord.html"><code>Ord</code></a>:</p>
 <pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1u8</span>;
 <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2u8</span>;
@@ -91,6 +92,7 @@ consume a comparator to produce a new one with different behavior, similar to
 example, all comparators can be <a href="trait.CompareExt.html#method.rev">reversed</a>:</p>
 <pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::<span class='ident'>Greater</span>;
 
 <span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>.<span class='ident'>rev</span>();
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='number'>1u8</span>, <span class='kw-2'>&amp;</span><span class='number'>2u8</span>), <span class='ident'>Greater</span>);
@@ -101,6 +103,7 @@ a type by using a closure of type <code>Fn(&amp;Lhs, &amp;Rhs) -&gt; Ordering</c
 can be compared by their length instead of their contents:</p>
 <pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
 <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>4</span>, <span class='number'>5</span>];
@@ -117,6 +120,7 @@ first by one key, <a href="trait.CompareExt.html#method.then">then</a>, if the f
 equal, by another:</p>
 <pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>struct</span> <span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>age</span>: <span class='ident'>u8</span> }
 
@@ -145,6 +149,7 @@ equal, by another:</p>
 previous example:</p>
 <pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Extract</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>struct</span> <span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>age</span>: <span class='ident'>u8</span> }
 
