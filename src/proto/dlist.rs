@@ -1,7 +1,8 @@
+use std::cmp::Ordering;
 use std::kinds::marker::NoCopy;
 use std::{ptr, mem};
 use std::iter;
-use std::fmt::{mod, Show};
+use std::fmt::{self, Show};
 use std::hash::{Hash, Writer};
 
 // FIXME(Gankro): Although the internal interface we have here is *safer* than std's DList,
@@ -544,7 +545,7 @@ impl<'a, T> Cursor<'a, T> {
 
 
 /// An iterator over references to the items of a `DList`.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct Iter<'a, T:'a> {
     head: &'a Link<T>,
     tail: &'a Raw<T>,
@@ -559,7 +560,7 @@ pub struct IterMut<'a, T:'a> {
 }
 
 /// An iterator over mutable references to the items of a `DList`.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct IntoIter<T> {
     list: DList<T>
 }
@@ -665,7 +666,7 @@ impl<T> Drop for DList<T> {
     }
 }
 
-impl<A> FromIterator<A> for DList<A> {
+impl<A> iter::FromIterator<A> for DList<A> {
     fn from_iter<T: Iterator<A>>(iterator: T) -> DList<A> {
         let mut ret = DList::new();
         ret.extend(iterator);

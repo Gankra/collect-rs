@@ -2,6 +2,7 @@
 /// ordered iterators. This can be useful to do selects between multiple
 /// tables of items
 
+use std::cmp::Ordering::{Less, Equal, Greater};
 use std::iter::Peekable;
 use std::collections::{
     btree_map, btree_set,
@@ -14,7 +15,7 @@ use super::super::{tree_set, tree_map, trie_set, trie_map};
 /// Allows an iterator to be do an inner join with another
 /// iterator to combine their values or filter based on their keys.
 /// this trait is applied to an iterator over a map like structure
-pub trait OrderedMapIterator<K, A>: Iterator<(K, A)> {
+pub trait OrderedMapIterator<K, A>: Iterator<(K, A)> + Sized {
     /// join two ordered maps together
     fn inner_join_map<B, T: OrderedMapIterator<K, B>>(self, map: T)
         -> InnerJoinMapIterator<Self, T> {
@@ -52,7 +53,7 @@ pub trait OrderedMapIterator<K, A>: Iterator<(K, A)> {
 /// Allows an iterator to be do an inner join with another
 /// iterator to combine their values or filter based on their keys.
 /// this trait is applied to an iterator over a set like structure
-pub trait OrderedSetIterator<K>: Iterator<K> {
+pub trait OrderedSetIterator<K>: Iterator<K> + Sized {
     /// join two ordered maps together
     fn inner_join_map<B, T: OrderedMapIterator<K, B>>(self, map: T)
         -> InnerJoinMapSetIterator<T, Self> {
@@ -238,7 +239,7 @@ impl<'a, K, V> OrderedMapIterator<&'a K, &'a V> for tree_map::Iter<'a, K, V> {}
 impl<'a> OrderedSetIterator<uint> for trie_set::Iter<'a> {}
 impl<'a, V> OrderedMapIterator<uint, &'a V> for trie_map::Iter<'a, V> {}
 impl<'a, V> OrderedMapIterator<uint, &'a V> for vec_map::Iter<'a, V> {}
-impl<'a> OrderedSetIterator<uint> for bitv_set::BitPositions<'a> {}
+impl<'a> OrderedSetIterator<uint> for bitv_set::Iter<'a> {}
 
 
 impl<K: Ord, VA, VB,

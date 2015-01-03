@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::{dlist, ring_buf, DList, RingBuf};
 use std::iter;
 use std::fmt;
@@ -19,7 +20,7 @@ use traverse::Traversal;
 /// perform an insertion or deletion, it will take amortized `O(B)` time to perform, with a
 /// worst-case cost of `O(B^2)`. Insertion and deletion on either end will always take
 /// `O(1)` time, though (assuming it takes `O(1)` time to allocate an array of size `B`).
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct BList<T> {
     list: DList<RingBuf<T>>,
     b: uint,
@@ -418,7 +419,7 @@ impl<T> Traversal<T> for IntoTrav<T> {
 }
 
 
-impl<A> FromIterator<A> for BList<A> {
+impl<A> iter::FromIterator<A> for BList<A> {
     fn from_iter<T: Iterator<A>>(iterator: T) -> BList<A> {
         let mut ret = BList::new();
         ret.extend(iterator);

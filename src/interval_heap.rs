@@ -2,6 +2,7 @@
 
 use std::slice;
 use std::default::Default;
+use std::iter;
 
 use compare::{Compare, Natural};
 
@@ -130,7 +131,7 @@ fn update_max<T, C: Compare<T>>(v: &mut [T], cmp: &C) {
 /// time, removal takes O(log n) time and accessing minimum and maximum can
 /// be done in constant time. Also, other convenient functions are provided
 /// that handle conversion from and into vectors and allow iteration etc.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct IntervalHeap<T, C: Compare<T> = Natural<T>> {
     data: Vec<T>,
     cmp: C,
@@ -339,7 +340,7 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
     }
 }
 
-impl<T, C: Compare<T> + Default> FromIterator<T> for IntervalHeap<T, C> {
+impl<T, C: Compare<T> + Default> iter::FromIterator<T> for IntervalHeap<T, C> {
     /// Creates an interval heap with all the items from an iterator
     fn from_iter<Iter: Iterator<T>>(iter: Iter) -> IntervalHeap<T, C> {
         IntervalHeap::from_vec_and_comparator(iter.collect(), Default::default())
