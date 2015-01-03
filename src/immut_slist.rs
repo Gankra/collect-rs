@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+use std::iter;
 use std::rc::{try_unwrap, Rc};
 use std::hash::{Writer, Hash};
 use std;
@@ -139,7 +141,7 @@ impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
     }
 }
 
-impl<T> FromIterator<T> for ImmutSList<T> {
+impl<T> iter::FromIterator<T> for ImmutSList<T> {
     fn from_iter<I: Iterator<T>>(mut iterator: I) -> ImmutSList<T> {
         let mut list = ImmutSList::new();
         for elem in iterator {

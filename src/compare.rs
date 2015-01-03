@@ -14,6 +14,7 @@
 //!
 //! ```rust
 //! use collect::compare::{Compare, Natural};
+//! use std::cmp::Ordering::{Less, Equal, Greater};
 //!
 //! let a = &1u8;
 //! let b = &2u8;
@@ -48,6 +49,7 @@
 //!
 //! ```rust
 //! use collect::compare::{Compare, CompareExt, Natural};
+//! use std::cmp::Ordering::Greater;
 //!
 //! let cmp = Natural.rev();
 //! assert_eq!(cmp.compare(&1u8, &2u8), Greater);
@@ -59,6 +61,7 @@
 //!
 //! ```rust
 //! use collect::compare::{Compare, CompareExt};
+//! use std::cmp::Ordering::{Less, Greater};
 //!
 //! let a = vec![1, 2, 3];
 //! let b = vec![4, 5];
@@ -77,6 +80,7 @@
 //!
 //! ```rust
 //! use collect::compare::{Compare, CompareExt};
+//! use std::cmp::Ordering::{Less, Equal, Greater};
 //!
 //! struct Pet { name: &'static str, age: u8 }
 //!
@@ -106,6 +110,7 @@
 //!
 //! ```rust
 //! use collect::compare::{Compare, CompareExt, Extract, Natural};
+//! use std::cmp::Ordering::{Less, Greater};
 //!
 //! struct Pet { name: &'static str, age: u8 }
 //!
@@ -122,6 +127,7 @@
 //! ```
 
 use std::borrow::BorrowFrom;
+use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
 
 /// Returns the maximum of two values according to the given comparator, or `lhs` if they
@@ -181,7 +187,7 @@ pub fn min<'a, Sized? C, Sized? T>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
 /// See the [`compare` module's documentation](index.html) for detailed usage.
 ///
 /// The `compares_*` methods may be overridden to provide more efficient implementations.
-pub trait Compare<Sized? Lhs, Sized? Rhs = Lhs> for Sized? {
+pub trait Compare<Sized? Lhs, Sized? Rhs = Lhs> {
     /// Compares two values, returning `Less`, `Equal`, or `Greater` if `lhs` is less
     /// than, equal to, or greater than `rhs`, respectively.
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering;
@@ -224,13 +230,14 @@ impl<Sized? F, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for F
 }
 
 /// An extension trait with methods applicable to all comparators.
-pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> {
+pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> + Sized {
     /// Borrows the comparator's parameters before comparing them.
     ///
     /// # Examples
     ///
     /// ```rust
     /// use collect::compare::{Compare, CompareExt, Natural};
+    /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///
     /// let a_str = "a";
     /// let a_string = a_str.to_string();
@@ -251,6 +258,7 @@ pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> {
     ///
     /// ```rust
     /// use collect::compare::{Compare, CompareExt, Natural};
+    /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///
     /// let a = &1u8;
     /// let b = &2u8;
@@ -271,6 +279,7 @@ pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> {
     ///
     /// ```rust
     /// use collect::compare::{Compare, CompareExt};
+    /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///
     /// let cmp = |&: lhs: &u8, rhs: &u16| (*lhs as u16).cmp(rhs);
     /// assert_eq!(cmp.compare(&1u8, &2u16), Less);
@@ -294,6 +303,7 @@ pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> {
     ///
     /// ```rust
     /// use collect::compare::{Compare, CompareExt};
+    /// use std::cmp::Ordering::{Less, Equal};
     ///
     /// struct Foo { key1: char, key2: u8 }
     ///
@@ -333,6 +343,7 @@ impl<C, Sized? Lhs, Sized? Rhs, Sized? Lb, Sized? Rb> Compare<Lhs, Rhs> for Borr
 ///
 /// ```rust
 /// use collect::compare::{Compare, Extract, Natural};
+/// use std::cmp::Ordering::Greater;
 ///
 /// let a = vec![1, 2, 3];
 /// let b = vec![4, 5];
@@ -411,6 +422,7 @@ impl<C, D, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for Lexicographic<C, D>
 ///
 /// ```rust
 /// use collect::compare::{Compare, Natural};
+/// use std::cmp::Ordering::{Less, Equal, Greater};
 ///
 /// let a = &1u8;
 /// let b = &2u8;

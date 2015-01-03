@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::{dlist, ring_buf, DList, RingBuf};
 use std::iter;
 use std::fmt;
@@ -418,7 +419,7 @@ impl<T> Traversal<T> for IntoTrav<T> {
 }
 
 
-impl<A> FromIterator<A> for BList<A> {
+impl<A> iter::FromIterator<A> for BList<A> {
     fn from_iter<T: Iterator<A>>(iterator: T) -> BList<A> {
         let mut ret = BList::new();
         ret.extend(iterator);

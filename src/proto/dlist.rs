@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::kinds::marker::NoCopy;
 use std::{ptr, mem};
 use std::iter;
@@ -665,7 +666,7 @@ impl<T> Drop for DList<T> {
     }
 }
 
-impl<A> FromIterator<A> for DList<A> {
+impl<A> iter::FromIterator<A> for DList<A> {
     fn from_iter<T: Iterator<A>>(iterator: T) -> DList<A> {
         let mut ret = DList::new();
         ret.extend(iterator);

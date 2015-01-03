@@ -2,6 +2,7 @@
 
 use std::slice;
 use std::default::Default;
+use std::iter;
 
 use compare::{Compare, Natural};
 
@@ -339,7 +340,7 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
     }
 }
 
-impl<T, C: Compare<T> + Default> FromIterator<T> for IntervalHeap<T, C> {
+impl<T, C: Compare<T> + Default> iter::FromIterator<T> for IntervalHeap<T, C> {
     /// Creates an interval heap with all the items from an iterator
     fn from_iter<Iter: Iterator<T>>(iter: Iter) -> IntervalHeap<T, C> {
         IntervalHeap::from_vec_and_comparator(iter.collect(), Default::default())

@@ -10,7 +10,6 @@
 
  #![allow(dead_code)]
 
-use std::prelude::*;
 use std::rand;
 use std::rand::Rng;
 use test::Bencher;

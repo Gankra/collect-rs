@@ -12,12 +12,13 @@
 
 pub use self::Entry::*;
 use self::TrieNode::*;
+use std::cmp::Ordering;
 use std::default::Default;
 use std::fmt;
 use std::fmt::Show;
 use std::mem::zeroed;
 use std::mem;
-use std::ops::{Slice, SliceMut};
+use std::ops::{self, Slice, SliceMut};
 use std::uint;
 use std::iter;
 use std::ptr;
@@ -644,7 +645,7 @@ impl<T> TrieMap<T> {
     }
 }
 
-impl<T> FromIterator<(uint, T)> for TrieMap<T> {
+impl<T> iter::FromIterator<(uint, T)> for TrieMap<T> {
     fn from_iter<Iter: Iterator<(uint, T)>>(iter: Iter) -> TrieMap<T> {
         let mut map = TrieMap::new();
         map.extend(iter);
@@ -668,14 +669,14 @@ impl<S: Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
     }
 }
 
-impl<T> Index<uint, T> for TrieMap<T> {
+impl<T> ops::Index<uint, T> for TrieMap<T> {
     #[inline]
     fn index<'a>(&'a self, i: &uint) -> &'a T {
         self.get(i).expect("key not present")
     }
 }
 
-impl<T> IndexMut<uint, T> for TrieMap<T> {
+impl<T> ops::IndexMut<uint, T> for TrieMap<T> {
     #[inline]
     fn index_mut<'a>(&'a mut self, i: &uint) -> &'a mut T {
         self.get_mut(i).expect("key not present")
@@ -1765,7 +1766,6 @@ mod test {
 
 #[cfg(test)]
 mod bench {
-    use std::prelude::*;
     use std::rand::{weak_rng, Rng};
     use test::{Bencher, black_box};
 

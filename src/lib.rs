@@ -26,6 +26,8 @@
 #![feature(globs)]
 #![feature(macro_rules)]
 #![feature(slicing_syntax)]
+#![feature(associated_types)]
+#![feature(old_orphan_check)]
 
 #[cfg(test)] extern crate test;
 extern crate core;

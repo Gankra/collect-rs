@@ -9,10 +9,12 @@
 // except according to those terms.
 
 use std::default::Default;
+use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::fmt;
 use std::fmt::Show;
 use std::iter;
 use std::mem::{replace, swap};
+use std::ops;
 use std::ptr;
 use std::hash::{Writer, Hash};
 
@@ -172,14 +174,14 @@ impl<K, V, C> Default for TreeMap<K, V, C> where C: Compare<K> + Default {
     fn default() -> TreeMap<K, V, C> { TreeMap::with_comparator(Default::default()) }
 }
 
-impl<K, V, C, Sized? Q> Index<Q, V> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+impl<K, V, C, Sized? Q> ops::Index<Q, V> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     #[inline]
     fn index<'a>(&'a self, i: &Q) -> &'a V {
         self.get(i).expect("no entry found for key")
     }
 }
 
-impl<K, V, C, Sized? Q> IndexMut<Q, V> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+impl<K, V, C, Sized? Q> ops::IndexMut<Q, V> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     #[inline]
     fn index_mut<'a>(&'a mut self, i: &Q) -> &'a mut V {
         self.get_mut(i).expect("no entry found for key")
@@ -1305,7 +1307,7 @@ fn remove<K, V, C, Sized? Q>(node: &mut Option<Box<TreeNode<K, V>>>, key: &Q, cm
     };
 }
 
-impl<K, V, C> FromIterator<(K, V)> for TreeMap<K, V, C> where C: Compare<K> + Default {
+impl<K, V, C> iter::FromIterator<(K, V)> for TreeMap<K, V, C> where C: Compare<K> + Default {
     fn from_iter<T: Iterator<(K, V)>>(iter: T) -> TreeMap<K, V, C> {
         let mut map: TreeMap<K, V, C> = Default::default();
         map.extend(iter);
@@ -1468,7 +1470,7 @@ mod test_treemap {
                                   parent: &Box<TreeNode<K, V>>) {
         match *node {
           Some(ref r) => {
-            assert_eq!(r.key.cmp(&parent.key), Less);
+            assert_eq!(r.key.cmp(&parent.key), ::std::cmp::Ordering::Less);
             assert!(r.level == parent.level - 1); // left is black
             check_left(&r.left, r);
             check_right(&r.right, r, false);
@@ -1482,7 +1484,7 @@ mod test_treemap {
                                    parent_red: bool) {
         match *node {
           Some(ref r) => {
-            assert_eq!(r.key.cmp(&parent.key), Greater);
+            assert_eq!(r.key.cmp(&parent.key), ::std::cmp::Ordering::Greater);
             let red = r.level == parent.level;
             if parent_red { assert!(!red) } // no dual horizontal links
             // Right red or black
@@ -1915,7 +1917,6 @@ mod test_treemap {
 
 #[cfg(test)]
 mod bench {
-    use std::prelude::*;
     use std::rand::{weak_rng, Rng};
     use test::{Bencher, black_box};
 

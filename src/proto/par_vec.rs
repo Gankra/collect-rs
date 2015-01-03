@@ -8,6 +8,7 @@ use std::fmt::Error as FmtError;
 use std::iter::range_inclusive;
 use std::sync::Arc;
 use std::mem;
+use std::ops;
 
 /// A vector that can be operated on concurrently via non-overlapping slices.
 ///
@@ -89,13 +90,15 @@ pub struct ParSlice<T: Send> {
     data: &'static mut [T],
 }
 
-impl<T: Send> Deref<[T]> for ParSlice<T> {
+impl<T: Send> ops::Deref for ParSlice<T> {
+    type Target = [T];
+
     fn deref<'a>(&'a self) -> &'a [T] {
         self.data
     }
 }
 
-impl<T: Send> DerefMut<[T]> for ParSlice<T> {
+impl<T: Send> ops::DerefMut for ParSlice<T> {
     fn deref_mut<'a>(&'a mut self) -> &'a mut [T] {
         self.data
     }

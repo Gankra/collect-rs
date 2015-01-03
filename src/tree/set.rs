@@ -8,12 +8,14 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
 use std::fmt;
 use std::fmt::Show;
 use std::iter::Peekable;
 use std::iter;
 use std::hash::{Writer, Hash};
+use std::ops;
 
 use compare::{Compare, Natural};
 use tree_map::{self, TreeMap};
@@ -689,7 +691,7 @@ impl<'a, T, C> Iterator<&'a T> for Union<'a, T, C> where C: Compare<T> {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
 
     /// Returns the union of `self` and `rhs` as a new `TreeSet<T, C>`.
@@ -715,7 +717,7 @@ impl<'a, 'b, T, C> BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
 
     /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T, C>`.
@@ -741,7 +743,7 @@ impl<'a, 'b, T, C> BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
 
     /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T, C>`.
@@ -767,7 +769,7 @@ impl<'a, 'b, T, C> BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> Sub<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::Sub<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
 
     /// Returns the difference of `self` and `rhs` as a new `TreeSet<T, C>`.
@@ -792,7 +794,7 @@ impl<'a, 'b, T, C> Sub<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
     }
 }
 
-impl<T, C> FromIterator<T> for TreeSet<T, C> where C: Compare<T> + Default {
+impl<T, C> iter::FromIterator<T> for TreeSet<T, C> where C: Compare<T> + Default {
     fn from_iter<Iter: Iterator<T>>(iter: Iter) -> TreeSet<T, C> {
         let mut set: TreeSet<T, C> = Default::default();
         set.extend(iter);

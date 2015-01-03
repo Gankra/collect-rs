@@ -12,11 +12,13 @@
 // FIXME(conventions): replace each_reverse by making iter DoubleEnded
 // FIXME(conventions): implement iter_mut and into_iter
 
+use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
 use std::fmt;
 use std::fmt::Show;
-use std::iter::Peekable;
+use std::iter::{self, Peekable};
 use std::hash::Hash;
+use std::ops;
 
 use trie_map::{TrieMap, self};
 
@@ -444,7 +446,7 @@ impl TrieSet {
     }
 }
 
-impl FromIterator<uint> for TrieSet {
+impl iter::FromIterator<uint> for TrieSet {
     fn from_iter<Iter: Iterator<uint>>(iter: Iter) -> TrieSet {
         let mut set = TrieSet::new();
         set.extend(iter);
@@ -460,32 +462,8 @@ impl Extend<uint> for TrieSet {
     }
 }
 
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl BitOr<TrieSet, TrieSet> for TrieSet {
-    /// Returns the union of `self` and `rhs` as a new `TrieSet`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TrieSet;
-    ///
-    /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
-    /// let b: TrieSet = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TrieSet = a | b;
-    /// let v: Vec<uint> = set.iter().collect();
-    /// assert_eq!(v, vec![1u, 2, 3, 4, 5]);
-    /// ```
-    fn bitor(&self, rhs: &TrieSet) -> TrieSet {
-        self.union(rhs).collect()
-    }
-}
-
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> BitOr<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitOr<&'b TrieSet, TrieSet> for &'a TrieSet {
     /// Returns the union of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -505,32 +483,8 @@ impl<'a, 'b> BitOr<&'b TrieSet, TrieSet> for &'a TrieSet {
     }
 }
 
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl BitAnd<TrieSet, TrieSet> for TrieSet {
-    /// Returns the intersection of `self` and `rhs` as a new `TrieSet`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TrieSet;
-    ///
-    /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
-    /// let b: TrieSet = vec![2, 3, 4].into_iter().collect();
-    ///
-    /// let set: TrieSet = a & b;
-    /// let v: Vec<uint> = set.iter().collect();
-    /// assert_eq!(v, vec![2u, 3]);
-    /// ```
-    fn bitand(&self, rhs: &TrieSet) -> TrieSet {
-        self.intersection(rhs).collect()
-    }
-}
-
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> BitAnd<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitAnd<&'b TrieSet, TrieSet> for &'a TrieSet {
     /// Returns the intersection of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -550,32 +504,8 @@ impl<'a, 'b> BitAnd<&'b TrieSet, TrieSet> for &'a TrieSet {
     }
 }
 
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl BitXor<TrieSet, TrieSet> for TrieSet {
-    /// Returns the symmetric difference of `self` and `rhs` as a new `TrieSet`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TrieSet;
-    ///
-    /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
-    /// let b: TrieSet = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TrieSet = a ^ b;
-    /// let v: Vec<uint> = set.iter().collect();
-    /// assert_eq!(v, vec![1u, 2, 4, 5]);
-    /// ```
-    fn bitxor(&self, rhs: &TrieSet) -> TrieSet {
-        self.symmetric_difference(rhs).collect()
-    }
-}
-
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> BitXor<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitXor<&'b TrieSet, TrieSet> for &'a TrieSet {
     /// Returns the symmetric difference of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -595,32 +525,8 @@ impl<'a, 'b> BitXor<&'b TrieSet, TrieSet> for &'a TrieSet {
     }
 }
 
-// NOTE(stage0): Remove impl after a snapshot
-#[cfg(stage0)]
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl Sub<TrieSet, TrieSet> for TrieSet {
-    /// Returns the difference of `self` and `rhs` as a new `TrieSet`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::TrieSet;
-    ///
-    /// let a: TrieSet = vec![1, 2, 3].into_iter().collect();
-    /// let b: TrieSet = vec![3, 4, 5].into_iter().collect();
-    ///
-    /// let set: TrieSet = a - b;
-    /// let v: Vec<uint> = set.iter().collect();
-    /// assert_eq!(v, vec![1u, 2]);
-    /// ```
-    fn sub(&self, rhs: &TrieSet) -> TrieSet {
-        self.difference(rhs).collect()
-    }
-}
-
-#[cfg(not(stage0))]  // NOTE(stage0): Remove cfg after a snapshot
-#[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> Sub<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::Sub<&'b TrieSet, TrieSet> for &'a TrieSet {
     /// Returns the difference of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
