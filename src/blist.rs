@@ -1,11 +1,12 @@
 use std::cmp::Ordering;
-use std::collections::{dlist, ring_buf, DList, RingBuf};
+use std::collections::{ring_buf, RingBuf};
 use std::iter;
 use std::fmt;
 use std::mem;
 use std::hash::{Hash, Hasher, Writer};
 use std::num::Int;
 use traverse::Traversal;
+use proto::dlist::{self, DList};
 
 /// A skeleton implementation of a BList, based on the [Space-Efficient Linked List]
 /// (http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html) described in
