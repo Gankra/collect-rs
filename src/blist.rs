@@ -392,8 +392,10 @@ pub struct IntoTrav<T> {
     list: BList<T>,
 }
 
-impl<'a, T> Traversal<&'a T> for Trav<'a, T> {
-    fn foreach<F: FnMut(&'a T) -> bool>(self, mut f: F) {
+impl<'a, T> Traversal for Trav<'a, T> {
+    type Item = &'a T;
+
+    fn foreach<F>(self, mut f: F) where F: FnMut(&'a T) -> bool {
         for node in self.list.list.iter() {
             for elem in node.iter() {
                 if f(elem) { return; }
@@ -402,8 +404,10 @@ impl<'a, T> Traversal<&'a T> for Trav<'a, T> {
     }
 }
 
-impl<'a, T> Traversal<&'a mut T> for TravMut<'a, T> {
-    fn foreach<F: FnMut(&'a mut T) -> bool>(self, mut f: F) {
+impl<'a, T> Traversal for TravMut<'a, T> {
+    type Item = &'a mut T;
+
+    fn foreach<F>(self, mut f: F) where F: FnMut(&'a mut T) -> bool {
         for node in self.list.list.iter_mut() {
             for elem in node.iter_mut() {
                 if f(elem) { return; }
@@ -412,8 +416,10 @@ impl<'a, T> Traversal<&'a mut T> for TravMut<'a, T> {
     }
 }
 
-impl<T> Traversal<T> for IntoTrav<T> {
-    fn foreach<F: FnMut(T) -> bool>(self, mut f: F) {
+impl<T> Traversal for IntoTrav<T> {
+    type Item = T;
+
+    fn foreach<F>(self, mut f: F) where F: FnMut(T) -> bool {
         for node in self.list.list.into_iter() {
             for elem in node.into_iter() {
                 if f(elem) { return; }
