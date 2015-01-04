@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.4/src/ext.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.5/src/ext.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ext.rs.html -- source</title>
@@ -203,12 +203,40 @@
 <span id='161'>161</span>
 <span id='162'>162</span>
 <span id='163'>163</span>
+<span id='164'>164</span>
+<span id='165'>165</span>
+<span id='166'>166</span>
+<span id='167'>167</span>
+<span id='168'>168</span>
+<span id='169'>169</span>
+<span id='170'>170</span>
+<span id='171'>171</span>
+<span id='172'>172</span>
+<span id='173'>173</span>
+<span id='174'>174</span>
+<span id='175'>175</span>
+<span id='176'>176</span>
+<span id='177'>177</span>
+<span id='178'>178</span>
+<span id='179'>179</span>
+<span id='180'>180</span>
+<span id='181'>181</span>
+<span id='182'>182</span>
+<span id='183'>183</span>
+<span id='184'>184</span>
+<span id='185'>185</span>
+<span id='186'>186</span>
+<span id='187'>187</span>
+<span id='188'>188</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Deref</span>;
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>O</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>O</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>O</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>O</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>closure</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>closure</span>;
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
             <span class='ident'>f</span>(<span class='ident'>closure</span>(<span class='ident'>t</span>))
@@ -216,9 +244,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>{
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>predicate</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>predicate</span>;
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
             <span class='kw'>if</span> <span class='ident'>predicate</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>) { <span class='ident'>f</span>(<span class='ident'>t</span>) } <span class='kw'>else</span> { <span class='boolval'>false</span> }
@@ -226,9 +256,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>FilterMap</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>O</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>FilterMap</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>O</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>O</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>predicate</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>predicate</span>;
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
             <span class='kw'>match</span> <span class='ident'>predicate</span>(<span class='ident'>t</span>) {
@@ -239,9 +271,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Enumerate</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>((<span class='ident'>uint</span>, <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Enumerate</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> (<span class='ident'>uint</span>, <span class='ident'>T</span>);
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>((<span class='ident'>uint</span>, <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>counter</span> <span class='op'>=</span> <span class='number'>0</span>;
         <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>foreach</span>(<span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
             <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>f</span>((<span class='ident'>counter</span>, <span class='ident'>t</span>));
@@ -251,9 +285,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Skip</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Skip</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>counter</span> <span class='op'>=</span> <span class='number'>0</span>;
         <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>n</span>;
 
@@ -268,9 +304,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Take</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Take</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>counter</span> <span class='op'>=</span> <span class='number'>0</span>;
         <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>n</span>;
 
@@ -285,9 +323,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SkipWhile</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>SkipWhile</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>predicate</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>predicate</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>flag</span> <span class='op'>=</span> <span class='boolval'>false</span>;
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
@@ -304,9 +344,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TakeWhile</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>TakeWhile</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>predicate</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>predicate</span>;
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
             <span class='kw'>if</span> <span class='ident'>predicate</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>) { <span class='ident'>f</span>(<span class='ident'>t</span>) } <span class='kw'>else</span> { <span class='boolval'>true</span> }
@@ -314,9 +356,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Inspect</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Inspect</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>closure</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>closure</span>;
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
             <span class='ident'>closure</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>);
@@ -325,9 +369,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Chain</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>O</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>O</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Chain</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>O</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>O</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>flag</span> <span class='op'>=</span> <span class='boolval'>false</span>;
         <span class='self'>self</span>.<span class='ident'>one</span>.<span class='ident'>foreach</span>(<span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
             <span class='ident'>flag</span> <span class='op'>=</span> <span class='ident'>f</span>(<span class='ident'>t</span>); <span class='ident'>flag</span>
@@ -341,11 +387,13 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>U</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>FlatMap</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>U</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>FlatMap</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>,
       <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>U</span>,
-      <span class='ident'>U</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>O</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) {
+      <span class='ident'>U</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>O</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>O</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F1</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F1</span>) <span class='kw'>where</span> <span class='ident'>F1</span>: <span class='ident'>FnMut</span>(<span class='ident'>O</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>producer</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>producer</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>flag</span> <span class='op'>=</span> <span class='boolval'>false</span>;
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='op'>|</span><span class='ident'>t</span>: <span class='ident'>T</span><span class='op'>|</span> {
@@ -357,11 +405,13 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>D</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Cloned</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>,
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span>, <span class='ident'>D</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Cloned</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>D</span><span class='op'>&gt;</span>,
       <span class='ident'>D</span>: <span class='ident'>Deref</span><span class='op'>&lt;</span><span class='ident'>Target</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>,
       <span class='ident'>T</span>: <span class='ident'>Clone</span> {
-    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F</span>) {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>foreach</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
             <span class='ident'>f</span>(<span class='ident'>d</span>.<span class='ident'>deref</span>().<span class='ident'>clone</span>())
         });
