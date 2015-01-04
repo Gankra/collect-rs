@@ -646,7 +646,7 @@ impl<T> TrieMap<T> {
 }
 
 impl<T> iter::FromIterator<(uint, T)> for TrieMap<T> {
-    fn from_iter<Iter: Iterator<(uint, T)>>(iter: Iter) -> TrieMap<T> {
+    fn from_iter<Iter: Iterator<Item=(uint, T)>>(iter: Iter) -> TrieMap<T> {
         let mut map = TrieMap::new();
         map.extend(iter);
         map
@@ -654,7 +654,7 @@ impl<T> iter::FromIterator<(uint, T)> for TrieMap<T> {
 }
 
 impl<T> Extend<(uint, T)> for TrieMap<T> {
-    fn extend<Iter: Iterator<(uint, T)>>(&mut self, mut iter: Iter) {
+    fn extend<Iter: Iterator<Item=(uint, T)>>(&mut self, mut iter: Iter) {
         for (k, v) in iter {
             self.insert(k, v);
         }
@@ -669,14 +669,16 @@ impl<S: Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
     }
 }
 
-impl<T> ops::Index<uint, T> for TrieMap<T> {
+impl<T> ops::Index<uint> for TrieMap<T> {
+    type Output = T;
     #[inline]
     fn index<'a>(&'a self, i: &uint) -> &'a T {
         self.get(i).expect("key not present")
     }
 }
 
-impl<T> ops::IndexMut<uint, T> for TrieMap<T> {
+impl<T> ops::IndexMut<uint> for TrieMap<T> {
+    type Output = T;
     #[inline]
     fn index_mut<'a>(&'a mut self, i: &uint) -> &'a mut T {
         self.get_mut(i).expect("key not present")
@@ -1139,7 +1141,8 @@ macro_rules! iterator_impl {
             }
         }
 
-        item!(impl<'a, T> Iterator<(uint, &'a $($mut_)* T)> for $name<'a, T> {
+        item!(impl<'a, T> Iterator for $name<'a, T> {
+                type Item = (uint, &'a $($mut_)* T);
                 // you might wonder why we're not even trying to act within the
                 // rules, and are just manipulating raw pointers like there's no
                 // such thing as invalid pointers and memory unsafety. The

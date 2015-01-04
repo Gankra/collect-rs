@@ -447,7 +447,7 @@ impl TrieSet {
 }
 
 impl iter::FromIterator<uint> for TrieSet {
-    fn from_iter<Iter: Iterator<uint>>(iter: Iter) -> TrieSet {
+    fn from_iter<Iter: Iterator<Item=uint>>(iter: Iter) -> TrieSet {
         let mut set = TrieSet::new();
         set.extend(iter);
         set
@@ -455,7 +455,7 @@ impl iter::FromIterator<uint> for TrieSet {
 }
 
 impl Extend<uint> for TrieSet {
-    fn extend<Iter: Iterator<uint>>(&mut self, mut iter: Iter) {
+    fn extend<Iter: Iterator<Item=uint>>(&mut self, mut iter: Iter) {
         for elem in iter {
             self.insert(elem);
         }
@@ -463,7 +463,9 @@ impl Extend<uint> for TrieSet {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> ops::BitOr<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitOr<&'b TrieSet> for &'a TrieSet {
+    type Output = TrieSet;
+
     /// Returns the union of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -484,7 +486,9 @@ impl<'a, 'b> ops::BitOr<&'b TrieSet, TrieSet> for &'a TrieSet {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> ops::BitAnd<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitAnd<&'b TrieSet> for &'a TrieSet {
+    type Output = TrieSet;
+
     /// Returns the intersection of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -505,7 +509,9 @@ impl<'a, 'b> ops::BitAnd<&'b TrieSet, TrieSet> for &'a TrieSet {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> ops::BitXor<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::BitXor<&'b TrieSet> for &'a TrieSet {
+    type Output = TrieSet;
+
     /// Returns the symmetric difference of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -526,7 +532,9 @@ impl<'a, 'b> ops::BitXor<&'b TrieSet, TrieSet> for &'a TrieSet {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b> ops::Sub<&'b TrieSet, TrieSet> for &'a TrieSet {
+impl<'a, 'b> ops::Sub<&'b TrieSet> for &'a TrieSet {
+    type Output = TrieSet;
+
     /// Returns the difference of `self` and `rhs` as a new `TrieSet`.
     ///
     /// # Example
@@ -584,7 +592,8 @@ fn cmp_opt(x: Option<&uint>, y: Option<&uint>, short: Ordering, long: Ordering) 
     }
 }
 
-impl<'a> Iterator<uint> for Iter<'a> {
+impl<'a> Iterator for Iter<'a> {
+    type Item = uint;
     fn next(&mut self) -> Option<uint> {
         self.iter.next().map(|(key, _)| key)
     }
@@ -594,7 +603,8 @@ impl<'a> Iterator<uint> for Iter<'a> {
     }
 }
 
-impl<'a> Iterator<uint> for Difference<'a> {
+impl<'a> Iterator for Difference<'a> {
+    type Item = uint;
     fn next(&mut self) -> Option<uint> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Less, Less) {
@@ -606,7 +616,8 @@ impl<'a> Iterator<uint> for Difference<'a> {
     }
 }
 
-impl<'a> Iterator<uint> for SymmetricDifference<'a> {
+impl<'a> Iterator for SymmetricDifference<'a> {
+    type Item = uint;
     fn next(&mut self) -> Option<uint> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
@@ -618,7 +629,8 @@ impl<'a> Iterator<uint> for SymmetricDifference<'a> {
     }
 }
 
-impl<'a> Iterator<uint> for Intersection<'a> {
+impl<'a> Iterator for Intersection<'a> {
+    type Item = uint;
     fn next(&mut self) -> Option<uint> {
         loop {
             let o_cmp = match (self.a.peek(), self.b.peek()) {
@@ -636,7 +648,8 @@ impl<'a> Iterator<uint> for Intersection<'a> {
     }
 }
 
-impl<'a> Iterator<uint> for Union<'a> {
+impl<'a> Iterator for Union<'a> {
+    type Item = uint;
     fn next(&mut self) -> Option<uint> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {

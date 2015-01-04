@@ -621,22 +621,26 @@ fn cmp_opt<T, C: Compare<T>>(x: Option<& &T>, y: Option<& &T>,
 }
 
 
-impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
     #[inline] fn next(&mut self) -> Option<&'a T> { self.iter.next().map(|(value, _)| value) }
     #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
-impl<'a, T> Iterator<&'a T> for RevIter<'a, T> {
+impl<'a, T> Iterator for RevIter<'a, T> {
+    type Item = &'a T;
     #[inline] fn next(&mut self) -> Option<&'a T> { self.iter.next().map(|(value, _)| value) }
     #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
-impl<T> Iterator<T> for IntoIter<T> {
+impl<T> Iterator for IntoIter<T> {
+    type Item = T;
     #[inline] fn next(&mut self) -> Option<T> { self.0.next() }
     #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
 
-impl<'a, T, C> Iterator<&'a T> for Difference<'a, T, C> where C: Compare<T> {
+impl<'a, T, C> Iterator for Difference<'a, T, C> where C: Compare<T> {
+    type Item = &'a T;
     fn next(&mut self) -> Option<&'a T> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Less, Less, self.cmp) {
@@ -648,7 +652,8 @@ impl<'a, T, C> Iterator<&'a T> for Difference<'a, T, C> where C: Compare<T> {
     }
 }
 
-impl<'a, T, C> Iterator<&'a T> for SymmetricDifference<'a, T, C> where C: Compare<T> {
+impl<'a, T, C> Iterator for SymmetricDifference<'a, T, C> where C: Compare<T> {
+    type Item = &'a T;
     fn next(&mut self) -> Option<&'a T> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp) {
@@ -660,7 +665,8 @@ impl<'a, T, C> Iterator<&'a T> for SymmetricDifference<'a, T, C> where C: Compar
     }
 }
 
-impl<'a, T, C> Iterator<&'a T> for Intersection<'a, T, C> where C: Compare<T> {
+impl<'a, T, C> Iterator for Intersection<'a, T, C> where C: Compare<T> {
+    type Item = &'a T;
     fn next(&mut self) -> Option<&'a T> {
         loop {
             let o_cmp = match (self.a.peek(), self.b.peek()) {
@@ -678,7 +684,8 @@ impl<'a, T, C> Iterator<&'a T> for Intersection<'a, T, C> where C: Compare<T> {
     }
 }
 
-impl<'a, T, C> Iterator<&'a T> for Union<'a, T, C> where C: Compare<T> {
+impl<'a, T, C> Iterator for Union<'a, T, C> where C: Compare<T> {
+    type Item = &'a T;
     fn next(&mut self) -> Option<&'a T> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less, self.cmp) {
@@ -691,8 +698,10 @@ impl<'a, T, C> Iterator<&'a T> for Union<'a, T, C> where C: Compare<T> {
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> ops::BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitOr<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
+
+    type Output = TreeSet<T, C>;
 
     /// Returns the union of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
@@ -717,8 +726,10 @@ impl<'a, 'b, T, C> ops::BitOr<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> ops::BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitAnd<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
+
+    type Output = TreeSet<T, C>;
 
     /// Returns the intersection of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
@@ -743,8 +754,10 @@ impl<'a, 'b, T, C> ops::BitAnd<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> ops::BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::BitXor<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
+
+    type Output = TreeSet<T, C>;
 
     /// Returns the symmetric difference of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
@@ -769,8 +782,10 @@ impl<'a, 'b, T, C> ops::BitXor<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet
 }
 
 #[unstable = "matches collection reform specification, waiting for dust to settle"]
-impl<'a, 'b, T, C> ops::Sub<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T, C>
+impl<'a, 'b, T, C> ops::Sub<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     where T: Clone, C: Compare<T> + Eq + Clone {
+
+    type Output = TreeSet<T, C>;
 
     /// Returns the difference of `self` and `rhs` as a new `TreeSet<T, C>`.
     ///
@@ -795,7 +810,7 @@ impl<'a, 'b, T, C> ops::Sub<&'b TreeSet<T, C>, TreeSet<T, C>> for &'a TreeSet<T,
 }
 
 impl<T, C> iter::FromIterator<T> for TreeSet<T, C> where C: Compare<T> + Default {
-    fn from_iter<Iter: Iterator<T>>(iter: Iter) -> TreeSet<T, C> {
+    fn from_iter<Iter: Iterator<Item=T>>(iter: Iter) -> TreeSet<T, C> {
         let mut set: TreeSet<T, C> = Default::default();
         set.extend(iter);
         set
@@ -804,7 +819,7 @@ impl<T, C> iter::FromIterator<T> for TreeSet<T, C> where C: Compare<T> + Default
 
 impl<T, C> Extend<T> for TreeSet<T, C> where C: Compare<T> {
     #[inline]
-    fn extend<Iter: Iterator<T>>(&mut self, mut iter: Iter) {
+    fn extend<Iter: Iterator<Item=T>>(&mut self, mut iter: Iter) {
         for elem in iter {
             self.insert(elem);
         }

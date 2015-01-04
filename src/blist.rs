@@ -266,9 +266,10 @@ struct AbsIter<DListIter, RingBufIter> {
 }
 
 impl<A,
-    RingBufIter: Iterator<A>,
-    DListIter: Iterator<T>,
-    T: Traverse<RingBufIter>> Iterator<A> for AbsIter<DListIter, RingBufIter> {
+    RingBufIter: Iterator<Item=A>,
+    DListIter: Iterator<Item=T>,
+    T: Traverse<RingBufIter>> Iterator for AbsIter<DListIter, RingBufIter> {
+    type Item = A;
     // I would like to thank all my friends and the fact that Iterator::next doesn't
     // borrow self, for this passing borrowck with minimal gymnastics
     fn next(&mut self) -> Option<A> {
@@ -315,9 +316,9 @@ impl<A,
 }
 
 impl<A,
-    RingBufIter: DoubleEndedIterator<A>,
-    DListIter: DoubleEndedIterator<T>,
-    T: Traverse<RingBufIter>> DoubleEndedIterator<A> for AbsIter<DListIter, RingBufIter> {
+    RingBufIter: DoubleEndedIterator + Iterator<Item=A>,
+    DListIter: DoubleEndedIterator + Iterator<Item=T>,
+    T: Traverse<RingBufIter>> DoubleEndedIterator for AbsIter<DListIter, RingBufIter> {
     // see `next` for details. This should be an exact mirror.
     fn next_back(&mut self) -> Option<A> {
         if self.len > 0 { self.len -= 1; }
@@ -348,32 +349,35 @@ impl<A,
     }
 }
 
-impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
     fn next(&mut self) -> Option<&'a T> { self.0.next() }
     fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
-impl<'a, T> DoubleEndedIterator<&'a T> for Iter<'a, T> {
+impl<'a, T> DoubleEndedIterator for Iter<'a, T> {
     fn next_back(&mut self) -> Option<&'a T> { self.0.next_back() }
 }
-impl<'a, T> ExactSizeIterator<&'a T> for Iter<'a, T> {}
+impl<'a, T> ExactSizeIterator for Iter<'a, T> {}
 
-impl<'a, T> Iterator<&'a mut T> for IterMut<'a, T> {
+impl<'a, T> Iterator for IterMut<'a, T> {
+    type Item = &'a mut T;
     fn next(&mut self) -> Option<&'a mut T> { self.0.next() }
     fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
-impl<'a, T> DoubleEndedIterator<&'a mut T> for IterMut<'a, T> {
+impl<'a, T> DoubleEndedIterator for IterMut<'a, T> {
     fn next_back(&mut self) -> Option<&'a mut T> { self.0.next_back() }
 }
-impl<'a, T> ExactSizeIterator<&'a mut T> for IterMut<'a, T> {}
+impl<'a, T> ExactSizeIterator for IterMut<'a, T> {}
 
-impl<T> Iterator<T> for IntoIter<T> {
+impl<T> Iterator for IntoIter<T> {
+    type Item = T;
     fn next(&mut self) -> Option<T> { self.0.next() }
     fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
 }
-impl<T> DoubleEndedIterator<T> for IntoIter<T> {
+impl<T> DoubleEndedIterator for IntoIter<T> {
     fn next_back(&mut self) -> Option<T> { self.0.next_back() }
 }
-impl<T> ExactSizeIterator<T> for IntoIter<T> {}
+impl<T> ExactSizeIterator for IntoIter<T> {}
 
 
 pub struct Trav<'a, T: 'a> {
@@ -420,7 +424,7 @@ impl<T> Traversal<T> for IntoTrav<T> {
 
 
 impl<A> iter::FromIterator<A> for BList<A> {
-    fn from_iter<T: Iterator<A>>(iterator: T) -> BList<A> {
+    fn from_iter<T: Iterator<Item=A>>(iterator: T) -> BList<A> {
         let mut ret = BList::new();
         ret.extend(iterator);
         ret
@@ -428,7 +432,7 @@ impl<A> iter::FromIterator<A> for BList<A> {
 }
 
 impl<A> Extend<A> for BList<A> {
-    fn extend<T: Iterator<A>>(&mut self, mut iterator: T) {
+    fn extend<T: Iterator<Item=A>>(&mut self, mut iterator: T) {
         for elt in iterator { self.push_back(elt); }
     }
 }

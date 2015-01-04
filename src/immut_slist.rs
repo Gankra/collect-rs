@@ -124,7 +124,8 @@ impl<T> Drop for ImmutSList<T> {
 }
 
 
-impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
     fn next(&mut self) -> Option<&'a T> {
         match self.head.take() {
             None => None,
@@ -142,7 +143,7 @@ impl<'a, T> Iterator<&'a T> for Iter<'a, T> {
 }
 
 impl<T> iter::FromIterator<T> for ImmutSList<T> {
-    fn from_iter<I: Iterator<T>>(mut iterator: I) -> ImmutSList<T> {
+    fn from_iter<I: Iterator<Item=T>>(mut iterator: I) -> ImmutSList<T> {
         let mut list = ImmutSList::new();
         for elem in iterator {
             list = list.append(elem);

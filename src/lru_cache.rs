@@ -331,7 +331,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
 }
 
 impl<K: Hash + Eq, V> Extend<(K, V)> for LruCache<K, V> {
-    fn extend<T: Iterator<(K, V)>>(&mut self, mut iter: T) {
+    fn extend<T: Iterator<Item=(K, V)>>(&mut self, mut iter: T) {
         for (k, v) in iter{
             self.insert(k, v);
         }
