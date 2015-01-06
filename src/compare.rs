@@ -345,6 +345,30 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for 
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
         self.0.compare(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
     }
+
+    fn compares_lt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.compares_lt(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+    }
+
+    fn compares_le(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.compares_le(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+    }
+
+    fn compares_ge(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.compares_ge(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+    }
+
+    fn compares_gt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.compares_gt(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+    }
+
+    fn compares_eq(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.compares_eq(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+    }
+
+    fn compares_ne(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
+        self.0.compares_ne(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+    }
 }
 
 /// A comparator that extracts a sort key from a value.
