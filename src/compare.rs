@@ -229,6 +229,14 @@ impl<F: ?Sized, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for F
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering { (*self)(lhs, rhs) }
 }
 
+impl<'a, Lhs: ?Sized, Rhs: ?Sized, C: ?Sized> Compare<Lhs, Rhs> for &'a C
+    where C: Compare<Lhs, Rhs> {
+
+    fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
+        Compare::compare(*self, lhs, rhs)
+    }
+}
+
 /// An extension trait with methods applicable to all comparators.
 pub trait CompareExt<Lhs: ?Sized, Rhs: ?Sized = Lhs> : Compare<Lhs, Rhs> + Sized {
     /// Borrows the comparator's parameters before comparing them.
