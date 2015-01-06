@@ -62,7 +62,7 @@ impl<W:hash::Writer,E:CLike> hash::Hash<W> for EnumSet<E> {
 /// # use collect::enum_set::CLike;
 /// use std::mem;
 ///
-/// #[deriving(Copy)]
+/// #[derive(Copy)]
 /// #[repr(u32)]
 /// enum Foo {
 ///     A, B, C
