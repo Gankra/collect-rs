@@ -129,6 +129,7 @@
 use std::borrow::BorrowFrom;
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
+use std::fmt;
 
 /// Returns the maximum of two values according to the given comparator, or `lhs` if they
 /// are equal.
@@ -335,7 +336,7 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized> CompareExt<Lhs, Rhs> for C where C: Compare<Lh
 /// A comparator that borrows its parameters before comparing them.
 ///
 /// See [`CompareExt::borrow`](trait.CompareExt.html#method.borrow) for an example.
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Show)]
 pub struct Borrow<C>(C);
 
 #[old_impl_check]
@@ -385,7 +386,7 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for 
 /// let cmp = Extract::new(|vec: &Vec<u8>| vec.len(), Natural);
 /// assert_eq!(cmp.compare(&a, &b), Greater);
 /// ```
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Show)]
 pub struct Extract<E, C> {
     ext: E,
     cmp: C,
@@ -437,7 +438,7 @@ impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C>
 /// (https://en.wikipedia.org/wiki/Lexicographical_order) combines two others.
 ///
 /// See [`CompareExt::then`](trait.CompareExt.html#method.then) for an example.
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Show)]
 pub struct Lexicographic<C, D>(C, D);
 
 impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Lexicographic<C, D>
@@ -512,10 +513,16 @@ impl<T: Ord + ?Sized> PartialEq for Natural<T> {
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<T: Ord + ?Sized> Eq for Natural<T> {}
 
+// FIXME: replace with `derive(Show)` once
+// https://github.com/rust-lang/rust/issues/19839 is fixed
+impl<T: Ord + ?Sized> fmt::Show for Natural<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result { write!(f, "Natural") }
+}
+
 /// A comparator that reverses the ordering of another.
 ///
 /// See [`CompareExt::rev`](trait.CompareExt.html#method.rev) for an example.
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Show)]
 pub struct Rev<C>(C);
 
 impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Rev<C> where C: Compare<Lhs, Rhs> {
@@ -542,7 +549,7 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Rev<C> where C: Compare<
 /// expects `C: Compare<U, T>`.
 ///
 /// See [`CompareExt::swap`](trait.CompareExt.html#method.swap) for an example.
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Show)]
 pub struct Swap<C>(C);
 
 impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Rhs, Lhs> for Swap<C>
