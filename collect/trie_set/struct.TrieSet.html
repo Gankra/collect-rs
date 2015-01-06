@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>trie_set</a>::<wbr><a class='struct' href=''>TrieSet</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-10568' href='../../src/collect/trie/set.rs.html#55-57'>[src]</a></span></h1>
+        </span><a id='src-10560' href='../../src/collect/trie/set.rs.html#55-57'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct TrieSet {
     // some fields omitted
 }</pre><div class='docblock'><p>A set implemented as a radix trie.</p>
@@ -83,7 +83,7 @@
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieSet</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>set</span> <span class='op'>=</span> <span class='ident'>TrieSet</span>::<span class='ident'>new</span>();
 </pre>
-</div><h4 id='method.each_reverse' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.each_reverse' class='fnname'>each_reverse</a>(&amp;self, f: |&amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>| -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.each_reverse' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.each_reverse' class='fnname'>each_reverse</a>&lt;F&gt;(&amp;self, f: F) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code></h4>
 <div class='docblock'><p>Visits all values in reverse order. Aborts traversal when <code>f</code> returns <code>false</code>.
 Returns <code>true</code> if <code>f</code> returns <code>true</code> for all elements.</p>
 
@@ -361,7 +361,7 @@ present in the set.</p>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieSet</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>set</span> <span class='op'>=</span> <span class='ident'>TrieSet</span>::<span class='ident'>new</span>();
 </pre>
-</div><h4 id='method.each_reverse' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.each_reverse' class='fnname'>each_reverse</a>(&amp;self, f: |&amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>| -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.each_reverse' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.each_reverse' class='fnname'>each_reverse</a>&lt;F&gt;(&amp;self, f: F) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code></h4>
 <div class='docblock'><p>Visits all values in reverse order. Aborts traversal when <code>f</code> returns <code>false</code>.
 Returns <code>true</code> if <code>f</code> returns <code>true</code> for all elements.</p>
 

@@ -1997,6 +1997,10 @@
 <span id='1955'>1955</span>
 <span id='1956'>1956</span>
 <span id='1957'>1957</span>
+<span id='1958'>1958</span>
+<span id='1959'>1959</span>
+<span id='1960'>1960</span>
+<span id='1961'>1961</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -2187,8 +2191,9 @@
     <span class='doccomment'>/// assert_eq!(vec, vec![&quot;c&quot;, &quot;b&quot;]);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>each_reverse</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>f</span>: <span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>|</span> <span class='op'>-&gt;</span> <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>each_reverse</span>(<span class='ident'>f</span>)
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>each_reverse</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>each_reverse</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>f</span>)
     }
 
     <span class='doccomment'>/// Gets an iterator visiting all keys in ascending order by the keys.</span>
@@ -2712,10 +2717,11 @@
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>InternalNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>each_reverse</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>f</span>: <span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>|</span> <span class='op'>-&gt;</span> <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='kw'>fn</span> <span class='ident'>each_reverse</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>for</span> <span class='ident'>elt</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>children</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>() {
             <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>elt</span> {
-                <span class='ident'>Internal</span>(<span class='kw-2'>ref</span> <span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>x</span>.<span class='ident'>each_reverse</span>(<span class='op'>|</span><span class='ident'>i</span>,<span class='ident'>t</span><span class='op'>|</span> <span class='ident'>f</span>(<span class='ident'>i</span>,<span class='ident'>t</span>)) { <span class='kw'>return</span> <span class='boolval'>false</span> },
+                <span class='ident'>Internal</span>(<span class='kw-2'>ref</span> <span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>x</span>.<span class='ident'>each_reverse</span>(<span class='ident'>f</span>) { <span class='kw'>return</span> <span class='boolval'>false</span> },
                 <span class='ident'>External</span>(<span class='ident'>k</span>, <span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>f</span>(<span class='kw-2'>&amp;</span><span class='ident'>k</span>, <span class='ident'>v</span>) { <span class='kw'>return</span> <span class='boolval'>false</span> },
                 <span class='ident'>Nothing</span> <span class='op'>=&gt;</span> ()
             }
@@ -3313,19 +3319,21 @@
     <span class='kw'>fn</span> <span class='ident'>test_each_reverse</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>6</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>6u</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='number'>8</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>4</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>2</span>).<span class='ident'>is_none</span>());
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='number'>4</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
         <span class='ident'>m</span>.<span class='ident'>each_reverse</span>(<span class='op'>|</span><span class='ident'>k</span>, <span class='ident'>v</span><span class='op'>|</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>k</span>, <span class='ident'>n</span>);
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>v</span>, <span class='ident'>n</span> <span class='op'>*</span> <span class='number'>2</span>);
+            <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>v</span>);
             <span class='ident'>n</span> <span class='op'>-=</span> <span class='number'>1</span>;
             <span class='boolval'>true</span>
         });
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>, [<span class='kw-2'>&amp;</span><span class='number'>8</span>, <span class='kw-2'>&amp;</span><span class='number'>6</span>, <span class='kw-2'>&amp;</span><span class='number'>4</span>, <span class='kw-2'>&amp;</span><span class='number'>2</span>, <span class='kw-2'>&amp;</span><span class='number'>0</span>]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
