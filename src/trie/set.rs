@@ -109,7 +109,7 @@ impl TrieSet {
     /// assert_eq!(vec, vec![5, 4, 3]);
     /// ```
     #[inline]
-    pub fn each_reverse(&self, f: |&uint| -> bool) -> bool {
+    pub fn each_reverse<F>(&self, mut f: F) -> bool where F: FnMut(&uint) -> bool {
         self.map.each_reverse(|k, _| f(k))
     }
 

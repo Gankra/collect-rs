@@ -187,8 +187,9 @@ impl<T> TrieMap<T> {
     /// assert_eq!(vec, vec!["c", "b"]);
     /// ```
     #[inline]
-    pub fn each_reverse<'a>(&'a self, f: |&uint, &'a T| -> bool) -> bool {
-        self.root.each_reverse(f)
+    pub fn each_reverse<'a, F>(&'a self, mut f: F) -> bool
+        where F: FnMut(&uint, &'a T) -> bool {
+        self.root.each_reverse(&mut f)
     }
 
     /// Gets an iterator visiting all keys in ascending order by the keys.
@@ -712,10 +713,11 @@ impl<T> InternalNode<T> {
 }
 
 impl<T> InternalNode<T> {
-    fn each_reverse<'a>(&'a self, f: |&uint, &'a T| -> bool) -> bool {
+    fn each_reverse<'a, F>(&'a self, f: &mut F) -> bool
+        where F: FnMut(&uint, &'a T) -> bool {
         for elt in self.children.iter().rev() {
             match *elt {
-                Internal(ref x) => if !x.each_reverse(|i,t| f(i,t)) { return false },
+                Internal(ref x) => if !x.each_reverse(f) { return false },
                 External(k, ref v) => if !f(&k, v) { return false },
                 Nothing => ()
             }
@@ -1313,19 +1315,21 @@ mod test {
     fn test_each_reverse() {
         let mut m = TrieMap::new();
 
-        assert!(m.insert(3, 6).is_none());
+        assert!(m.insert(3, 6u).is_none());
         assert!(m.insert(0, 0).is_none());
         assert!(m.insert(4, 8).is_none());
         assert!(m.insert(2, 4).is_none());
         assert!(m.insert(1, 2).is_none());
 
         let mut n = 4;
+        let mut vec = vec![];
         m.each_reverse(|k, v| {
             assert_eq!(*k, n);
-            assert_eq!(*v, n * 2);
+            vec.push(v);
             n -= 1;
             true
         });
+        assert_eq!(vec, [&8, &6, &4, &2, &0]);
     }
 
     #[test]
