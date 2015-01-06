@@ -2107,9 +2107,9 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let mut map = TreeMap::new();</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// map.insert(2i, &quot;bar&quot;);</span>
-<span class='doccomment'>/// map.insert(1i, &quot;foo&quot;);</span>
-<span class='doccomment'>/// map.insert(3i, &quot;quux&quot;);</span>
+<span class='doccomment'>/// map.insert(2, &quot;bar&quot;);</span>
+<span class='doccomment'>/// map.insert(1, &quot;foo&quot;);</span>
+<span class='doccomment'>/// map.insert(3, &quot;quux&quot;);</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// // In ascending order by keys</span>
 <span class='doccomment'>/// for (key, value) in map.iter() {</span>
@@ -2171,7 +2171,7 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// // Print the trolls, ordered by level with smallest level first</span>
 <span class='doccomment'>/// for (troll, heroes) in trolls.iter() {</span>
-<span class='doccomment'>///     let what = if heroes.len() == 1u { &quot;hero&quot; }</span>
+<span class='doccomment'>///     let what = if heroes.len() == 1 { &quot;hero&quot; }</span>
 <span class='doccomment'>///                else { &quot;heroes&quot; };</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>///     println!(&quot;level {}: &#39;{}&#39; has slain {} {}&quot;,</span>
@@ -2291,9 +2291,9 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1i);</span>
-    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3i);</span>
-    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2i);</span>
+    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1);</span>
+    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3);</span>
+    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Print &quot;a&quot;, &quot;b&quot;, &quot;c&quot; in order.</span>
     <span class='doccomment'>/// for x in map.keys() {</span>
@@ -2316,9 +2316,9 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1i);</span>
-    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3i);</span>
-    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2i);</span>
+    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1);</span>
+    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3);</span>
+    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Print 1, 2, 3 ordered by keys.</span>
     <span class='doccomment'>/// for x in map.values() {</span>
@@ -2340,9 +2340,9 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1i);</span>
-    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3i);</span>
-    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2i);</span>
+    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1);</span>
+    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3);</span>
+    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Print contents in ascending order</span>
     <span class='doccomment'>/// for (key, value) in map.iter() {</span>
@@ -2366,9 +2366,9 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1i);</span>
-    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3i);</span>
-    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2i);</span>
+    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1);</span>
+    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3);</span>
+    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Print contents in descending order</span>
     <span class='doccomment'>/// for (key, value) in map.rev_iter() {</span>
@@ -2387,9 +2387,9 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1i);</span>
-    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3i);</span>
-    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2i);</span>
+    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1);</span>
+    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3);</span>
+    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Add 10 until we find &quot;b&quot;</span>
     <span class='doccomment'>/// for (key, value) in map.iter_mut() {</span>
@@ -2419,9 +2419,9 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1i);</span>
-    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3i);</span>
-    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2i);</span>
+    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1);</span>
+    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3);</span>
+    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Add 10 until we find &quot;b&quot;</span>
     <span class='doccomment'>/// for (key, value) in map.rev_iter_mut() {</span>
@@ -2444,9 +2444,9 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1i);</span>
-    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3i);</span>
-    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2i);</span>
+    <span class='doccomment'>/// map.insert(&quot;a&quot;, 1);</span>
+    <span class='doccomment'>/// map.insert(&quot;c&quot;, 3);</span>
+    <span class='doccomment'>/// map.insert(&quot;b&quot;, 2);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Not possible with a regular `.iter()`</span>
     <span class='doccomment'>/// let vec: Vec&lt;(&amp;str, int)&gt; = map.into_iter().collect();</span>
@@ -2474,7 +2474,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut a = TreeMap::new();</span>
     <span class='doccomment'>/// assert_eq!(a.len(), 0);</span>
-    <span class='doccomment'>/// a.insert(1u, &quot;a&quot;);</span>
+    <span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// assert_eq!(a.len(), 1);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
@@ -2489,7 +2489,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut a = TreeMap::new();</span>
     <span class='doccomment'>/// assert!(a.is_empty());</span>
-    <span class='doccomment'>/// a.insert(1u, &quot;a&quot;);</span>
+    <span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// assert!(!a.is_empty());</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
@@ -2504,7 +2504,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut a = TreeMap::new();</span>
-    <span class='doccomment'>/// a.insert(1u, &quot;a&quot;);</span>
+    <span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// a.clear();</span>
     <span class='doccomment'>/// assert!(a.is_empty());</span>
     <span class='doccomment'>/// ```</span>
@@ -2531,7 +2531,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(1u, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;1), Some(&amp;&quot;a&quot;));</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;2), None);</span>
     <span class='doccomment'>/// ```</span>
@@ -2560,7 +2560,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(1u, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// assert_eq!(map.contains_key(&amp;1), true);</span>
     <span class='doccomment'>/// assert_eq!(map.contains_key(&amp;2), false);</span>
     <span class='doccomment'>/// ```</span>
@@ -2589,7 +2589,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(1u, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// match map.get_mut(&amp;1) {</span>
     <span class='doccomment'>///     Some(x) =&gt; *x = &quot;b&quot;,</span>
     <span class='doccomment'>///     None =&gt; (),</span>
@@ -2625,7 +2625,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// assert_eq!(map.insert(37u, &quot;a&quot;), None);</span>
+    <span class='doccomment'>/// assert_eq!(map.insert(37, &quot;a&quot;), None);</span>
     <span class='doccomment'>/// assert_eq!(map.is_empty(), false);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// map.insert(37, &quot;b&quot;);</span>
@@ -2657,7 +2657,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(1u, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// assert_eq!(map.remove(&amp;1), Some(&quot;a&quot;));</span>
     <span class='doccomment'>/// assert_eq!(map.remove(&amp;1), None);</span>
     <span class='doccomment'>/// ```</span>
@@ -2783,7 +2783,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(2i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(2, &quot;a&quot;);</span>
     <span class='doccomment'>/// map.insert(4, &quot;b&quot;);</span>
     <span class='doccomment'>/// map.insert(6, &quot;c&quot;);</span>
     <span class='doccomment'>/// map.insert(8, &quot;d&quot;);</span>
@@ -2805,7 +2805,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(2i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(2, &quot;a&quot;);</span>
     <span class='doccomment'>/// map.insert(4, &quot;b&quot;);</span>
     <span class='doccomment'>/// map.insert(6, &quot;c&quot;);</span>
     <span class='doccomment'>/// map.insert(8, &quot;d&quot;);</span>
@@ -2841,7 +2841,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(2i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(2, &quot;a&quot;);</span>
     <span class='doccomment'>/// map.insert(4, &quot;b&quot;);</span>
     <span class='doccomment'>/// map.insert(6, &quot;c&quot;);</span>
     <span class='doccomment'>/// map.insert(8, &quot;d&quot;);</span>
@@ -2875,7 +2875,7 @@
     <span class='doccomment'>/// use collect::TreeMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = TreeMap::new();</span>
-    <span class='doccomment'>/// map.insert(2i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(2, &quot;a&quot;);</span>
     <span class='doccomment'>/// map.insert(4, &quot;b&quot;);</span>
     <span class='doccomment'>/// map.insert(6, &quot;c&quot;);</span>
     <span class='doccomment'>/// map.insert(8, &quot;d&quot;);</span>

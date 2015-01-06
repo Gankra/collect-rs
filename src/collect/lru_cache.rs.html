@@ -662,7 +662,7 @@
     <span class='doccomment'>/// use collect::LruCache;</span>
     <span class='doccomment'>/// let mut cache = LruCache::new(2);</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// cache.insert(1i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// cache.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// cache.insert(2, &quot;b&quot;);</span>
     <span class='doccomment'>/// assert_eq!(cache.get(&amp;1), Some(&amp;&quot;a&quot;));</span>
     <span class='doccomment'>/// assert_eq!(cache.get(&amp;2), Some(&amp;&quot;b&quot;));</span>
@@ -707,7 +707,7 @@
     <span class='doccomment'>/// use collect::LruCache;</span>
     <span class='doccomment'>/// let mut cache = LruCache::new(2);</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// cache.insert(1i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// cache.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// cache.insert(2, &quot;b&quot;);</span>
     <span class='doccomment'>/// cache.insert(2, &quot;c&quot;);</span>
     <span class='doccomment'>/// cache.insert(3, &quot;d&quot;);</span>
@@ -748,7 +748,7 @@
     <span class='doccomment'>/// use collect::LruCache;</span>
     <span class='doccomment'>/// let mut cache = LruCache::new(2);</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// cache.insert(2i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// cache.insert(2, &quot;a&quot;);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// assert_eq!(cache.remove(&amp;1), None);</span>
     <span class='doccomment'>/// assert_eq!(cache.remove(&amp;2), Some(&quot;a&quot;));</span>
@@ -794,7 +794,7 @@
     <span class='doccomment'>/// use collect::LruCache;</span>
     <span class='doccomment'>/// let mut cache = LruCache::new(2);</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// cache.insert(1i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// cache.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// cache.insert(2, &quot;b&quot;);</span>
     <span class='doccomment'>/// cache.insert(3, &quot;c&quot;);</span>
     <span class='doccomment'>///</span>
@@ -803,7 +803,7 @@
     <span class='doccomment'>/// assert_eq!(cache.get(&amp;3), Some(&amp;&quot;c&quot;));</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// cache.set_capacity(3);</span>
-    <span class='doccomment'>/// cache.insert(1i, &quot;a&quot;);</span>
+    <span class='doccomment'>/// cache.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// cache.insert(2, &quot;b&quot;);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// assert_eq!(cache.get(&amp;1), Some(&amp;&quot;a&quot;));</span>

@@ -85,7 +85,7 @@ according to the natural order of its elements.</p>
                            href="#examples">Examples</a></h1><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>IntervalHeap</span>;
 
-<span class='kw'>let</span> <span class='ident'>heap</span> <span class='op'>=</span> <span class='ident'>IntervalHeap</span>::<span class='ident'>from_vec</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>5u32</span>, <span class='number'>1</span>, <span class='number'>6</span>, <span class='number'>4</span>]);
+<span class='kw'>let</span> <span class='ident'>heap</span> <span class='op'>=</span> <span class='ident'>IntervalHeap</span>::<span class='ident'>from_vec</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>5</span>, <span class='number'>1</span>, <span class='number'>6</span>, <span class='number'>4</span>]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>heap</span>.<span class='ident'>len</span>(), <span class='number'>4</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>heap</span>.<span class='ident'>get_min_max</span>(), <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='number'>1</span>, <span class='kw-2'>&amp;</span><span class='number'>6</span>)));
 </pre>

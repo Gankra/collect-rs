@@ -61,8 +61,8 @@ to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/tr
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
-<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1u8</span>;
-<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2u8</span>;
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1</span>;
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2</span>;
 
 <span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>;
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='ident'>a</span>, <span class='ident'>b</span>), <span class='ident'>Less</span>);
@@ -74,8 +74,8 @@ to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/tr
 <pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
 
-<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1u8</span>;
-<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2u8</span>;
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1</span>;
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2</span>;
 
 <span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>;
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_lt</span>(<span class='ident'>a</span>, <span class='ident'>b</span>));
@@ -95,7 +95,7 @@ example, all comparators can be <a href="trait.CompareExt.html#method.rev">rever
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::<span class='ident'>Greater</span>;
 
 <span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>.<span class='ident'>rev</span>();
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='number'>1u8</span>, <span class='kw-2'>&amp;</span><span class='number'>2u8</span>), <span class='ident'>Greater</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>, <span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='ident'>Greater</span>);
 </pre>
 
 <p>It is possible to implement a comparator that is not based on the natural ordering of

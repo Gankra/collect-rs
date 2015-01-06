@@ -1288,9 +1288,9 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let mut set = TreeSet::new();</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// set.insert(2i);</span>
-<span class='doccomment'>/// set.insert(1i);</span>
-<span class='doccomment'>/// set.insert(3i);</span>
+<span class='doccomment'>/// set.insert(2);</span>
+<span class='doccomment'>/// set.insert(1);</span>
+<span class='doccomment'>/// set.insert(3);</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// for i in set.iter() {</span>
 <span class='doccomment'>///    println!(&quot;{}&quot;, i) // prints 1, then 2, then 3</span>
@@ -1408,7 +1408,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeSet;</span>
-    <span class='doccomment'>/// let set: TreeSet&lt;int&gt; = [1i, 4, 3, 5, 2].iter().map(|&amp;x| x).collect();</span>
+    <span class='doccomment'>/// let set: TreeSet&lt;int&gt; = [1, 4, 3, 5, 2].iter().map(|&amp;x| x).collect();</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Will print in ascending order.</span>
     <span class='doccomment'>/// for x in set.iter() {</span>
@@ -1427,7 +1427,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeSet;</span>
-    <span class='doccomment'>/// let set: TreeSet&lt;int&gt; = [1i, 4, 3, 5, 2].iter().map(|&amp;x| x).collect();</span>
+    <span class='doccomment'>/// let set: TreeSet&lt;int&gt; = [1, 4, 3, 5, 2].iter().map(|&amp;x| x).collect();</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Will print in descending order.</span>
     <span class='doccomment'>/// for x in set.rev_iter() {</span>
@@ -1446,7 +1446,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeSet;</span>
-    <span class='doccomment'>/// let set: TreeSet&lt;int&gt; = [1i, 4, 3, 5, 2].iter().map(|&amp;x| x).collect();</span>
+    <span class='doccomment'>/// let set: TreeSet&lt;int&gt; = [1, 4, 3, 5, 2].iter().map(|&amp;x| x).collect();</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // Not possible with a regular `.iter()`</span>
     <span class='doccomment'>/// let v: Vec&lt;int&gt; = set.into_iter().collect();</span>
@@ -1631,7 +1631,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut v = TreeSet::new();</span>
     <span class='doccomment'>/// assert_eq!(v.len(), 0);</span>
-    <span class='doccomment'>/// v.insert(1i);</span>
+    <span class='doccomment'>/// v.insert(1);</span>
     <span class='doccomment'>/// assert_eq!(v.len(), 1);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -1647,7 +1647,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut v = TreeSet::new();</span>
     <span class='doccomment'>/// assert!(v.is_empty());</span>
-    <span class='doccomment'>/// v.insert(1i);</span>
+    <span class='doccomment'>/// v.insert(1);</span>
     <span class='doccomment'>/// assert!(!v.is_empty());</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
@@ -1661,7 +1661,7 @@
     <span class='doccomment'>/// use collect::TreeSet;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut v = TreeSet::new();</span>
-    <span class='doccomment'>/// v.insert(1i);</span>
+    <span class='doccomment'>/// v.insert(1);</span>
     <span class='doccomment'>/// v.clear();</span>
     <span class='doccomment'>/// assert!(v.is_empty());</span>
     <span class='doccomment'>/// ```</span>
@@ -1680,7 +1680,7 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeSet;</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let set: TreeSet&lt;int&gt; = [1i, 2, 3].iter().map(|&amp;x| x).collect();</span>
+    <span class='doccomment'>/// let set: TreeSet&lt;int&gt; = [1, 2, 3].iter().map(|&amp;x| x).collect();</span>
     <span class='doccomment'>/// assert_eq!(set.contains(&amp;1), true);</span>
     <span class='doccomment'>/// assert_eq!(set.contains(&amp;4), false);</span>
     <span class='doccomment'>/// ```</span>
@@ -1700,7 +1700,7 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeSet;</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let a: TreeSet&lt;int&gt; = [1i, 2, 3].iter().map(|&amp;x| x).collect();</span>
+    <span class='doccomment'>/// let a: TreeSet&lt;int&gt; = [1, 2, 3].iter().map(|&amp;x| x).collect();</span>
     <span class='doccomment'>/// let mut b: TreeSet&lt;int&gt; = TreeSet::new();</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// assert_eq!(a.is_disjoint(&amp;b), true);</span>
@@ -1721,7 +1721,7 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeSet;</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let sup: TreeSet&lt;int&gt; = [1i, 2, 3].iter().map(|&amp;x| x).collect();</span>
+    <span class='doccomment'>/// let sup: TreeSet&lt;int&gt; = [1, 2, 3].iter().map(|&amp;x| x).collect();</span>
     <span class='doccomment'>/// let mut set: TreeSet&lt;int&gt; = TreeSet::new();</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// assert_eq!(set.is_subset(&amp;sup), true);</span>
@@ -1763,7 +1763,7 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TreeSet;</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let sub: TreeSet&lt;int&gt; = [1i, 2].iter().map(|&amp;x| x).collect();</span>
+    <span class='doccomment'>/// let sub: TreeSet&lt;int&gt; = [1, 2].iter().map(|&amp;x| x).collect();</span>
     <span class='doccomment'>/// let mut set: TreeSet&lt;int&gt; = TreeSet::new();</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// assert_eq!(set.is_superset(&amp;sub), false);</span>
@@ -1790,8 +1790,8 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut set = TreeSet::new();</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(set.insert(2i), true);</span>
-    <span class='doccomment'>/// assert_eq!(set.insert(2i), false);</span>
+    <span class='doccomment'>/// assert_eq!(set.insert(2), true);</span>
+    <span class='doccomment'>/// assert_eq!(set.insert(2), false);</span>
     <span class='doccomment'>/// assert_eq!(set.len(), 1);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -1812,7 +1812,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut set = TreeSet::new();</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// set.insert(2i);</span>
+    <span class='doccomment'>/// set.insert(2);</span>
     <span class='doccomment'>/// assert_eq!(set.remove(&amp;2), true);</span>
     <span class='doccomment'>/// assert_eq!(set.remove(&amp;2), false);</span>
     <span class='doccomment'>/// ```</span>
