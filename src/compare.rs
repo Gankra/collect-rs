@@ -16,8 +16,8 @@
 //! use collect::compare::{Compare, Natural};
 //! use std::cmp::Ordering::{Less, Equal, Greater};
 //!
-//! let a = &1u8;
-//! let b = &2u8;
+//! let a = &1;
+//! let b = &2;
 //!
 //! let cmp = Natural;
 //! assert_eq!(cmp.compare(a, b), Less);
@@ -30,8 +30,8 @@
 //! ```rust
 //! use collect::compare::{Compare, Natural};
 //!
-//! let a = &1u8;
-//! let b = &2u8;
+//! let a = &1;
+//! let b = &2;
 //!
 //! let cmp = Natural;
 //! assert!(cmp.compares_lt(a, b));
@@ -52,7 +52,7 @@
 //! use std::cmp::Ordering::Greater;
 //!
 //! let cmp = Natural.rev();
-//! assert_eq!(cmp.compare(&1u8, &2u8), Greater);
+//! assert_eq!(cmp.compare(&1, &2), Greater);
 //! ```
 //!
 //! It is possible to implement a comparator that is not based on the natural ordering of
@@ -260,8 +260,8 @@ pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> + Sized {
     /// use collect::compare::{Compare, CompareExt, Natural};
     /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///
-    /// let a = &1u8;
-    /// let b = &2u8;
+    /// let a = &1;
+    /// let b = &2;
     ///
     /// let cmp = Natural.rev();
     /// assert_eq!(cmp.compare(a, b), Greater);
@@ -424,8 +424,8 @@ impl<C, D, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for Lexicographic<C, D>
 /// use collect::compare::{Compare, Natural};
 /// use std::cmp::Ordering::{Less, Equal, Greater};
 ///
-/// let a = &1u8;
-/// let b = &2u8;
+/// let a = &1;
+/// let b = &2;
 ///
 /// let cmp = Natural;
 /// assert_eq!(cmp.compare(a, b), Less);
@@ -450,29 +450,29 @@ impl<Sized? T: Ord> Compare<T> for Natural<T> {
     fn compares_ne(&self, lhs: &T, rhs: &T) -> bool { PartialEq::ne(lhs, rhs) }
 }
 
-// FIXME: replace with `deriving(Clone)` once
+// FIXME: replace with `derive(Clone)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<Sized? T: Ord> Clone for Natural<T> {
     fn clone(&self) -> Natural<T> { *self }
 }
 
-// FIXME: replace with `deriving(Copy)` once
+// FIXME: replace with `derive(Copy)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<Sized? T: Ord> Copy for Natural<T> {}
 
-// FIXME: replace with `deriving(Default)` once
+// FIXME: replace with `derive(Default)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<Sized? T: Ord> Default for Natural<T> {
     fn default() -> Natural<T> { Natural }
 }
 
-// FIXME: replace with `deriving(PartialEq)` once
+// FIXME: replace with `derive(PartialEq)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<Sized? T: Ord> PartialEq for Natural<T> {
     fn eq(&self, _other: &Natural<T>) -> bool { true }
 }
 
-// FIXME: replace with `deriving(Eq)` once
+// FIXME: replace with `derive(Eq)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<Sized? T: Ord> Eq for Natural<T> {}
 

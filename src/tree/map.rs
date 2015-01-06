@@ -35,9 +35,9 @@ use compare::{Compare, Natural};
 ///
 /// let mut map = TreeMap::new();
 ///
-/// map.insert(2i, "bar");
-/// map.insert(1i, "foo");
-/// map.insert(3i, "quux");
+/// map.insert(2, "bar");
+/// map.insert(1, "foo");
+/// map.insert(3, "quux");
 ///
 /// // In ascending order by keys
 /// for (key, value) in map.iter() {
@@ -99,7 +99,7 @@ use compare::{Compare, Natural};
 ///
 /// // Print the trolls, ordered by level with smallest level first
 /// for (troll, heroes) in trolls.iter() {
-///     let what = if heroes.len() == 1u { "hero" }
+///     let what = if heroes.len() == 1 { "hero" }
 ///                else { "heroes" };
 ///
 ///     println!("level {}: '{}' has slain {} {}",
@@ -219,9 +219,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
-    /// map.insert("a", 1i);
-    /// map.insert("c", 3i);
-    /// map.insert("b", 2i);
+    /// map.insert("a", 1);
+    /// map.insert("c", 3);
+    /// map.insert("b", 2);
     ///
     /// // Print "a", "b", "c" in order.
     /// for x in map.keys() {
@@ -244,9 +244,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
-    /// map.insert("a", 1i);
-    /// map.insert("c", 3i);
-    /// map.insert("b", 2i);
+    /// map.insert("a", 1);
+    /// map.insert("c", 3);
+    /// map.insert("b", 2);
     ///
     /// // Print 1, 2, 3 ordered by keys.
     /// for x in map.values() {
@@ -268,9 +268,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
-    /// map.insert("a", 1i);
-    /// map.insert("c", 3i);
-    /// map.insert("b", 2i);
+    /// map.insert("a", 1);
+    /// map.insert("c", 3);
+    /// map.insert("b", 2);
     ///
     /// // Print contents in ascending order
     /// for (key, value) in map.iter() {
@@ -294,9 +294,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
-    /// map.insert("a", 1i);
-    /// map.insert("c", 3i);
-    /// map.insert("b", 2i);
+    /// map.insert("a", 1);
+    /// map.insert("c", 3);
+    /// map.insert("b", 2);
     ///
     /// // Print contents in descending order
     /// for (key, value) in map.rev_iter() {
@@ -315,9 +315,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
-    /// map.insert("a", 1i);
-    /// map.insert("c", 3i);
-    /// map.insert("b", 2i);
+    /// map.insert("a", 1);
+    /// map.insert("c", 3);
+    /// map.insert("b", 2);
     ///
     /// // Add 10 until we find "b"
     /// for (key, value) in map.iter_mut() {
@@ -347,9 +347,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
-    /// map.insert("a", 1i);
-    /// map.insert("c", 3i);
-    /// map.insert("b", 2i);
+    /// map.insert("a", 1);
+    /// map.insert("c", 3);
+    /// map.insert("b", 2);
     ///
     /// // Add 10 until we find "b"
     /// for (key, value) in map.rev_iter_mut() {
@@ -372,9 +372,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::TreeMap;
     /// let mut map = TreeMap::new();
-    /// map.insert("a", 1i);
-    /// map.insert("c", 3i);
-    /// map.insert("b", 2i);
+    /// map.insert("a", 1);
+    /// map.insert("c", 3);
+    /// map.insert("b", 2);
     ///
     /// // Not possible with a regular `.iter()`
     /// let vec: Vec<(&str, int)> = map.into_iter().collect();
@@ -402,7 +402,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     ///
     /// let mut a = TreeMap::new();
     /// assert_eq!(a.len(), 0);
-    /// a.insert(1u, "a");
+    /// a.insert(1, "a");
     /// assert_eq!(a.len(), 1);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -417,7 +417,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     ///
     /// let mut a = TreeMap::new();
     /// assert!(a.is_empty());
-    /// a.insert(1u, "a");
+    /// a.insert(1, "a");
     /// assert!(!a.is_empty());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -432,7 +432,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut a = TreeMap::new();
-    /// a.insert(1u, "a");
+    /// a.insert(1, "a");
     /// a.clear();
     /// assert!(a.is_empty());
     /// ```
@@ -459,7 +459,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// map.insert(1u, "a");
+    /// map.insert(1, "a");
     /// assert_eq!(map.get(&1), Some(&"a"));
     /// assert_eq!(map.get(&2), None);
     /// ```
@@ -488,7 +488,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// map.insert(1u, "a");
+    /// map.insert(1, "a");
     /// assert_eq!(map.contains_key(&1), true);
     /// assert_eq!(map.contains_key(&2), false);
     /// ```
@@ -517,7 +517,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// map.insert(1u, "a");
+    /// map.insert(1, "a");
     /// match map.get_mut(&1) {
     ///     Some(x) => *x = "b",
     ///     None => (),
@@ -553,7 +553,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// assert_eq!(map.insert(37u, "a"), None);
+    /// assert_eq!(map.insert(37, "a"), None);
     /// assert_eq!(map.is_empty(), false);
     ///
     /// map.insert(37, "b");
@@ -585,7 +585,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// map.insert(1u, "a");
+    /// map.insert(1, "a");
     /// assert_eq!(map.remove(&1), Some("a"));
     /// assert_eq!(map.remove(&1), None);
     /// ```
@@ -711,7 +711,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// map.insert(2i, "a");
+    /// map.insert(2, "a");
     /// map.insert(4, "b");
     /// map.insert(6, "c");
     /// map.insert(8, "d");
@@ -733,7 +733,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// map.insert(2i, "a");
+    /// map.insert(2, "a");
     /// map.insert(4, "b");
     /// map.insert(6, "c");
     /// map.insert(8, "d");
@@ -769,7 +769,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// map.insert(2i, "a");
+    /// map.insert(2, "a");
     /// map.insert(4, "b");
     /// map.insert(6, "c");
     /// map.insert(8, "d");
@@ -803,7 +803,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// use collect::TreeMap;
     ///
     /// let mut map = TreeMap::new();
-    /// map.insert(2i, "a");
+    /// map.insert(2, "a");
     /// map.insert(4, "b");
     /// map.insert(6, "c");
     /// map.insert(8, "d");

@@ -32,9 +32,9 @@ use tree_map::{self, TreeMap};
 ///
 /// let mut set = TreeSet::new();
 ///
-/// set.insert(2i);
-/// set.insert(1i);
-/// set.insert(3i);
+/// set.insert(2);
+/// set.insert(1);
+/// set.insert(3);
 ///
 /// for i in set.iter() {
 ///    println!("{}", i) // prints 1, then 2, then 3
@@ -152,7 +152,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let set: TreeSet<int> = [1i, 4, 3, 5, 2].iter().map(|&x| x).collect();
+    /// let set: TreeSet<int> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
     /// // Will print in ascending order.
     /// for x in set.iter() {
@@ -171,7 +171,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let set: TreeSet<int> = [1i, 4, 3, 5, 2].iter().map(|&x| x).collect();
+    /// let set: TreeSet<int> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
     /// // Will print in descending order.
     /// for x in set.rev_iter() {
@@ -190,7 +190,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let set: TreeSet<int> = [1i, 4, 3, 5, 2].iter().map(|&x| x).collect();
+    /// let set: TreeSet<int> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
     /// // Not possible with a regular `.iter()`
     /// let v: Vec<int> = set.into_iter().collect();
@@ -375,7 +375,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// let mut v = TreeSet::new();
     /// assert_eq!(v.len(), 0);
-    /// v.insert(1i);
+    /// v.insert(1);
     /// assert_eq!(v.len(), 1);
     /// ```
     #[inline]
@@ -391,7 +391,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// let mut v = TreeSet::new();
     /// assert!(v.is_empty());
-    /// v.insert(1i);
+    /// v.insert(1);
     /// assert!(!v.is_empty());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -405,7 +405,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// use collect::TreeSet;
     ///
     /// let mut v = TreeSet::new();
-    /// v.insert(1i);
+    /// v.insert(1);
     /// v.clear();
     /// assert!(v.is_empty());
     /// ```
@@ -424,7 +424,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let set: TreeSet<int> = [1i, 2, 3].iter().map(|&x| x).collect();
+    /// let set: TreeSet<int> = [1, 2, 3].iter().map(|&x| x).collect();
     /// assert_eq!(set.contains(&1), true);
     /// assert_eq!(set.contains(&4), false);
     /// ```
@@ -444,7 +444,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<int> = [1i, 2, 3].iter().map(|&x| x).collect();
+    /// let a: TreeSet<int> = [1, 2, 3].iter().map(|&x| x).collect();
     /// let mut b: TreeSet<int> = TreeSet::new();
     ///
     /// assert_eq!(a.is_disjoint(&b), true);
@@ -465,7 +465,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let sup: TreeSet<int> = [1i, 2, 3].iter().map(|&x| x).collect();
+    /// let sup: TreeSet<int> = [1, 2, 3].iter().map(|&x| x).collect();
     /// let mut set: TreeSet<int> = TreeSet::new();
     ///
     /// assert_eq!(set.is_subset(&sup), true);
@@ -507,7 +507,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let sub: TreeSet<int> = [1i, 2].iter().map(|&x| x).collect();
+    /// let sub: TreeSet<int> = [1, 2].iter().map(|&x| x).collect();
     /// let mut set: TreeSet<int> = TreeSet::new();
     ///
     /// assert_eq!(set.is_superset(&sub), false);
@@ -534,8 +534,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// let mut set = TreeSet::new();
     ///
-    /// assert_eq!(set.insert(2i), true);
-    /// assert_eq!(set.insert(2i), false);
+    /// assert_eq!(set.insert(2), true);
+    /// assert_eq!(set.insert(2), false);
     /// assert_eq!(set.len(), 1);
     /// ```
     #[inline]
@@ -556,7 +556,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// let mut set = TreeSet::new();
     ///
-    /// set.insert(2i);
+    /// set.insert(2);
     /// assert_eq!(set.remove(&2), true);
     /// assert_eq!(set.remove(&2), false);
     /// ```

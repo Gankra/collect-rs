@@ -187,7 +187,7 @@ impl<T: Ord> IntervalHeap<T> {
     /// ```rust
     /// use collect::IntervalHeap;
     ///
-    /// let heap = IntervalHeap::from_vec(vec![5u32, 1, 6, 4]);
+    /// let heap = IntervalHeap::from_vec(vec![5, 1, 6, 4]);
     /// assert_eq!(heap.len(), 4);
     /// assert_eq!(heap.get_min_max(), Some((&1, &6)));
     /// ```
