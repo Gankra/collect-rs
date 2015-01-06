@@ -10,7 +10,7 @@ pub trait StringJoiner {
   /// ```rust
   /// use collect::iter::StringJoiner;
   ///
-  /// let vec = vec![1u,2,3];
+  /// let vec = vec![1,2,3];
   /// assert_eq!(vec.iter().join(", ").as_slice(), "1, 2, 3");
   /// ```
   fn join(&mut self, sep: &str) -> String;

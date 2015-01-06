@@ -22,9 +22,9 @@
 //!
 //! let mut tree_set = TreeSet::new();
 //!
-//! tree_set.insert(2i);
-//! tree_set.insert(1i);
-//! tree_set.insert(3i);
+//! tree_set.insert(2);
+//! tree_set.insert(1);
+//! tree_set.insert(3);
 //!
 //! for i in tree_set.iter() {
 //!    println!("{}", i) // prints 1, then 2, then 3

@@ -478,7 +478,7 @@ impl<'a, 'b> ops::BitOr<&'b TrieSet> for &'a TrieSet {
     ///
     /// let set: TrieSet = &a | &b;
     /// let v: Vec<uint> = set.iter().collect();
-    /// assert_eq!(v, vec![1u, 2, 3, 4, 5]);
+    /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
     /// ```
     fn bitor(self, rhs: &TrieSet) -> TrieSet {
         self.union(rhs).collect()
@@ -501,7 +501,7 @@ impl<'a, 'b> ops::BitAnd<&'b TrieSet> for &'a TrieSet {
     ///
     /// let set: TrieSet = &a & &b;
     /// let v: Vec<uint> = set.iter().collect();
-    /// assert_eq!(v, vec![2u, 3]);
+    /// assert_eq!(v, vec![2, 3]);
     /// ```
     fn bitand(self, rhs: &TrieSet) -> TrieSet {
         self.intersection(rhs).collect()
@@ -524,7 +524,7 @@ impl<'a, 'b> ops::BitXor<&'b TrieSet> for &'a TrieSet {
     ///
     /// let set: TrieSet = &a ^ &b;
     /// let v: Vec<uint> = set.iter().collect();
-    /// assert_eq!(v, vec![1u, 2, 4, 5]);
+    /// assert_eq!(v, vec![1, 2, 4, 5]);
     /// ```
     fn bitxor(self, rhs: &TrieSet) -> TrieSet {
         self.symmetric_difference(rhs).collect()
@@ -547,7 +547,7 @@ impl<'a, 'b> ops::Sub<&'b TrieSet> for &'a TrieSet {
     ///
     /// let set: TrieSet = &a - &b;
     /// let v: Vec<uint> = set.iter().collect();
-    /// assert_eq!(v, vec![1u, 2]);
+    /// assert_eq!(v, vec![1, 2]);
     /// ```
     fn sub(self, rhs: &TrieSet) -> TrieSet {
         self.difference(rhs).collect()

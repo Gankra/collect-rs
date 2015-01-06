@@ -127,7 +127,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// use collect::LruCache;
     /// let mut cache = LruCache::new(2);
     ///
-    /// cache.insert(1i, "a");
+    /// cache.insert(1, "a");
     /// cache.insert(2, "b");
     /// assert_eq!(cache.get(&1), Some(&"a"));
     /// assert_eq!(cache.get(&2), Some(&"b"));
@@ -172,7 +172,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// use collect::LruCache;
     /// let mut cache = LruCache::new(2);
     ///
-    /// cache.insert(1i, "a");
+    /// cache.insert(1, "a");
     /// cache.insert(2, "b");
     /// cache.insert(2, "c");
     /// cache.insert(3, "d");
@@ -213,7 +213,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// use collect::LruCache;
     /// let mut cache = LruCache::new(2);
     ///
-    /// cache.insert(2i, "a");
+    /// cache.insert(2, "a");
     ///
     /// assert_eq!(cache.remove(&1), None);
     /// assert_eq!(cache.remove(&2), Some("a"));
@@ -259,7 +259,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// use collect::LruCache;
     /// let mut cache = LruCache::new(2);
     ///
-    /// cache.insert(1i, "a");
+    /// cache.insert(1, "a");
     /// cache.insert(2, "b");
     /// cache.insert(3, "c");
     ///
@@ -268,7 +268,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// assert_eq!(cache.get(&3), Some(&"c"));
     ///
     /// cache.set_capacity(3);
-    /// cache.insert(1i, "a");
+    /// cache.insert(1, "a");
     /// cache.insert(2, "b");
     ///
     /// assert_eq!(cache.get(&1), Some(&"a"));

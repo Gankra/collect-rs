@@ -16,8 +16,8 @@
 //! use collect::compare::{Compare, Natural};
 //! use std::cmp::Ordering::{Less, Equal, Greater};
 //!
-//! let a = &1u8;
-//! let b = &2u8;
+//! let a = &1;
+//! let b = &2;
 //!
 //! let cmp = Natural;
 //! assert_eq!(cmp.compare(a, b), Less);
@@ -30,8 +30,8 @@
 //! ```rust
 //! use collect::compare::{Compare, Natural};
 //!
-//! let a = &1u8;
-//! let b = &2u8;
+//! let a = &1;
+//! let b = &2;
 //!
 //! let cmp = Natural;
 //! assert!(cmp.compares_lt(a, b));
@@ -52,7 +52,7 @@
 //! use std::cmp::Ordering::Greater;
 //!
 //! let cmp = Natural.rev();
-//! assert_eq!(cmp.compare(&1u8, &2u8), Greater);
+//! assert_eq!(cmp.compare(&1, &2), Greater);
 //! ```
 //!
 //! It is possible to implement a comparator that is not based on the natural ordering of
@@ -260,8 +260,8 @@ pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> + Sized {
     /// use collect::compare::{Compare, CompareExt, Natural};
     /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///
-    /// let a = &1u8;
-    /// let b = &2u8;
+    /// let a = &1;
+    /// let b = &2;
     ///
     /// let cmp = Natural.rev();
     /// assert_eq!(cmp.compare(a, b), Greater);
@@ -424,8 +424,8 @@ impl<C, D, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for Lexicographic<C, D>
 /// use collect::compare::{Compare, Natural};
 /// use std::cmp::Ordering::{Less, Equal, Greater};
 ///
-/// let a = &1u8;
-/// let b = &2u8;
+/// let a = &1;
+/// let b = &2;
 ///
 /// let cmp = Natural;
 /// assert_eq!(cmp.compare(a, b), Less);
