@@ -21,12 +21,8 @@
 
 
 #![feature(unsafe_destructor)]
-#![feature(default_type_params)]
 #![feature(unboxed_closures)]
-#![feature(globs)]
-#![feature(macro_rules)]
 #![feature(slicing_syntax)]
-#![feature(associated_types)]
 #![feature(old_orphan_check)]
 
 #[cfg(test)] extern crate test;

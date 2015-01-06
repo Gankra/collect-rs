@@ -174,7 +174,7 @@ impl<K, V, C> Default for TreeMap<K, V, C> where C: Compare<K> + Default {
     fn default() -> TreeMap<K, V, C> { TreeMap::with_comparator(Default::default()) }
 }
 
-impl<K, V, C, Sized? Q> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+impl<K, V, C, Q: ?Sized> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     type Output = V;
     #[inline]
     fn index<'a>(&'a self, i: &Q) -> &'a V {
@@ -182,7 +182,7 @@ impl<K, V, C, Sized? Q> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> +
     }
 }
 
-impl<K, V, C, Sized? Q> ops::IndexMut<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+impl<K, V, C, Q: ?Sized> ops::IndexMut<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     type Output = V;
     #[inline]
     fn index_mut<'a>(&'a mut self, i: &Q) -> &'a mut V {
@@ -465,11 +465,11 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn get<Sized? Q>(&self, key: &Q) -> Option<&V>
+    pub fn get<Q: ?Sized>(&self, key: &Q) -> Option<&V>
         where C: Compare<Q, K>
     {
         // FIXME: redundant, but a bug in method-level where clauses requires it
-        fn f<'r, K, V, C, Sized? Q>(node: &'r Option<Box<TreeNode<K, V>>>, cmp: &C, key: &Q)
+        fn f<'r, K, V, C, Q: ?Sized>(node: &'r Option<Box<TreeNode<K, V>>>, cmp: &C, key: &Q)
             -> Option<&'r V> where C: Compare<Q, K> {
             tree_find_with(node, |k| cmp.compare(key, k))
         }
@@ -494,7 +494,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn contains_key<Sized? Q>(&self, key: &Q) -> bool
+    pub fn contains_key<Q: ?Sized>(&self, key: &Q) -> bool
         where C: Compare<Q, K>
     {
         self.get(key).is_some()
@@ -526,11 +526,11 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn get_mut<Sized? Q>(&mut self, key: &Q) -> Option<&mut V>
+    pub fn get_mut<Q: ?Sized>(&mut self, key: &Q) -> Option<&mut V>
         where C: Compare<Q, K>
     {
         // FIXME: redundant, but a bug in method-level where clauses requires it
-        fn f<'r, K, V, C, Sized? Q>(node: &'r mut Option<Box<TreeNode<K, V>>>, cmp: &C, key: &Q)
+        fn f<'r, K, V, C, Q: ?Sized>(node: &'r mut Option<Box<TreeNode<K, V>>>, cmp: &C, key: &Q)
             -> Option<&'r mut V> where C: Compare<Q, K> {
             tree_find_with_mut(node, |k| cmp.compare(key, k))
         }
@@ -590,7 +590,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.remove(&1), None);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn remove<Sized? Q>(&mut self, key: &Q) -> Option<V>
+    pub fn remove<Q: ?Sized>(&mut self, key: &Q) -> Option<V>
         where C: Compare<Q, K>
     {
         let ret = remove(&mut self.root, key, &self.cmp);
@@ -1229,7 +1229,7 @@ fn insert<K, V, C>(node: &mut Option<Box<TreeNode<K, V>>>, key: K, value: V, cmp
     }
 }
 
-fn remove<K, V, C, Sized? Q>(node: &mut Option<Box<TreeNode<K, V>>>, key: &Q, cmp: &C)
+fn remove<K, V, C, Q: ?Sized>(node: &mut Option<Box<TreeNode<K, V>>>, key: &Q, cmp: &C)
     -> Option<V> where C: Compare<Q, K> {
 
     fn heir_swap<K, V>(node: &mut Box<TreeNode<K, V>>,

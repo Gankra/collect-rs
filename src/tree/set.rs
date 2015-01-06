@@ -430,7 +430,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn contains<Sized? Q>(&self, value: &Q) -> bool
+    pub fn contains<Q: ?Sized>(&self, value: &Q) -> bool
         where C: Compare<Q, T>
     {
         self.map.contains_key(value)
@@ -562,7 +562,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn remove<Sized? Q>(&mut self, value: &Q) -> bool
+    pub fn remove<Q: ?Sized>(&mut self, value: &Q) -> bool
         where C: Compare<Q, T>
     {
         self.map.remove(value).is_some()
