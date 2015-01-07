@@ -37,56 +37,19 @@
 //! assert!(cache.get(&2).is_none());
 //! ```
 
-use std::cmp::{PartialEq, Eq};
-use std::collections::HashMap;
 use std::fmt;
 use std::hash::Hash;
 use std::iter::{range, Iterator, Extend};
-use std::mem;
-use std::ptr;
+
+use linked_hash_map::LinkedHashMap;
 
 // FIXME(conventions): implement iterators?
 // FIXME(conventions): implement indexing?
 
-struct KeyRef<K> { k: *const K }
-
-struct LruEntry<K, V> {
-    next: *mut LruEntry<K, V>,
-    prev: *mut LruEntry<K, V>,
-    key: K,
-    value: V,
-}
-
 /// An LRU Cache.
 pub struct LruCache<K, V> {
-    map: HashMap<KeyRef<K>, Box<LruEntry<K, V>>>,
+    map: LinkedHashMap<K, V>,
     max_size: uint,
-    head: *mut LruEntry<K, V>,
-}
-
-impl<S, K: Hash<S>> Hash<S> for KeyRef<K> {
-    fn hash(&self, state: &mut S) {
-        unsafe { (*self.k).hash(state) }
-    }
-}
-
-impl<K: PartialEq> PartialEq for KeyRef<K> {
-    fn eq(&self, other: &KeyRef<K>) -> bool {
-        unsafe{ (*self.k).eq(&*other.k) }
-    }
-}
-
-impl<K: Eq> Eq for KeyRef<K> {}
-
-impl<K, V> LruEntry<K, V> {
-    fn new(k: K, v: V) -> LruEntry<K, V> {
-        LruEntry {
-            key: k,
-            value: v,
-            next: ptr::null_mut(),
-            prev: ptr::null_mut(),
-        }
-    }
 }
 
 impl<K: Hash + Eq, V> LruCache<K, V> {
@@ -100,16 +63,10 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn new(capacity: uint) -> LruCache<K, V> {
-        let cache = LruCache {
-            map: HashMap::new(),
+        LruCache {
+            map: LinkedHashMap::new(),
             max_size: capacity,
-            head: unsafe{ mem::transmute(box mem::uninitialized::<LruEntry<K, V>>()) },
-        };
-        unsafe {
-            (*cache.head).next = cache.head;
-            (*cache.head).prev = cache.head;
         }
-        return cache;
     }
 
     /// Deprecated: Replaced with `insert`.
@@ -134,32 +91,9 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn insert(&mut self, k: K, v: V) -> Option<V> {
-        let (node_ptr, node_opt, old_val) = match self.map.get_mut(&KeyRef{k: &k}) {
-            Some(node) => {
-                let old_val = mem::replace(&mut node.value, v);
-                let node_ptr: *mut LruEntry<K, V> = &mut **node;
-                (node_ptr, None, Some(old_val))
-            }
-            None => {
-                let mut node = box LruEntry::new(k, v);
-                let node_ptr: *mut LruEntry<K, V> = &mut *node;
-                (node_ptr, Some(node), None)
-            }
-        };
-        match node_opt {
-            None => {
-                // Existing node, just update LRU position
-                self.detach(node_ptr);
-                self.attach(node_ptr);
-            }
-            Some(node) => {
-                let keyref = unsafe { &(*node_ptr).key };
-                self.map.insert(KeyRef{k: keyref}, node);
-                self.attach(node_ptr);
-                if self.len() > self.capacity() {
-                    self.remove_lru();
-                }
-            }
+        let old_val = self.map.insert(k, v);
+        if self.len() > self.capacity() {
+            self.remove_lru();
         }
         old_val
     }
@@ -182,21 +116,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn get(&mut self, k: &K) -> Option<&V> {
-        let (value, node_ptr_opt) = match self.map.get_mut(&KeyRef{k: k}) {
-            None => (None, None),
-            Some(node) => {
-                let node_ptr: *mut LruEntry<K, V> = &mut **node;
-                (Some(unsafe { &(*node_ptr).value }), Some(node_ptr))
-            }
-        };
-        match node_ptr_opt {
-            None => (),
-            Some(node_ptr) => {
-                self.detach(node_ptr);
-                self.attach(node_ptr);
-            }
-        }
-        return value;
+        self.map.get_refresh(k)
     }
 
     /// Deprecated: Renamed to `remove`.
@@ -222,12 +142,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn remove(&mut self, k: &K) -> Option<V> {
-        let removed = self.map.remove(&KeyRef{k: k});
-        removed.map(|mut node| {
-            let node_ptr: *mut LruEntry<K,V> = &mut *node;
-            self.detach(node_ptr);
-            node.value
-        })
+        self.map.remove(k)
     }
 
     /// Return the maximum number of key-value pairs the cache can hold.
@@ -291,29 +206,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
 
     #[inline]
     fn remove_lru(&mut self) {
-        if self.len() > 0 {
-            let lru = unsafe { (*self.head).prev };
-            self.detach(lru);
-            self.map.remove(&KeyRef{k: unsafe { &(*lru).key }});
-        }
-    }
-
-    #[inline]
-    fn detach(&mut self, node: *mut LruEntry<K, V>) {
-        unsafe {
-            (*(*node).prev).next = (*node).next;
-            (*(*node).next).prev = (*node).prev;
-        }
-    }
-
-    #[inline]
-    fn attach(&mut self, node: *mut LruEntry<K, V>) {
-        unsafe {
-            (*node).next = (*self.head).next;
-            (*node).prev = self.head;
-            (*self.head).next = node;
-            (*(*node).next).prev = node;
-        }
+        self.map.pop_front()
     }
 
     /// Return the number of key-value pairs in the cache.
@@ -322,7 +215,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
 
     /// Returns whether the cache is currently empty.
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn is_empty(&self) -> bool { self.len() == 0 }
+    pub fn is_empty(&self) -> bool { self.map.is_empty() }
 
     /// Clear the cache of all key-value pairs.
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -343,39 +236,19 @@ impl<A: fmt::Show + Hash + Eq, B: fmt::Show> fmt::Show for LruCache<A, B> {
     /// used to least-recently used.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
-        let mut cur = self.head;
-        for i in range(0, self.len()) {
-            if i > 0 { try!(write!(f, ", ")) }
-            unsafe {
-                cur = (*cur).next;
-                try!(write!(f, "{}", (*cur).key));
-            }
-            try!(write!(f, ": "));
-            unsafe {
-                try!(write!(f, "{}", (*cur).value));
-            }
+
+        for (i, (k, v)) in self.map.iter().rev().enumerate() {
+            if i != 0 { try!(write!(f, ", ")); }
+            try!(write!(f, "{}: {}", *k, *v));
         }
-        write!(f, r"}}")
+
+        write!(f, "}}")
     }
 }
 
 unsafe impl<K: Send, V: Send> Send for LruCache<K, V> {}
 
 unsafe impl<K: Sync, V: Sync> Sync for LruCache<K, V> {}
-
-#[unsafe_destructor]
-impl<K, V> Drop for LruCache<K, V> {
-    fn drop(&mut self) {
-        unsafe {
-            let node: Box<LruEntry<K, V>> = mem::transmute(self.head);
-            // Prevent compiler from trying to drop the un-initialized field in the sigil node.
-            let box internal_node = node;
-            let LruEntry { next: _, prev: _, key: k, value: v } = internal_node;
-            mem::forget(k);
-            mem::forget(v);
-        }
-    }
-}
 
 #[cfg(test)]
 mod tests {
