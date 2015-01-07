@@ -1,3 +1,7 @@
+//! A module providing a map implementation `LinearMap` backed by a vector.
+
+#![warn(missing_docs)]
+
 use std::iter::Map;
 use std::iter::RandomAccessIterator;
 use std::mem;
@@ -216,140 +220,84 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     }
 }
 
+/// The iterator returned by `LinearMap::iter`.
 pub struct Iter<'a, K:'a, V:'a> {
-    iter: Map<(&'a (K, V)), (&'a K, &'a V), slice::Iter<'a, (K, V)>, fn(&'a (K, V)) -> (&'a K, &'a V)>,
+    iter: Map<(&'a (K, V)), (&'a K, &'a V), slice::Iter<'a, (K, V)>,
+              fn(&'a (K, V)) -> (&'a K, &'a V)>,
 }
 
+/// The iterator returned by `LinearMap::iter_mut`.
 pub struct IterMut<'a, K:'a, V:'a> {
-    iter: Map<(&'a mut (K, V)), (&'a K, &'a mut V), slice::IterMut<'a, (K, V)>, fn(&'a mut (K, V)) -> (&'a K, &'a mut V)>,
+    iter: Map<(&'a mut (K, V)), (&'a K, &'a mut V), slice::IterMut<'a, (K, V)>,
+              fn(&'a mut (K, V)) -> (&'a K, &'a mut V)>,
 }
 
+/// The iterator returned by `LinearMap::keys`.
 pub struct Keys<'a, K:'a, V:'a> {
     iter: Map<(&'a K, &'a V), &'a K, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>,
 }
 
+/// The iterator returned by `LinearMap::values`.
 pub struct Values<'a, K:'a, V:'a> {
     iter: Map<(&'a K, &'a V), &'a V, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>,
 }
 
 impl<'a, K:'a, V:'a> Iterator for Iter<'a, K, V> {
     type Item = (&'a K, &'a V);
-    fn next(&mut self) -> Option<(&'a K, &'a V)> {
-        self.iter.next()
-    }
-    fn size_hint(&self) -> (uint, Option<uint>) {
-        self.iter.size_hint()
-    }
+    fn next(&mut self) -> Option<(&'a K, &'a V)> { self.iter.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
 impl<'a, K:'a, V:'a> Iterator for IterMut<'a, K, V> {
     type Item = (&'a K, &'a mut V);
-    fn next(&mut self) -> Option<(&'a K, &'a mut V)> {
-        self.iter.next()
-    }
-    fn size_hint(&self) -> (uint, Option<uint>) {
-        self.iter.size_hint()
-    }
+    fn next(&mut self) -> Option<(&'a K, &'a mut V)> { self.iter.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
 impl<'a, K:'a, V:'a> Iterator for Keys<'a, K, V> {
     type Item = &'a K;
-    fn next(&mut self) -> Option<&'a K> {
-        self.iter.next()
-    }
-    fn size_hint(&self) -> (uint, Option<uint>) {
-        self.iter.size_hint()
-    }
+    fn next(&mut self) -> Option<&'a K> { self.iter.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
 impl<'a, K:'a, V:'a> Iterator for Values<'a, K, V> {
     type Item = &'a V;
-    fn next(&mut self) -> Option<&'a V> {
-        self.iter.next()
-    }
-    fn size_hint(&self) -> (uint, Option<uint>) {
-        self.iter.size_hint()
-    }
+    fn next(&mut self) -> Option<&'a V> { self.iter.next() }
+    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
 }
 
-// TODO: Implement Copy when `Map` does.
-//impl<'a, K:'a, V:'a> Copy for Iter   <'a, K, V> { }
-//impl<'a, K:'a, V:'a> Copy for Keys   <'a, K, V> { }
-//impl<'a, K:'a, V:'a> Copy for Values <'a, K, V> { }
-
 impl<'a, K:'a, V:'a> Clone for Iter<'a, K, V> {
-    fn clone(&self) -> Iter<'a, K, V> {
-        Iter { iter: self.iter.clone() }
-    }
+    fn clone(&self) -> Iter<'a, K, V> { Iter { iter: self.iter.clone() } }
 }
 
 impl<'a, K:'a, V:'a> Clone for Keys<'a, K, V> {
-    fn clone(&self) -> Keys<'a, K, V> {
-        Keys { iter: self.iter.clone() }
-    }
+    fn clone(&self) -> Keys<'a, K, V> { Keys { iter: self.iter.clone() } }
 }
 
 impl<'a, K:'a, V:'a> Clone for Values<'a, K, V> {
-    fn clone(&self) -> Values<'a, K, V> {
-        Values { iter: self.iter.clone() }
-    }
+    fn clone(&self) -> Values<'a, K, V> { Values { iter: self.iter.clone() } }
 }
 
 impl<'a, K:'a, V:'a> DoubleEndedIterator for Iter<'a, K, V> {
-    fn next_back(&mut self) -> Option<(&'a K, &'a V)> {
-        self.iter.next_back()
-    }
+    fn next_back(&mut self) -> Option<(&'a K, &'a V)> { self.iter.next_back() }
 }
 
 impl<'a, K:'a, V:'a> DoubleEndedIterator for IterMut<'a, K, V> {
-    fn next_back(&mut self) -> Option<(&'a K, &'a mut V)> {
-        self.iter.next_back()
-    }
+    fn next_back(&mut self) -> Option<(&'a K, &'a mut V)> { self.iter.next_back() }
 }
 
 impl<'a, K:'a, V:'a> DoubleEndedIterator for Keys<'a, K, V> {
-    fn next_back(&mut self) -> Option<&'a K> {
-        self.iter.next_back()
-    }
+    fn next_back(&mut self) -> Option<&'a K> { self.iter.next_back() }
 }
 
 impl<'a, K:'a, V:'a> DoubleEndedIterator for Values<'a, K, V> {
-    fn next_back(&mut self) -> Option<&'a V> {
-        self.iter.next_back()
-    }
+    fn next_back(&mut self) -> Option<&'a V> { self.iter.next_back() }
 }
 
 impl<'a, K:'a, V:'a> ExactSizeIterator for Iter   <'a, K, V> { }
 impl<'a, K:'a, V:'a> ExactSizeIterator for IterMut<'a, K, V> { }
 impl<'a, K:'a, V:'a> ExactSizeIterator for Keys   <'a, K, V> { }
 impl<'a, K:'a, V:'a> ExactSizeIterator for Values <'a, K, V> { }
-
-impl<'a, K:'a, V:'a> RandomAccessIterator for Iter<'a, K, V> {
-    fn indexable(&self) -> uint {
-        self.iter.indexable()
-    }
-    fn idx(&mut self, index: uint) -> Option<(&'a K, &'a V)> {
-        self.iter.idx(index)
-    }
-}
-
-impl<'a, K:'a, V:'a> RandomAccessIterator for Keys<'a, K, V> {
-    fn indexable(&self) -> uint {
-        self.iter.indexable()
-    }
-    fn idx(&mut self, index: uint) -> Option<&'a K> {
-        self.iter.idx(index)
-    }
-}
-
-impl<'a, K:'a, V:'a> RandomAccessIterator for Values<'a, K, V> {
-    fn indexable(&self) -> uint {
-        self.iter.indexable()
-    }
-    fn idx(&mut self, index: uint) -> Option<&'a V> {
-        self.iter.idx(index)
-    }
-}
 
 #[cfg(test)]
 mod test {
