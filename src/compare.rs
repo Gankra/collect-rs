@@ -150,7 +150,7 @@ use std::default::Default;
 /// ```
 // FIXME: convert to default method on `Compare` once where clauses permit equality
 // (https://github.com/rust-lang/rust/issues/20041)
-pub fn max<'a, Sized? C, Sized? T>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
+pub fn max<'a, C: ?Sized, T: ?Sized>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
     where C: Compare<T> {
 
     if cmp.compares_ge(lhs, rhs) { lhs } else { rhs }
@@ -176,7 +176,7 @@ pub fn max<'a, Sized? C, Sized? T>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
 /// ```
 // FIXME: convert to default method on `Compare` once where clauses permit equality
 // (https://github.com/rust-lang/rust/issues/20041)
-pub fn min<'a, Sized? C, Sized? T>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
+pub fn min<'a, C: ?Sized, T: ?Sized>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
     where C: Compare<T> {
 
     if cmp.compares_le(lhs, rhs) { lhs } else { rhs }
@@ -187,7 +187,7 @@ pub fn min<'a, Sized? C, Sized? T>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
 /// See the [`compare` module's documentation](index.html) for detailed usage.
 ///
 /// The `compares_*` methods may be overridden to provide more efficient implementations.
-pub trait Compare<Sized? Lhs, Sized? Rhs = Lhs> {
+pub trait Compare<Lhs: ?Sized, Rhs: ?Sized = Lhs> {
     /// Compares two values, returning `Less`, `Equal`, or `Greater` if `lhs` is less
     /// than, equal to, or greater than `rhs`, respectively.
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering;
@@ -223,14 +223,14 @@ pub trait Compare<Sized? Lhs, Sized? Rhs = Lhs> {
     }
 }
 
-impl<Sized? F, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for F
+impl<F: ?Sized, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for F
     where F: Fn(&Lhs, &Rhs) -> Ordering {
 
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering { (*self)(lhs, rhs) }
 }
 
 /// An extension trait with methods applicable to all comparators.
-pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> + Sized {
+pub trait CompareExt<Lhs: ?Sized, Rhs: ?Sized = Lhs> : Compare<Lhs, Rhs> + Sized {
     /// Borrows the comparator's parameters before comparing them.
     ///
     /// # Examples
@@ -321,7 +321,7 @@ pub trait CompareExt<Sized? Lhs, Sized? Rhs = Lhs> : Compare<Lhs, Rhs> + Sized {
     }
 }
 
-impl<C, Sized? Lhs, Sized? Rhs> CompareExt<Lhs, Rhs> for C where C: Compare<Lhs, Rhs> {}
+impl<C, Lhs: ?Sized, Rhs: ?Sized> CompareExt<Lhs, Rhs> for C where C: Compare<Lhs, Rhs> {}
 
 /// A comparator that borrows its parameters before comparing them.
 ///
@@ -329,7 +329,7 @@ impl<C, Sized? Lhs, Sized? Rhs> CompareExt<Lhs, Rhs> for C where C: Compare<Lhs,
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct Borrow<C>(C);
 
-impl<C, Sized? Lhs, Sized? Rhs, Sized? Lb, Sized? Rb> Compare<Lhs, Rhs> for Borrow<C>
+impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for Borrow<C>
     where C: Compare<Lb, Rb>, Lb: BorrowFrom<Lhs>, Rb: BorrowFrom<Rhs> {
 
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
@@ -359,13 +359,13 @@ pub struct Extract<E, C> {
 
 // FIXME: convert to default method on `CompareExt` once where clauses permit equality
 // (https://github.com/rust-lang/rust/issues/20041)
-impl<E, C, Sized? T, K> Extract<E, C> where E: Fn(&T) -> K, C: Compare<K> {
+impl<E, C, T: ?Sized, K> Extract<E, C> where E: Fn(&T) -> K, C: Compare<K> {
     /// Returns a comparator that extracts a sort key using `ext` and compares it using
     /// `cmp`.
     pub fn new(ext: E, cmp: C) -> Extract<E, C> { Extract { ext: ext, cmp: cmp } }
 }
 
-impl<E, C, Sized? T, K> Compare<T> for Extract<E, C>
+impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C>
     where E: Fn(&T) -> K, C: Compare<K> {
 
     fn compare(&self, lhs: &T, rhs: &T) -> Ordering {
@@ -404,7 +404,7 @@ impl<E, C, Sized? T, K> Compare<T> for Extract<E, C>
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct Lexicographic<C, D>(C, D);
 
-impl<C, D, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for Lexicographic<C, D>
+impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Lexicographic<C, D>
     where C: Compare<Lhs, Rhs>, D: Compare<Lhs, Rhs> {
 
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
@@ -432,9 +432,9 @@ impl<C, D, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for Lexicographic<C, D>
 /// assert_eq!(cmp.compare(b, a), Greater);
 /// assert_eq!(cmp.compare(a, a), Equal);
 /// ```
-pub struct Natural<Sized? T: Ord>;
+pub struct Natural<T: Ord + ?Sized>;
 
-impl<Sized? T: Ord> Compare<T> for Natural<T> {
+impl<T: Ord + ?Sized> Compare<T> for Natural<T> {
     fn compare(&self, lhs: &T, rhs: &T) -> Ordering { Ord::cmp(lhs, rhs) }
 
     fn compares_lt(&self, lhs: &T, rhs: &T) -> bool { PartialOrd::lt(lhs, rhs) }
@@ -452,29 +452,29 @@ impl<Sized? T: Ord> Compare<T> for Natural<T> {
 
 // FIXME: replace with `derive(Clone)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<Sized? T: Ord> Clone for Natural<T> {
+impl<T: Ord + ?Sized> Clone for Natural<T> {
     fn clone(&self) -> Natural<T> { *self }
 }
 
 // FIXME: replace with `derive(Copy)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<Sized? T: Ord> Copy for Natural<T> {}
+impl<T: Ord + ?Sized> Copy for Natural<T> {}
 
 // FIXME: replace with `derive(Default)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<Sized? T: Ord> Default for Natural<T> {
+impl<T: Ord + ?Sized> Default for Natural<T> {
     fn default() -> Natural<T> { Natural }
 }
 
 // FIXME: replace with `derive(PartialEq)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<Sized? T: Ord> PartialEq for Natural<T> {
+impl<T: Ord + ?Sized> PartialEq for Natural<T> {
     fn eq(&self, _other: &Natural<T>) -> bool { true }
 }
 
 // FIXME: replace with `derive(Eq)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<Sized? T: Ord> Eq for Natural<T> {}
+impl<T: Ord + ?Sized> Eq for Natural<T> {}
 
 /// A comparator that reverses the ordering of another.
 ///
@@ -482,7 +482,7 @@ impl<Sized? T: Ord> Eq for Natural<T> {}
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct Rev<C>(C);
 
-impl<C, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for Rev<C> where C: Compare<Lhs, Rhs> {
+impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Rev<C> where C: Compare<Lhs, Rhs> {
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
         self.0.compare(lhs, rhs).reverse()
     }
@@ -509,7 +509,7 @@ impl<C, Sized? Lhs, Sized? Rhs> Compare<Lhs, Rhs> for Rev<C> where C: Compare<Lh
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct Swap<C>(C);
 
-impl<C, Sized? Lhs, Sized? Rhs> Compare<Rhs, Lhs> for Swap<C>
+impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Rhs, Lhs> for Swap<C>
     where C: Compare<Lhs, Rhs> {
 
     fn compare(&self, rhs: &Rhs, lhs: &Lhs) -> Ordering { self.0.compare(lhs, rhs) }
