@@ -640,6 +640,9 @@
 <span id="598">598</span>
 <span id="599">599</span>
 <span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -674,6 +677,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::{<span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>kinds</span>::<span class='ident'>marker</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hash</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::{<span class='ident'>Iterator</span>, <span class='ident'>Extend</span>};
@@ -924,9 +928,9 @@
     <span class='doccomment'>/// map.insert(&quot;b&quot;, 20);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut iter = map.iter();</span>
-    <span class='doccomment'>/// assert_eq!(Some((&amp;&quot;a&quot;, &amp;10)), iter.next());</span>
-    <span class='doccomment'>/// assert_eq!(Some((&amp;&quot;c&quot;, &amp;30)), iter.next());</span>
-    <span class='doccomment'>/// assert_eq!(Some((&amp;&quot;b&quot;, &amp;20)), iter.next());</span>
+    <span class='doccomment'>/// assert_eq!((&amp;&quot;a&quot;, &amp;10), iter.next().unwrap());</span>
+    <span class='doccomment'>/// assert_eq!((&amp;&quot;c&quot;, &amp;30), iter.next().unwrap());</span>
+    <span class='doccomment'>/// assert_eq!((&amp;&quot;b&quot;, &amp;20), iter.next().unwrap());</span>
     <span class='doccomment'>/// assert_eq!(None, iter.next());</span>
     <span class='doccomment'>/// ```</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
@@ -934,6 +938,7 @@
             <span class='ident'>head</span>: <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>head</span>).<span class='ident'>prev</span> },
             <span class='ident'>tail</span>: <span class='self'>self</span>.<span class='ident'>head</span>,
             <span class='ident'>remaining</span>: <span class='self'>self</span>.<span class='ident'>len</span>(),
+            <span class='ident'>marker</span>: <span class='ident'>marker</span>::<span class='ident'>ContravariantLifetime</span>,
         }
     }
 
@@ -1051,6 +1056,7 @@
     <span class='ident'>head</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>LinkedHashMapEntry</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>,
     <span class='ident'>tail</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>LinkedHashMapEntry</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>,
     <span class='ident'>remaining</span>: <span class='ident'>uint</span>,
+    <span class='ident'>marker</span>: <span class='ident'>marker</span>::<span class='ident'>ContravariantLifetime</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>,
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
@@ -1218,25 +1224,25 @@
 
         <span class='comment'>// regular iter</span>
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>iter</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>10</span>)), <span class='ident'>iter</span>.<span class='ident'>next</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>20</span>)), <span class='ident'>iter</span>.<span class='ident'>next</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>30</span>)), <span class='ident'>iter</span>.<span class='ident'>next</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>10</span>), <span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>20</span>), <span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>30</span>), <span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>iter</span>.<span class='ident'>next</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>iter</span>.<span class='ident'>next</span>());
 
         <span class='comment'>// reversed iter</span>
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rev_iter</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>30</span>)), <span class='ident'>rev_iter</span>.<span class='ident'>next</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>20</span>)), <span class='ident'>rev_iter</span>.<span class='ident'>next</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>10</span>)), <span class='ident'>rev_iter</span>.<span class='ident'>next</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>30</span>), <span class='ident'>rev_iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>20</span>), <span class='ident'>rev_iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>10</span>), <span class='ident'>rev_iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>rev_iter</span>.<span class='ident'>next</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>rev_iter</span>.<span class='ident'>next</span>());
 
         <span class='comment'>// mixed</span>
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>mixed_iter</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>iter</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>10</span>)), <span class='ident'>mixed_iter</span>.<span class='ident'>next</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>30</span>)), <span class='ident'>mixed_iter</span>.<span class='ident'>next_back</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>20</span>)), <span class='ident'>mixed_iter</span>.<span class='ident'>next</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>10</span>), <span class='ident'>mixed_iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>30</span>), <span class='ident'>mixed_iter</span>.<span class='ident'>next_back</span>().<span class='ident'>unwrap</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>20</span>), <span class='ident'>mixed_iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>mixed_iter</span>.<span class='ident'>next</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>mixed_iter</span>.<span class='ident'>next_back</span>());
     }
