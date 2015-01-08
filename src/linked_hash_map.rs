@@ -31,6 +31,7 @@
 use std::cmp::{PartialEq, Eq};
 use std::collections::HashMap;
 use std::iter;
+use std::kinds::marker;
 use std::fmt;
 use std::hash::Hash;
 use std::iter::{Iterator, Extend};
@@ -281,9 +282,9 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     /// map.insert("b", 20);
     ///
     /// let mut iter = map.iter();
-    /// assert_eq!(Some((&"a", &10)), iter.next());
-    /// assert_eq!(Some((&"c", &30)), iter.next());
-    /// assert_eq!(Some((&"b", &20)), iter.next());
+    /// assert_eq!((&"a", &10), iter.next().unwrap());
+    /// assert_eq!((&"c", &30), iter.next().unwrap());
+    /// assert_eq!((&"b", &20), iter.next().unwrap());
     /// assert_eq!(None, iter.next());
     /// ```
     pub fn iter(&self) -> Iter<K, V> {
@@ -291,6 +292,7 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
             head: unsafe { (*self.head).prev },
             tail: self.head,
             remaining: self.len(),
+            marker: marker::ContravariantLifetime,
         }
     }
 
@@ -408,6 +410,7 @@ pub struct Iter<'a, K: 'a, V: 'a> {
     head: *const LinkedHashMapEntry<K, V>,
     tail: *const LinkedHashMapEntry<K, V>,
     remaining: uint,
+    marker: marker::ContravariantLifetime<'a>,
 }
 
 impl<'a, K, V> Iterator for Iter<'a, K, V> {
@@ -575,25 +578,25 @@ mod tests {
 
         // regular iter
         let mut iter = map.iter();
-        assert_eq!(Some((&"a", &10)), iter.next());
-        assert_eq!(Some((&"b", &20)), iter.next());
-        assert_eq!(Some((&"c", &30)), iter.next());
+        assert_eq!((&"a", &10), iter.next().unwrap());
+        assert_eq!((&"b", &20), iter.next().unwrap());
+        assert_eq!((&"c", &30), iter.next().unwrap());
         assert_eq!(None, iter.next());
         assert_eq!(None, iter.next());
 
         // reversed iter
         let mut rev_iter = map.iter().rev();
-        assert_eq!(Some((&"c", &30)), rev_iter.next());
-        assert_eq!(Some((&"b", &20)), rev_iter.next());
-        assert_eq!(Some((&"a", &10)), rev_iter.next());
+        assert_eq!((&"c", &30), rev_iter.next().unwrap());
+        assert_eq!((&"b", &20), rev_iter.next().unwrap());
+        assert_eq!((&"a", &10), rev_iter.next().unwrap());
         assert_eq!(None, rev_iter.next());
         assert_eq!(None, rev_iter.next());
 
         // mixed
         let mut mixed_iter = map.iter();
-        assert_eq!(Some((&"a", &10)), mixed_iter.next());
-        assert_eq!(Some((&"c", &30)), mixed_iter.next_back());
-        assert_eq!(Some((&"b", &20)), mixed_iter.next());
+        assert_eq!((&"a", &10), mixed_iter.next().unwrap());
+        assert_eq!((&"c", &30), mixed_iter.next_back().unwrap());
+        assert_eq!((&"b", &20), mixed_iter.next().unwrap());
         assert_eq!(None, mixed_iter.next());
         assert_eq!(None, mixed_iter.next_back());
     }
