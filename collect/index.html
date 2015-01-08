@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>collect</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/collect/lib.rs.html#2-87'>[src]</a></span></h1>
+        </span><a id='src-0' href='../src/collect/lib.rs.html#2-89'>[src]</a></span></h1>
 <div class='docblock'><p>collect-rs is intended as an experimental extension of the Rust standard library&#39;s
 libcollections. Ideas that are too niche, crazy, or experimental to land in libcollections
 can be gathered here where they can gain the maintenance and network-effect benefits that
@@ -65,7 +65,7 @@ iterator adapters? Heck yeah!</p>
 <p>Note that anything include in collect-rs is theoretically a candidate for inclusion in
 libcollections. As such, this project is licensed under the same terms as Rust itself.</p>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use blist::<a class='struct' href='../collect/blist/struct.BList.html' title='collect::blist::BList'>BList</a>;</code></td></tr><tr><td><code>pub use enum_set::<a class='struct' href='../collect/enum_set/struct.EnumSet.html' title='collect::enum_set::EnumSet'>EnumSet</a>;</code></td></tr><tr><td><code>pub use immut_slist::<a class='struct' href='../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>;</code></td></tr><tr><td><code>pub use interval_heap::<a class='struct' href='../collect/interval_heap/struct.IntervalHeap.html' title='collect::interval_heap::IntervalHeap'>IntervalHeap</a>;</code></td></tr><tr><td><code>pub use lru_cache::<a class='struct' href='../collect/lru_cache/struct.LruCache.html' title='collect::lru_cache::LruCache'>LruCache</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr><td><code>pub use blist::<a class='struct' href='../collect/blist/struct.BList.html' title='collect::blist::BList'>BList</a>;</code></td></tr><tr><td><code>pub use enum_set::<a class='struct' href='../collect/enum_set/struct.EnumSet.html' title='collect::enum_set::EnumSet'>EnumSet</a>;</code></td></tr><tr><td><code>pub use immut_slist::<a class='struct' href='../collect/immut_slist/struct.ImmutSList.html' title='collect::immut_slist::ImmutSList'>ImmutSList</a>;</code></td></tr><tr><td><code>pub use interval_heap::<a class='struct' href='../collect/interval_heap/struct.IntervalHeap.html' title='collect::interval_heap::IntervalHeap'>IntervalHeap</a>;</code></td></tr><tr><td><code>pub use linked_hash_map::<a class='struct' href='../collect/linked_hash_map/struct.LinkedHashMap.html' title='collect::linked_hash_map::LinkedHashMap'>LinkedHashMap</a>;</code></td></tr><tr><td><code>pub use lru_cache::<a class='struct' href='../collect/lru_cache/struct.LruCache.html' title='collect::lru_cache::LruCache'>LruCache</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='blist/index.html'
@@ -104,6 +104,13 @@ libcollections. As such, this project is licensed under the same terms as Rust i
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='iter/index.html'
                                title='collect::iter'>iter</a></td>
                         <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='linked_hash_map/index.html'
+                               title='collect::linked_hash_map'>linked_hash_map</a></td>
+                        <td class='docblock short'><p>A HashMap wrapper that holds key-value pairs in insertion order.</p>
+</td>
                     </tr>
                 
                     <tr>

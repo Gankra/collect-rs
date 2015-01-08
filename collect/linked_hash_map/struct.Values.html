@@ -7,7 +7,7 @@
     <meta name="description" content="API documentation for the Rust `Values` struct in crate `collect`.">
     <meta name="keywords" content="rust, rustlang, rust-lang, Values">
 
-    <title>collect::tree_map::Values - Rust</title>
+    <title>collect::linked_hash_map::Values - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>tree_map</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.IntoIter.html'>IntoIter</a><a class='struct ' href='struct.Iter.html'>Iter</a><a class='struct ' href='struct.IterMut.html'>IterMut</a><a class='struct ' href='struct.Keys.html'>Keys</a><a class='struct ' href='struct.RevIter.html'>RevIter</a><a class='struct ' href='struct.RevIterMut.html'>RevIterMut</a><a class='struct ' href='struct.TreeMap.html'>TreeMap</a><a class='struct current' href='struct.Values.html'>Values</a></div>
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>linked_hash_map</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Iter.html'>Iter</a><a class='struct ' href='struct.Keys.html'>Keys</a><a class='struct ' href='struct.LinkedHashMap.html'>LinkedHashMap</a><a class='struct current' href='struct.Values.html'>Values</a></div>
     </section>
 
     <nav class="sub">
@@ -41,17 +41,17 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>tree_map</a>::<wbr><a class='struct' href=''>Values</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>linked_hash_map</a>::<wbr><a class='struct' href=''>Values</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-2070' href='../../src/collect/tree/map.rs.html#883-884'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Values&lt;'a, K: 'a, V: 'a&gt;(_);</pre><div class='docblock'><p>TreeMap values iterator.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;'a, K, V&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a> for <a class='struct' href='../../collect/tree_map/struct.Values.html' title='collect::tree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h3><div class='impl-items'><h4 id='assoc_type.Item' class='type'><a class='stability Unmarked' title='No stability level'></a><code>type Item = &amp;'a V</code></h4>
+        </span><a id='src-23321' href='../../src/collect/linked_hash_map.rs.html#470-472'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Values&lt;'a, K: 'a, V: 'a&gt; {
+    // some fields omitted
+}</pre><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;'a, K, V&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a> for <a class='struct' href='../../collect/linked_hash_map/struct.Values.html' title='collect::linked_hash_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h3><div class='impl-items'><h4 id='assoc_type.Item' class='type'><a class='stability Unmarked' title='No stability level'></a><code>type Item = &amp;'a V</code></h4>
 <h4 id='method.next' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.next' class='fnname'>next</a>(&amp;mut self) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'a V&gt;</code></h4>
 <h4 id='method.size_hint' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.size_hint' class='fnname'>size_hint</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>, <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>&gt;)</a></code></h4>
-</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;'a, K, V&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a> for <a class='struct' href='../../collect/tree_map/struct.Values.html' title='collect::tree_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h3><div class='impl-items'><h4 id='assoc_type.Item' class='type'><a class='stability Unmarked' title='No stability level'></a><code>type Item = &amp;'a V</code></h4>
-<h4 id='method.next' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.next' class='fnname'>next</a>(&amp;mut self) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'a V&gt;</code></h4>
-<h4 id='method.size_hint' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.size_hint' class='fnname'>size_hint</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>, <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a>&gt;)</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;'a, K, V&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.DoubleEndedIterator.html' title='core::iter::DoubleEndedIterator'>DoubleEndedIterator</a> for <a class='struct' href='../../collect/linked_hash_map/struct.Values.html' title='collect::linked_hash_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h3><div class='impl-items'><h4 id='method.next_back' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.next_back' class='fnname'>next_back</a>(&amp;mut self) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'a V&gt;</code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;'a, K, V&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.ExactSizeIterator.html' title='core::iter::ExactSizeIterator'>ExactSizeIterator</a> for <a class='struct' href='../../collect/linked_hash_map/struct.Values.html' title='collect::linked_hash_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h3><div class='impl-items'><h4 id='method.len' class='tymethod'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#tymethod.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a></code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `LinkedHashMap` struct in crate `collect`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, LinkedHashMap">
+
+    <title>collect::linked_hash_map::LinkedHashMap - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>linked_hash_map</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Iter.html'>Iter</a><a class='struct ' href='struct.Keys.html'>Keys</a><a class='struct current' href='struct.LinkedHashMap.html'>LinkedHashMap</a><a class='struct ' href='struct.Values.html'>Values</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>linked_hash_map</a>::<wbr><a class='struct' href=''>LinkedHashMap</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-21748' href='../../src/collect/linked_hash_map.rs.html#52-55'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct LinkedHashMap&lt;K, V&gt; {
+    // some fields omitted
+}</pre><div class='docblock'><p>A linked hash map.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>, V&gt; <a class='struct' href='../../collect/linked_hash_map/struct.LinkedHashMap.html' title='collect::linked_hash_map::LinkedHashMap'>LinkedHashMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../collect/linked_hash_map/struct.LinkedHashMap.html' title='collect::linked_hash_map::LinkedHashMap'>LinkedHashMap</a>&lt;K, V&gt;</code></h4>
+<div class='docblock'><p>Creates a linked hash map.</p>
+</div><h4 id='method.insert' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, k: K, v: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
+<div class='docblock'><p>Inserts a key-value pair into the map. If the key already existed, the old value is
+returned.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>));
+</pre>
+</div><h4 id='method.get' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.get' class='fnname'>get</a>(&amp;self, k: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt;</code></h4>
+<div class='docblock'><p>Returns the value corresponding to the key in the map.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='string'>&quot;c&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>));
+</pre>
+</div><h4 id='method.get_refresh' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.get_refresh' class='fnname'>get_refresh</a>(&amp;mut self, k: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt;</code></h4>
+<div class='docblock'><p>Returns the value corresponding to the key in the map.</p>
+
+<p>If value is found, it is moved to the end of the list.
+This operation can be used in implemenation of LRU cache.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1i</span>, <span class='string'>&quot;a&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='string'>&quot;b&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='string'>&quot;d&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get_refresh</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>));
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='number'>2</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='ident'>map</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>().<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+</pre>
+</div><h4 id='method.remove' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>(&amp;mut self, k: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
+<div class='docblock'><p>Removes and returns the value corresponding to the key from the map.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2i</span>, <span class='string'>&quot;a&quot;</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>None</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>None</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>len</span>(), <span class='number'>0</span>);
+</pre>
+</div><h4 id='method.capacity' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.capacity' class='fnname'>capacity</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a></code></h4>
+<div class='docblock'><p>Returns the maximum number of key-value pairs the map can hold without reallocating.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>LinkedHashMap</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+<span class='kw'>let</span> <span class='ident'>capacity</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>capacity</span>();
+</pre>
+</div><h4 id='method.pop_front' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.pop_front' class='fnname'>pop_front</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Removes the first entry.</p>
+
+<p>Can be used in implementation of LRU cache.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1i</span>, <span class='number'>10i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
+<span class='ident'>map</span>.<span class='ident'>pop_front</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>None</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>20</span>));
+</pre>
+</div><h4 id='method.len' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.uint.html'>uint</a></code></h4>
+<div class='docblock'><p>Returns the number of key-value pairs in the map.</p>
+</div><h4 id='method.is_empty' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Returns whether the map is currently empty.</p>
+</div><h4 id='method.clear' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Clear the map of all key-value pairs.</p>
+</div><h4 id='method.iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../../collect/linked_hash_map/struct.Iter.html' title='collect::linked_hash_map::Iter'>Iter</a>&lt;K, V&gt;</code></h4>
+<div class='docblock'><p>A double-ended iterator visiting all key-value pairs in order of insertion.
+Iterator element type is <code>(&amp;&#39;a K, &amp;&#39;a V)</code></p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>10</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>30</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>20</span>);
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>iter</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>10</span>)), <span class='ident'>iter</span>.<span class='ident'>next</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;c&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>30</span>)), <span class='ident'>iter</span>.<span class='ident'>next</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>, <span class='kw-2'>&amp;</span><span class='number'>20</span>)), <span class='ident'>iter</span>.<span class='ident'>next</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>iter</span>.<span class='ident'>next</span>());
+</pre>
+</div><h4 id='method.keys' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/linked_hash_map/struct.Keys.html' title='collect::linked_hash_map::Keys'>Keys</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>A double-ended iterator visiting all key in order of insertion.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&#39;a&#39;</span>, <span class='number'>10i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&#39;c&#39;</span>, <span class='number'>30</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&#39;b&#39;</span>, <span class='number'>20</span>);
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>keys</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='string'>&#39;a&#39;</span>, <span class='ident'>keys</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='string'>&#39;c&#39;</span>, <span class='ident'>keys</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='string'>&#39;b&#39;</span>, <span class='ident'>keys</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>keys</span>.<span class='ident'>next</span>());
+</pre>
+</div><h4 id='method.values' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../collect/linked_hash_map/struct.Values.html' title='collect::linked_hash_map::Values'>Values</a>&lt;'a, K, V&gt;</code></h4>
+<div class='docblock'><p>A double-ended iterator visiting all values in order of insertion.</p>
+
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LinkedHashMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&#39;a&#39;</span>, <span class='number'>10i</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&#39;c&#39;</span>, <span class='number'>30</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&#39;b&#39;</span>, <span class='number'>20</span>);
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>values</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>values</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>, <span class='ident'>values</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='number'>30</span>, <span class='ident'>values</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='number'>20</span>, <span class='ident'>values</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>values</span>.<span class='ident'>next</span>());
+</pre>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>, V&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Extend.html' title='core::iter::Extend'>Extend</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(K, V)</a>&gt; for <a class='struct' href='../../collect/linked_hash_map/struct.LinkedHashMap.html' title='collect::linked_hash_map::LinkedHashMap'>LinkedHashMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.extend' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.extend' class='fnname'>extend</a>&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&gt;(&amp;mut self, iter: T)</code></h4>
+</div><h3 class='impl'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>impl&lt;A: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>, B: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> for <a class='struct' href='../../collect/linked_hash_map/struct.LinkedHashMap.html' title='collect::linked_hash_map::LinkedHashMap'>LinkedHashMap</a>&lt;A, B&gt;</code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Returns a string that lists the key-value pairs in insertion order.</p>
+</div></div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Send.html' title='core::kinds::Send'>Send</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Send.html' title='core::kinds::Send'>Send</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Send.html' title='core::kinds::Send'>Send</a> for <a class='struct' href='../../collect/linked_hash_map/struct.LinkedHashMap.html' title='collect::linked_hash_map::LinkedHashMap'>LinkedHashMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><a class='stability Experimental' title='Experimental'></a><code>impl&lt;K: <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sync.html' title='core::kinds::Sync'>Sync</a>, V: <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sync.html' title='core::kinds::Sync'>Sync</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/kinds/trait.Sync.html' title='core::kinds::Sync'>Sync</a> for <a class='struct' href='../../collect/linked_hash_map/struct.LinkedHashMap.html' title='collect::linked_hash_map::LinkedHashMap'>LinkedHashMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;K, V&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../collect/linked_hash_map/struct.LinkedHashMap.html' title='collect::linked_hash_map::LinkedHashMap'>LinkedHashMap</a>&lt;K, V&gt;</code></h3><div class='impl-items'><h4 id='method.drop' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "collect";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>
