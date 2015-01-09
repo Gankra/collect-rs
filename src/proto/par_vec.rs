@@ -106,7 +106,7 @@ impl<T: Send> ops::DerefMut for ParSlice<T> {
 
 impl<T: Send> Show for ParSlice<T> where T: Show {
     fn fmt(&self, f: &mut Formatter) -> Result<(), FmtError> {
-        write!(f, "{}", self.data)
+        write!(f, "{:?}", self.data)
     }
 }
 

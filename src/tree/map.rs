@@ -16,7 +16,7 @@ use std::iter;
 use std::mem::{replace, swap};
 use std::ops;
 use std::ptr;
-use std::hash::{Writer, Hash};
+use std::hash::{Hash, Hasher, Writer};
 
 use compare::{Compare, Natural};
 
@@ -31,6 +31,7 @@ use compare::{Compare, Natural};
 /// # Examples
 ///
 /// ```rust
+/// #![allow(unstable)]
 /// use collect::TreeMap;
 ///
 /// let mut map = TreeMap::new();
@@ -162,7 +163,7 @@ impl<K: Show, V: Show, C> Show for TreeMap<K, V, C> where C: Compare<K> {
 
         for (i, (k, v)) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}: {}", *k, *v));
+            try!(write!(f, "{:?}: {:?}", *k, *v));
         }
 
         write!(f, "}}")
@@ -607,20 +608,20 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::tree_map::TreeMap;
     ///
-    /// fn get_headers() -> TreeMap<String, String> {
+    /// fn get_headers() -> TreeMap<&'static str, &'static str> {
     ///     let mut result = TreeMap::new();
-    ///     result.insert("Content-Type".to_string(), "application/xml".to_string());
-    ///     result.insert("User-Agent".to_string(), "Curl-Rust/0.1".to_string());
+    ///     result.insert("Content-Type", "application/xml");
+    ///     result.insert("User-Agent", "Curl-Rust/0.1");
     ///     result
     /// }
     ///
     /// let headers = get_headers();
     /// let ua_key = "User-Agent";
-    /// let ua = headers.find_with(|k| {
-    ///    ua_key.cmp(k.as_slice())
+    /// let ua = headers.find_with(|&k| {
+    ///    ua_key.cmp(k)
     /// });
     ///
-    /// assert_eq!((*ua.unwrap()).as_slice(), "Curl-Rust/0.1");
+    /// assert_eq!(*ua.unwrap(), "Curl-Rust/0.1");
     /// ```
     #[inline]
     #[experimental = "likely to be renamed, may be removed"]
@@ -1331,7 +1332,7 @@ impl<K, V, C> Extend<(K, V)> for TreeMap<K, V, C> where C: Compare<K> {
     }
 }
 
-impl<S: Writer, K: Hash<S>, V: Hash<S>, C> Hash<S> for TreeMap<K, V, C> where C: Compare<K> {
+impl<S: Hasher+Writer, K: Hash<S>, V: Hash<S>, C> Hash<S> for TreeMap<K, V, C> where C: Compare<K> {
     fn hash(&self, state: &mut S) {
         for elt in self.iter() {
             elt.hash(state);
@@ -1763,16 +1764,14 @@ mod test_treemap {
 
     #[test]
     fn test_show() {
-        let mut map: TreeMap<int, int> = TreeMap::new();
-        let empty: TreeMap<int, int> = TreeMap::new();
+        let mut map = TreeMap::new();
+        let empty: TreeMap<i32, i32> = TreeMap::new();
 
         map.insert(1, 2);
         map.insert(3, 4);
 
-        let map_str = format!("{}", map);
-
-        assert!(map_str == "{1: 2, 3: 4}");
-        assert_eq!(format!("{}", empty), "{}");
+        assert_eq!(format!("{:?}", map), "{1i32: 2i32, 3i32: 4i32}");
+        assert_eq!(format!("{:?}", empty), "{}");
     }
 
     #[test]

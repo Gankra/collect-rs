@@ -14,7 +14,7 @@ use std::fmt;
 use std::fmt::Show;
 use std::iter::Peekable;
 use std::iter;
-use std::hash::{Writer, Hash};
+use std::hash::{Hash, Hasher, Writer};
 use std::ops;
 
 use compare::{Compare, Natural};
@@ -111,7 +111,7 @@ impl<T: Show, C> Show for TreeSet<T, C> where C: Compare<T> {
 
         for (i, x) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}", *x));
+            try!(write!(f, "{:?}", *x));
         }
 
         write!(f, "}}")
@@ -826,7 +826,7 @@ impl<T, C> Extend<T> for TreeSet<T, C> where C: Compare<T> {
     }
 }
 
-impl<S: Writer, T: Hash<S>, C> Hash<S> for TreeSet<T, C> where C: Compare<T> {
+impl<S: Hasher+Writer, T: Hash<S>, C> Hash<S> for TreeSet<T, C> where C: Compare<T> {
     fn hash(&self, state: &mut S) {
         for elt in self.iter() {
             elt.hash(state);
@@ -989,7 +989,7 @@ mod test {
       y.insert(2);
       y.insert(1);
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
     }
 
     struct Counter<'a, 'b> {
@@ -1162,16 +1162,14 @@ mod test {
 
     #[test]
     fn test_show() {
-        let mut set: TreeSet<int> = TreeSet::new();
-        let empty: TreeSet<int> = TreeSet::new();
+        let mut set = TreeSet::new();
+        let empty: TreeSet<i32> = TreeSet::new();
 
         set.insert(1);
         set.insert(2);
 
-        let set_str = format!("{}", set);
-
-        assert!(set_str == "{1, 2}");
-        assert_eq!(format!("{}", empty), "{}");
+        assert_eq!(format!("{:?}", set), "{1i32, 2i32}");
+        assert_eq!(format!("{:?}", empty), "{}");
     }
 
     #[test]

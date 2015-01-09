@@ -3,7 +3,7 @@ use std::collections::{dlist, ring_buf, DList, RingBuf};
 use std::iter;
 use std::fmt;
 use std::mem;
-use std::hash::{Hash, Writer};
+use std::hash::{Hash, Hasher, Writer};
 use std::num::Int;
 use traverse::Traversal;
 
@@ -476,14 +476,14 @@ impl<A: fmt::Show> fmt::Show for BList<A> {
 
         for (i, e) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}", *e));
+            try!(write!(f, "{:?}", *e));
         }
 
         write!(f, "]")
     }
 }
 
-impl<S: Writer, A: Hash<S>> Hash<S> for BList<A> {
+impl<S: Hasher+Writer, A: Hash<S>> Hash<S> for BList<A> {
     fn hash(&self, state: &mut S) {
         self.len().hash(state);
         for elt in self.iter() {
@@ -657,7 +657,7 @@ mod test {
       let mut x = BList::new();
       let mut y = BList::new();
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
 
       x.push_back(1i);
       x.push_back(2);
@@ -667,7 +667,7 @@ mod test {
       y.push_front(2);
       y.push_front(1);
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
     }
 
     #[test]
@@ -714,13 +714,13 @@ mod test {
 
     #[test]
     fn test_show() {
-        let list: BList<int> = range(0i, 10).collect();
-        assert!(list.to_string().as_slice() == "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
+        let list: BList<i32> = range(0, 10).collect();
+        assert_eq!(format!("{:?}", list), "[0i32, 1i32, 2i32, 3i32, 4i32, 5i32, 6i32, 7i32, 8i32, 9i32]");
 
         let list: BList<&str> = vec!["just", "one", "test", "more"].iter()
                                                                    .map(|&s| s)
                                                                    .collect();
-        assert!(list.to_string().as_slice() == "[just, one, test, more]");
+        assert_eq!(format!("{:?}", list), r#"["just", "one", "test", "more"]"#);
     }
 }
 

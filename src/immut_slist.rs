@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::iter;
 use std::rc::{try_unwrap, Rc};
-use std::hash::{Writer, Hash};
+use std::hash::{Hash, Hasher, Writer};
 use std;
 
 struct Node<T> {
@@ -185,14 +185,14 @@ impl<T: std::fmt::Show> std::fmt::Show for ImmutSList<T> {
 
         for (i, e) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}", *e));
+            try!(write!(f, "{:?}", *e));
         }
 
         write!(f, "]")
     }
 }
 
-impl<S: Writer, A: Hash<S>> Hash<S> for ImmutSList<A> {
+impl<S: Hasher+Writer, A: Hash<S>> Hash<S> for ImmutSList<A> {
     fn hash(&self, state: &mut S) {
         self.len().hash(state);
         for elt in self.iter() {
@@ -309,12 +309,12 @@ mod tests {
       let mut x = ImmutSList::new();
       let mut y = ImmutSList::new();
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
 
       x = x.append(1i).append(2).append(3);
       y = y.append(1i).append(4).tail().append(2).append(3);
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
     }
 
     #[test]
@@ -361,14 +361,14 @@ mod tests {
 
     #[test]
     fn test_show() {
-        let list: ImmutSList<int> = range(0i, 10).rev().collect();
-        assert!(list.to_string().as_slice() == "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
+        let list: ImmutSList<i32> = range(0, 10).rev().collect();
+        assert_eq!(format!("{:?}", list), "[0i32, 1i32, 2i32, 3i32, 4i32, 5i32, 6i32, 7i32, 8i32, 9i32]");
 
         let list: ImmutSList<&str> = vec!["just", "one", "test", "more"].iter()
                                                                    .rev()
                                                                    .map(|&s| s)
                                                                    .collect();
-        assert!(list.to_string().as_slice() == "[just, one, test, more]");
+        assert_eq!(format!("{:?}", list), r#"["just", "one", "test", "more"]"#);
     }
 
     #[bench]

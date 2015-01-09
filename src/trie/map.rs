@@ -12,19 +12,19 @@
 
 pub use self::Entry::*;
 use self::TrieNode::*;
+
 use std::cmp::Ordering;
 use std::default::Default;
-use std::fmt;
 use std::fmt::Show;
+use std::fmt;
+use std::hash::{Hash, Hasher, Writer};
+use std::iter;
 use std::mem::zeroed;
 use std::mem;
-use std::ops::{self, Slice, SliceMut};
-use std::uint;
-use std::iter;
+use std::ops;
 use std::ptr;
-use std::hash::{Writer, Hash};
-
 use std::slice;
+use std::uint;
 
 // FIXME(conventions): implement bounded iterators
 // FIXME(conventions): implement into_iter
@@ -141,7 +141,7 @@ impl<T: Show> Show for TrieMap<T> {
 
         for (i, (k, v)) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}: {}", k, *v));
+            try!(write!(f, "{:?}: {:?}", k, *v));
         }
 
         write!(f, "}}")
@@ -475,8 +475,7 @@ macro_rules! bound {
      // are we looking at the upper bound?
      is_upper = $upper:expr,
 
-     // method names for slicing/iterating.
-     slice_from = $slice_from:ident,
+     // method name for iterating.
      iter = $iter:ident,
 
      // see the comment on `addr!`, this is just an optional mut, but
@@ -535,7 +534,7 @@ macro_rules! bound {
                         }
                     };
                     // push to the stack.
-                    it.stack[it.length] = children.$slice_from(&slice_idx).$iter();
+                    it.stack[it.length] = children[slice_idx..].$iter();
                     it.length += 1;
                     if ret { return it }
                 })
@@ -549,7 +548,7 @@ impl<T> TrieMap<T> {
     fn bound<'a>(&'a self, key: uint, upper: bool) -> Iter<'a, T> {
         bound!(Iter, self = self,
                key = key, is_upper = upper,
-               slice_from = slice_from_or_fail, iter = iter,
+               iter = iter,
                mutability = )
     }
 
@@ -591,7 +590,7 @@ impl<T> TrieMap<T> {
     fn bound_mut<'a>(&'a mut self, key: uint, upper: bool) -> IterMut<'a, T> {
         bound!(IterMut, self = self,
                key = key, is_upper = upper,
-               slice_from = slice_from_or_fail_mut, iter = iter_mut,
+               iter = iter_mut,
                mutability = mut)
     }
 
@@ -662,7 +661,7 @@ impl<T> Extend<(uint, T)> for TrieMap<T> {
     }
 }
 
-impl<S: Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
+impl<S: Hasher+Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
     fn hash(&self, state: &mut S) {
         for elt in self.iter() {
             elt.hash(state);
@@ -1117,7 +1116,7 @@ macro_rules! iterator_impl {
             // using init rather than uninit, so that the worst that can happen
             // from failing to initialise correctly after calling these is a
             // segfault.
-            #[cfg(target_word_size="32")]
+            #[cfg(target_pointer_width="32")]
             unsafe fn new() -> $name<'a, T> {
                 $name {
                     remaining_min: 0,
@@ -1129,7 +1128,7 @@ macro_rules! iterator_impl {
                 }
             }
 
-            #[cfg(target_word_size="64")]
+            #[cfg(target_pointer_width="64")]
             unsafe fn new() -> $name<'a, T> {
                 $name {
                     remaining_min: 0,
@@ -1592,7 +1591,7 @@ mod test {
       let mut x = TrieMap::new();
       let mut y = TrieMap::new();
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
       x.insert(1, 'a');
       x.insert(2, 'b');
       x.insert(3, 'c');
@@ -1601,21 +1600,19 @@ mod test {
       y.insert(2, 'b');
       y.insert(1, 'a');
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
     }
 
     #[test]
     fn test_show() {
         let mut map = TrieMap::new();
-        let empty: TrieMap<uint> = TrieMap::new();
+        let empty: TrieMap<char> = TrieMap::new();
 
         map.insert(1, 'a');
         map.insert(2, 'b');
 
-        let map_str = format!("{}", map);
-
-        assert!(map_str == "{1: a, 2: b}");
-        assert_eq!(format!("{}", empty), "{}");
+        assert_eq!(format!("{:?}", map), "{1u: 'a', 2u: 'b'}");
+        assert_eq!(format!("{:?}", empty), "{}");
     }
 
     #[test]

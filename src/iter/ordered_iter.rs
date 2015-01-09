@@ -81,6 +81,7 @@ pub struct OuterJoinIterator<A: Iterator<Item=VA>, B: Iterator<Item=VB>, VA, VB>
     right: Peekable<VB, B>
 }
 
+#[old_impl_check]
 impl<K: Ord, DataA, DataB,
      A: OrderedMapIterator<K, DataA>,
      B: OrderedMapIterator<K, DataB>>
@@ -126,6 +127,7 @@ impl<K: Ord, DataA, DataB,
 }
 
 
+#[old_impl_check]
 impl<K: Ord,
      A: OrderedSetIterator<K>,
      B: OrderedSetIterator<K>>
@@ -162,6 +164,7 @@ impl<K: Ord,
     }
 }
 
+#[old_impl_check]
 impl<K: Ord,
      V,
      SetIter: OrderedSetIterator<K>,
