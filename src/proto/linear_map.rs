@@ -68,14 +68,14 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     }
 
     /// Creates an empty map with the given initial capacity.
-    pub fn with_capacity(capacity: uint) -> LinearMap<K,V> {
+    pub fn with_capacity(capacity: usize) -> LinearMap<K,V> {
         LinearMap {
             storage: Vec::with_capacity(capacity),
         }
     }
 
     /// Returns the number of elements the map can hold without reallocating.
-    pub fn capacity(&self) -> uint {
+    pub fn capacity(&self) -> usize {
         self.storage.capacity()
     }
 
@@ -85,8 +85,8 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     ///
     /// # Panics
     ///
-    /// Panics if the new allocation size overflows `uint`.
-    pub fn reserve(&mut self, additional: uint) {
+    /// Panics if the new allocation size overflows `usize`.
+    pub fn reserve(&mut self, additional: usize) {
         self.storage.reserve(additional);
     }
 
@@ -99,8 +99,8 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     ///
     /// # Panics
     ///
-    /// Panics if the new capacity overflows `uint`.
-    pub fn reserve_exact(&mut self, additional: uint) {
+    /// Panics if the new capacity overflows `usize`.
+    pub fn reserve_exact(&mut self, additional: usize) {
         self.storage.reserve_exact(additional);
     }
 
@@ -114,7 +114,7 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     }
 
     /// Returns the number of elements in the map.
-    pub fn len(&self) -> uint {
+    pub fn len(&self) -> usize {
         self.storage.len()
     }
 
@@ -244,25 +244,25 @@ pub struct Values<'a, K:'a, V:'a> {
 impl<'a, K:'a, V:'a> Iterator for Iter<'a, K, V> {
     type Item = (&'a K, &'a V);
     fn next(&mut self) -> Option<(&'a K, &'a V)> { self.iter.next() }
-    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
 }
 
 impl<'a, K:'a, V:'a> Iterator for IterMut<'a, K, V> {
     type Item = (&'a K, &'a mut V);
     fn next(&mut self) -> Option<(&'a K, &'a mut V)> { self.iter.next() }
-    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
 }
 
 impl<'a, K:'a, V:'a> Iterator for Keys<'a, K, V> {
     type Item = &'a K;
     fn next(&mut self) -> Option<&'a K> { self.iter.next() }
-    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
 }
 
 impl<'a, K:'a, V:'a> Iterator for Values<'a, K, V> {
     type Item = &'a V;
     fn next(&mut self) -> Option<&'a V> { self.iter.next() }
-    fn size_hint(&self) -> (uint, Option<uint>) { self.iter.size_hint() }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
 }
 
 impl<'a, K:'a, V:'a> Clone for Iter<'a, K, V> {
@@ -302,7 +302,7 @@ impl<'a, K:'a, V:'a> ExactSizeIterator for Values <'a, K, V> { }
 mod test {
     use super::LinearMap;
 
-    const TEST_CAPACITY: uint = 10;
+    const TEST_CAPACITY: usize = 10;
 
     #[test]
     fn test_new() {

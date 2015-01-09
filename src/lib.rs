@@ -21,7 +21,6 @@
 
 #![allow(unstable)]
 #![feature(box_syntax)]
-#![feature(int_uint)]
 #![feature(old_impl_check)]
 #![feature(unboxed_closures)]
 #![feature(unsafe_destructor)]

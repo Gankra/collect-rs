@@ -17,14 +17,14 @@
 //! use collect::LinkedHashMap;
 //!
 //! let mut map = LinkedHashMap::new();
-//! map.insert(2i, 20i);
+//! map.insert(2is, 20is);
 //! map.insert(1, 10);
 //! map.insert(3, 30);
 //! assert_eq!(*map.get(&1).unwrap(), 10);
 //! assert_eq!(*map.get(&2).unwrap(), 20);
 //! assert_eq!(*map.get(&3).unwrap(), 30);
 //!
-//! let items: Vec<(int, int)> = map.iter().map(|t| (*t.0, *t.1)).collect();
+//! let items: Vec<(isize, isize)> = map.iter().map(|t| (*t.0, *t.1)).collect();
 //! assert_eq!(vec![(2, 20), (1, 10), (3, 30)], items);
 //! ```
 
@@ -104,7 +104,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
-    /// map.insert(1i, "a");
+    /// map.insert(1is, "a");
     /// map.insert(2, "b");
     /// assert_eq!(map.get(&1), Some(&"a"));
     /// assert_eq!(map.get(&2), Some(&"b"));
@@ -145,7 +145,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
-    /// map.insert(1i, "a");
+    /// map.insert(1is, "a");
     /// map.insert(2, "b");
     /// map.insert(2, "c");
     /// map.insert(3, "d");
@@ -168,7 +168,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
-    /// map.insert(1i, "a");
+    /// map.insert(1is, "a");
     /// map.insert(2, "b");
     /// map.insert(3, "d");
     ///
@@ -202,7 +202,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
-    /// map.insert(2i, "a");
+    /// map.insert(2is, "a");
     ///
     /// assert_eq!(map.remove(&1), None);
     /// assert_eq!(map.remove(&2), Some("a"));
@@ -224,10 +224,10 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     ///
     /// ```rust
     /// use collect::LinkedHashMap;
-    /// let mut map: LinkedHashMap<int, &str> = LinkedHashMap::new();
+    /// let mut map: LinkedHashMap<isize, &str> = LinkedHashMap::new();
     /// let capacity = map.capacity();
     /// ```
-    pub fn capacity(&self) -> uint {
+    pub fn capacity(&self) -> usize {
         self.map.capacity()
     }
 
@@ -240,7 +240,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// ```rust
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
-    /// map.insert(1i, 10i);
+    /// map.insert(1is, 10is);
     /// map.insert(2, 20);
     /// map.pop_front();
     /// assert_eq!(map.get(&1), None);
@@ -256,7 +256,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     }
 
     /// Returns the number of key-value pairs in the map.
-    pub fn len(&self) -> uint { self.map.len() }
+    pub fn len(&self) -> usize { self.map.len() }
 
     /// Returns whether the map is currently empty.
     pub fn is_empty(&self) -> bool { self.len() == 0 }
@@ -304,7 +304,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     ///
     /// let mut map = LinkedHashMap::new();
-    /// map.insert('a', 10i);
+    /// map.insert('a', 10is);
     /// map.insert('c', 30);
     /// map.insert('b', 20);
     ///
@@ -328,7 +328,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     ///
     /// let mut map = LinkedHashMap::new();
-    /// map.insert('a', 10i);
+    /// map.insert('a', 10is);
     /// map.insert('c', 30);
     /// map.insert('b', 20);
     ///
@@ -410,7 +410,7 @@ impl<K, V> Drop for LinkedHashMap<K, V> {
 pub struct Iter<'a, K: 'a, V: 'a> {
     head: *const LinkedHashMapEntry<K, V>,
     tail: *const LinkedHashMapEntry<K, V>,
-    remaining: uint,
+    remaining: usize,
     marker: marker::ContravariantLifetime<'a>,
 }
 
@@ -430,7 +430,7 @@ impl<'a, K, V> Iterator for Iter<'a, K, V> {
         }
     }
 
-    fn size_hint(&self) -> (uint, Option<uint>) {
+    fn size_hint(&self) -> (usize, Option<usize>) {
         (self.remaining, Some(self.remaining))
     }
 }
@@ -461,7 +461,7 @@ impl<'a, K, V> Iterator for Keys<'a, K, V> {
     type Item = &'a K;
 
     #[inline] fn next(&mut self) -> Option<(&'a K)> { self.inner.next() }
-    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.inner.size_hint() }
+    #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.inner.size_hint() }
 }
 
 impl<'a, K, V> DoubleEndedIterator for Keys<'a, K, V> {
@@ -479,7 +479,7 @@ impl<'a, K, V> Iterator for Values<'a, K, V> {
     type Item = &'a V;
 
     #[inline] fn next(&mut self) -> Option<(&'a V)> { self.inner.next() }
-    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.inner.size_hint() }
+    #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.inner.size_hint() }
 }
 
 impl<'a, K, V> DoubleEndedIterator for Values<'a, K, V> {
@@ -501,7 +501,7 @@ mod tests {
     #[test]
     fn test_insert_and_get() {
         let mut map = LinkedHashMap::new();
-        map.insert(1i, 10i);
+        map.insert(1is, 10is);
         map.insert(2, 20);
         assert_opt_eq(map.get(&1), 10);
         assert_opt_eq(map.get(&2), 20);
@@ -511,7 +511,7 @@ mod tests {
     #[test]
     fn test_insert_update() {
         let mut map = LinkedHashMap::new();
-        map.insert("1".to_string(), vec![10i, 10]);
+        map.insert("1".to_string(), vec![10is, 10]);
         map.insert("1".to_string(), vec![10, 19]);
         assert_opt_eq(map.get(&"1".to_string()), vec![10, 19]);
         assert_eq!(map.len(), 1);
@@ -538,7 +538,7 @@ mod tests {
     #[test]
     fn test_remove() {
         let mut map = LinkedHashMap::new();
-        map.insert(1i, 10i);
+        map.insert(1is, 10is);
         map.insert(2, 20);
         map.insert(3, 30);
         map.insert(4, 40);
@@ -558,7 +558,7 @@ mod tests {
     #[test]
     fn test_clear() {
         let mut map = LinkedHashMap::new();
-        map.insert(1i, 10i);
+        map.insert(1is, 10is);
         map.insert(2, 20);
         map.clear();
         assert!(map.get(&1).is_none());

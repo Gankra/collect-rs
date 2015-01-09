@@ -89,7 +89,7 @@ fn bit<E:CLike>(e: &E) -> u32 {
     let value = e.to_u32();
     assert!(value < u32::BITS as u32,
             "EnumSet only supports up to {} variants.", u32::BITS - 1);
-    1 << value as uint
+    1 << value
 }
 
 impl<E:CLike> EnumSet<E> {
@@ -111,7 +111,7 @@ impl<E:CLike> EnumSet<E> {
 
     /// Returns the number of elements in the given `EnumSet`.
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn len(&self) -> uint {
+    pub fn len(&self) -> usize {
         self.bits.count_ones()
     }
 
@@ -262,7 +262,7 @@ impl<E:CLike> Iterator for Iter<E> {
         self.bits >>= 1;
         Some(elem)
     }
-    fn size_hint(&self) -> (uint, Option<uint>) {
+    fn size_hint(&self) -> (usize, Option<usize>) {
         let exact = self.bits.count_ones();
         (exact, Some(exact))
     }
