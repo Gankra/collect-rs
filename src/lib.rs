@@ -23,8 +23,6 @@
 #![feature(box_syntax)]
 #![feature(int_uint)]
 #![feature(old_impl_check)]
-#![feature(old_orphan_check)]
-#![feature(slicing_syntax)]
 #![feature(unboxed_closures)]
 #![feature(unsafe_destructor)]
 
