@@ -518,21 +518,21 @@ mod tests {
     }
 
     #[test]
-    fn test_to_string() {
+    fn test_show() {
         let mut map = LinkedHashMap::new();
-        assert_eq!(map.to_string(), "{}");
-        map.insert(1i, 10i);
+        assert_eq!(format!("{:?}", map), "{}");
+        map.insert(1, 10);
         map.insert(2, 20);
         map.insert(3, 30);
-        assert_eq!(map.to_string(), "{1: 10, 2: 20, 3: 30}");
+        assert_eq!(format!("{:?}", map), "{1i32: 10i32, 2i32: 20i32, 3i32: 30i32}");
         map.insert(2, 22);
-        assert_eq!(map.to_string(), "{1: 10, 3: 30, 2: 22}");
+        assert_eq!(format!("{:?}", map), "{1i32: 10i32, 3i32: 30i32, 2i32: 22i32}");
         map.get(&3);
-        assert_eq!(map.to_string(), "{1: 10, 3: 30, 2: 22}");
+        assert_eq!(format!("{:?}", map), "{1i32: 10i32, 3i32: 30i32, 2i32: 22i32}");
         map.get_refresh(&3);
-        assert_eq!(map.to_string(), "{1: 10, 2: 22, 3: 30}");
+        assert_eq!(format!("{:?}", map), "{1i32: 10i32, 2i32: 22i32, 3i32: 30i32}");
         map.clear();
-        assert_eq!(map.to_string(), "{}");
+        assert_eq!(format!("{:?}", map), "{}");
     }
 
     #[test]
@@ -563,7 +563,7 @@ mod tests {
         map.clear();
         assert!(map.get(&1).is_none());
         assert!(map.get(&2).is_none());
-        assert_eq!(map.to_string(), "{}");
+        assert_eq!(format!("{:?}", map), "{}");
     }
 
     #[test]

@@ -1763,16 +1763,14 @@ mod test_treemap {
 
     #[test]
     fn test_show() {
-        let mut map: TreeMap<int, int> = TreeMap::new();
-        let empty: TreeMap<int, int> = TreeMap::new();
+        let mut map = TreeMap::new();
+        let empty: TreeMap<i32, i32> = TreeMap::new();
 
         map.insert(1, 2);
         map.insert(3, 4);
 
-        let map_str = format!("{}", map);
-
-        assert!(map_str == "{1: 2, 3: 4}");
-        assert_eq!(format!("{}", empty), "{}");
+        assert_eq!(format!("{:?}", map), "{1i32: 2i32, 3i32: 4i32}");
+        assert_eq!(format!("{:?}", empty), "{}");
     }
 
     #[test]

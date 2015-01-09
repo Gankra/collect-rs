@@ -1591,7 +1591,7 @@ mod test {
       let mut x = TrieMap::new();
       let mut y = TrieMap::new();
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
       x.insert(1, 'a');
       x.insert(2, 'b');
       x.insert(3, 'c');
@@ -1600,21 +1600,19 @@ mod test {
       y.insert(2, 'b');
       y.insert(1, 'a');
 
-      assert!(hash::hash(&x) == hash::hash(&y));
+      assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
     }
 
     #[test]
     fn test_show() {
         let mut map = TrieMap::new();
-        let empty: TrieMap<uint> = TrieMap::new();
+        let empty: TrieMap<char> = TrieMap::new();
 
         map.insert(1, 'a');
         map.insert(2, 'b');
 
-        let map_str = format!("{}", map);
-
-        assert!(map_str == "{1: a, 2: b}");
-        assert_eq!(format!("{}", empty), "{}");
+        assert_eq!(format!("{:?}", map), "{1u: 'a', 2u: 'b'}");
+        assert_eq!(format!("{:?}", empty), "{}");
     }
 
     #[test]

@@ -318,11 +318,11 @@ mod test {
     #[test]
     fn test_show() {
         let mut e = EnumSet::new();
-        assert_eq!("{}", e.to_string());
+        assert_eq!("{}", format!("{:?}", e));
         e.insert(A);
-        assert_eq!("{A}", e.to_string());
+        assert_eq!("{A}", format!("{:?}", e));
         e.insert(C);
-        assert_eq!("{A, C}", e.to_string());
+        assert_eq!("{A, C}", format!("{:?}", e));
     }
 
     #[test]

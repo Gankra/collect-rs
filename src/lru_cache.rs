@@ -316,20 +316,20 @@ mod tests {
     }
 
     #[test]
-    fn test_to_string() {
-        let mut cache: LruCache<int, int> = LruCache::new(3);
+    fn test_show() {
+        let mut cache: LruCache<i32, i32> = LruCache::new(3);
         cache.insert(1, 10);
         cache.insert(2, 20);
         cache.insert(3, 30);
-        assert_eq!(cache.to_string(), "{3: 30, 2: 20, 1: 10}");
+        assert_eq!(format!("{:?}", cache), "{3i32: 30i32, 2i32: 20i32, 1i32: 10i32}");
         cache.insert(2, 22);
-        assert_eq!(cache.to_string(), "{2: 22, 3: 30, 1: 10}");
+        assert_eq!(format!("{:?}", cache), "{2i32: 22i32, 3i32: 30i32, 1i32: 10i32}");
         cache.insert(6, 60);
-        assert_eq!(cache.to_string(), "{6: 60, 2: 22, 3: 30}");
+        assert_eq!(format!("{:?}", cache), "{6i32: 60i32, 2i32: 22i32, 3i32: 30i32}");
         cache.get(&3);
-        assert_eq!(cache.to_string(), "{3: 30, 6: 60, 2: 22}");
+        assert_eq!(format!("{:?}", cache), "{3i32: 30i32, 6i32: 60i32, 2i32: 22i32}");
         cache.set_capacity(2);
-        assert_eq!(cache.to_string(), "{3: 30, 6: 60}");
+        assert_eq!(format!("{:?}", cache), "{3i32: 30i32, 6i32: 60i32}");
     }
 
     #[test]
@@ -361,6 +361,6 @@ mod tests {
         cache.clear();
         assert!(cache.get(&1).is_none());
         assert!(cache.get(&2).is_none());
-        assert_eq!(cache.to_string(), "{}");
+        assert_eq!(format!("{:?}", cache), "{}");
     }
 }

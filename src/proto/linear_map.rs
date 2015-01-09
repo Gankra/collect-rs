@@ -429,7 +429,7 @@ mod test {
         {
             let mut result_k = 0;
             let mut result_v = 0;
-            for (&k, &v) in map.iter_mut() {
+            for (&k, &mut v) in map.iter_mut() {
                 result_k ^= k;
                 result_v ^= v;
                 assert_eq!(((k << 1) & ALL) | ((k >> 3) & ALL), v);
