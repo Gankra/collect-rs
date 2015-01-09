@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.5/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/traverse-0.0.6/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -232,8 +232,8 @@
 <span id="190">190</span>
 <span id="191">191</span>
 </pre><pre class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>unboxed_closures</span>, <span class='ident'>associated_types</span>, <span class='ident'>globs</span>, <span class='ident'>phase</span>)]</span>
 <span class='comment'>//#![deny(missing_docs, warnings)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>staged_unstable</span>, <span class='ident'>staged_experimental</span>)]</span>
 
 <span class='doccomment'>//! Proof-of-concept trait for internal iterators.</span>
 
@@ -256,7 +256,7 @@
         <span class='self'>self</span>.<span class='ident'>foreach</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span>: <span class='ident'>t</span>: <span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>|</span> { <span class='ident'>f</span>(<span class='ident'>t</span>); <span class='boolval'>false</span> })
     }
 
-    <span class='kw'>fn</span> <span class='ident'>map</span><span class='op'>&lt;</span><span class='ident'>O</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>Self</span>::<span class='ident'>Item</span>) <span class='op'>-&gt;</span> <span class='ident'>O</span> {
+    <span class='kw'>fn</span> <span class='ident'>map</span><span class='op'>&lt;</span><span class='ident'>O</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span>, <span class='ident'>O</span>, <span class='ident'>Self</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>Self</span>::<span class='ident'>Item</span>) <span class='op'>-&gt;</span> <span class='ident'>O</span> {
         <span class='ident'>Map</span> { <span class='ident'>iter</span>: <span class='self'>self</span>, <span class='ident'>closure</span>: <span class='ident'>f</span> }
     }
 
@@ -265,7 +265,7 @@
         <span class='ident'>Filter</span> { <span class='ident'>iter</span>: <span class='self'>self</span>, <span class='ident'>predicate</span>: <span class='ident'>pred</span> }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>filter_map</span><span class='op'>&lt;</span><span class='ident'>O</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>pred</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>FilterMap</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>filter_map</span><span class='op'>&lt;</span><span class='ident'>O</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>pred</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>FilterMap</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span>, <span class='ident'>O</span>, <span class='ident'>Self</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
     <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>Self</span>::<span class='ident'>Item</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> {
         <span class='ident'>FilterMap</span> { <span class='ident'>iter</span>: <span class='self'>self</span>, <span class='ident'>predicate</span>: <span class='ident'>pred</span> }
     }
@@ -296,7 +296,7 @@
         <span class='ident'>Inspect</span> { <span class='ident'>iter</span>: <span class='self'>self</span>, <span class='ident'>closure</span>: <span class='ident'>f</span> }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>flat_map</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>U</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>FlatMap</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>flat_map</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>U</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>FlatMap</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span>, <span class='ident'>A</span>, <span class='ident'>U</span>, <span class='ident'>Self</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
     <span class='kw'>where</span> <span class='ident'>U</span>: <span class='ident'>Traversal</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;</span>,
           <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>Self</span>::<span class='ident'>Item</span>) <span class='op'>-&gt;</span> <span class='ident'>U</span> {
         <span class='ident'>FlatMap</span> { <span class='ident'>iter</span>: <span class='self'>self</span>, <span class='ident'>producer</span>: <span class='ident'>f</span> }
@@ -353,7 +353,7 @@
 <span class='doccomment'>/// An Traversal that maps over the contents of</span>
 <span class='doccomment'>/// another Traversal.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>closure</span>: <span class='ident'>F</span>
 }
@@ -365,7 +365,7 @@
 }
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FilterMap</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FilterMap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>predicate</span>: <span class='ident'>F</span>
 }
@@ -410,7 +410,7 @@
 }
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FlatMap</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FlatMap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span>, <span class='ident'>U</span>, <span class='ident'>I</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>iter</span>: <span class='ident'>I</span>,
     <span class='ident'>producer</span>: <span class='ident'>F</span>
 }
