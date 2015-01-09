@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>collect</a>::<wbr><a href='../index.html'>proto</a>::<wbr><a href='index.html'>linear_map</a>::<wbr><a class='struct' href=''>LinearMap</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-27343' href='../../../src/collect/proto/linear_map.rs.html#58-60'>[src]</a></span></h1>
+        </span><a id='src-27340' href='../../../src/collect/proto/linear_map.rs.html#58-60'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct LinearMap&lt;K, V&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A very simple map implementation backed by a vector.</p>
@@ -102,7 +102,7 @@ reallocations.</p>
 
 <h1 id="panics" class='section-header'><a
                            href="#panics">Panics</a></h1>
-<p>Panics if the new allocation size overflows <code>uint</code>.</p>
+<p>Panics if the new allocation size overflows <code>usize</code>.</p>
 </div><h4 id='method.reserve_exact' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.reserve_exact' class='fnname'>reserve_exact</a>(&amp;mut self, additional: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></h4>
 <div class='docblock'><p>Reserves the minimum capacity for exactly <code>additional</code> more elemnnts to
 be inserted in the map.</p>
@@ -113,7 +113,7 @@ minimal. Prefer <code>reserve</code> if future insertions are expected.</p>
 
 <h1 id="panics" class='section-header'><a
                            href="#panics">Panics</a></h1>
-<p>Panics if the new capacity overflows <code>uint</code>.</p>
+<p>Panics if the new capacity overflows <code>usize</code>.</p>
 </div><h4 id='method.shrink_to_fit' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.shrink_to_fit' class='fnname'>shrink_to_fit</a>(&amp;mut self)</code></h4>
 <div class='docblock'><p>Shrinks the capacity of the map as much as possible.</p>
 

@@ -2025,18 +2025,18 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>uint</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>usize</span>;
 
 <span class='comment'>// FIXME(conventions): implement bounded iterators</span>
 <span class='comment'>// FIXME(conventions): implement into_iter</span>
 <span class='comment'>// FIXME(conventions): replace each_reverse by making iter DoubleEnded</span>
 
 <span class='comment'>// FIXME: #5244: need to manually update the InternalNode constructor</span>
-<span class='kw'>const</span> <span class='ident'>SHIFT</span>: <span class='ident'>uint</span> <span class='op'>=</span> <span class='number'>4</span>;
-<span class='kw'>const</span> <span class='ident'>SIZE</span>: <span class='ident'>uint</span> <span class='op'>=</span> <span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>SHIFT</span>;
-<span class='kw'>const</span> <span class='ident'>MASK</span>: <span class='ident'>uint</span> <span class='op'>=</span> <span class='ident'>SIZE</span> <span class='op'>-</span> <span class='number'>1</span>;
+<span class='kw'>const</span> <span class='ident'>SHIFT</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>4</span>;
+<span class='kw'>const</span> <span class='ident'>SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>SHIFT</span>;
+<span class='kw'>const</span> <span class='ident'>MASK</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>SIZE</span> <span class='op'>-</span> <span class='number'>1</span>;
 <span class='comment'>// The number of chunks that the key is divided into. Also the maximum depth of the TrieMap.</span>
-<span class='kw'>const</span> <span class='ident'>MAX_DEPTH</span>: <span class='ident'>uint</span> <span class='op'>=</span> <span class='ident'>uint</span>::<span class='ident'>BITS</span> <span class='op'>/</span> <span class='ident'>SHIFT</span>;
+<span class='kw'>const</span> <span class='ident'>MAX_DEPTH</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>usize</span>::<span class='ident'>BITS</span> <span class='op'>/</span> <span class='ident'>SHIFT</span>;
 
 <span class='doccomment'>/// A map implemented as a radix trie.</span>
 <span class='doccomment'>///</span>
@@ -2047,7 +2047,7 @@
 <span class='doccomment'>/// the same 4 bits in the first layer, a leaf node will be created in the first layer.</span>
 <span class='doccomment'>/// When keys coincide, the next 4 bits are used to assign the node to a bucket in the next layer,</span>
 <span class='doccomment'>/// with this process continuing until an empty spot is found or there are no more bits left in the</span>
-<span class='doccomment'>/// key. As a result, the maximum depth using 32-bit `uint` keys is 8. The worst collisions occur</span>
+<span class='doccomment'>/// key. As a result, the maximum depth using 32-bit `usize` keys is 8. The worst collisions occur</span>
 <span class='doccomment'>/// for very small numbers. For example, 1 and 2 are identical in all but their least significant</span>
 <span class='doccomment'>/// 4 bits. If both numbers are used as keys, a chain of maximum length will be created to</span>
 <span class='doccomment'>/// differentiate them.</span>
@@ -2091,7 +2091,7 @@
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='ident'>root</span>: <span class='ident'>InternalNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-    <span class='ident'>length</span>: <span class='ident'>uint</span>
+    <span class='ident'>length</span>: <span class='ident'>usize</span>
 }
 
 <span class='comment'>// An internal node holds SIZE child nodes, which may themselves contain more internal nodes.</span>
@@ -2100,7 +2100,7 @@
 <span class='comment'>// to access a node. The layer of the tree directly below the root corresponds to idx 0.</span>
 <span class='kw'>struct</span> <span class='ident'>InternalNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='comment'>// The number of direct children which are external (i.e. that store a value).</span>
-    <span class='ident'>count</span>: <span class='ident'>uint</span>,
+    <span class='ident'>count</span>: <span class='ident'>usize</span>,
     <span class='ident'>children</span>: [<span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>; <span class='ident'>SIZE</span>]
 }
 
@@ -2109,7 +2109,7 @@
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>enum</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='ident'>Internal</span>(<span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>InternalNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>),
-    <span class='ident'>External</span>(<span class='ident'>uint</span>, <span class='ident'>T</span>),
+    <span class='ident'>External</span>(<span class='ident'>usize</span>, <span class='ident'>T</span>),
     <span class='ident'>Nothing</span>
 }
 
@@ -2189,16 +2189,16 @@
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>each_reverse</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>each_reverse</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>f</span>)
     }
 
     <span class='doccomment'>/// Gets an iterator visiting all keys in ascending order by the keys.</span>
-    <span class='doccomment'>/// The iterator&#39;s element type is `uint`.</span>
+    <span class='doccomment'>/// The iterator&#39;s element type is `usize`.</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>keys</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Keys</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='kw'>fn</span> <span class='ident'>first</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>B</span><span class='op'>&gt;</span>((<span class='ident'>a</span>, _): (<span class='ident'>A</span>, <span class='ident'>B</span>)) <span class='op'>-&gt;</span> <span class='ident'>A</span> { <span class='ident'>a</span> }
-        <span class='kw'>let</span> <span class='ident'>first</span>: <span class='kw'>fn</span>((<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>uint</span> <span class='op'>=</span> <span class='ident'>first</span>; <span class='comment'>// coerce to fn pointer</span>
+        <span class='kw'>let</span> <span class='ident'>first</span>: <span class='kw'>fn</span>((<span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>first</span>; <span class='comment'>// coerce to fn pointer</span>
 
         <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='ident'>first</span>)
     }
@@ -2208,7 +2208,7 @@
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>values</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Values</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='kw'>fn</span> <span class='ident'>second</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>B</span><span class='op'>&gt;</span>((_, <span class='ident'>b</span>): (<span class='ident'>A</span>, <span class='ident'>B</span>)) <span class='op'>-&gt;</span> <span class='ident'>B</span> { <span class='ident'>b</span> }
-        <span class='kw'>let</span> <span class='ident'>second</span>: <span class='kw'>fn</span>((<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span> <span class='op'>=</span> <span class='ident'>second</span>; <span class='comment'>// coerce to fn pointer</span>
+        <span class='kw'>let</span> <span class='ident'>second</span>: <span class='kw'>fn</span>((<span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span> <span class='op'>=</span> <span class='ident'>second</span>; <span class='comment'>// coerce to fn pointer</span>
 
         <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='ident'>second</span>)
     }
@@ -2243,10 +2243,10 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::TrieMap;</span>
-    <span class='doccomment'>/// let mut map: TrieMap&lt;int&gt; = [(1, 2), (2, 4), (3, 6)].iter().map(|&amp;x| x).collect();</span>
+    <span class='doccomment'>/// let mut map: TrieMap&lt;isize&gt; = [(1, 2), (2, 4), (3, 6)].iter().map(|&amp;x| x).collect();</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// for (key, value) in map.iter_mut() {</span>
-    <span class='doccomment'>///     *value = -(key as int);</span>
+    <span class='doccomment'>///     *value = -(key as isize);</span>
     <span class='doccomment'>/// }</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;1), Some(&amp;-1));</span>
@@ -2278,7 +2278,7 @@
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>uint</span> { <span class='self'>self</span>.<span class='ident'>length</span> }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> { <span class='self'>self</span>.<span class='ident'>length</span> }
 
     <span class='doccomment'>/// Return true if the map contains no elements.</span>
     <span class='doccomment'>///</span>
@@ -2317,7 +2317,7 @@
 
     <span class='doccomment'>/// Deprecated: renamed to `get`.</span>
     <span class='attribute'>#[<span class='ident'>deprecated</span> <span class='op'>=</span> <span class='string'>&quot;renamed to `get`&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>find</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>find</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>key</span>)
     }
 
@@ -2335,7 +2335,7 @@
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>node</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>root</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>idx</span> <span class='op'>=</span> <span class='number'>0</span>;
         <span class='kw'>loop</span> {
@@ -2368,13 +2368,13 @@
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>key</span>).<span class='ident'>is_some</span>()
     }
 
     <span class='doccomment'>/// Deprecated: renamed to `get_mut`.</span>
     <span class='attribute'>#[<span class='ident'>deprecated</span> <span class='op'>=</span> <span class='string'>&quot;renamed to `get_mut`&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>find_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>find_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>get_mut</span>(<span class='ident'>key</span>)
     }
 
@@ -2395,13 +2395,13 @@
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='ident'>find_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>children</span>[<span class='ident'>chunk</span>(<span class='op'>*</span><span class='ident'>key</span>, <span class='number'>0</span>)], <span class='op'>*</span><span class='ident'>key</span>, <span class='number'>1</span>)
     }
 
     <span class='doccomment'>/// Deprecated: Renamed to `insert`.</span>
     <span class='attribute'>#[<span class='ident'>deprecated</span> <span class='op'>=</span> <span class='string'>&quot;Renamed to `insert`&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>swap</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>swap</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>insert</span>(<span class='ident'>key</span>, <span class='ident'>value</span>)
     }
 
@@ -2422,7 +2422,7 @@
     <span class='doccomment'>/// assert_eq!(map[37], &quot;c&quot;);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> (_, <span class='ident'>old_val</span>) <span class='op'>=</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>count</span>,
                                     <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>children</span>[<span class='ident'>chunk</span>(<span class='ident'>key</span>, <span class='number'>0</span>)],
                                     <span class='ident'>key</span>, <span class='ident'>value</span>, <span class='number'>1</span>);
@@ -2432,7 +2432,7 @@
 
     <span class='doccomment'>/// Deprecated: Renamed to `remove`.</span>
     <span class='attribute'>#[<span class='ident'>deprecated</span> <span class='op'>=</span> <span class='string'>&quot;Renamed to `remove`&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>pop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>pop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>remove</span>(<span class='ident'>key</span>)
     }
 
@@ -2450,7 +2450,7 @@
     <span class='doccomment'>/// assert_eq!(map.remove(&amp;1), None);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>count</span>,
                          <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>children</span>[<span class='ident'>chunk</span>(<span class='op'>*</span><span class='ident'>key</span>, <span class='number'>0</span>)],
                          <span class='op'>*</span><span class='ident'>key</span>, <span class='number'>1</span>);
@@ -2500,7 +2500,7 @@
             <span class='comment'>// stop us.</span>
             <span class='kw'>let</span> <span class='ident'>this</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>this</span>;
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>node</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-                <span class='ident'>mem</span>::<span class='ident'>transmute</span>::<span class='op'>&lt;</span>_, <span class='ident'>uint</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>this</span>.<span class='ident'>root</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>InternalNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
+                <span class='ident'>mem</span>::<span class='ident'>transmute</span>::<span class='op'>&lt;</span>_, <span class='ident'>usize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>this</span>.<span class='ident'>root</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>InternalNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
             };
 
             <span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>key</span>;
@@ -2513,12 +2513,12 @@
             <span class='macro'>addr</span><span class='macro'>!</span>(<span class='kw'>loop</span> {
                     <span class='kw'>let</span> <span class='ident'>children</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {<span class='macro'>addr</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mut_</span>)<span class='op'>*</span> (<span class='op'>*</span><span class='ident'>node</span>).<span class='ident'>children</span>)};
                     <span class='comment'>// it.length is the current depth in the iterator and the</span>
-                    <span class='comment'>// current depth through the `uint` key we&#39;ve traversed.</span>
+                    <span class='comment'>// current depth through the `usize` key we&#39;ve traversed.</span>
                     <span class='kw'>let</span> <span class='ident'>child_id</span> <span class='op'>=</span> <span class='ident'>chunk</span>(<span class='ident'>key</span>, <span class='ident'>it</span>.<span class='ident'>length</span>);
                     <span class='kw'>let</span> (<span class='ident'>slice_idx</span>, <span class='ident'>ret</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>children</span>[<span class='ident'>child_id</span>] {
                         <span class='ident'>Internal</span>(<span class='kw-2'>ref</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mut_</span>)<span class='op'>*</span> <span class='ident'>n</span>) <span class='op'>=&gt;</span> {
                             <span class='ident'>node</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-                                <span class='ident'>mem</span>::<span class='ident'>transmute</span>::<span class='op'>&lt;</span>_, <span class='ident'>uint</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>n</span>)
+                                <span class='ident'>mem</span>::<span class='ident'>transmute</span>::<span class='op'>&lt;</span>_, <span class='ident'>usize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>n</span>)
                                     <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>InternalNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
                             };
                             (<span class='ident'>child_id</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='boolval'>false</span>)
@@ -2546,7 +2546,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='comment'>// If `upper` is true then returns upper_bound else returns lower_bound.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='macro'>bound</span><span class='macro'>!</span>(<span class='ident'>Iter</span>, <span class='self'>self</span> <span class='op'>=</span> <span class='self'>self</span>,
                <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>key</span>, <span class='ident'>is_upper</span> <span class='op'>=</span> <span class='ident'>upper</span>,
                <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>,
@@ -2566,7 +2566,7 @@
     <span class='doccomment'>/// assert_eq!(map.lower_bound(5).next(), Some((6, &amp;&quot;c&quot;)));</span>
     <span class='doccomment'>/// assert_eq!(map.lower_bound(10).next(), None);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>bound</span>(<span class='ident'>key</span>, <span class='boolval'>false</span>)
     }
 
@@ -2583,12 +2583,12 @@
     <span class='doccomment'>/// assert_eq!(map.upper_bound(5).next(), Some((6, &amp;&quot;c&quot;)));</span>
     <span class='doccomment'>/// assert_eq!(map.upper_bound(10).next(), None);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>bound</span>(<span class='ident'>key</span>, <span class='boolval'>true</span>)
     }
     <span class='comment'>// If `upper` is true then returns upper_bound else returns lower_bound.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='macro'>bound</span><span class='macro'>!</span>(<span class='ident'>IterMut</span>, <span class='self'>self</span> <span class='op'>=</span> <span class='self'>self</span>,
                <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>key</span>, <span class='ident'>is_upper</span> <span class='op'>=</span> <span class='ident'>upper</span>,
                <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter_mut</span>,
@@ -2616,7 +2616,7 @@
     <span class='doccomment'>/// assert_eq!(map.get(&amp;4), Some(&amp;&quot;changed&quot;));</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;6), Some(&amp;&quot;changed&quot;));</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lower_bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>bound_mut</span>(<span class='ident'>key</span>, <span class='boolval'>false</span>)
     }
 
@@ -2641,21 +2641,21 @@
     <span class='doccomment'>/// assert_eq!(map.get(&amp;4), Some(&amp;&quot;b&quot;));</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;6), Some(&amp;&quot;changed&quot;));</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>upper_bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>bound_mut</span>(<span class='ident'>key</span>, <span class='boolval'>true</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>uint</span>, <span class='ident'>T</span>)<span class='op'>&gt;&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>Iter</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span>(<span class='ident'>usize</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>usize</span>, <span class='ident'>T</span>)<span class='op'>&gt;&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>Iter</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='ident'>map</span>.<span class='ident'>extend</span>(<span class='ident'>iter</span>);
         <span class='ident'>map</span>
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Extend</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>uint</span>, <span class='ident'>T</span>)<span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>iter</span>: <span class='ident'>Iter</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Extend</span><span class='op'>&lt;</span>(<span class='ident'>usize</span>, <span class='ident'>T</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>usize</span>, <span class='ident'>T</span>)<span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>iter</span>: <span class='ident'>Iter</span>) {
         <span class='kw'>for</span> (<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>iter</span> {
             <span class='self'>self</span>.<span class='ident'>insert</span>(<span class='ident'>k</span>, <span class='ident'>v</span>);
         }
@@ -2670,18 +2670,18 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>Index</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>Index</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>T</span>;
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>index</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>i</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
+    <span class='kw'>fn</span> <span class='ident'>index</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>i</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
         <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>i</span>).<span class='ident'>expect</span>(<span class='string'>&quot;key not present&quot;</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>IndexMut</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ops</span>::<span class='ident'>IndexMut</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>T</span>;
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>index_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>i</span>: <span class='kw-2'>&amp;</span><span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span> {
+    <span class='kw'>fn</span> <span class='ident'>index_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>i</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span> {
         <span class='self'>self</span>.<span class='ident'>get_mut</span>(<span class='ident'>i</span>).<span class='ident'>expect</span>(<span class='string'>&quot;key not present&quot;</span>)
     }
 }
@@ -2714,7 +2714,7 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>InternalNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>each_reverse</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>for</span> <span class='ident'>elt</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>children</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>() {
             <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>elt</span> {
                 <span class='ident'>Internal</span>(<span class='kw-2'>ref</span> <span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>x</span>.<span class='ident'>each_reverse</span>(<span class='ident'>f</span>) { <span class='kw'>return</span> <span class='boolval'>false</span> },
@@ -2728,12 +2728,12 @@
 
 <span class='comment'>// if this was done via a trait, the key could be generic</span>
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>chunk</span>(<span class='ident'>n</span>: <span class='ident'>uint</span>, <span class='ident'>idx</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>uint</span> {
-    <span class='kw'>let</span> <span class='ident'>sh</span> <span class='op'>=</span> <span class='ident'>uint</span>::<span class='ident'>BITS</span> <span class='op'>-</span> (<span class='ident'>SHIFT</span> <span class='op'>*</span> (<span class='ident'>idx</span> <span class='op'>+</span> <span class='number'>1</span>));
+<span class='kw'>fn</span> <span class='ident'>chunk</span>(<span class='ident'>n</span>: <span class='ident'>usize</span>, <span class='ident'>idx</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    <span class='kw'>let</span> <span class='ident'>sh</span> <span class='op'>=</span> <span class='ident'>usize</span>::<span class='ident'>BITS</span> <span class='op'>-</span> (<span class='ident'>SHIFT</span> <span class='op'>*</span> (<span class='ident'>idx</span> <span class='op'>+</span> <span class='number'>1</span>));
     (<span class='ident'>n</span> <span class='op'>&gt;&gt;</span> <span class='ident'>sh</span>) <span class='kw-2'>&amp;</span> <span class='ident'>MASK</span>
 }
 
-<span class='kw'>fn</span> <span class='ident'>find_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>child</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>idx</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>find_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>child</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>, <span class='ident'>idx</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>child</span> {
         <span class='ident'>External</span>(<span class='ident'>stored</span>, <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>value</span>) <span class='kw'>if</span> <span class='ident'>stored</span> <span class='op'>==</span> <span class='ident'>key</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>value</span>),
         <span class='ident'>External</span>(..) <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
@@ -2751,7 +2751,7 @@
 <span class='doccomment'>/// which will be incremented only if `start_node` is transformed into a *new* external node.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Returns a mutable reference to the inserted value and an optional previous value.</span>
-<span class='kw'>fn</span> <span class='ident'>insert</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>count</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>uint</span>, <span class='ident'>start_node</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>value</span>: <span class='ident'>T</span>, <span class='ident'>idx</span>: <span class='ident'>uint</span>)
+<span class='kw'>fn</span> <span class='ident'>insert</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>count</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>usize</span>, <span class='ident'>start_node</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>, <span class='ident'>value</span>: <span class='ident'>T</span>, <span class='ident'>idx</span>: <span class='ident'>usize</span>)
     <span class='op'>-&gt;</span> (<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) {
     <span class='comment'>// We branch twice to avoid having to do the `replace` when we</span>
     <span class='comment'>// don&#39;t need to; this is much faster, especially for keys that</span>
@@ -2801,8 +2801,8 @@
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>remove</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>count</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>uint</span>, <span class='ident'>child</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>,
-             <span class='ident'>idx</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>remove</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>count</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>usize</span>, <span class='ident'>child</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>,
+             <span class='ident'>idx</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>let</span> (<span class='ident'>ret</span>, <span class='ident'>this</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>child</span> {
       <span class='ident'>External</span>(<span class='ident'>stored</span>, _) <span class='kw'>if</span> <span class='ident'>stored</span> <span class='op'>==</span> <span class='ident'>key</span> <span class='op'>=&gt;</span> {
         <span class='kw'>match</span> <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='ident'>child</span>, <span class='ident'>Nothing</span>) {
@@ -2851,14 +2851,14 @@
 <span class='doccomment'>/// * Pointers at indexes less than `length` can be safely dereferenced.</span>
 <span class='kw'>struct</span> <span class='ident'>SearchStack</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>map</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-    <span class='ident'>length</span>: <span class='ident'>uint</span>,
-    <span class='ident'>key</span>: <span class='ident'>uint</span>,
+    <span class='ident'>length</span>: <span class='ident'>usize</span>,
+    <span class='ident'>key</span>: <span class='ident'>usize</span>,
     <span class='ident'>items</span>: [<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>; <span class='ident'>MAX_DEPTH</span>]
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>SearchStack</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Creates a new search-stack with empty entries.</span>
-    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>map</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>SearchStack</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>map</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>SearchStack</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='ident'>SearchStack</span> {
             <span class='ident'>map</span>: <span class='ident'>map</span>,
             <span class='ident'>length</span>: <span class='number'>0</span>,
@@ -2893,7 +2893,7 @@
         <span class='self'>self</span>.<span class='ident'>length</span> <span class='op'>==</span> <span class='number'>0</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>get_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>idx</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>get_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>idx</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>idx</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>length</span>);
         <span class='kw'>unsafe</span> {
             <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>items</span>[<span class='ident'>idx</span>]
@@ -2906,7 +2906,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Gets the given key&#39;s corresponding entry in the map for in-place manipulation.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>entry</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Entry</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>entry</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Entry</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='comment'>// Create an empty search stack.</span>
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>search_stack</span> <span class='op'>=</span> <span class='ident'>SearchStack</span>::<span class='ident'>new</span>(<span class='self'>self</span>, <span class='ident'>key</span>);
 
@@ -2945,7 +2945,7 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// This function is safe only if `node` points to a valid `TrieNode`.</span>
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>next_child</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>node</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>idx</span>: <span class='ident'>uint</span>)
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>next_child</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>node</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>key</span>: <span class='ident'>usize</span>, <span class='ident'>idx</span>: <span class='ident'>usize</span>)
     <span class='op'>-&gt;</span> (<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>bool</span>) {
     <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>node</span> {
         <span class='comment'>// If the node is internal, tell the caller to descend further.</span>
@@ -3084,26 +3084,26 @@
 <span class='doccomment'>/// A forward iterator over a map.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>:<span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>stack</span>: [<span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>; <span class='ident'>MAX_DEPTH</span>],
-    <span class='ident'>length</span>: <span class='ident'>uint</span>,
-    <span class='ident'>remaining_min</span>: <span class='ident'>uint</span>,
-    <span class='ident'>remaining_max</span>: <span class='ident'>uint</span>
+    <span class='ident'>length</span>: <span class='ident'>usize</span>,
+    <span class='ident'>remaining_min</span>: <span class='ident'>usize</span>,
+    <span class='ident'>remaining_max</span>: <span class='ident'>usize</span>
 }
 
 <span class='doccomment'>/// A forward iterator over the key-value pairs of a map, with the</span>
 <span class='doccomment'>/// values being mutable.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>:<span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>stack</span>: [<span class='ident'>slice</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>TrieNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>; <span class='ident'>MAX_DEPTH</span>],
-    <span class='ident'>length</span>: <span class='ident'>uint</span>,
-    <span class='ident'>remaining_min</span>: <span class='ident'>uint</span>,
-    <span class='ident'>remaining_max</span>: <span class='ident'>uint</span>
+    <span class='ident'>length</span>: <span class='ident'>usize</span>,
+    <span class='ident'>remaining_min</span>: <span class='ident'>usize</span>,
+    <span class='ident'>remaining_max</span>: <span class='ident'>usize</span>
 }
 
 <span class='doccomment'>/// A forward iterator over the keys of a map.</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Keys</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>iter</span>::<span class='ident'>Map</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>), <span class='ident'>uint</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>fn</span>((<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>uint</span><span class='op'>&gt;</span>;
+<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Keys</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>iter</span>::<span class='ident'>Map</span><span class='op'>&lt;</span>(<span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>), <span class='ident'>usize</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>fn</span>((<span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='ident'>usize</span><span class='op'>&gt;</span>;
 
 <span class='doccomment'>/// A forward iterator over the values of a map.</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Values</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span>
-    <span class='ident'>iter</span>::<span class='ident'>Map</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>), <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>fn</span>((<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span>;
+    <span class='ident'>iter</span>::<span class='ident'>Map</span><span class='op'>&lt;</span>(<span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>), <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>, <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>fn</span>((<span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>)) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span>;
 
 <span class='comment'>// FIXME #5846: see `addr!` above.</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>item</span> { (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>item</span>) <span class='op'>=&gt;</span> {<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>}}
@@ -3144,7 +3144,7 @@
         }
 
         <span class='macro'>item</span><span class='macro'>!</span>(<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-                <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> (<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mut_</span>)<span class='op'>*</span> <span class='ident'>T</span>);
+                <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> (<span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mut_</span>)<span class='op'>*</span> <span class='ident'>T</span>);
                 <span class='comment'>// you might wonder why we&#39;re not even trying to act within the</span>
                 <span class='comment'>// rules, and are just manipulating raw pointers like there&#39;s no</span>
                 <span class='comment'>// such thing as invalid pointers and memory unsafety. The</span>
@@ -3161,14 +3161,14 @@
                 <span class='comment'>// nested appropriately. self.stack has enough storage</span>
                 <span class='comment'>// to store the maximum depth of Internal nodes in the</span>
                 <span class='comment'>// trie (8 on 32-bit platforms, 16 on 64-bit).</span>
-                <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>uint</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mut_</span>)<span class='op'>*</span> <span class='ident'>T</span>)<span class='op'>&gt;</span> {
+                <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mut_</span>)<span class='op'>*</span> <span class='ident'>T</span>)<span class='op'>&gt;</span> {
                     <span class='kw'>let</span> <span class='ident'>start_ptr</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>as_mut_ptr</span>();
 
                     <span class='kw'>unsafe</span> {
                         <span class='comment'>// write_ptr is the next place to write to the stack.</span>
                         <span class='comment'>// invariant: start_ptr &lt;= write_ptr &lt; end of the</span>
                         <span class='comment'>// vector.</span>
-                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>write_ptr</span> <span class='op'>=</span> <span class='ident'>start_ptr</span>.<span class='ident'>offset</span>(<span class='self'>self</span>.<span class='ident'>length</span> <span class='kw'>as</span> <span class='ident'>int</span>);
+                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>write_ptr</span> <span class='op'>=</span> <span class='ident'>start_ptr</span>.<span class='ident'>offset</span>(<span class='self'>self</span>.<span class='ident'>length</span> <span class='kw'>as</span> <span class='ident'>isize</span>);
                         <span class='kw'>while</span> <span class='ident'>write_ptr</span> <span class='op'>!=</span> <span class='ident'>start_ptr</span> {
                             <span class='comment'>// indexing back one is safe, since write_ptr &gt;</span>
                             <span class='comment'>// start_ptr now.</span>
@@ -3197,8 +3197,8 @@
                                                 <span class='comment'>// store the new length of the</span>
                                                 <span class='comment'>// stack, based on our current</span>
                                                 <span class='comment'>// position.</span>
-                                                <span class='self'>self</span>.<span class='ident'>length</span> <span class='op'>=</span> (<span class='ident'>write_ptr</span> <span class='kw'>as</span> <span class='ident'>uint</span>
-                                                               <span class='op'>-</span> <span class='ident'>start_ptr</span> <span class='kw'>as</span> <span class='ident'>uint</span>) <span class='op'>/</span>
+                                                <span class='self'>self</span>.<span class='ident'>length</span> <span class='op'>=</span> (<span class='ident'>write_ptr</span> <span class='kw'>as</span> <span class='ident'>usize</span>
+                                                               <span class='op'>-</span> <span class='ident'>start_ptr</span> <span class='kw'>as</span> <span class='ident'>usize</span>) <span class='op'>/</span>
                                                     <span class='ident'>mem</span>::<span class='ident'>size_of_val</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>write_ptr</span>);
 
                                                 <span class='kw'>return</span> <span class='prelude-val'>Some</span>((<span class='ident'>key</span>, <span class='ident'>value</span>));
@@ -3213,7 +3213,7 @@
                 }
 
                 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-                <span class='kw'>fn</span> <span class='ident'>size_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>uint</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>) {
+                <span class='kw'>fn</span> <span class='ident'>size_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>usize</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) {
                     (<span class='self'>self</span>.<span class='ident'>remaining_min</span>, <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>remaining_max</span>))
                 }
             });
@@ -3226,7 +3226,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>range_step</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>uint</span>;
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>usize</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>;
 
     <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>TrieMap</span>, <span class='ident'>InternalNode</span>};
@@ -3255,9 +3255,9 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_find_mut</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='number'>12i</span>).<span class='ident'>is_none</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>2u</span>, <span class='number'>8i</span>).<span class='ident'>is_none</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>5u</span>, <span class='number'>14i</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1us</span>, <span class='number'>12is</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>2us</span>, <span class='number'>8is</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>5us</span>, <span class='number'>14is</span>).<span class='ident'>is_none</span>());
         <span class='kw'>let</span> <span class='ident'>new</span> <span class='op'>=</span> <span class='number'>100</span>;
         <span class='kw'>match</span> <span class='ident'>m</span>.<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>) {
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>new</span>
@@ -3269,7 +3269,7 @@
     <span class='kw'>fn</span> <span class='ident'>test_find_mut_missing</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>0</span>).<span class='ident'>is_none</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='number'>12i</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1us</span>, <span class='number'>12is</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>0</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>8</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='number'>0</span>).<span class='ident'>is_none</span>());
@@ -3278,33 +3278,33 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_step</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>trie</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='number'>300u</span>;
+        <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='number'>300us</span>;
 
-        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>1u</span>, <span class='ident'>n</span>, <span class='number'>2</span>) {
+        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>1us</span>, <span class='ident'>n</span>, <span class='number'>2</span>) {
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>trie</span>.<span class='ident'>insert</span>(<span class='ident'>x</span>, <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>).<span class='ident'>is_none</span>());
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>trie</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>));
             <span class='ident'>check_integrity</span>(<span class='kw-2'>&amp;</span><span class='ident'>trie</span>.<span class='ident'>root</span>);
         }
 
-        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>0u</span>, <span class='ident'>n</span>, <span class='number'>2</span>) {
+        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>0us</span>, <span class='ident'>n</span>, <span class='number'>2</span>) {
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>trie</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>));
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>trie</span>.<span class='ident'>insert</span>(<span class='ident'>x</span>, <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>).<span class='ident'>is_none</span>());
             <span class='ident'>check_integrity</span>(<span class='kw-2'>&amp;</span><span class='ident'>trie</span>.<span class='ident'>root</span>);
         }
 
-        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>n</span>) {
+        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>n</span>) {
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>trie</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>));
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>trie</span>.<span class='ident'>insert</span>(<span class='ident'>x</span>, <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>).<span class='ident'>is_none</span>());
             <span class='ident'>check_integrity</span>(<span class='kw-2'>&amp;</span><span class='ident'>trie</span>.<span class='ident'>root</span>);
         }
 
-        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>1u</span>, <span class='ident'>n</span>, <span class='number'>2</span>) {
+        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>1us</span>, <span class='ident'>n</span>, <span class='number'>2</span>) {
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>trie</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>).<span class='ident'>is_some</span>());
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>trie</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>));
             <span class='ident'>check_integrity</span>(<span class='kw-2'>&amp;</span><span class='ident'>trie</span>.<span class='ident'>root</span>);
         }
 
-        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>0u</span>, <span class='ident'>n</span>, <span class='number'>2</span>) {
+        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>0us</span>, <span class='ident'>n</span>, <span class='number'>2</span>) {
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>trie</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>));
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>trie</span>.<span class='ident'>insert</span>(<span class='ident'>x</span>, <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>).<span class='ident'>is_none</span>());
             <span class='ident'>check_integrity</span>(<span class='kw-2'>&amp;</span><span class='ident'>trie</span>.<span class='ident'>root</span>);
@@ -3315,7 +3315,7 @@
     <span class='kw'>fn</span> <span class='ident'>test_each_reverse</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>6u</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>6us</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='number'>8</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>4</span>).<span class='ident'>is_none</span>());
@@ -3336,14 +3336,14 @@
     <span class='kw'>fn</span> <span class='ident'>test_each_reverse_break</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
-        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='ident'>uint</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>10000</span>, <span class='ident'>uint</span>::<span class='ident'>MAX</span>).<span class='ident'>rev</span>() {
+        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='ident'>usize</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>10000</span>, <span class='ident'>usize</span>::<span class='ident'>MAX</span>).<span class='ident'>rev</span>() {
             <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>x</span>, <span class='ident'>x</span> <span class='op'>/</span> <span class='number'>2</span>);
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>uint</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>1</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>usize</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>1</span>;
         <span class='ident'>m</span>.<span class='ident'>each_reverse</span>(<span class='op'>|</span><span class='ident'>k</span>, <span class='ident'>v</span><span class='op'>|</span> {
-            <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>==</span> <span class='ident'>uint</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>5000</span> { <span class='boolval'>false</span> } <span class='kw'>else</span> {
-                <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>n</span> <span class='op'>&gt;</span> <span class='ident'>uint</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>5000</span>);
+            <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>==</span> <span class='ident'>usize</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>5000</span> { <span class='boolval'>false</span> } <span class='kw'>else</span> {
+                <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>n</span> <span class='op'>&gt;</span> <span class='ident'>usize</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>5000</span>);
 
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>k</span>, <span class='ident'>n</span>);
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>v</span>, <span class='ident'>n</span> <span class='op'>/</span> <span class='number'>2</span>);
@@ -3356,24 +3356,24 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_insert</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='number'>2i</span>), <span class='prelude-val'>None</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='number'>3i</span>), <span class='prelude-val'>Some</span>(<span class='number'>2</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='number'>4i</span>), <span class='prelude-val'>Some</span>(<span class='number'>3</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1us</span>, <span class='number'>2is</span>), <span class='prelude-val'>None</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1us</span>, <span class='number'>3is</span>), <span class='prelude-val'>Some</span>(<span class='number'>2</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1us</span>, <span class='number'>4is</span>), <span class='prelude-val'>Some</span>(<span class='number'>3</span>));
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_remove</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='number'>2i</span>);
+        <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='number'>1us</span>, <span class='number'>2is</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='number'>2</span>));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>None</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_from_iter</span>() {
-        <span class='kw'>let</span> <span class='ident'>xs</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='number'>1u</span>, <span class='number'>1i</span>), (<span class='number'>2</span>, <span class='number'>2</span>), (<span class='number'>3</span>, <span class='number'>3</span>), (<span class='number'>4</span>, <span class='number'>4</span>), (<span class='number'>5</span>, <span class='number'>5</span>), (<span class='number'>6</span>, <span class='number'>6</span>)];
+        <span class='kw'>let</span> <span class='ident'>xs</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='number'>1us</span>, <span class='number'>1is</span>), (<span class='number'>2</span>, <span class='number'>2</span>), (<span class='number'>3</span>, <span class='number'>3</span>), (<span class='number'>4</span>, <span class='number'>4</span>), (<span class='number'>5</span>, <span class='number'>5</span>), (<span class='number'>6</span>, <span class='number'>6</span>)];
 
-        <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>xs</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
+        <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>isize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>xs</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
         <span class='kw'>for</span> <span class='kw-2'>&amp;</span>(<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>xs</span>.<span class='ident'>iter</span>() {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>k</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>v</span>));
@@ -3384,7 +3384,7 @@
     <span class='kw'>fn</span> <span class='ident'>test_keys</span>() {
         <span class='kw'>let</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='number'>1</span>, <span class='string'>&#39;a&#39;</span>), (<span class='number'>2</span>, <span class='string'>&#39;b&#39;</span>), (<span class='number'>3</span>, <span class='string'>&#39;c&#39;</span>)];
         <span class='kw'>let</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>char</span><span class='op'>&gt;&gt;</span>();
-        <span class='kw'>let</span> <span class='ident'>keys</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;&gt;</span>();
+        <span class='kw'>let</span> <span class='ident'>keys</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;&gt;</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>keys</span>.<span class='ident'>len</span>(), <span class='number'>3</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>keys</span>.<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>keys</span>.<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>));
@@ -3404,11 +3404,11 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_iteration</span>() {
-        <span class='kw'>let</span> <span class='ident'>empty_map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='ident'>empty_map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>empty_map</span>.<span class='ident'>iter</span>().<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 
-        <span class='kw'>let</span> <span class='ident'>first</span> <span class='op'>=</span> <span class='ident'>uint</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>10000</span>;
-        <span class='kw'>let</span> <span class='ident'>last</span> <span class='op'>=</span> <span class='ident'>uint</span>::<span class='ident'>MAX</span>;
+        <span class='kw'>let</span> <span class='ident'>first</span> <span class='op'>=</span> <span class='ident'>usize</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>10000</span>;
+        <span class='kw'>let</span> <span class='ident'>last</span> <span class='op'>=</span> <span class='ident'>usize</span>::<span class='ident'>MAX</span>;
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='ident'>first</span>, <span class='ident'>last</span>).<span class='ident'>rev</span>() {
@@ -3426,11 +3426,11 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_mut_iter</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>empty_map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>empty_map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>empty_map</span>.<span class='ident'>iter_mut</span>().<span class='ident'>next</span>().<span class='ident'>is_none</span>());
 
-        <span class='kw'>let</span> <span class='ident'>first</span> <span class='op'>=</span> <span class='ident'>uint</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>10000</span>;
-        <span class='kw'>let</span> <span class='ident'>last</span> <span class='op'>=</span> <span class='ident'>uint</span>::<span class='ident'>MAX</span>;
+        <span class='kw'>let</span> <span class='ident'>first</span> <span class='op'>=</span> <span class='ident'>usize</span>::<span class='ident'>MAX</span> <span class='op'>-</span> <span class='number'>10000</span>;
+        <span class='kw'>let</span> <span class='ident'>last</span> <span class='op'>=</span> <span class='ident'>usize</span>::<span class='ident'>MAX</span>;
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='ident'>first</span>, <span class='ident'>last</span>).<span class='ident'>rev</span>() {
@@ -3450,21 +3450,21 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_bound</span>() {
-        <span class='kw'>let</span> <span class='ident'>empty_map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='ident'>empty_map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>empty_map</span>.<span class='ident'>lower_bound</span>(<span class='number'>0</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>empty_map</span>.<span class='ident'>upper_bound</span>(<span class='number'>0</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 
-        <span class='kw'>let</span> <span class='ident'>last</span> <span class='op'>=</span> <span class='number'>999u</span>;
-        <span class='kw'>let</span> <span class='ident'>step</span> <span class='op'>=</span> <span class='number'>3u</span>;
-        <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='number'>42u</span>;
+        <span class='kw'>let</span> <span class='ident'>last</span> <span class='op'>=</span> <span class='number'>999us</span>;
+        <span class='kw'>let</span> <span class='ident'>step</span> <span class='op'>=</span> <span class='number'>3us</span>;
+        <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='number'>42us</span>;
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>0u</span>, <span class='ident'>last</span>, <span class='ident'>step</span>) {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>0us</span>, <span class='ident'>last</span>, <span class='ident'>step</span>) {
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>x</span> <span class='op'>%</span> <span class='ident'>step</span> <span class='op'>==</span> <span class='number'>0</span>);
             <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='ident'>x</span>, <span class='ident'>value</span>);
         }
 
-        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>last</span> <span class='op'>-</span> <span class='ident'>step</span>) {
+        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>last</span> <span class='op'>-</span> <span class='ident'>step</span>) {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>lb</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>lower_bound</span>(<span class='ident'>i</span>);
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ub</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>upper_bound</span>(<span class='ident'>i</span>);
             <span class='kw'>let</span> <span class='ident'>next_key</span> <span class='op'>=</span> <span class='ident'>i</span> <span class='op'>-</span> <span class='ident'>i</span> <span class='op'>%</span> <span class='ident'>step</span> <span class='op'>+</span> <span class='ident'>step</span>;
@@ -3492,18 +3492,18 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_mut_bound</span>() {
-        <span class='kw'>let</span> <span class='ident'>empty_map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='ident'>empty_map</span> : <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>empty_map</span>.<span class='ident'>lower_bound</span>(<span class='number'>0</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>empty_map</span>.<span class='ident'>upper_bound</span>(<span class='number'>0</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m_lower</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m_upper</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='number'>100</span>) {
+        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='number'>100</span>) {
             <span class='ident'>m_lower</span>.<span class='ident'>insert</span>(<span class='number'>2</span> <span class='op'>*</span> <span class='ident'>i</span>, <span class='number'>4</span> <span class='op'>*</span> <span class='ident'>i</span>);
             <span class='ident'>m_upper</span>.<span class='ident'>insert</span>(<span class='number'>2</span> <span class='op'>*</span> <span class='ident'>i</span>, <span class='number'>4</span> <span class='op'>*</span> <span class='ident'>i</span>);
         }
 
-        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='number'>199</span>) {
+        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='number'>199</span>) {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>lb_it</span> <span class='op'>=</span> <span class='ident'>m_lower</span>.<span class='ident'>lower_bound_mut</span>(<span class='ident'>i</span>);
             <span class='kw'>let</span> (<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='op'>=</span> <span class='ident'>lb_it</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>();
             <span class='kw'>let</span> <span class='ident'>lb</span> <span class='op'>=</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='ident'>i</span> <span class='op'>%</span> <span class='number'>2</span>;
@@ -3511,7 +3511,7 @@
             <span class='op'>*</span><span class='ident'>v</span> <span class='op'>-=</span> <span class='ident'>k</span>;
         }
 
-        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='number'>198</span>) {
+        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='number'>198</span>) {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ub_it</span> <span class='op'>=</span> <span class='ident'>m_upper</span>.<span class='ident'>upper_bound_mut</span>(<span class='ident'>i</span>);
             <span class='kw'>let</span> (<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='op'>=</span> <span class='ident'>ub_it</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>();
             <span class='kw'>let</span> <span class='ident'>ub</span> <span class='op'>=</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>2</span> <span class='op'>-</span> <span class='ident'>i</span> <span class='op'>%</span> <span class='number'>2</span>;
@@ -3543,9 +3543,9 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>==</span> <span class='ident'>b</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>0</span>, <span class='number'>5i</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>0</span>, <span class='number'>5is</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>!=</span> <span class='ident'>b</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>0</span>, <span class='number'>4i</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>0</span>, <span class='number'>4is</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>!=</span> <span class='ident'>b</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>5</span>, <span class='number'>19</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>!=</span> <span class='ident'>b</span>);
@@ -3561,7 +3561,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span>) <span class='op'>&amp;&amp;</span> <span class='op'>!</span>(<span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span>));
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>2u</span>, <span class='number'>5i</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>2us</span>, <span class='number'>5is</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>7</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span>);
@@ -3579,7 +3579,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;=</span> <span class='ident'>b</span> <span class='op'>&amp;&amp;</span> <span class='ident'>a</span> <span class='op'>&gt;=</span> <span class='ident'>b</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1u</span>, <span class='number'>1i</span>).<span class='ident'>is_none</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1us</span>, <span class='number'>1is</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&gt;</span> <span class='ident'>b</span> <span class='op'>&amp;&amp;</span> <span class='ident'>a</span> <span class='op'>&gt;=</span> <span class='ident'>b</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span> <span class='op'>&amp;&amp;</span> <span class='ident'>b</span> <span class='op'>&lt;=</span> <span class='ident'>a</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>2</span>).<span class='ident'>is_none</span>());
@@ -3620,9 +3620,9 @@
     <span class='kw'>fn</span> <span class='ident'>test_index</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>2i</span>);
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>1i</span>);
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>4i</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>2is</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>1is</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>4is</span>);
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>2</span>], <span class='number'>1</span>);
     }
@@ -3632,19 +3632,19 @@
     <span class='kw'>fn</span> <span class='ident'>test_index_nonexistent</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>2i</span>);
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>1i</span>);
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>4i</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>2is</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>1is</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>4is</span>);
 
         <span class='ident'>map</span>[<span class='number'>4</span>];
     }
 
     <span class='comment'>// Number of items to insert into the map during entry tests.</span>
     <span class='comment'>// The tests rely on it being even.</span>
-    <span class='kw'>const</span> <span class='ident'>SQUARES_UPPER_LIM</span>: <span class='ident'>uint</span> <span class='op'>=</span> <span class='number'>128</span>;
+    <span class='kw'>const</span> <span class='ident'>SQUARES_UPPER_LIM</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>128</span>;
 
     <span class='doccomment'>/// Make a TrieMap storing i^2 for i in [0, 128)</span>
-    <span class='kw'>fn</span> <span class='ident'>squares_map</span>() <span class='op'>-&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>squares_map</span>() <span class='op'>-&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
         <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0</span>, <span class='ident'>SQUARES_UPPER_LIM</span>) {
             <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='ident'>i</span>, <span class='ident'>i</span> <span class='op'>*</span> <span class='ident'>i</span>);
@@ -3686,14 +3686,14 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_entry_into_mut</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>6u</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>6us</span>);
 
         <span class='kw'>let</span> <span class='ident'>value_ref</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>map</span>.<span class='ident'>entry</span>(<span class='number'>3</span>) {
             <span class='ident'>Occupied</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='ident'>e</span>.<span class='ident'>into_mut</span>(),
             <span class='ident'>Vacant</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Entry not found.&quot;</span>)
         };
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>value_ref</span>, <span class='number'>6u</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>value_ref</span>, <span class='number'>6us</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -3760,7 +3760,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_single_key</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>2u</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>2us</span>);
 
         <span class='kw'>match</span> <span class='ident'>map</span>.<span class='ident'>entry</span>(<span class='number'>1</span>) {
             <span class='ident'>Occupied</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> { <span class='ident'>e</span>.<span class='ident'>take</span>(); },
@@ -3776,10 +3776,10 @@
 
     <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>TrieMap</span>, <span class='ident'>Occupied</span>, <span class='ident'>Vacant</span>};
 
-    <span class='kw'>const</span> <span class='ident'>MAP_SIZE</span>: <span class='ident'>uint</span> <span class='op'>=</span> <span class='number'>1000</span>;
+    <span class='kw'>const</span> <span class='ident'>MAP_SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>1000</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>random_map</span>(<span class='ident'>size</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
+    <span class='kw'>fn</span> <span class='ident'>random_map</span>(<span class='ident'>size</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>weak_rng</span>();
 
         <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0</span>, <span class='ident'>size</span>) {
@@ -3788,7 +3788,7 @@
         <span class='ident'>map</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>bench_iter</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>, <span class='ident'>size</span>: <span class='ident'>uint</span>) {
+    <span class='kw'>fn</span> <span class='ident'>bench_iter</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>, <span class='ident'>size</span>: <span class='ident'>usize</span>) {
         <span class='kw'>let</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>random_map</span>(<span class='ident'>size</span>);
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
             <span class='kw'>for</span> <span class='ident'>entry</span> <span class='kw'>in</span> <span class='ident'>map</span>.<span class='ident'>iter</span>() {
@@ -3814,14 +3814,14 @@
 
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bench_lower_bound</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>weak_rng</span>();
-        <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>MAP_SIZE</span>) {
+        <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>MAP_SIZE</span>) {
             <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>(), <span class='ident'>rng</span>.<span class='ident'>gen</span>());
         }
 
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
-            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='number'>10</span>) {
+            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='number'>10</span>) {
                 <span class='ident'>m</span>.<span class='ident'>lower_bound</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>());
             }
         });
@@ -3829,14 +3829,14 @@
 
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bench_upper_bound</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>weak_rng</span>();
-        <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>MAP_SIZE</span>) {
+        <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>MAP_SIZE</span>) {
             <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>(), <span class='ident'>rng</span>.<span class='ident'>gen</span>());
         }
 
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
-            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='number'>10</span>) {
+            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='number'>10</span>) {
                 <span class='ident'>m</span>.<span class='ident'>upper_bound</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>());
             }
         });
@@ -3844,11 +3844,11 @@
 
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bench_insert_large</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span>[<span class='ident'>uint</span>; <span class='number'>10</span>]<span class='op'>&gt;</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>10</span>]<span class='op'>&gt;</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>weak_rng</span>();
 
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
-            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>MAP_SIZE</span>) {
+            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>MAP_SIZE</span>) {
                 <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>(), [<span class='number'>1</span>; <span class='number'>10</span>]);
             }
         });
@@ -3856,11 +3856,11 @@
 
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bench_insert_large_entry</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span>[<span class='ident'>uint</span>; <span class='number'>10</span>]<span class='op'>&gt;</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>10</span>]<span class='op'>&gt;</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>weak_rng</span>();
 
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
-            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>MAP_SIZE</span>) {
+            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>MAP_SIZE</span>) {
                 <span class='kw'>match</span> <span class='ident'>m</span>.<span class='ident'>entry</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>()) {
                     <span class='ident'>Occupied</span>(<span class='kw-2'>mut</span> <span class='ident'>e</span>) <span class='op'>=&gt;</span> { <span class='ident'>e</span>.<span class='ident'>set</span>([<span class='number'>1</span>; <span class='number'>10</span>]); },
                     <span class='ident'>Vacant</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> { <span class='ident'>e</span>.<span class='ident'>set</span>([<span class='number'>1</span>; <span class='number'>10</span>]); }
@@ -3871,13 +3871,13 @@
 
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bench_insert_large_low_bits</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span>[<span class='ident'>uint</span>; <span class='number'>10</span>]<span class='op'>&gt;</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='op'>&lt;</span>[<span class='ident'>usize</span>; <span class='number'>10</span>]<span class='op'>&gt;</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>weak_rng</span>();
 
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
-            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>MAP_SIZE</span>) {
+            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>MAP_SIZE</span>) {
                 <span class='comment'>// only have the last few bits set.</span>
-                <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>() <span class='kw-2'>&amp;</span> <span class='number'>0xff_ff</span>, [<span class='number'>1</span>; <span class='number'>10</span>]);
+                <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>() <span class='kw-2'>&amp;</span> <span class='number'>0xff_ff</span>, [<span class='number'>1</span>; <span class='number'>10</span>]);
             }
         });
     }
@@ -3888,7 +3888,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>weak_rng</span>();
 
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
-            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>MAP_SIZE</span>) {
+            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>MAP_SIZE</span>) {
                 <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>(), ());
             }
         });
@@ -3900,9 +3900,9 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>weak_rng</span>();
 
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
-            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>MAP_SIZE</span>) {
+            <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0us</span>, <span class='ident'>MAP_SIZE</span>) {
                 <span class='comment'>// only have the last few bits set.</span>
-                <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>() <span class='kw-2'>&amp;</span> <span class='number'>0xff_ff</span>, ());
+                <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>() <span class='kw-2'>&amp;</span> <span class='number'>0xff_ff</span>, ());
             }
         });
     }
@@ -3910,7 +3910,7 @@
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bench_get</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
         <span class='kw'>let</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>random_map</span>(<span class='ident'>MAP_SIZE</span>);
-        <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>();
+        <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>();
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
             <span class='kw'>for</span> <span class='ident'>key</span> <span class='kw'>in</span> <span class='ident'>keys</span>.<span class='ident'>iter</span>() {
                 <span class='ident'>black_box</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='ident'>key</span>));
@@ -3921,7 +3921,7 @@
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bench_get_entry</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>random_map</span>(<span class='ident'>MAP_SIZE</span>);
-        <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>();
+        <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>();
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
             <span class='kw'>for</span> <span class='ident'>key</span> <span class='kw'>in</span> <span class='ident'>keys</span>.<span class='ident'>iter</span>() {
                 <span class='kw'>match</span> <span class='ident'>map</span>.<span class='ident'>entry</span>(<span class='op'>*</span><span class='ident'>key</span>) {
@@ -3936,7 +3936,7 @@
     <span class='kw'>fn</span> <span class='ident'>bench_remove</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>random_map</span>(<span class='ident'>MAP_SIZE</span>);
-            <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>();
+            <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>();
             <span class='kw'>for</span> <span class='ident'>key</span> <span class='kw'>in</span> <span class='ident'>keys</span>.<span class='ident'>iter</span>() {
                 <span class='ident'>black_box</span>(<span class='ident'>map</span>.<span class='ident'>remove</span>(<span class='ident'>key</span>));
             }
@@ -3947,7 +3947,7 @@
     <span class='kw'>fn</span> <span class='ident'>bench_remove_entry</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>random_map</span>(<span class='ident'>MAP_SIZE</span>);
-            <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>();
+            <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>keys</span>().<span class='ident'>collect</span>();
             <span class='kw'>for</span> <span class='ident'>key</span> <span class='kw'>in</span> <span class='ident'>keys</span>.<span class='ident'>iter</span>() {
                 <span class='kw'>match</span> <span class='ident'>map</span>.<span class='ident'>entry</span>(<span class='op'>*</span><span class='ident'>key</span>) {
                     <span class='ident'>Occupied</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> { <span class='ident'>black_box</span>(<span class='ident'>e</span>.<span class='ident'>take</span>()); },

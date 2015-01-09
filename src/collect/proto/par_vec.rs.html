@@ -267,7 +267,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span><span class='op'>&gt;</span> <span class='ident'>ParVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create a new `ParVec`, returning it and a vector of slices that can be sent</span>
     <span class='doccomment'>/// to other threads and mutated concurrently.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>slices</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> (<span class='ident'>ParVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>) {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>slices</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> (<span class='ident'>ParVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>) {
         <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>vec</span>);
 
         <span class='kw'>let</span> <span class='ident'>par_slices</span> <span class='op'>=</span> <span class='ident'>sub_slices</span>(<span class='ident'>data</span>.<span class='ident'>as_slice</span>(), <span class='ident'>slices</span>).<span class='ident'>into_iter</span>()
@@ -309,11 +309,11 @@
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>sub_slices</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>parent</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>], <span class='ident'>slice_count</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span>[<span class='ident'>T</span>]<span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>sub_slices</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>parent</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>], <span class='ident'>slice_count</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span>[<span class='ident'>T</span>]<span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>slices</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
 
     <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>parent</span>.<span class='ident'>len</span>();
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>start</span> <span class='op'>=</span> <span class='number'>0u</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>start</span> <span class='op'>=</span> <span class='number'>0us</span>;
 
     <span class='kw'>for</span> <span class='ident'>curr</span> <span class='kw'>in</span> <span class='ident'>range_inclusive</span>(<span class='number'>1</span>, <span class='ident'>slice_count</span>).<span class='ident'>rev</span>() {
         <span class='kw'>let</span> <span class='ident'>slice_len</span> <span class='op'>=</span> (<span class='ident'>len</span> <span class='op'>-</span> <span class='ident'>start</span>) <span class='op'>/</span> <span class='ident'>curr</span>;
@@ -365,17 +365,17 @@
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rand</span>::{<span class='ident'>thread_rng</span>, <span class='ident'>Rng</span>};
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>range_inclusive</span>;
 
-    <span class='kw'>const</span> <span class='ident'>TEST_SLICES</span>: <span class='ident'>uint</span> <span class='op'>=</span> <span class='number'>8</span>;
+    <span class='kw'>const</span> <span class='ident'>TEST_SLICES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>8</span>;
     <span class='kw'>const</span> <span class='ident'>TEST_MAX</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='number'>1000</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_unwrap_safely</span>() {
-        <span class='kw'>let</span> (<span class='ident'>vec</span>, <span class='ident'>slices</span>) <span class='op'>=</span> <span class='ident'>ParVec</span>::<span class='ident'>new</span>([<span class='number'>5u</span>; <span class='ident'>TEST_MAX</span> <span class='kw'>as</span> <span class='ident'>uint</span>].<span class='ident'>to_vec</span>(), <span class='ident'>TEST_SLICES</span>);
+        <span class='kw'>let</span> (<span class='ident'>vec</span>, <span class='ident'>slices</span>) <span class='op'>=</span> <span class='ident'>ParVec</span>::<span class='ident'>new</span>([<span class='number'>5us</span>; <span class='ident'>TEST_MAX</span> <span class='kw'>as</span> <span class='ident'>usize</span>].<span class='ident'>to_vec</span>(), <span class='ident'>TEST_SLICES</span>);
         <span class='ident'>mem</span>::<span class='ident'>drop</span>(<span class='ident'>slices</span>);
 
         <span class='kw'>let</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>into_inner</span>();
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>vec</span>, [<span class='number'>5u</span>; <span class='ident'>TEST_MAX</span> <span class='kw'>as</span> <span class='ident'>uint</span>].<span class='ident'>as_slice</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>vec</span>, [<span class='number'>5us</span>; <span class='ident'>TEST_MAX</span> <span class='kw'>as</span> <span class='ident'>usize</span>].<span class='ident'>as_slice</span>());
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

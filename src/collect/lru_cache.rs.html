@@ -428,7 +428,7 @@
 <span class='doccomment'>//! ```rust</span>
 <span class='doccomment'>//! use collect::LruCache;</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut cache: LruCache&lt;int, int&gt; = LruCache::new(2);</span>
+<span class='doccomment'>//! let mut cache: LruCache&lt;isize, isize&gt; = LruCache::new(2);</span>
 <span class='doccomment'>//! cache.insert(1, 10);</span>
 <span class='doccomment'>//! cache.insert(2, 20);</span>
 <span class='doccomment'>//! cache.insert(3, 30);</span>
@@ -459,7 +459,7 @@
 <span class='doccomment'>/// An LRU Cache.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
     <span class='ident'>map</span>: <span class='ident'>LinkedHashMap</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>,
-    <span class='ident'>max_size</span>: <span class='ident'>uint</span>,
+    <span class='ident'>max_size</span>: <span class='ident'>usize</span>,
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>HmHasher</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
@@ -469,10 +469,10 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::LruCache;</span>
-    <span class='doccomment'>/// let mut cache: LruCache&lt;int, &amp;str&gt; = LruCache::new(10);</span>
+    <span class='doccomment'>/// let mut cache: LruCache&lt;isize, &amp;str&gt; = LruCache::new(10);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>capacity</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>capacity</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
         <span class='ident'>LruCache</span> {
             <span class='ident'>map</span>: <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>(),
             <span class='ident'>max_size</span>: <span class='ident'>capacity</span>,
@@ -561,17 +561,17 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::LruCache;</span>
-    <span class='doccomment'>/// let mut cache: LruCache&lt;int, &amp;str&gt; = LruCache::new(2);</span>
+    <span class='doccomment'>/// let mut cache: LruCache&lt;isize, &amp;str&gt; = LruCache::new(2);</span>
     <span class='doccomment'>/// assert_eq!(cache.capacity(), 2);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>capacity</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>uint</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>capacity</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='self'>self</span>.<span class='ident'>max_size</span>
     }
 
     <span class='doccomment'>/// Deprecated: Renamed to `set_capacity`.</span>
     <span class='attribute'>#[<span class='ident'>deprecated</span> <span class='op'>=</span> <span class='string'>&quot;Renamed to `set_capacity`&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>change_capacity</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>capacity</span>: <span class='ident'>uint</span>) {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>change_capacity</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>capacity</span>: <span class='ident'>usize</span>) {
         <span class='self'>self</span>.<span class='ident'>set_capacity</span>(<span class='ident'>capacity</span>)
     }
 
@@ -607,7 +607,7 @@
     <span class='doccomment'>/// assert_eq!(cache.get(&amp;3), Some(&amp;&quot;c&quot;));</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_capacity</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>capacity</span>: <span class='ident'>uint</span>) {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_capacity</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>capacity</span>: <span class='ident'>usize</span>) {
         <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>range</span>(<span class='ident'>capacity</span>, <span class='self'>self</span>.<span class='ident'>len</span>()) {
             <span class='self'>self</span>.<span class='ident'>remove_lru</span>();
         }
@@ -621,7 +621,7 @@
 
     <span class='doccomment'>/// Return the number of key-value pairs in the cache.</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>uint</span> { <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>len</span>() }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> { <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>len</span>() }
 
     <span class='doccomment'>/// Returns whether the cache is currently empty.</span>
     <span class='attribute'>#[<span class='ident'>unstable</span> <span class='op'>=</span> <span class='string'>&quot;matches collection reform specification, waiting for dust to settle&quot;</span>]</span>
@@ -671,7 +671,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_put_and_get</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>isize</span>, <span class='ident'>isize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>assert_opt_eq</span>(<span class='ident'>cache</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='number'>10</span>);
@@ -702,7 +702,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_pop</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>isize</span>, <span class='ident'>isize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>len</span>(), <span class='number'>2</span>);
@@ -715,7 +715,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_change_capacity</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>isize</span>, <span class='ident'>isize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>capacity</span>(), <span class='number'>2</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
@@ -743,7 +743,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_remove</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>3</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>isize</span>, <span class='ident'>isize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>3</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>30</span>);
@@ -764,7 +764,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_clear</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>isize</span>, <span class='ident'>isize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>cache</span>.<span class='ident'>clear</span>();
