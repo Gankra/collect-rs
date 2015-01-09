@@ -14,39 +14,39 @@ use std::rand;
 use std::rand::Rng;
 use test::Bencher;
 
-pub fn insert_rand_n<M, I, R>(n: uint,
+pub fn insert_rand_n<M, I, R>(n: usize,
                               map: &mut M,
                               b: &mut Bencher,
                               mut insert: I,
                               mut remove: R) where
-    I: FnMut(&mut M, uint),
-    R: FnMut(&mut M, uint),
+    I: FnMut(&mut M, usize),
+    R: FnMut(&mut M, usize),
 {
     // setup
     let mut rng = rand::weak_rng();
 
     for _ in range(0, n) {
-        insert(map, rng.gen::<uint>() % n);
+        insert(map, rng.gen::<usize>() % n);
     }
 
     // measure
     b.iter(|| {
-        let k = rng.gen::<uint>() % n;
+        let k = rng.gen::<usize>() % n;
         insert(map, k);
         remove(map, k);
     })
 }
 
-pub fn insert_seq_n<M, I, R>(n: uint,
+pub fn insert_seq_n<M, I, R>(n: usize,
                              map: &mut M,
                              b: &mut Bencher,
                              mut insert: I,
                              mut remove: R) where
-    I: FnMut(&mut M, uint),
-    R: FnMut(&mut M, uint),
+    I: FnMut(&mut M, usize),
+    R: FnMut(&mut M, usize),
 {
     // setup
-    for i in range(0u, n) {
+    for i in range(0us, n) {
         insert(map, i * 2);
     }
 
@@ -59,17 +59,17 @@ pub fn insert_seq_n<M, I, R>(n: uint,
     })
 }
 
-pub fn find_rand_n<M, T, I, F>(n: uint,
+pub fn find_rand_n<M, T, I, F>(n: usize,
                                map: &mut M,
                                b: &mut Bencher,
                                mut insert: I,
                                mut find: F) where
-    I: FnMut(&mut M, uint),
-    F: FnMut(&M, uint) -> T,
+    I: FnMut(&mut M, usize),
+    F: FnMut(&M, usize) -> T,
 {
     // setup
     let mut rng = rand::weak_rng();
-    let mut keys: Vec<_> = range(0, n).map(|_| rng.gen::<uint>() % n).collect();
+    let mut keys: Vec<_> = range(0, n).map(|_| rng.gen::<usize>() % n).collect();
 
     for k in keys.iter() {
         insert(map, *k);
@@ -86,16 +86,16 @@ pub fn find_rand_n<M, T, I, F>(n: uint,
     })
 }
 
-pub fn find_seq_n<M, T, I, F>(n: uint,
+pub fn find_seq_n<M, T, I, F>(n: usize,
                               map: &mut M,
                               b: &mut Bencher,
                               mut insert: I,
                               mut find: F) where
-    I: FnMut(&mut M, uint),
-    F: FnMut(&M, uint) -> T,
+    I: FnMut(&mut M, usize),
+    F: FnMut(&M, usize) -> T,
 {
     // setup
-    for i in range(0u, n) {
+    for i in range(0us, n) {
         insert(map, i);
     }
 

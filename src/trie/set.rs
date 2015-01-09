@@ -109,7 +109,7 @@ impl TrieSet {
     /// assert_eq!(vec, vec![5, 4, 3]);
     /// ```
     #[inline]
-    pub fn each_reverse<F>(&self, mut f: F) -> bool where F: FnMut(&uint) -> bool {
+    pub fn each_reverse<F>(&self, mut f: F) -> bool where F: FnMut(&usize) -> bool {
         self.map.each_reverse(|k, _| f(k))
     }
 
@@ -150,7 +150,7 @@ impl TrieSet {
     /// assert_eq!(set.lower_bound(5).next(), Some(6));
     /// assert_eq!(set.lower_bound(10).next(), None);
     /// ```
-    pub fn lower_bound<'a>(&'a self, val: uint) -> Iter<'a> {
+    pub fn lower_bound<'a>(&'a self, val: usize) -> Iter<'a> {
         Iter { iter: self.map.lower_bound(val) }
     }
 
@@ -167,7 +167,7 @@ impl TrieSet {
     /// assert_eq!(set.upper_bound(5).next(), Some(6));
     /// assert_eq!(set.upper_bound(10).next(), None);
     /// ```
-    pub fn upper_bound<'a>(&'a self, val: uint) -> Iter<'a> {
+    pub fn upper_bound<'a>(&'a self, val: usize) -> Iter<'a> {
         Iter { iter: self.map.upper_bound(val) }
     }
 
@@ -285,7 +285,7 @@ impl TrieSet {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn len(&self) -> uint { self.map.len() }
+    pub fn len(&self) -> usize { self.map.len() }
 
     /// Returns true if the set contains no elements
     ///
@@ -331,7 +331,7 @@ impl TrieSet {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn contains(&self, value: &uint) -> bool {
+    pub fn contains(&self, value: &usize) -> bool {
         self.map.contains_key(value)
     }
 
@@ -421,7 +421,7 @@ impl TrieSet {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn insert(&mut self, value: uint) -> bool {
+    pub fn insert(&mut self, value: usize) -> bool {
         self.map.insert(value, ()).is_none()
     }
 
@@ -441,21 +441,21 @@ impl TrieSet {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn remove(&mut self, value: &uint) -> bool {
+    pub fn remove(&mut self, value: &usize) -> bool {
         self.map.remove(value).is_some()
     }
 }
 
-impl iter::FromIterator<uint> for TrieSet {
-    fn from_iter<Iter: Iterator<Item=uint>>(iter: Iter) -> TrieSet {
+impl iter::FromIterator<usize> for TrieSet {
+    fn from_iter<Iter: Iterator<Item=usize>>(iter: Iter) -> TrieSet {
         let mut set = TrieSet::new();
         set.extend(iter);
         set
     }
 }
 
-impl Extend<uint> for TrieSet {
-    fn extend<Iter: Iterator<Item=uint>>(&mut self, mut iter: Iter) {
+impl Extend<usize> for TrieSet {
+    fn extend<Iter: Iterator<Item=usize>>(&mut self, mut iter: Iter) {
         for elem in iter {
             self.insert(elem);
         }
@@ -477,7 +477,7 @@ impl<'a, 'b> ops::BitOr<&'b TrieSet> for &'a TrieSet {
     /// let b: TrieSet = vec![3, 4, 5].into_iter().collect();
     ///
     /// let set: TrieSet = &a | &b;
-    /// let v: Vec<uint> = set.iter().collect();
+    /// let v: Vec<usize> = set.iter().collect();
     /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
     /// ```
     fn bitor(self, rhs: &TrieSet) -> TrieSet {
@@ -500,7 +500,7 @@ impl<'a, 'b> ops::BitAnd<&'b TrieSet> for &'a TrieSet {
     /// let b: TrieSet = vec![2, 3, 4].into_iter().collect();
     ///
     /// let set: TrieSet = &a & &b;
-    /// let v: Vec<uint> = set.iter().collect();
+    /// let v: Vec<usize> = set.iter().collect();
     /// assert_eq!(v, vec![2, 3]);
     /// ```
     fn bitand(self, rhs: &TrieSet) -> TrieSet {
@@ -523,7 +523,7 @@ impl<'a, 'b> ops::BitXor<&'b TrieSet> for &'a TrieSet {
     /// let b: TrieSet = vec![3, 4, 5].into_iter().collect();
     ///
     /// let set: TrieSet = &a ^ &b;
-    /// let v: Vec<uint> = set.iter().collect();
+    /// let v: Vec<usize> = set.iter().collect();
     /// assert_eq!(v, vec![1, 2, 4, 5]);
     /// ```
     fn bitxor(self, rhs: &TrieSet) -> TrieSet {
@@ -546,7 +546,7 @@ impl<'a, 'b> ops::Sub<&'b TrieSet> for &'a TrieSet {
     /// let b: TrieSet = vec![3, 4, 5].into_iter().collect();
     ///
     /// let set: TrieSet = &a - &b;
-    /// let v: Vec<uint> = set.iter().collect();
+    /// let v: Vec<usize> = set.iter().collect();
     /// assert_eq!(v, vec![1, 2]);
     /// ```
     fn sub(self, rhs: &TrieSet) -> TrieSet {
@@ -561,30 +561,30 @@ pub struct Iter<'a> {
 
 /// An iterator producing elements in the set difference (in-order).
 pub struct Difference<'a> {
-    a: Peekable<uint, Iter<'a>>,
-    b: Peekable<uint, Iter<'a>>,
+    a: Peekable<usize, Iter<'a>>,
+    b: Peekable<usize, Iter<'a>>,
 }
 
 /// An iterator producing elements in the set symmetric difference (in-order).
 pub struct SymmetricDifference<'a> {
-    a: Peekable<uint, Iter<'a>>,
-    b: Peekable<uint, Iter<'a>>,
+    a: Peekable<usize, Iter<'a>>,
+    b: Peekable<usize, Iter<'a>>,
 }
 
 /// An iterator producing elements in the set intersection (in-order).
 pub struct Intersection<'a> {
-    a: Peekable<uint, Iter<'a>>,
-    b: Peekable<uint, Iter<'a>>,
+    a: Peekable<usize, Iter<'a>>,
+    b: Peekable<usize, Iter<'a>>,
 }
 
 /// An iterator producing elements in the set union (in-order).
 pub struct Union<'a> {
-    a: Peekable<uint, Iter<'a>>,
-    b: Peekable<uint, Iter<'a>>,
+    a: Peekable<usize, Iter<'a>>,
+    b: Peekable<usize, Iter<'a>>,
 }
 
 /// Compare `x` and `y`, but return `short` if x is None and `long` if y is None
-fn cmp_opt(x: Option<&uint>, y: Option<&uint>, short: Ordering, long: Ordering) -> Ordering {
+fn cmp_opt(x: Option<&usize>, y: Option<&usize>, short: Ordering, long: Ordering) -> Ordering {
     match (x, y) {
         (None    , _       ) => short,
         (_       , None    ) => long,
@@ -593,19 +593,19 @@ fn cmp_opt(x: Option<&uint>, y: Option<&uint>, short: Ordering, long: Ordering) 
 }
 
 impl<'a> Iterator for Iter<'a> {
-    type Item = uint;
-    fn next(&mut self) -> Option<uint> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
         self.iter.next().map(|(key, _)| key)
     }
 
-    fn size_hint(&self) -> (uint, Option<uint>) {
+    fn size_hint(&self) -> (usize, Option<usize>) {
         self.iter.size_hint()
     }
 }
 
 impl<'a> Iterator for Difference<'a> {
-    type Item = uint;
-    fn next(&mut self) -> Option<uint> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Less, Less) {
                 Less    => return self.a.next(),
@@ -617,8 +617,8 @@ impl<'a> Iterator for Difference<'a> {
 }
 
 impl<'a> Iterator for SymmetricDifference<'a> {
-    type Item = uint;
-    fn next(&mut self) -> Option<uint> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
                 Less => return self.a.next(),
@@ -630,8 +630,8 @@ impl<'a> Iterator for SymmetricDifference<'a> {
 }
 
 impl<'a> Iterator for Intersection<'a> {
-    type Item = uint;
-    fn next(&mut self) -> Option<uint> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
         loop {
             let o_cmp = match (self.a.peek(), self.b.peek()) {
                 (None    , _       ) => None,
@@ -649,8 +649,8 @@ impl<'a> Iterator for Intersection<'a> {
 }
 
 impl<'a> Iterator for Union<'a> {
-    type Item = uint;
-    fn next(&mut self) -> Option<uint> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
         loop {
             match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
                 Less    => return self.a.next(),
@@ -663,14 +663,14 @@ impl<'a> Iterator for Union<'a> {
 
 #[cfg(test)]
 mod test {
-    use std::uint;
+    use std::usize;
 
     use super::TrieSet;
 
     #[test]
     fn test_sane_chunk() {
         let x = 1;
-        let y = 1 << (uint::BITS - 1);
+        let y = 1 << (usize::BITS - 1);
 
         let mut trie = TrieSet::new();
 
@@ -688,7 +688,7 @@ mod test {
 
     #[test]
     fn test_from_iter() {
-        let xs = vec![9u, 8, 7, 6, 5, 4, 3, 2, 1];
+        let xs = vec![9us, 8, 7, 6, 5, 4, 3, 2, 1];
 
         let set: TrieSet = xs.iter().map(|&x| x).collect();
 
@@ -726,9 +726,9 @@ mod test {
         let mut b = TrieSet::new();
 
         assert!(!(a < b) && !(b < a));
-        assert!(b.insert(2u));
+        assert!(b.insert(2us));
         assert!(a < b);
-        assert!(a.insert(3u));
+        assert!(a.insert(3us));
         assert!(!(a < b) && b < a);
         assert!(b.insert(1));
         assert!(b < a);
@@ -744,29 +744,29 @@ mod test {
         let mut b = TrieSet::new();
 
         assert!(a <= b && a >= b);
-        assert!(a.insert(1u));
+        assert!(a.insert(1us));
         assert!(a > b && a >= b);
         assert!(b < a && b <= a);
-        assert!(b.insert(2u));
+        assert!(b.insert(2us));
         assert!(b > a && b >= a);
         assert!(a < b && a <= b);
     }
 
     struct Counter<'a, 'b> {
-        i: &'a mut uint,
-        expected: &'b [uint],
+        i: &'a mut usize,
+        expected: &'b [usize],
     }
 
-    impl<'a, 'b> FnMut(uint) -> bool for Counter<'a, 'b> {
-        extern "rust-call" fn call_mut(&mut self, (x,): (uint,)) -> bool {
+    impl<'a, 'b> FnMut(usize) -> bool for Counter<'a, 'b> {
+        extern "rust-call" fn call_mut(&mut self, (x,): (usize,)) -> bool {
             assert_eq!(x, self.expected[*self.i]);
             *self.i += 1;
             true
         }
     }
 
-    fn check<F>(a: &[uint], b: &[uint], expected: &[uint], f: F) where
-        // FIXME Replace `Counter` with `Box<FnMut(&uint) -> bool>`
+    fn check<F>(a: &[usize], b: &[usize], expected: &[usize], f: F) where
+        // FIXME Replace `Counter` with `Box<FnMut(&usize) -> bool>`
         F: FnOnce(&TrieSet, &TrieSet, Counter) -> bool,
     {
         let mut set_a = TrieSet::new();
@@ -782,7 +782,7 @@ mod test {
 
     #[test]
     fn test_intersection() {
-        fn check_intersection(a: &[uint], b: &[uint], expected: &[uint]) {
+        fn check_intersection(a: &[usize], b: &[usize], expected: &[usize]) {
             check(a, b, expected, |x, y, f| x.intersection(y).all(f))
         }
 
@@ -798,7 +798,7 @@ mod test {
 
     #[test]
     fn test_difference() {
-        fn check_difference(a: &[uint], b: &[uint], expected: &[uint]) {
+        fn check_difference(a: &[usize], b: &[usize], expected: &[usize]) {
             check(a, b, expected, |x, y, f| x.difference(y).all(f))
         }
 
@@ -815,7 +815,7 @@ mod test {
 
     #[test]
     fn test_symmetric_difference() {
-        fn check_symmetric_difference(a: &[uint], b: &[uint], expected: &[uint]) {
+        fn check_symmetric_difference(a: &[usize], b: &[usize], expected: &[usize]) {
             check(a, b, expected, |x, y, f| x.symmetric_difference(y).all(f))
         }
 
@@ -829,7 +829,7 @@ mod test {
 
     #[test]
     fn test_union() {
-        fn check_union(a: &[uint], b: &[uint], expected: &[uint]) {
+        fn check_union(a: &[usize], b: &[usize], expected: &[usize]) {
             check(a, b, expected, |x, y, f| x.union(y).all(f))
         }
 
@@ -847,8 +847,8 @@ mod test {
         let b: TrieSet = vec![3, 4, 5].into_iter().collect();
 
         let set: TrieSet = &a | &b;
-        let v: Vec<uint> = set.iter().collect();
-        assert_eq!(v, vec![1u, 2, 3, 4, 5]);
+        let v: Vec<usize> = set.iter().collect();
+        assert_eq!(v, vec![1us, 2, 3, 4, 5]);
     }
 
     #[test]
@@ -857,8 +857,8 @@ mod test {
         let b: TrieSet = vec![2, 3, 4].into_iter().collect();
 
         let set: TrieSet = &a & &b;
-        let v: Vec<uint> = set.iter().collect();
-        assert_eq!(v, vec![2u, 3]);
+        let v: Vec<usize> = set.iter().collect();
+        assert_eq!(v, vec![2us, 3]);
     }
 
     #[test]
@@ -867,8 +867,8 @@ mod test {
         let b: TrieSet = vec![3, 4, 5].into_iter().collect();
 
         let set: TrieSet = &a ^ &b;
-        let v: Vec<uint> = set.iter().collect();
-        assert_eq!(v, vec![1u, 2, 4, 5]);
+        let v: Vec<usize> = set.iter().collect();
+        assert_eq!(v, vec![1us, 2, 4, 5]);
     }
 
     #[test]
@@ -877,7 +877,7 @@ mod test {
         let b: TrieSet = vec![3, 4, 5].into_iter().collect();
 
         let set: TrieSet = &a - &b;
-        let v: Vec<uint> = set.iter().collect();
-        assert_eq!(v, vec![1u, 2]);
+        let v: Vec<usize> = set.iter().collect();
+        assert_eq!(v, vec![1us, 2]);
     }
 }

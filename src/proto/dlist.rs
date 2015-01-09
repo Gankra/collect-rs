@@ -106,7 +106,7 @@ impl<T> Raw<T> {
 
 /// An experimental rewrite of DList to provide a more cursor-oriented API.
 pub struct DList<T> {
-    len: uint,
+    len: usize,
     head: Link<T>,
     tail: Raw<T>,
 }
@@ -213,7 +213,7 @@ impl<T> DList<T> {
     ///
     /// Panics if the index is greater than the length of the list.
     #[inline]
-    pub fn insert(&mut self, index: uint, elem: T) {
+    pub fn insert(&mut self, index: usize, elem: T) {
         assert!(index <= self.len(), "index out of bounds");
         let mut cursor = self.cursor();
         cursor.seek_forward(index);
@@ -222,7 +222,7 @@ impl<T> DList<T> {
 
     /// Removes the element at the given index. Returns None if the index is out of bounds.
     #[inline]
-    pub fn remove(&mut self, index: uint) -> Option<T> {
+    pub fn remove(&mut self, index: usize) -> Option<T> {
         if index >= self.len() {
             None
         } else {
@@ -234,7 +234,7 @@ impl<T> DList<T> {
 
     /// Splits the list into two lists at the given index. Returns the right side of the split.
     /// Returns an empty list if index is out of bounds.
-    pub fn split_at(&mut self, index: uint) -> DList<T> {
+    pub fn split_at(&mut self, index: usize) -> DList<T> {
         if index >= self.len() {
             DList::new()
         } else {
@@ -252,7 +252,7 @@ impl<T> DList<T> {
     }
 
     /// Inserts the given list at the given index. The old list will be empty afterwards.
-    pub fn splice(&mut self, index: uint, other: &mut DList<T>) {
+    pub fn splice(&mut self, index: usize, other: &mut DList<T>) {
         let mut cursor = self.cursor();
         cursor.seek_forward(index);
         cursor.splice(other);
@@ -260,7 +260,7 @@ impl<T> DList<T> {
 
     /// Gets the number of elements in the list.
     #[inline]
-    pub fn len(&self) -> uint {
+    pub fn len(&self) -> usize {
         self.len
     }
 
@@ -332,7 +332,7 @@ pub struct Cursor<'a, T: 'a> {
     list: &'a mut DList<T>,
     prev: Raw<T>,
     // index of `next`, where the ghost is at `len`.
-    index: uint,
+    index: usize,
 }
 
 // Note, the Cursor's ops and repr are specifically designed so that the cursor's reference
@@ -533,12 +533,12 @@ impl<'a, T> Cursor<'a, T> {
     }
 
     /// Calls `next` the specified number of times.
-    pub fn seek_forward(&mut self, by: uint) {
+    pub fn seek_forward(&mut self, by: usize) {
         for _ in range(0, by) { self.next(); }
     }
 
     /// Calls `prev` the specified number of times.
-    pub fn seek_backward(&mut self, by: uint) {
+    pub fn seek_backward(&mut self, by: usize) {
         for _ in range(0, by) { self.prev(); }
     }
 }
@@ -549,14 +549,14 @@ impl<'a, T> Cursor<'a, T> {
 pub struct Iter<'a, T:'a> {
     head: &'a Link<T>,
     tail: &'a Raw<T>,
-    nelem: uint,
+    nelem: usize,
 }
 
 /// An iterator over mutable references to the items of a `DList`.
 pub struct IterMut<'a, T:'a> {
     head: Raw<T>,
     tail: Raw<T>,
-    nelem: uint,
+    nelem: usize,
 }
 
 /// An iterator over mutable references to the items of a `DList`.
@@ -580,7 +580,7 @@ impl<'a, A> Iterator for Iter<'a, A> {
     }
 
     #[inline]
-    fn size_hint(&self) -> (uint, Option<uint>) {
+    fn size_hint(&self) -> (usize, Option<usize>) {
         (self.nelem, Some(self.nelem))
     }
 }
@@ -622,7 +622,7 @@ impl<'a, A> Iterator for IterMut<'a, A> {
     }
 
     #[inline]
-    fn size_hint(&self) -> (uint, Option<uint>) {
+    fn size_hint(&self) -> (usize, Option<usize>) {
         (self.nelem, Some(self.nelem))
     }
 }
@@ -652,7 +652,7 @@ impl<A> Iterator for IntoIter<A> {
     fn next(&mut self) -> Option<A> { self.list.pop_front() }
 
     #[inline]
-    fn size_hint(&self) -> (uint, Option<uint>) {
+    fn size_hint(&self) -> (usize, Option<usize>) {
         (self.list.len(), Some(self.list.len()))
     }
 }
@@ -749,8 +749,8 @@ mod test {
     use super::DList;
     use std::hash;
 
-    fn generate_test() -> DList<int> {
-        list_from(&[0i,1,2,3,4,5,6])
+    fn generate_test() -> DList<isize> {
+        list_from(&[0is,1,2,3,4,5,6])
     }
 
     fn list_from<T: Clone>(v: &[T]) -> DList<T> {
@@ -759,7 +759,7 @@ mod test {
 
     #[test]
     fn test_basic() {
-        let mut m: DList<Box<int>> = DList::new();
+        let mut m: DList<Box<isize>> = DList::new();
         assert_eq!(m.pop_front(), None);
         assert_eq!(m.pop_back(), None);
         assert_eq!(m.pop_front(), None);
@@ -779,7 +779,7 @@ mod test {
         assert_eq!(m.pop_front(), Some(box 1));
 
         let mut n = DList::new();
-        n.push_front(2i);
+        n.push_front(2is);
         n.push_front(3);
         {
             assert_eq!(n.front().unwrap(), &3);
@@ -802,11 +802,11 @@ mod test {
     fn test_iterator() {
         let m = generate_test();
         for (i, elt) in m.iter().enumerate() {
-            assert_eq!(i as int, *elt);
+            assert_eq!(i as isize, *elt);
         }
         let mut n = DList::new();
         assert_eq!(n.iter().next(), None);
-        n.push_front(4i);
+        n.push_front(4is);
         let mut it = n.iter();
         assert_eq!(it.size_hint(), (1, Some(1)));
         assert_eq!(it.next().unwrap(), &4);
@@ -819,7 +819,7 @@ mod test {
     fn test_iterator_double_end() {
         let mut n = DList::new();
         assert_eq!(n.iter().next(), None);
-        n.push_front(4i);
+        n.push_front(4is);
         n.push_front(5);
         n.push_front(6);
         let mut it = n.iter();
@@ -837,11 +837,11 @@ mod test {
     fn test_rev_iter() {
         let m = generate_test();
         for (i, elt) in m.iter().rev().enumerate() {
-            assert_eq!((6 - i) as int, *elt);
+            assert_eq!((6 - i) as isize, *elt);
         }
         let mut n = DList::new();
         assert_eq!(n.iter().rev().next(), None);
-        n.push_front(4i);
+        n.push_front(4is);
         let mut it = n.iter().rev();
         assert_eq!(it.size_hint(), (1, Some(1)));
         assert_eq!(it.next().unwrap(), &4);
@@ -854,13 +854,13 @@ mod test {
         let mut m = generate_test();
         let mut len = m.len();
         for (i, elt) in m.iter_mut().enumerate() {
-            assert_eq!(i as int, *elt);
+            assert_eq!(i as isize, *elt);
             len -= 1;
         }
         assert_eq!(len, 0);
         let mut n = DList::new();
         assert!(n.iter_mut().next().is_none());
-        n.push_front(4i);
+        n.push_front(4is);
         n.push_back(5);
         let mut it = n.iter_mut();
         assert_eq!(it.size_hint(), (2, Some(2)));
@@ -874,7 +874,7 @@ mod test {
     fn test_iterator_mut_double_end() {
         let mut n = DList::new();
         assert!(n.iter_mut().next_back().is_none());
-        n.push_front(4i);
+        n.push_front(4is);
         n.push_front(5);
         n.push_front(6);
         let mut it = n.iter_mut();
@@ -898,8 +898,8 @@ mod test {
         m.push_back(1);
         assert!(n == m);
 
-        let n = list_from(&[2i,3,4]);
-        let m = list_from(&[1i,2,3]);
+        let n = list_from(&[2is,3,4]);
+        let m = list_from(&[1is,2,3]);
         assert!(n != m);
     }
 
@@ -910,11 +910,11 @@ mod test {
 
       assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
 
-      x.push_back(1i);
+      x.push_back(1is);
       x.push_back(2);
       x.push_back(3);
 
-      y.push_front(3i);
+      y.push_front(3is);
       y.push_front(2);
       y.push_front(1);
 
@@ -923,8 +923,8 @@ mod test {
 
     #[test]
     fn test_ord() {
-        let n: DList<int> = list_from(&[]);
-        let m = list_from(&[1i,2,3]);
+        let n: DList<isize> = list_from(&[]);
+        let m = list_from(&[1is,2,3]);
         assert!(n < m);
         assert!(m > n);
         assert!(n <= n);
@@ -976,7 +976,7 @@ mod test {
 
     #[test]
     fn test_cursor_seek() {
-        let mut list = list_from(&[0i,1,2,3,4]);
+        let mut list = list_from(&[0is,1,2,3,4]);
         let mut curs = list.cursor();
         // forward iteration
         assert_eq!(*curs.peek_next().unwrap(), 0);
@@ -1006,7 +1006,7 @@ mod test {
 
     #[test]
     fn test_cursor_insert() {
-        let mut list = list_from(&[0i,1,2,3,4]);
+        let mut list = list_from(&[0is,1,2,3,4]);
         {
             let mut curs = list.cursor();
 
@@ -1060,7 +1060,7 @@ mod test {
 
     #[test]
     fn test_cursor_remove() {
-        let mut list = list_from(&[0i,1,2,3,4,5,6,7]);
+        let mut list = list_from(&[0is,1,2,3,4,5,6,7]);
         {
             let mut curs = list.cursor();
             // remove from front
@@ -1105,26 +1105,26 @@ mod test {
 
     #[test]
     fn test_append() {
-        let mut list1 = list_from(&[0i,1,2,3]);
+        let mut list1 = list_from(&[0is,1,2,3]);
         let mut list2 = list_from(&[4,5,6,7]);
 
         // Normal append
         list1.append(&mut list2);
-        assert_eq!(&list1, &list_from(&[0i,1,2,3,4,5,6,7]));
+        assert_eq!(&list1, &list_from(&[0is,1,2,3,4,5,6,7]));
         assert_eq!(&list2, &DList::new());
         assert_eq!(list1.len(), 8);
         assert_eq!(list2.len(), 0);
 
         // Append to an empty list
         list2.append(&mut list1);
-        assert_eq!(&list2, &list_from(&[0i,1,2,3,4,5,6,7]));
+        assert_eq!(&list2, &list_from(&[0is,1,2,3,4,5,6,7]));
         assert_eq!(&list1, &DList::new());
         assert_eq!(list2.len(), 8);
         assert_eq!(list1.len(), 0);
 
         // Append an empty list
         list2.append(&mut list1);
-        assert_eq!(&list2, &list_from(&[0i,1,2,3,4,5,6,7]));
+        assert_eq!(&list2, &list_from(&[0is,1,2,3,4,5,6,7]));
         assert_eq!(&list1, &DList::new());
         assert_eq!(list2.len(), 8);
         assert_eq!(list1.len(), 0);
@@ -1132,7 +1132,7 @@ mod test {
 
     #[test]
     fn test_split_at() {
-        let mut list2 = list_from(&[4i,5,6,7]);
+        let mut list2 = list_from(&[4is,5,6,7]);
 
         // split at front; basically just move the list
         let mut list3 = list2.split_at(0);
@@ -1158,7 +1158,7 @@ mod test {
 
     #[test]
     fn test_splice() {
-        let mut list1 = list_from(&[3i,4,5]);
+        let mut list1 = list_from(&[3is,4,5]);
         let mut list2 = list_from(&[1,2,6,7]);
         let mut list3 = DList::new();
 
@@ -1190,15 +1190,15 @@ mod bench{
 
     #[bench]
     fn bench_collect_into(b: &mut test::Bencher) {
-        let v = &[0i; 64];
+        let v = &[0is; 64];
         b.iter(|| {
-            let _: DList<int> = v.iter().map(|x| *x).collect();
+            let _: DList<isize> = v.iter().map(|x| *x).collect();
         })
     }
 
     #[bench]
     fn bench_push_front(b: &mut test::Bencher) {
-        let mut m: DList<int> = DList::new();
+        let mut m: DList<isize> = DList::new();
         b.iter(|| {
             m.push_front(0);
         })
@@ -1206,7 +1206,7 @@ mod bench{
 
     #[bench]
     fn bench_push_back(b: &mut test::Bencher) {
-        let mut m: DList<int> = DList::new();
+        let mut m: DList<isize> = DList::new();
         b.iter(|| {
             m.push_back(0);
         })
@@ -1214,7 +1214,7 @@ mod bench{
 
     #[bench]
     fn bench_push_back_pop_back(b: &mut test::Bencher) {
-        let mut m: DList<int> = DList::new();
+        let mut m: DList<isize> = DList::new();
         b.iter(|| {
             m.push_back(0);
             m.pop_back();
@@ -1223,7 +1223,7 @@ mod bench{
 
     #[bench]
     fn bench_push_front_pop_front(b: &mut test::Bencher) {
-        let mut m: DList<int> = DList::new();
+        let mut m: DList<isize> = DList::new();
         b.iter(|| {
             m.push_front(0);
             m.pop_front();
@@ -1232,32 +1232,32 @@ mod bench{
 
     #[bench]
     fn bench_iter(b: &mut test::Bencher) {
-        let v = &[0i; 128];
-        let m: DList<int> = v.iter().map(|&x|x).collect();
+        let v = &[0is; 128];
+        let m: DList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().count() == 128);
         })
     }
     #[bench]
     fn bench_iter_mut(b: &mut test::Bencher) {
-        let v = &[0i; 128];
-        let mut m: DList<int> = v.iter().map(|&x|x).collect();
+        let v = &[0is; 128];
+        let mut m: DList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().count() == 128);
         })
     }
     #[bench]
     fn bench_iter_rev(b: &mut test::Bencher) {
-        let v = &[0i; 128];
-        let m: DList<int> = v.iter().map(|&x|x).collect();
+        let v = &[0is; 128];
+        let m: DList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().rev().count() == 128);
         })
     }
     #[bench]
     fn bench_iter_mut_rev(b: &mut test::Bencher) {
-        let v = &[0i; 128];
-        let mut m: DList<int> = v.iter().map(|&x|x).collect();
+        let v = &[0is; 128];
+        let mut m: DList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().rev().count() == 128);
         })

@@ -34,13 +34,13 @@ use compare::{Compare, Natural};
 // interval heap. Right now, this takes O(n log n) time, I think.
 
 
-fn is_root(x: uint) -> bool { x < 2 }
+fn is_root(x: usize) -> bool { x < 2 }
 
 /// Set LSB to zero for the "left" item index of a node.
-fn left(x: uint) -> uint { x & !1u }
+fn left(x: usize) -> usize { x & !1us }
 
 /// Returns index of "left" item of parent node.
-fn parent_left(x: uint) -> uint {
+fn parent_left(x: usize) -> usize {
     debug_assert!(!is_root(x));
     left((x - 2) / 2)
 }
@@ -175,7 +175,7 @@ impl<T: Ord> IntervalHeap<T> {
     /// assert!(heap.is_empty());
     /// assert!(heap.capacity() >= 5);
     /// ```
-    pub fn with_capacity(capacity: uint) -> IntervalHeap<T> {
+    pub fn with_capacity(capacity: usize) -> IntervalHeap<T> {
         IntervalHeap::with_capacity_and_comparator(capacity, Natural)
     }
 
@@ -204,7 +204,7 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
 
     /// Returns an empty heap with the given capacity and ordered according to the given
     /// comparator.
-    pub fn with_capacity_and_comparator(capacity: uint, cmp: C) -> IntervalHeap<T, C> {
+    pub fn with_capacity_and_comparator(capacity: usize, cmp: C) -> IntervalHeap<T, C> {
         IntervalHeap { data: Vec::with_capacity(capacity), cmp: cmp }
     }
 
@@ -251,7 +251,7 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
 
     /// Returns the number of items the interval heap could hold
     /// without reallocation.
-    pub fn capacity(&self) -> uint {
+    pub fn capacity(&self) -> usize {
         self.data.capacity()
     }
 
@@ -262,14 +262,14 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
     /// Note that the allocator may give the collection more space than it
     /// requests. Therefore capacity can not be relied upon to be precisely
     /// minimal. Prefer `reserve` if future insertions are expected.
-    pub fn reserve_exact(&mut self, additional: uint) {
+    pub fn reserve_exact(&mut self, additional: usize) {
         self.data.reserve_exact(additional);
     }
 
     /// Reserves capacity for at least `additional` more elements to be inserted
     /// in the `IntervalHeap`. The collection may reserve more space to avoid
     /// frequent reallocations.
-    pub fn reserve(&mut self, additional: uint) {
+    pub fn reserve(&mut self, additional: usize) {
         self.data.reserve(additional);
     }
 
@@ -325,7 +325,7 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
     }
 
     /// Returns the number of items in the interval heap
-    pub fn len(&self) -> uint {
+    pub fn len(&self) -> usize {
         self.data.len()
     }
 
@@ -362,7 +362,7 @@ impl<T, C: Compare<T>> Extend<T> for IntervalHeap<T, C> {
 impl<'a, T> Iterator for Iter<'a, T> {
     type Item = &'a T;
     #[inline] fn next(&mut self) -> Option<&'a T> { self.0.next() }
-    #[inline] fn size_hint(&self) -> (uint, Option<uint>) { self.0.size_hint() }
+    #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
 }
 
 #[cfg(test)]
@@ -380,9 +380,9 @@ mod test {
         if x[1] < x[0] { return false; }
         let mut ofs = 2;
         while ofs < x.len() {
-            let ofz = ofs + (ofs + 1 < x.len()) as uint;
+            let ofz = ofs + (ofs + 1 < x.len()) as usize;
             if x[ofz] < x[ofs] { return false; }
-            let parent = (ofs / 2 - 1) & !1u;
+            let parent = (ofs / 2 - 1) & !1us;
             if x[ofs] < x[parent] { return false; }
             if x[parent+1] < x[ofz] { return false; }
             ofs += 2;
@@ -394,10 +394,10 @@ mod test {
     fn fuzz_push_into_sorted_vec() {
         let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
-        for _ in range(0, 100u) {
+        for _ in range(0, 100us) {
             tmp.clear();
             let mut ih = IntervalHeap::from_vec(tmp);
-            for _ in range(0, 100u) {
+            for _ in range(0, 100us) {
                 ih.push(rng.next_u32());
                 assert!(is_interval_heap(as_slice(&ih)));
             }
@@ -412,10 +412,10 @@ mod test {
     fn fuzz_pop_min() {
         let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
-        for _ in range(0, 100u) {
+        for _ in range(0, 100us) {
             tmp.clear();
             let mut ih = IntervalHeap::from_vec(tmp);
-            for _ in range(0, 100u) {
+            for _ in range(0, 100us) {
                 ih.push(rng.next_u32());
             }
             let mut tmpx: Option<u32> = None;
@@ -437,10 +437,10 @@ mod test {
     fn fuzz_pop_max() {
         let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
-        for _ in range(0, 100u) {
+        for _ in range(0, 100us) {
             tmp.clear();
             let mut ih = IntervalHeap::from_vec(tmp);
-            for _ in range(0, 100u) {
+            for _ in range(0, 100us) {
                 ih.push(rng.next_u32());
             }
             let mut tmpx: Option<u32> = None;
