@@ -12,19 +12,19 @@
 
 pub use self::Entry::*;
 use self::TrieNode::*;
+
 use std::cmp::Ordering;
 use std::default::Default;
-use std::fmt;
 use std::fmt::Show;
+use std::fmt;
+use std::hash::{Hash, Hasher, Writer};
+use std::iter;
 use std::mem::zeroed;
 use std::mem;
-use std::ops::{self, Slice, SliceMut};
-use std::uint;
-use std::iter;
+use std::ops;
 use std::ptr;
-use std::hash::{Writer, Hash};
-
 use std::slice;
+use std::uint;
 
 // FIXME(conventions): implement bounded iterators
 // FIXME(conventions): implement into_iter
@@ -141,7 +141,7 @@ impl<T: Show> Show for TrieMap<T> {
 
         for (i, (k, v)) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}: {}", k, *v));
+            try!(write!(f, "{:?}: {:?}", k, *v));
         }
 
         write!(f, "}}")
@@ -662,7 +662,7 @@ impl<T> Extend<(uint, T)> for TrieMap<T> {
     }
 }
 
-impl<S: Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
+impl<S: Hasher+Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
     fn hash(&self, state: &mut S) {
         for elt in self.iter() {
             elt.hash(state);
@@ -1117,7 +1117,7 @@ macro_rules! iterator_impl {
             // using init rather than uninit, so that the worst that can happen
             // from failing to initialise correctly after calling these is a
             // segfault.
-            #[cfg(target_word_size="32")]
+            #[cfg(target_pointer_width="32")]
             unsafe fn new() -> $name<'a, T> {
                 $name {
                     remaining_min: 0,
@@ -1129,7 +1129,7 @@ macro_rules! iterator_impl {
                 }
             }
 
-            #[cfg(target_word_size="64")]
+            #[cfg(target_pointer_width="64")]
             unsafe fn new() -> $name<'a, T> {
                 $name {
                     remaining_min: 0,

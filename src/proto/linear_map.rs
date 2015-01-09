@@ -141,7 +141,7 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     /// mutable references to the values. Iterator element type is `(&'a K, &'a
     /// mut V)`.
     pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, K, V> {
-        fn ref_<A,B>(&(ref v1, ref mut v2): &mut (A, B)) -> (&A, &mut B) { (v1, v2) }
+        fn ref_<A,B>(&mut (ref v1, ref mut v2): &mut (A, B)) -> (&A, &mut B) { (v1, v2) }
         IterMut { iter: self.storage.iter_mut().map(ref_ as fn(&'a mut (K, V)) -> (&'a K, &'a mut V)) }
     }
 
@@ -190,7 +190,7 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
         for kv in self.storage.iter_mut() {
             let found;
             {
-                let &(ref k, _) = kv;
+                let &mut (ref k, _) = kv;
                 found = key == *k;
             }
             if found {

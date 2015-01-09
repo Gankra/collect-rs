@@ -3,7 +3,7 @@ use std::collections::{dlist, ring_buf, DList, RingBuf};
 use std::iter;
 use std::fmt;
 use std::mem;
-use std::hash::{Hash, Writer};
+use std::hash::{Hash, Hasher, Writer};
 use std::num::Int;
 use traverse::Traversal;
 
@@ -476,14 +476,14 @@ impl<A: fmt::Show> fmt::Show for BList<A> {
 
         for (i, e) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}", *e));
+            try!(write!(f, "{:?}", *e));
         }
 
         write!(f, "]")
     }
 }
 
-impl<S: Writer, A: Hash<S>> Hash<S> for BList<A> {
+impl<S: Hasher+Writer, A: Hash<S>> Hash<S> for BList<A> {
     fn hash(&self, state: &mut S) {
         self.len().hash(state);
         for elt in self.iter() {

@@ -19,11 +19,13 @@
 //! Note that anything include in collect-rs is theoretically a candidate for inclusion in
 //! libcollections. As such, this project is licensed under the same terms as Rust itself.
 
-
-#![feature(unsafe_destructor)]
-#![feature(unboxed_closures)]
-#![feature(slicing_syntax)]
+#![feature(box_syntax)]
+#![feature(int_uint)]
+#![feature(old_impl_check)]
 #![feature(old_orphan_check)]
+#![feature(slicing_syntax)]
+#![feature(unboxed_closures)]
+#![feature(unsafe_destructor)]
 
 #[cfg(test)] extern crate test;
 extern crate core;
@@ -44,7 +46,6 @@ pub use tree_map::TreeMap;
 pub use tree_set::TreeSet;
 pub use trie_map::TrieMap;
 pub use trie_set::TrieSet;
-
 
 
 

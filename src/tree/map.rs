@@ -16,7 +16,7 @@ use std::iter;
 use std::mem::{replace, swap};
 use std::ops;
 use std::ptr;
-use std::hash::{Writer, Hash};
+use std::hash::{Hash, Hasher, Writer};
 
 use compare::{Compare, Natural};
 
@@ -162,7 +162,7 @@ impl<K: Show, V: Show, C> Show for TreeMap<K, V, C> where C: Compare<K> {
 
         for (i, (k, v)) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}: {}", *k, *v));
+            try!(write!(f, "{:?}: {:?}", *k, *v));
         }
 
         write!(f, "}}")
@@ -1331,7 +1331,7 @@ impl<K, V, C> Extend<(K, V)> for TreeMap<K, V, C> where C: Compare<K> {
     }
 }
 
-impl<S: Writer, K: Hash<S>, V: Hash<S>, C> Hash<S> for TreeMap<K, V, C> where C: Compare<K> {
+impl<S: Hasher+Writer, K: Hash<S>, V: Hash<S>, C> Hash<S> for TreeMap<K, V, C> where C: Compare<K> {
     fn hash(&self, state: &mut S) {
         for elt in self.iter() {
             elt.hash(state);

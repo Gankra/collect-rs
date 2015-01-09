@@ -30,11 +30,12 @@
 
 use std::cmp::{PartialEq, Eq};
 use std::collections::HashMap;
-use std::iter;
-use std::kinds::marker;
 use std::fmt;
-use std::hash::Hash;
+use std::hash::{Hash, Hasher, Writer};
+use std::collections::hash_map::Hasher as HmHasher;
 use std::iter::{Iterator, Extend};
+use std::iter;
+use std::marker;
 use std::mem;
 use std::ptr;
 
@@ -55,7 +56,7 @@ pub struct LinkedHashMap<K, V> {
     head: *mut LinkedHashMapEntry<K, V>,
 }
 
-impl<S, K: Hash<S>> Hash<S> for KeyRef<K> {
+impl<S: Hasher+Writer, K: Hash<S>> Hash<S> for KeyRef<K> {
     fn hash(&self, state: &mut S) {
         unsafe { (*self.k).hash(state) }
     }
@@ -80,7 +81,7 @@ impl<K, V> LinkedHashMapEntry<K, V> {
     }
 }
 
-impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
+impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// Creates a linked hash map.
     pub fn new() -> LinkedHashMap<K, V> {
         let map = LinkedHashMap {
@@ -345,7 +346,7 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     }
 }
 
-impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
+impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     #[inline]
     fn detach(&mut self, node: *mut LinkedHashMapEntry<K, V>) {
         unsafe {
@@ -366,7 +367,7 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
 }
 
 
-impl<K: Hash + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
+impl<K: Hash<HmHasher> + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
     fn extend<T: Iterator<Item=(K, V)>>(&mut self, mut iter: T) {
         for (k, v) in iter{
             self.insert(k, v);
@@ -374,14 +375,14 @@ impl<K: Hash + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
     }
 }
 
-impl<A: fmt::Show + Hash + Eq, B: fmt::Show> fmt::Show for LinkedHashMap<A, B> {
+impl<A: fmt::Show + Hash<HmHasher> + Eq, B: fmt::Show> fmt::Show for LinkedHashMap<A, B> {
     /// Returns a string that lists the key-value pairs in insertion order.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
 
         for (i, (k, v)) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}: {}", *k, *v));
+            try!(write!(f, "{:?}: {:?}", *k, *v));
         }
 
         write!(f, "}}")

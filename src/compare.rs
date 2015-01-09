@@ -329,6 +329,7 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized> CompareExt<Lhs, Rhs> for C where C: Compare<Lh
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct Borrow<C>(C);
 
+#[old_impl_check]
 impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for Borrow<C>
     where C: Compare<Lb, Rb>, Lb: BorrowFrom<Lhs>, Rb: BorrowFrom<Rhs> {
 
@@ -359,12 +360,14 @@ pub struct Extract<E, C> {
 
 // FIXME: convert to default method on `CompareExt` once where clauses permit equality
 // (https://github.com/rust-lang/rust/issues/20041)
+#[old_impl_check]
 impl<E, C, T: ?Sized, K> Extract<E, C> where E: Fn(&T) -> K, C: Compare<K> {
     /// Returns a comparator that extracts a sort key using `ext` and compares it using
     /// `cmp`.
     pub fn new(ext: E, cmp: C) -> Extract<E, C> { Extract { ext: ext, cmp: cmp } }
 }
 
+#[old_impl_check]
 impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C>
     where E: Fn(&T) -> K, C: Compare<K> {
 

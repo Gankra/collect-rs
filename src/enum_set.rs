@@ -15,7 +15,7 @@
 
 use core::fmt;
 use core::hash;
-use core::kinds::marker::InvariantType;
+use core::marker::InvariantType;
 use core::num::Int;
 use core::u32;
 use std::iter;
@@ -42,14 +42,14 @@ impl<E:CLike+fmt::Show> fmt::Show for EnumSet<E> {
             if !first {
                 try!(write!(fmt, ", "));
             }
-            try!(write!(fmt, "{}", e));
+            try!(write!(fmt, "{:?}", e));
             first = false;
         }
         write!(fmt, "}}")
     }
 }
 
-impl<W:hash::Writer,E:CLike> hash::Hash<W> for EnumSet<E> {
+impl<W:hash::Hasher+hash::Writer,E:CLike> hash::Hash<W> for EnumSet<E> {
     fn hash(&self, state: &mut W) {
         self.bits.hash(state);
     }

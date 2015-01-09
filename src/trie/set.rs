@@ -62,7 +62,7 @@ impl Show for TrieSet {
 
         for (i, x) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}", x));
+            try!(write!(f, "{:?}", x));
         }
 
         write!(f, "}}")

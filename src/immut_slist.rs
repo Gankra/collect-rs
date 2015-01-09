@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::iter;
 use std::rc::{try_unwrap, Rc};
-use std::hash::{Writer, Hash};
+use std::hash::{Hash, Hasher, Writer};
 use std;
 
 struct Node<T> {
@@ -185,14 +185,14 @@ impl<T: std::fmt::Show> std::fmt::Show for ImmutSList<T> {
 
         for (i, e) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}", *e));
+            try!(write!(f, "{:?}", *e));
         }
 
         write!(f, "]")
     }
 }
 
-impl<S: Writer, A: Hash<S>> Hash<S> for ImmutSList<A> {
+impl<S: Hasher+Writer, A: Hash<S>> Hash<S> for ImmutSList<A> {
     fn hash(&self, state: &mut S) {
         self.len().hash(state);
         for elt in self.iter() {

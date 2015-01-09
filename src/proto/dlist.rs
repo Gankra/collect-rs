@@ -1,9 +1,9 @@
 use std::cmp::Ordering;
-use std::kinds::marker::NoCopy;
-use std::{ptr, mem};
-use std::iter;
 use std::fmt::{self, Show};
-use std::hash::{Hash, Writer};
+use std::hash::{Hash, Hasher, Writer};
+use std::iter;
+use std::marker::NoCopy;
+use std::{ptr, mem};
 
 // FIXME(Gankro): Although the internal interface we have here is *safer* than std's DList,
 // it's still by no means safe. Any claims we make here about safety in the internal APIs
@@ -717,14 +717,14 @@ impl<A: fmt::Show> fmt::Show for DList<A> {
 
         for (i, e) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}", *e));
+            try!(write!(f, "{:?}", *e));
         }
 
         write!(f, "]")
     }
 }
 
-impl<S: Writer, A: Hash<S>> Hash<S> for DList<A> {
+impl<S: Hasher+Writer, A: Hash<S>> Hash<S> for DList<A> {
     fn hash(&self, state: &mut S) {
         self.len().hash(state);
         for elt in self.iter() {

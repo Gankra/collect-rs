@@ -14,7 +14,7 @@ use std::fmt;
 use std::fmt::Show;
 use std::iter::Peekable;
 use std::iter;
-use std::hash::{Writer, Hash};
+use std::hash::{Hash, Hasher, Writer};
 use std::ops;
 
 use compare::{Compare, Natural};
@@ -111,7 +111,7 @@ impl<T: Show, C> Show for TreeSet<T, C> where C: Compare<T> {
 
         for (i, x) in self.iter().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}", *x));
+            try!(write!(f, "{:?}", *x));
         }
 
         write!(f, "}}")
@@ -826,7 +826,7 @@ impl<T, C> Extend<T> for TreeSet<T, C> where C: Compare<T> {
     }
 }
 
-impl<S: Writer, T: Hash<S>, C> Hash<S> for TreeSet<T, C> where C: Compare<T> {
+impl<S: Hasher+Writer, T: Hash<S>, C> Hash<S> for TreeSet<T, C> where C: Compare<T> {
     fn hash(&self, state: &mut S) {
         for elt in self.iter() {
             elt.hash(state);

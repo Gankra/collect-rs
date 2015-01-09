@@ -39,6 +39,7 @@
 
 use std::fmt;
 use std::hash::Hash;
+use std::collections::hash_map::Hasher as HmHasher;
 use std::iter::{range, Iterator, Extend};
 
 use linked_hash_map::LinkedHashMap;
@@ -52,7 +53,7 @@ pub struct LruCache<K, V> {
     max_size: uint,
 }
 
-impl<K: Hash + Eq, V> LruCache<K, V> {
+impl<K: Hash<HmHasher> + Eq, V> LruCache<K, V> {
     /// Create an LRU Cache that holds at most `capacity` items.
     ///
     /// # Example
@@ -223,7 +224,7 @@ impl<K: Hash + Eq, V> LruCache<K, V> {
 
 }
 
-impl<K: Hash + Eq, V> Extend<(K, V)> for LruCache<K, V> {
+impl<K: Hash<HmHasher> + Eq, V> Extend<(K, V)> for LruCache<K, V> {
     fn extend<T: Iterator<Item=(K, V)>>(&mut self, mut iter: T) {
         for (k, v) in iter{
             self.insert(k, v);
@@ -231,7 +232,7 @@ impl<K: Hash + Eq, V> Extend<(K, V)> for LruCache<K, V> {
     }
 }
 
-impl<A: fmt::Show + Hash + Eq, B: fmt::Show> fmt::Show for LruCache<A, B> {
+impl<A: fmt::Show + Hash<HmHasher> + Eq, B: fmt::Show> fmt::Show for LruCache<A, B> {
     /// Return a string that lists the key-value pairs from most-recently
     /// used to least-recently used.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -239,7 +240,7 @@ impl<A: fmt::Show + Hash + Eq, B: fmt::Show> fmt::Show for LruCache<A, B> {
 
         for (i, (k, v)) in self.map.iter().rev().enumerate() {
             if i != 0 { try!(write!(f, ", ")); }
-            try!(write!(f, "{}: {}", *k, *v));
+            try!(write!(f, "{:?}: {:?}", *k, *v));
         }
 
         write!(f, "}}")
