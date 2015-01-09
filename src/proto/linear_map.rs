@@ -3,7 +3,6 @@
 #![warn(missing_docs)]
 
 use std::iter::Map;
-use std::iter::RandomAccessIterator;
 use std::mem;
 use std::slice;
 

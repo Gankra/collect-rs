@@ -475,8 +475,7 @@ macro_rules! bound {
      // are we looking at the upper bound?
      is_upper = $upper:expr,
 
-     // method names for slicing/iterating.
-     slice_from = $slice_from:ident,
+     // method name for iterating.
      iter = $iter:ident,
 
      // see the comment on `addr!`, this is just an optional mut, but
@@ -535,7 +534,7 @@ macro_rules! bound {
                         }
                     };
                     // push to the stack.
-                    it.stack[it.length] = children.$slice_from(&slice_idx).$iter();
+                    it.stack[it.length] = children[slice_idx..].$iter();
                     it.length += 1;
                     if ret { return it }
                 })
@@ -549,7 +548,7 @@ impl<T> TrieMap<T> {
     fn bound<'a>(&'a self, key: uint, upper: bool) -> Iter<'a, T> {
         bound!(Iter, self = self,
                key = key, is_upper = upper,
-               slice_from = slice_from_or_fail, iter = iter,
+               iter = iter,
                mutability = )
     }
 
@@ -591,7 +590,7 @@ impl<T> TrieMap<T> {
     fn bound_mut<'a>(&'a mut self, key: uint, upper: bool) -> IterMut<'a, T> {
         bound!(IterMut, self = self,
                key = key, is_upper = upper,
-               slice_from = slice_from_or_fail_mut, iter = iter_mut,
+               iter = iter_mut,
                mutability = mut)
     }
 

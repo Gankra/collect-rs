@@ -19,6 +19,7 @@
 //! Note that anything include in collect-rs is theoretically a candidate for inclusion in
 //! libcollections. As such, this project is licensed under the same terms as Rust itself.
 
+#![allow(unstable)]
 #![feature(box_syntax)]
 #![feature(int_uint)]
 #![feature(old_impl_check)]
