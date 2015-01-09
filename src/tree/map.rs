@@ -31,6 +31,7 @@ use compare::{Compare, Natural};
 /// # Examples
 ///
 /// ```rust
+/// #![allow(unstable)]
 /// use collect::TreeMap;
 ///
 /// let mut map = TreeMap::new();
@@ -607,20 +608,20 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```rust
     /// use collect::tree_map::TreeMap;
     ///
-    /// fn get_headers() -> TreeMap<String, String> {
+    /// fn get_headers() -> TreeMap<&'static str, &'static str> {
     ///     let mut result = TreeMap::new();
-    ///     result.insert("Content-Type".to_string(), "application/xml".to_string());
-    ///     result.insert("User-Agent".to_string(), "Curl-Rust/0.1".to_string());
+    ///     result.insert("Content-Type", "application/xml");
+    ///     result.insert("User-Agent", "Curl-Rust/0.1");
     ///     result
     /// }
     ///
     /// let headers = get_headers();
     /// let ua_key = "User-Agent";
-    /// let ua = headers.find_with(|k| {
-    ///    ua_key.cmp(k.as_slice())
+    /// let ua = headers.find_with(|&k| {
+    ///    ua_key.cmp(k)
     /// });
     ///
-    /// assert_eq!((*ua.unwrap()).as_slice(), "Curl-Rust/0.1");
+    /// assert_eq!(*ua.unwrap(), "Curl-Rust/0.1");
     /// ```
     #[inline]
     #[experimental = "likely to be renamed, may be removed"]
