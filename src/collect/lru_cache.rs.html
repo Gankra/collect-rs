@@ -405,6 +405,7 @@
 <span id="363">363</span>
 <span id="364">364</span>
 <span id="365">365</span>
+<span id="366">366</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -447,6 +448,7 @@
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hash</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>hash_map</span>::<span class='ident'>Hasher</span> <span class='kw'>as</span> <span class='ident'>HmHasher</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::{<span class='ident'>range</span>, <span class='ident'>Iterator</span>, <span class='ident'>Extend</span>};
 
 <span class='kw'>use</span> <span class='ident'>linked_hash_map</span>::<span class='ident'>LinkedHashMap</span>;
@@ -460,7 +462,7 @@
     <span class='ident'>max_size</span>: <span class='ident'>uint</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Hash</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>HmHasher</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create an LRU Cache that holds at most `capacity` items.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Example</span>
@@ -631,7 +633,7 @@
 
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Hash</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>Extend</span><span class='op'>&lt;</span>(<span class='ident'>K</span>, <span class='ident'>V</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>HmHasher</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>Extend</span><span class='op'>&lt;</span>(<span class='ident'>K</span>, <span class='ident'>V</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>K</span>, <span class='ident'>V</span>)<span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>iter</span>: <span class='ident'>T</span>) {
         <span class='kw'>for</span> (<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>iter</span>{
             <span class='self'>self</span>.<span class='ident'>insert</span>(<span class='ident'>k</span>, <span class='ident'>v</span>);
@@ -639,7 +641,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>fmt</span>::<span class='ident'>Show</span> <span class='op'>+</span> <span class='ident'>Hash</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>B</span>: <span class='ident'>fmt</span>::<span class='ident'>Show</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Show</span> <span class='kw'>for</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>B</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>fmt</span>::<span class='ident'>Show</span> <span class='op'>+</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>HmHasher</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>B</span>: <span class='ident'>fmt</span>::<span class='ident'>Show</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Show</span> <span class='kw'>for</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>B</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Return a string that lists the key-value pairs from most-recently</span>
     <span class='doccomment'>/// used to least-recently used.</span>
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
@@ -647,7 +649,7 @@
 
         <span class='kw'>for</span> (<span class='ident'>i</span>, (<span class='ident'>k</span>, <span class='ident'>v</span>)) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>map</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>().<span class='ident'>enumerate</span>() {
             <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>!=</span> <span class='number'>0</span> { <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;, &quot;</span>)); }
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}: {}&quot;</span>, <span class='op'>*</span><span class='ident'>k</span>, <span class='op'>*</span><span class='ident'>v</span>));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{:?}: {:?}&quot;</span>, <span class='op'>*</span><span class='ident'>k</span>, <span class='op'>*</span><span class='ident'>v</span>));
         }
 
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;}}&quot;</span>)
@@ -723,20 +725,20 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_to_string</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>3</span>);
+    <span class='kw'>fn</span> <span class='ident'>test_show</span>() {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>i32</span>, <span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>3</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>30</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;{3: 30, 2: 20, 1: 10}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3i32: 30i32, 2i32: 20i32, 1i32: 10i32}&quot;</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>22</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;{2: 22, 3: 30, 1: 10}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{2i32: 22i32, 3i32: 30i32, 1i32: 10i32}&quot;</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='number'>60</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;{6: 60, 2: 22, 3: 30}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{6i32: 60i32, 2i32: 22i32, 3i32: 30i32}&quot;</span>);
         <span class='ident'>cache</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;{3: 30, 6: 60, 2: 22}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3i32: 30i32, 6i32: 60i32, 2i32: 22i32}&quot;</span>);
         <span class='ident'>cache</span>.<span class='ident'>set_capacity</span>(<span class='number'>2</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;{3: 30, 6: 60}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3i32: 30i32, 6i32: 60i32}&quot;</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -768,7 +770,7 @@
         <span class='ident'>cache</span>.<span class='ident'>clear</span>();
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>).<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>).<span class='ident'>is_none</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;{}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{}&quot;</span>);
     }
 }
 </pre>

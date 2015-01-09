@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>collect</a>::<wbr><a href='index.html'>iter</a>::<wbr><a class='trait' href=''>StringJoiner</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-14698' href='../../src/collect/iter/string_joiner.rs.html#4-17'>[src]</a></span></h1>
+        </span><a id='src-14708' href='../../src/collect/iter/string_joiner.rs.html#4-17'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait StringJoiner {
     fn <a href='#tymethod.join' class='fnname'>join</a>(&amp;mut self, sep: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='http://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>;
 }</pre><div class='docblock'><p>An Iterator adapter that walks through all the elements in the Iterator,
@@ -61,12 +61,12 @@ then combines them all into one String, seperated by sep.</p>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>iter</span>::<span class='ident'>StringJoiner</span>;
 
 <span class='kw'>let</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>,<span class='number'>2</span>,<span class='number'>3</span>];
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>.<span class='ident'>iter</span>().<span class='ident'>join</span>(<span class='string'>&quot;, &quot;</span>).<span class='ident'>as_slice</span>(), <span class='string'>&quot;1, 2, 3&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>vec</span>.<span class='ident'>iter</span>().<span class='ident'>join</span>(<span class='string'>&quot;, &quot;</span>), <span class='string'>&quot;1, 2, 3&quot;</span>);
 </pre>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;A: <a class='trait' href='http://doc.rust-lang.org/nightly/collections/string/trait.ToString.html' title='collections::string::ToString'>ToString</a>, T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&gt; <a class='trait' href='../../collect/iter/trait.StringJoiner.html' title='collect::iter::StringJoiner'>StringJoiner</a> for T</code></li>
+    <li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;A: <a class='trait' href='http://doc.rust-lang.org/nightly/collections/string/trait.ToString.html' title='collections::string::ToString'>ToString</a>, T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=A&gt;&gt; <a class='trait' href='../../collect/iter/trait.StringJoiner.html' title='collect::iter::StringJoiner'>StringJoiner</a> for T</code></li>
 </ul><script type="text/javascript" async
                               src="../../implementors/collect/iter/trait.StringJoiner.js">
                       </script></section>

@@ -428,6 +428,9 @@
 <span id="386">386</span>
 <span id="387">387</span>
 <span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/// There are utilities that can be used to do an inner join between</span>
 <span class='doccomment'>/// ordered iterators. This can be useful to do selects between multiple</span>
@@ -512,6 +515,7 @@
     <span class='ident'>right</span>: <span class='ident'>Peekable</span><span class='op'>&lt;</span><span class='ident'>VB</span>, <span class='ident'>B</span><span class='op'>&gt;</span>
 }
 
+<span class='attribute'>#[<span class='ident'>old_impl_check</span>]</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Ord</span>, <span class='ident'>DataA</span>, <span class='ident'>DataB</span>,
      <span class='ident'>A</span>: <span class='ident'>OrderedMapIterator</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>DataA</span><span class='op'>&gt;</span>,
      <span class='ident'>B</span>: <span class='ident'>OrderedMapIterator</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>DataB</span><span class='op'>&gt;&gt;</span>
@@ -557,6 +561,7 @@
 }
 
 
+<span class='attribute'>#[<span class='ident'>old_impl_check</span>]</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Ord</span>,
      <span class='ident'>A</span>: <span class='ident'>OrderedSetIterator</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span>,
      <span class='ident'>B</span>: <span class='ident'>OrderedSetIterator</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;&gt;</span>
@@ -593,6 +598,7 @@
     }
 }
 
+<span class='attribute'>#[<span class='ident'>old_impl_check</span>]</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Ord</span>,
      <span class='ident'>V</span>,
      <span class='ident'>SetIter</span>: <span class='ident'>OrderedSetIterator</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span>,

@@ -923,8 +923,6 @@
 <span id="881">881</span>
 <span id="882">882</span>
 <span id="883">883</span>
-<span id="884">884</span>
-<span id="885">885</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -990,7 +988,7 @@
 
         <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>x</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
             <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>!=</span> <span class='number'>0</span> { <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;, &quot;</span>)); }
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>x</span>));
         }
 
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;}}&quot;</span>)
@@ -1633,10 +1631,8 @@
         <span class='ident'>set</span>.<span class='ident'>insert</span>(<span class='number'>1</span>);
         <span class='ident'>set</span>.<span class='ident'>insert</span>(<span class='number'>2</span>);
 
-        <span class='kw'>let</span> <span class='ident'>set_str</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>set</span>);
-
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>set_str</span> <span class='op'>==</span> <span class='string'>&quot;{1, 2}&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>empty</span>), <span class='string'>&quot;{}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>set</span>), <span class='string'>&quot;{1u, 2u}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>empty</span>), <span class='string'>&quot;{}&quot;</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

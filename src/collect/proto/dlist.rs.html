@@ -1308,11 +1308,11 @@
 <span id="1266">1266</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>kinds</span>::<span class='ident'>marker</span>::<span class='ident'>NoCopy</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>ptr</span>, <span class='ident'>mem</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::{<span class='self'>self</span>, <span class='ident'>Show</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Hash</span>, <span class='ident'>Writer</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Hash</span>, <span class='ident'>Hasher</span>, <span class='ident'>Writer</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>NoCopy</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>ptr</span>, <span class='ident'>mem</span>};
 
 <span class='comment'>// FIXME(Gankro): Although the internal interface we have here is *safer* than std&#39;s DList,</span>
 <span class='comment'>// it&#39;s still by no means safe. Any claims we make here about safety in the internal APIs</span>
@@ -2026,14 +2026,14 @@
 
         <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>e</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
             <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>!=</span> <span class='number'>0</span> { <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;, &quot;</span>)); }
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='op'>*</span><span class='ident'>e</span>));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{:?}&quot;</span>, <span class='op'>*</span><span class='ident'>e</span>));
         }
 
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;]&quot;</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Writer</span>, <span class='ident'>A</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;&gt;</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Hasher</span><span class='op'>+</span><span class='ident'>Writer</span>, <span class='ident'>A</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;&gt;</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) {
         <span class='self'>self</span>.<span class='ident'>len</span>().<span class='ident'>hash</span>(<span class='ident'>state</span>);
         <span class='kw'>for</span> <span class='ident'>elt</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>() {
@@ -2217,7 +2217,7 @@
       <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>DList</span>::<span class='ident'>new</span>();
       <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>DList</span>::<span class='ident'>new</span>();
 
-      <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>hash</span>::<span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>) <span class='op'>==</span> <span class='ident'>hash</span>::<span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='ident'>y</span>));
+      <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>hash</span>::<span class='ident'>hash</span>::<span class='op'>&lt;</span>_, <span class='ident'>hash</span>::<span class='ident'>SipHasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>) <span class='op'>==</span> <span class='ident'>hash</span>::<span class='ident'>hash</span>::<span class='op'>&lt;</span>_, <span class='ident'>hash</span>::<span class='ident'>SipHasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>y</span>));
 
       <span class='ident'>x</span>.<span class='ident'>push_back</span>(<span class='number'>1i</span>);
       <span class='ident'>x</span>.<span class='ident'>push_back</span>(<span class='number'>2</span>);
@@ -2227,7 +2227,7 @@
       <span class='ident'>y</span>.<span class='ident'>push_front</span>(<span class='number'>2</span>);
       <span class='ident'>y</span>.<span class='ident'>push_front</span>(<span class='number'>1</span>);
 
-      <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>hash</span>::<span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>) <span class='op'>==</span> <span class='ident'>hash</span>::<span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='ident'>y</span>));
+      <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>hash</span>::<span class='ident'>hash</span>::<span class='op'>&lt;</span>_, <span class='ident'>hash</span>::<span class='ident'>SipHasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>) <span class='op'>==</span> <span class='ident'>hash</span>::<span class='ident'>hash</span>::<span class='op'>&lt;</span>_, <span class='ident'>hash</span>::<span class='ident'>SipHasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>y</span>));
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -2274,13 +2274,13 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_show</span>() {
-        <span class='kw'>let</span> <span class='ident'>list</span>: <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>range</span>(<span class='number'>0i</span>, <span class='number'>10</span>).<span class='ident'>collect</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>list</span>.<span class='ident'>to_string</span>().<span class='ident'>as_slice</span>() <span class='op'>==</span> <span class='string'>&quot;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>list</span>: <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>range</span>(<span class='number'>0</span>, <span class='number'>10</span>).<span class='ident'>collect</span>();
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>list</span>), <span class='string'>&quot;[0i32, 1i32, 2i32, 3i32, 4i32, 5i32, 6i32, 7i32, 8i32, 9i32]&quot;</span>);
 
         <span class='kw'>let</span> <span class='ident'>list</span>: <span class='ident'>DList</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;just&quot;</span>, <span class='string'>&quot;one&quot;</span>, <span class='string'>&quot;test&quot;</span>, <span class='string'>&quot;more&quot;</span>].<span class='ident'>iter</span>()
                                                                    .<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>)
                                                                    .<span class='ident'>collect</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>list</span>.<span class='ident'>to_string</span>().<span class='ident'>as_slice</span>() <span class='op'>==</span> <span class='string'>&quot;[just, one, test, more]&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>list</span>), <span class='string'>r#&quot;[&quot;just&quot;, &quot;one&quot;, &quot;test&quot;, &quot;more&quot;]&quot;#</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

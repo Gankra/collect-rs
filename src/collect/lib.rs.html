@@ -130,6 +130,8 @@
 <span id="88">88</span>
 <span id="89">89</span>
 <span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
 </pre><pre class='rust '>
 
 <span class='doccomment'>//! collect-rs is intended as an experimental extension of the Rust standard library&#39;s</span>
@@ -152,11 +154,14 @@
 <span class='doccomment'>//! Note that anything include in collect-rs is theoretically a candidate for inclusion in</span>
 <span class='doccomment'>//! libcollections. As such, this project is licensed under the same terms as Rust itself.</span>
 
-
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>unsafe_destructor</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>unboxed_closures</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>slicing_syntax</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unstable</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>box_syntax</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>int_uint</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>old_impl_check</span>)]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>old_orphan_check</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>slicing_syntax</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>unboxed_closures</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>unsafe_destructor</span>)]</span>
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>test</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>core</span>;
@@ -177,7 +182,6 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>tree_set</span>::<span class='ident'>TreeSet</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>trie_map</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>trie_set</span>::<span class='ident'>TrieSet</span>;
-
 
 
 

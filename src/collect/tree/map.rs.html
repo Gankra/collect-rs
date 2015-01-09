@@ -2068,7 +2068,6 @@
 <span id="2026">2026</span>
 <span id="2027">2027</span>
 <span id="2028">2028</span>
-<span id="2029">2029</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -2088,7 +2087,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::{<span class='ident'>replace</span>, <span class='ident'>swap</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Writer</span>, <span class='ident'>Hash</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Hash</span>, <span class='ident'>Hasher</span>, <span class='ident'>Writer</span>};
 
 <span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
 
@@ -2103,6 +2102,7 @@
 <span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```rust</span>
+<span class='doccomment'>/// #![allow(unstable)]</span>
 <span class='doccomment'>/// use collect::TreeMap;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let mut map = TreeMap::new();</span>
@@ -2234,7 +2234,7 @@
 
         <span class='kw'>for</span> (<span class='ident'>i</span>, (<span class='ident'>k</span>, <span class='ident'>v</span>)) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
             <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>!=</span> <span class='number'>0</span> { <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;, &quot;</span>)); }
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}: {}&quot;</span>, <span class='op'>*</span><span class='ident'>k</span>, <span class='op'>*</span><span class='ident'>v</span>));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{:?}: {:?}&quot;</span>, <span class='op'>*</span><span class='ident'>k</span>, <span class='op'>*</span><span class='ident'>v</span>));
         }
 
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;}}&quot;</span>)
@@ -2679,20 +2679,20 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::tree_map::TreeMap;</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// fn get_headers() -&gt; TreeMap&lt;String, String&gt; {</span>
+    <span class='doccomment'>/// fn get_headers() -&gt; TreeMap&lt;&amp;&#39;static str, &amp;&#39;static str&gt; {</span>
     <span class='doccomment'>///     let mut result = TreeMap::new();</span>
-    <span class='doccomment'>///     result.insert(&quot;Content-Type&quot;.to_string(), &quot;application/xml&quot;.to_string());</span>
-    <span class='doccomment'>///     result.insert(&quot;User-Agent&quot;.to_string(), &quot;Curl-Rust/0.1&quot;.to_string());</span>
+    <span class='doccomment'>///     result.insert(&quot;Content-Type&quot;, &quot;application/xml&quot;);</span>
+    <span class='doccomment'>///     result.insert(&quot;User-Agent&quot;, &quot;Curl-Rust/0.1&quot;);</span>
     <span class='doccomment'>///     result</span>
     <span class='doccomment'>/// }</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let headers = get_headers();</span>
     <span class='doccomment'>/// let ua_key = &quot;User-Agent&quot;;</span>
-    <span class='doccomment'>/// let ua = headers.find_with(|k| {</span>
-    <span class='doccomment'>///    ua_key.cmp(k.as_slice())</span>
+    <span class='doccomment'>/// let ua = headers.find_with(|&amp;k| {</span>
+    <span class='doccomment'>///    ua_key.cmp(k)</span>
     <span class='doccomment'>/// });</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!((*ua.unwrap()).as_slice(), &quot;Curl-Rust/0.1&quot;);</span>
+    <span class='doccomment'>/// assert_eq!(*ua.unwrap(), &quot;Curl-Rust/0.1&quot;);</span>
     <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='attribute'>#[<span class='ident'>experimental</span> <span class='op'>=</span> <span class='string'>&quot;likely to be renamed, may be removed&quot;</span>]</span>
@@ -3403,7 +3403,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Writer</span>, <span class='ident'>K</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>, <span class='ident'>V</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>, <span class='ident'>C</span><span class='op'>&gt;</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>C</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Hasher</span><span class='op'>+</span><span class='ident'>Writer</span>, <span class='ident'>K</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>, <span class='ident'>V</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>, <span class='ident'>C</span><span class='op'>&gt;</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>C</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) {
         <span class='kw'>for</span> <span class='ident'>elt</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>() {
             <span class='ident'>elt</span>.<span class='ident'>hash</span>(<span class='ident'>state</span>);
@@ -3835,16 +3835,14 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_show</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='ident'>empty</span>: <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='ident'>int</span>, <span class='ident'>int</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='ident'>empty</span>: <span class='ident'>TreeMap</span><span class='op'>&lt;</span><span class='ident'>i32</span>, <span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
 
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>2</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>4</span>);
 
-        <span class='kw'>let</span> <span class='ident'>map_str</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>map</span>);
-
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>map_str</span> <span class='op'>==</span> <span class='string'>&quot;{1: 2, 3: 4}&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>empty</span>), <span class='string'>&quot;{}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1i32: 2i32, 3i32: 4i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>empty</span>), <span class='string'>&quot;{}&quot;</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

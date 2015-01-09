@@ -1998,9 +1998,6 @@
 <span id="1956">1956</span>
 <span id="1957">1957</span>
 <span id="1958">1958</span>
-<span id="1959">1959</span>
-<span id="1960">1960</span>
-<span id="1961">1961</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -2016,19 +2013,19 @@
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Entry</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>TrieNode</span>::<span class='op'>*</span>;
+
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Show</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Hash</span>, <span class='ident'>Hasher</span>, <span class='ident'>Writer</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>zeroed</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='self'>self</span>, <span class='ident'>Slice</span>, <span class='ident'>SliceMut</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>uint</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Writer</span>, <span class='ident'>Hash</span>};
-
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>uint</span>;
 
 <span class='comment'>// FIXME(conventions): implement bounded iterators</span>
 <span class='comment'>// FIXME(conventions): implement into_iter</span>
@@ -2145,7 +2142,7 @@
 
         <span class='kw'>for</span> (<span class='ident'>i</span>, (<span class='ident'>k</span>, <span class='ident'>v</span>)) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
             <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>!=</span> <span class='number'>0</span> { <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;, &quot;</span>)); }
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>k</span>, <span class='op'>*</span><span class='ident'>v</span>));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{:?}: {:?}&quot;</span>, <span class='ident'>k</span>, <span class='op'>*</span><span class='ident'>v</span>));
         }
 
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;}}&quot;</span>)
@@ -2479,8 +2476,7 @@
      <span class='comment'>// are we looking at the upper bound?</span>
      <span class='ident'>is_upper</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>upper</span>:<span class='ident'>expr</span>,
 
-     <span class='comment'>// method names for slicing/iterating.</span>
-     <span class='ident'>slice_from</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slice_from</span>:<span class='ident'>ident</span>,
+     <span class='comment'>// method name for iterating.</span>
      <span class='ident'>iter</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iter</span>:<span class='ident'>ident</span>,
 
      <span class='comment'>// see the comment on `addr!`, this is just an optional mut, but</span>
@@ -2539,7 +2535,7 @@
                         }
                     };
                     <span class='comment'>// push to the stack.</span>
-                    <span class='ident'>it</span>.<span class='ident'>stack</span>[<span class='ident'>it</span>.<span class='ident'>length</span>] <span class='op'>=</span> <span class='ident'>children</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slice_from</span>(<span class='kw-2'>&amp;</span><span class='ident'>slice_idx</span>).<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iter</span>();
+                    <span class='ident'>it</span>.<span class='ident'>stack</span>[<span class='ident'>it</span>.<span class='ident'>length</span>] <span class='op'>=</span> <span class='ident'>children</span>[<span class='ident'>slice_idx</span>..].<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iter</span>();
                     <span class='ident'>it</span>.<span class='ident'>length</span> <span class='op'>+=</span> <span class='number'>1</span>;
                     <span class='kw'>if</span> <span class='ident'>ret</span> { <span class='kw'>return</span> <span class='ident'>it</span> }
                 })
@@ -2553,7 +2549,7 @@
     <span class='kw'>fn</span> <span class='ident'>bound</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='macro'>bound</span><span class='macro'>!</span>(<span class='ident'>Iter</span>, <span class='self'>self</span> <span class='op'>=</span> <span class='self'>self</span>,
                <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>key</span>, <span class='ident'>is_upper</span> <span class='op'>=</span> <span class='ident'>upper</span>,
-               <span class='ident'>slice_from</span> <span class='op'>=</span> <span class='ident'>slice_from_or_fail</span>, <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>,
+               <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>,
                <span class='ident'>mutability</span> <span class='op'>=</span> )
     }
 
@@ -2595,7 +2591,7 @@
     <span class='kw'>fn</span> <span class='ident'>bound_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>uint</span>, <span class='ident'>upper</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='macro'>bound</span><span class='macro'>!</span>(<span class='ident'>IterMut</span>, <span class='self'>self</span> <span class='op'>=</span> <span class='self'>self</span>,
                <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>key</span>, <span class='ident'>is_upper</span> <span class='op'>=</span> <span class='ident'>upper</span>,
-               <span class='ident'>slice_from</span> <span class='op'>=</span> <span class='ident'>slice_from_or_fail_mut</span>, <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter_mut</span>,
+               <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter_mut</span>,
                <span class='ident'>mutability</span> <span class='op'>=</span> <span class='kw-2'>mut</span>)
     }
 
@@ -2666,7 +2662,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Writer</span>, <span class='ident'>T</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;&gt;</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Hasher</span><span class='op'>+</span><span class='ident'>Writer</span>, <span class='ident'>T</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;&gt;</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) {
         <span class='kw'>for</span> <span class='ident'>elt</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>() {
             <span class='ident'>elt</span>.<span class='ident'>hash</span>(<span class='ident'>state</span>);
@@ -3121,7 +3117,7 @@
             <span class='comment'>// using init rather than uninit, so that the worst that can happen</span>
             <span class='comment'>// from failing to initialise correctly after calling these is a</span>
             <span class='comment'>// segfault.</span>
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_word_size</span><span class='op'>=</span><span class='string'>&quot;32&quot;</span>)]</span>
+            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_pointer_width</span><span class='op'>=</span><span class='string'>&quot;32&quot;</span>)]</span>
             <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
                 <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
                     <span class='ident'>remaining_min</span>: <span class='number'>0</span>,
@@ -3133,7 +3129,7 @@
                 }
             }
 
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_word_size</span><span class='op'>=</span><span class='string'>&quot;64&quot;</span>)]</span>
+            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_pointer_width</span><span class='op'>=</span><span class='string'>&quot;64&quot;</span>)]</span>
             <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
                 <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
                     <span class='ident'>remaining_min</span>: <span class='number'>0</span>,
@@ -3596,7 +3592,7 @@
       <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
       <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
-      <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>hash</span>::<span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>) <span class='op'>==</span> <span class='ident'>hash</span>::<span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='ident'>y</span>));
+      <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>hash</span>::<span class='ident'>hash</span>::<span class='op'>&lt;</span>_, <span class='ident'>hash</span>::<span class='ident'>SipHasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>) <span class='op'>==</span> <span class='ident'>hash</span>::<span class='ident'>hash</span>::<span class='op'>&lt;</span>_, <span class='ident'>hash</span>::<span class='ident'>SipHasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>y</span>));
       <span class='ident'>x</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&#39;a&#39;</span>);
       <span class='ident'>x</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='string'>&#39;b&#39;</span>);
       <span class='ident'>x</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='string'>&#39;c&#39;</span>);
@@ -3605,21 +3601,19 @@
       <span class='ident'>y</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='string'>&#39;b&#39;</span>);
       <span class='ident'>y</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&#39;a&#39;</span>);
 
-      <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>hash</span>::<span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>) <span class='op'>==</span> <span class='ident'>hash</span>::<span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='ident'>y</span>));
+      <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>hash</span>::<span class='ident'>hash</span>::<span class='op'>&lt;</span>_, <span class='ident'>hash</span>::<span class='ident'>SipHasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>) <span class='op'>==</span> <span class='ident'>hash</span>::<span class='ident'>hash</span>::<span class='op'>&lt;</span>_, <span class='ident'>hash</span>::<span class='ident'>SipHasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>y</span>));
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_show</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='ident'>empty</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='ident'>empty</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>char</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&#39;a&#39;</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='string'>&#39;b&#39;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>map_str</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>map</span>);
-
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>map_str</span> <span class='op'>==</span> <span class='string'>&quot;{1: a, 2: b}&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>empty</span>), <span class='string'>&quot;{}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1u: &#39;a&#39;, 2u: &#39;b&#39;}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>empty</span>), <span class='string'>&quot;{}&quot;</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
