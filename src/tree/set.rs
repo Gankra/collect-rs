@@ -54,7 +54,7 @@ use tree_map::{self, TreeMap};
 ///
 /// struct Troll<'a> {
 ///     name: &'a str,
-///     level: usize,
+///     level: u32,
 /// }
 ///
 /// let mut trolls = TreeSet::with_comparator(|&: l: &Troll, r: &Troll| l.level.cmp(&r.level));
@@ -130,7 +130,7 @@ impl<T: Ord> TreeSet<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let mut set: TreeSet<isize> = TreeSet::new();
+    /// let mut set: TreeSet<i32> = TreeSet::new();
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -152,7 +152,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let set: TreeSet<isize> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
+    /// let set: TreeSet<i32> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
     /// // Will print in ascending order.
     /// for x in set.iter() {
@@ -171,7 +171,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let set: TreeSet<isize> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
+    /// let set: TreeSet<i32> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
     /// // Will print in descending order.
     /// for x in set.rev_iter() {
@@ -190,10 +190,10 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let set: TreeSet<isize> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
+    /// let set: TreeSet<i32> = [1, 4, 3, 5, 2].iter().map(|&x| x).collect();
     ///
     /// // Not possible with a regular `.iter()`
-    /// let v: Vec<isize> = set.into_iter().collect();
+    /// let v: Vec<i32> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
     /// ```
     #[inline]
@@ -212,7 +212,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let set: TreeSet<isize> = [2, 4, 6, 8].iter().map(|&x| x).collect();
+    /// let set: TreeSet<i32> = [2, 4, 6, 8].iter().map(|&x| x).collect();
     ///
     /// assert_eq!(set.lower_bound(&4).next(), Some(&4));
     /// assert_eq!(set.lower_bound(&5).next(), Some(&6));
@@ -231,7 +231,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     ///
     /// ```rust
     /// use collect::TreeSet;
-    /// let set: TreeSet<isize> = [2, 4, 6, 8].iter().map(|&x| x).collect();
+    /// let set: TreeSet<i32> = [2, 4, 6, 8].iter().map(|&x| x).collect();
     ///
     /// assert_eq!(set.upper_bound(&4).next(), Some(&6));
     /// assert_eq!(set.upper_bound(&5).next(), Some(&6));
@@ -249,20 +249,20 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = [1, 2, 3].iter().map(|&x| x).collect();
-    /// let b: TreeSet<isize> = [3, 4, 5].iter().map(|&x| x).collect();
+    /// let a: TreeSet<i32> = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let b: TreeSet<i32> = [3, 4, 5].iter().map(|&x| x).collect();
     ///
     /// // Can be seen as `a - b`.
     /// for x in a.difference(&b) {
     ///     println!("{}", x); // Print 1 then 2
     /// }
     ///
-    /// let diff: TreeSet<isize> = a.difference(&b).map(|&x| x).collect();
+    /// let diff: TreeSet<i32> = a.difference(&b).map(|&x| x).collect();
     /// assert_eq!(diff, [1, 2].iter().map(|&x| x).collect());
     ///
     /// // Note that difference is not symmetric,
     /// // and `b - a` means something else:
-    /// let diff: TreeSet<isize> = b.difference(&a).map(|&x| x).collect();
+    /// let diff: TreeSet<i32> = b.difference(&a).map(|&x| x).collect();
     /// assert_eq!(diff, [4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -283,16 +283,16 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = [1, 2, 3].iter().map(|&x| x).collect();
-    /// let b: TreeSet<isize> = [3, 4, 5].iter().map(|&x| x).collect();
+    /// let a: TreeSet<i32> = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let b: TreeSet<i32> = [3, 4, 5].iter().map(|&x| x).collect();
     ///
     /// // Print 1, 2, 4, 5 in ascending order.
     /// for x in a.symmetric_difference(&b) {
     ///     println!("{}", x);
     /// }
     ///
-    /// let diff1: TreeSet<isize> = a.symmetric_difference(&b).map(|&x| x).collect();
-    /// let diff2: TreeSet<isize> = b.symmetric_difference(&a).map(|&x| x).collect();
+    /// let diff1: TreeSet<i32> = a.symmetric_difference(&b).map(|&x| x).collect();
+    /// let diff2: TreeSet<i32> = b.symmetric_difference(&a).map(|&x| x).collect();
     ///
     /// assert_eq!(diff1, diff2);
     /// assert_eq!(diff1, [1, 2, 4, 5].iter().map(|&x| x).collect());
@@ -315,15 +315,15 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = [1, 2, 3].iter().map(|&x| x).collect();
-    /// let b: TreeSet<isize> = [2, 3, 4].iter().map(|&x| x).collect();
+    /// let a: TreeSet<i32> = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let b: TreeSet<i32> = [2, 3, 4].iter().map(|&x| x).collect();
     ///
     /// // Print 2, 3 in ascending order.
     /// for x in a.intersection(&b) {
     ///     println!("{}", x);
     /// }
     ///
-    /// let diff: TreeSet<isize> = a.intersection(&b).map(|&x| x).collect();
+    /// let diff: TreeSet<i32> = a.intersection(&b).map(|&x| x).collect();
     /// assert_eq!(diff, [2, 3].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -344,15 +344,15 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = [1, 2, 3].iter().map(|&x| x).collect();
-    /// let b: TreeSet<isize> = [3, 4, 5].iter().map(|&x| x).collect();
+    /// let a: TreeSet<i32> = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let b: TreeSet<i32> = [3, 4, 5].iter().map(|&x| x).collect();
     ///
     /// // Print 1, 2, 3, 4, 5 in ascending order.
     /// for x in a.union(&b) {
     ///     println!("{}", x);
     /// }
     ///
-    /// let diff: TreeSet<isize> = a.union(&b).map(|&x| x).collect();
+    /// let diff: TreeSet<i32> = a.union(&b).map(|&x| x).collect();
     /// assert_eq!(diff, [1, 2, 3, 4, 5].iter().map(|&x| x).collect());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -424,7 +424,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let set: TreeSet<isize> = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let set: TreeSet<i32> = [1, 2, 3].iter().map(|&x| x).collect();
     /// assert_eq!(set.contains(&1), true);
     /// assert_eq!(set.contains(&4), false);
     /// ```
@@ -444,8 +444,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = [1, 2, 3].iter().map(|&x| x).collect();
-    /// let mut b: TreeSet<isize> = TreeSet::new();
+    /// let a: TreeSet<i32> = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let mut b: TreeSet<i32> = TreeSet::new();
     ///
     /// assert_eq!(a.is_disjoint(&b), true);
     /// b.insert(4);
@@ -465,8 +465,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let sup: TreeSet<isize> = [1, 2, 3].iter().map(|&x| x).collect();
-    /// let mut set: TreeSet<isize> = TreeSet::new();
+    /// let sup: TreeSet<i32> = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let mut set: TreeSet<i32> = TreeSet::new();
     ///
     /// assert_eq!(set.is_subset(&sup), true);
     /// set.insert(2);
@@ -507,8 +507,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let sub: TreeSet<isize> = [1, 2].iter().map(|&x| x).collect();
-    /// let mut set: TreeSet<isize> = TreeSet::new();
+    /// let sub: TreeSet<i32> = [1, 2].iter().map(|&x| x).collect();
+    /// let mut set: TreeSet<i32> = TreeSet::new();
     ///
     /// assert_eq!(set.is_superset(&sub), false);
     ///
@@ -710,11 +710,11 @@ impl<'a, 'b, T, C> ops::BitOr<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<isize> = vec![3, 4, 5].into_iter().collect();
+    /// let a: TreeSet<i32> = vec![1, 2, 3].into_iter().collect();
+    /// let b: TreeSet<i32> = vec![3, 4, 5].into_iter().collect();
     ///
-    /// let set: TreeSet<isize> = &a | &b;
-    /// let v: Vec<isize> = set.into_iter().collect();
+    /// let set: TreeSet<i32> = &a | &b;
+    /// let v: Vec<i32> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
     /// ```
     fn bitor(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
@@ -738,11 +738,11 @@ impl<'a, 'b, T, C> ops::BitAnd<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<isize> = vec![2, 3, 4].into_iter().collect();
+    /// let a: TreeSet<i32> = vec![1, 2, 3].into_iter().collect();
+    /// let b: TreeSet<i32> = vec![2, 3, 4].into_iter().collect();
     ///
-    /// let set: TreeSet<isize> = &a & &b;
-    /// let v: Vec<isize> = set.into_iter().collect();
+    /// let set: TreeSet<i32> = &a & &b;
+    /// let v: Vec<i32> = set.into_iter().collect();
     /// assert_eq!(v, vec![2, 3]);
     /// ```
     fn bitand(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
@@ -766,11 +766,11 @@ impl<'a, 'b, T, C> ops::BitXor<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<isize> = vec![3, 4, 5].into_iter().collect();
+    /// let a: TreeSet<i32> = vec![1, 2, 3].into_iter().collect();
+    /// let b: TreeSet<i32> = vec![3, 4, 5].into_iter().collect();
     ///
-    /// let set: TreeSet<isize> = &a ^ &b;
-    /// let v: Vec<isize> = set.into_iter().collect();
+    /// let set: TreeSet<i32> = &a ^ &b;
+    /// let v: Vec<i32> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2, 4, 5]);
     /// ```
     fn bitxor(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
@@ -794,11 +794,11 @@ impl<'a, 'b, T, C> ops::Sub<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
     /// ```rust
     /// use collect::TreeSet;
     ///
-    /// let a: TreeSet<isize> = vec![1, 2, 3].into_iter().collect();
-    /// let b: TreeSet<isize> = vec![3, 4, 5].into_iter().collect();
+    /// let a: TreeSet<i32> = vec![1, 2, 3].into_iter().collect();
+    /// let b: TreeSet<i32> = vec![3, 4, 5].into_iter().collect();
     ///
-    /// let set: TreeSet<isize> = &a - &b;
-    /// let v: Vec<isize> = set.into_iter().collect();
+    /// let set: TreeSet<i32> = &a - &b;
+    /// let v: Vec<i32> = set.into_iter().collect();
     /// assert_eq!(v, vec![1, 2]);
     /// ```
     fn sub(self, rhs: &TreeSet<T, C>) -> TreeSet<T, C> {
@@ -844,7 +844,7 @@ mod test {
     fn test_clear() {
         let mut s = TreeSet::new();
         s.clear();
-        assert!(s.insert(5is));
+        assert!(s.insert(5));
         assert!(s.insert(12));
         assert!(s.insert(19));
         s.clear();
@@ -860,8 +860,8 @@ mod test {
         let mut ys = TreeSet::new();
         assert!(xs.is_disjoint(&ys));
         assert!(ys.is_disjoint(&xs));
-        assert!(xs.insert(5is));
-        assert!(ys.insert(11is));
+        assert!(xs.insert(5));
+        assert!(ys.insert(11));
         assert!(xs.is_disjoint(&ys));
         assert!(ys.is_disjoint(&xs));
         assert!(xs.insert(7));
@@ -879,13 +879,13 @@ mod test {
     #[test]
     fn test_subset_and_superset() {
         let mut a = TreeSet::new();
-        assert!(a.insert(0is));
+        assert!(a.insert(0));
         assert!(a.insert(5));
         assert!(a.insert(11));
         assert!(a.insert(7));
 
         let mut b = TreeSet::new();
-        assert!(b.insert(0is));
+        assert!(b.insert(0));
         assert!(b.insert(7));
         assert!(b.insert(19));
         assert!(b.insert(250));
@@ -909,7 +909,7 @@ mod test {
     fn test_iterator() {
         let mut m = TreeSet::new();
 
-        assert!(m.insert(3is));
+        assert!(m.insert(3));
         assert!(m.insert(0));
         assert!(m.insert(4));
         assert!(m.insert(2));
@@ -926,7 +926,7 @@ mod test {
     fn test_rev_iter() {
         let mut m = TreeSet::new();
 
-        assert!(m.insert(3is));
+        assert!(m.insert(3));
         assert!(m.insert(0));
         assert!(m.insert(4));
         assert!(m.insert(2));
@@ -941,7 +941,7 @@ mod test {
 
     #[test]
     fn test_move_iter() {
-        let s: TreeSet<isize> = range(0is, 5).collect();
+        let s: TreeSet<i32> = range(0, 5).collect();
 
         let mut n = 0;
         for x in s.into_iter() {
@@ -952,7 +952,7 @@ mod test {
 
     #[test]
     fn test_move_iter_size_hint() {
-        let s: TreeSet<isize> = vec!(0is, 1).into_iter().collect();
+        let s: TreeSet<i32> = vec!(0, 1).into_iter().collect();
 
         let mut it = s.into_iter();
 
@@ -970,7 +970,7 @@ mod test {
     fn test_clone_eq() {
       let mut m = TreeSet::new();
 
-      m.insert(1is);
+      m.insert(1);
       m.insert(2);
 
       assert!(m.clone() == m);
@@ -981,11 +981,11 @@ mod test {
       let mut x = TreeSet::new();
       let mut y = TreeSet::new();
 
-      x.insert(1is);
+      x.insert(1);
       x.insert(2);
       x.insert(3);
 
-      y.insert(3is);
+      y.insert(3);
       y.insert(2);
       y.insert(1);
 
@@ -994,20 +994,20 @@ mod test {
 
     struct Counter<'a, 'b> {
         i: &'a mut usize,
-        expected: &'b [isize],
+        expected: &'b [i32],
     }
 
-    impl<'a, 'b, 'c> FnMut(&'c isize) -> bool for Counter<'a, 'b> {
-        extern "rust-call" fn call_mut(&mut self, (&x,): (&'c isize,)) -> bool {
+    impl<'a, 'b, 'c> FnMut(&'c i32) -> bool for Counter<'a, 'b> {
+        extern "rust-call" fn call_mut(&mut self, (&x,): (&'c i32,)) -> bool {
             assert_eq!(x, self.expected[*self.i]);
             *self.i += 1;
             true
         }
     }
 
-    fn check<F>(a: &[isize], b: &[isize], expected: &[isize], f: F) where
-        // FIXME Replace `Counter` with `Box<FnMut(&isize) -> bool>`
-        F: FnOnce(&TreeSet<isize>, &TreeSet<isize>, Counter) -> bool,
+    fn check<F>(a: &[i32], b: &[i32], expected: &[i32], f: F) where
+        // FIXME Replace `Counter` with `Box<FnMut(&i32) -> bool>`
+        F: FnOnce(&TreeSet<i32>, &TreeSet<i32>, Counter) -> bool,
     {
         let mut set_a = TreeSet::new();
         let mut set_b = TreeSet::new();
@@ -1022,7 +1022,7 @@ mod test {
 
     #[test]
     fn test_intersection() {
-        fn check_intersection(a: &[isize], b: &[isize], expected: &[isize]) {
+        fn check_intersection(a: &[i32], b: &[i32], expected: &[i32]) {
             check(a, b, expected, |x, y, f| x.intersection(y).all(f))
         }
 
@@ -1038,7 +1038,7 @@ mod test {
 
     #[test]
     fn test_difference() {
-        fn check_difference(a: &[isize], b: &[isize], expected: &[isize]) {
+        fn check_difference(a: &[i32], b: &[i32], expected: &[i32]) {
             check(a, b, expected, |x, y, f| x.difference(y).all(f))
         }
 
@@ -1055,8 +1055,8 @@ mod test {
 
     #[test]
     fn test_symmetric_difference() {
-        fn check_symmetric_difference(a: &[isize], b: &[isize],
-                                      expected: &[isize]) {
+        fn check_symmetric_difference(a: &[i32], b: &[i32],
+                                      expected: &[i32]) {
             check(a, b, expected, |x, y, f| x.symmetric_difference(y).all(f))
         }
 
@@ -1070,8 +1070,8 @@ mod test {
 
     #[test]
     fn test_union() {
-        fn check_union(a: &[isize], b: &[isize],
-                                      expected: &[isize]) {
+        fn check_union(a: &[i32], b: &[i32],
+                                      expected: &[i32]) {
             check(a, b, expected, |x, y, f| x.union(y).all(f))
         }
 
@@ -1085,50 +1085,50 @@ mod test {
 
     #[test]
     fn test_bit_or() {
-        let a: TreeSet<isize> = vec![1, 3, 5, 9, 11, 16, 19, 24].into_iter().collect();
-        let b: TreeSet<isize> = vec![-2, 1, 5, 9, 13, 19].into_iter().collect();
+        let a: TreeSet<i32> = vec![1, 3, 5, 9, 11, 16, 19, 24].into_iter().collect();
+        let b: TreeSet<i32> = vec![-2, 1, 5, 9, 13, 19].into_iter().collect();
 
-        let set: TreeSet<isize> = &a | &b;
-        let v: Vec<isize> = set.into_iter().collect();
+        let set: TreeSet<i32> = &a | &b;
+        let v: Vec<i32> = set.into_iter().collect();
         assert_eq!(v, vec![-2, 1, 3, 5, 9, 11, 13, 16, 19, 24]);
     }
 
     #[test]
     fn test_bit_and() {
-        let a: TreeSet<isize> = vec![11, 1, 3, 77, 103, 5, -5].into_iter().collect();
-        let b: TreeSet<isize> = vec![2, 11, 77, -9, -42, 5, 3].into_iter().collect();
+        let a: TreeSet<i32> = vec![11, 1, 3, 77, 103, 5, -5].into_iter().collect();
+        let b: TreeSet<i32> = vec![2, 11, 77, -9, -42, 5, 3].into_iter().collect();
 
-        let set: TreeSet<isize> = &a & &b;
-        let v: Vec<isize> = set.into_iter().collect();
+        let set: TreeSet<i32> = &a & &b;
+        let v: Vec<i32> = set.into_iter().collect();
         assert_eq!(v, vec![3, 5, 11, 77]);
     }
 
     #[test]
     fn test_bit_xor() {
-        let a: TreeSet<isize> = vec![1, 3, 5, 9, 11].into_iter().collect();
-        let b: TreeSet<isize> = vec![-2, 3, 9, 14, 22].into_iter().collect();
+        let a: TreeSet<i32> = vec![1, 3, 5, 9, 11].into_iter().collect();
+        let b: TreeSet<i32> = vec![-2, 3, 9, 14, 22].into_iter().collect();
 
-        let set: TreeSet<isize> = &a ^ &b;
-        let v: Vec<isize> = set.into_iter().collect();
+        let set: TreeSet<i32> = &a ^ &b;
+        let v: Vec<i32> = set.into_iter().collect();
         assert_eq!(v, vec![-2, 1, 5, 11, 14, 22]);
     }
 
     #[test]
     fn test_sub() {
-        let a: TreeSet<isize> = vec![-5, 11, 22, 33, 40, 42].into_iter().collect();
-        let b: TreeSet<isize> = vec![-12, -5, 14, 23, 34, 38, 39, 50].into_iter().collect();
+        let a: TreeSet<i32> = vec![-5, 11, 22, 33, 40, 42].into_iter().collect();
+        let b: TreeSet<i32> = vec![-12, -5, 14, 23, 34, 38, 39, 50].into_iter().collect();
 
-        let set: TreeSet<isize> = &a - &b;
-        let v: Vec<isize> = set.into_iter().collect();
+        let set: TreeSet<i32> = &a - &b;
+        let v: Vec<i32> = set.into_iter().collect();
         assert_eq!(v, vec![11, 22, 33, 40, 42]);
     }
 
     #[test]
     fn test_zip() {
         let mut x = TreeSet::new();
-        x.insert(5us);
-        x.insert(12us);
-        x.insert(11us);
+        x.insert(5);
+        x.insert(12);
+        x.insert(11);
 
         let mut y = TreeSet::new();
         y.insert("foo");
@@ -1138,22 +1138,16 @@ mod test {
         let y = y;
         let mut z = x.iter().zip(y.iter());
 
-        // FIXME: #5801: this needs a type hint to compile...
-        let result: Option<(&usize, & &'static str)> = z.next();
-        assert_eq!(result.unwrap(), (&5us, &("bar")));
-
-        let result: Option<(&usize, & &'static str)> = z.next();
-        assert_eq!(result.unwrap(), (&11us, &("foo")));
-
-        let result: Option<(&usize, & &'static str)> = z.next();
-        assert!(result.is_none());
+        assert_eq!(z.next().unwrap(), (&5, &("bar")));
+        assert_eq!(z.next().unwrap(), (&11, &("foo")));
+        assert!(z.next().is_none());
     }
 
     #[test]
     fn test_from_iter() {
-        let xs = [1is, 2, 3, 4, 5, 6, 7, 8, 9];
+        let xs = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-        let set: TreeSet<isize> = xs.iter().map(|&x| x).collect();
+        let set: TreeSet<i32> = xs.iter().map(|&x| x).collect();
 
         for x in xs.iter() {
             assert!(set.contains(x));
@@ -1178,7 +1172,7 @@ mod test {
 
         let mut m = TreeSet::with_comparator(Natural.rev());
 
-        assert!(m.insert(3is));
+        assert!(m.insert(3));
         assert!(m.insert(0));
         assert!(m.insert(4));
         assert!(m.insert(2));

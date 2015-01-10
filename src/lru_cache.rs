@@ -19,7 +19,7 @@
 //! ```rust
 //! use collect::LruCache;
 //!
-//! let mut cache: LruCache<isize, isize> = LruCache::new(2);
+//! let mut cache = LruCache::new(2);
 //! cache.insert(1, 10);
 //! cache.insert(2, 20);
 //! cache.insert(3, 30);
@@ -60,7 +60,7 @@ impl<K: Hash<HmHasher> + Eq, V> LruCache<K, V> {
     ///
     /// ```rust
     /// use collect::LruCache;
-    /// let mut cache: LruCache<isize, &str> = LruCache::new(10);
+    /// let mut cache: LruCache<i32, &str> = LruCache::new(10);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn new(capacity: usize) -> LruCache<K, V> {
@@ -152,7 +152,7 @@ impl<K: Hash<HmHasher> + Eq, V> LruCache<K, V> {
     ///
     /// ```rust
     /// use collect::LruCache;
-    /// let mut cache: LruCache<isize, &str> = LruCache::new(2);
+    /// let mut cache: LruCache<i32, &str> = LruCache::new(2);
     /// assert_eq!(cache.capacity(), 2);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -262,7 +262,7 @@ mod tests {
 
     #[test]
     fn test_put_and_get() {
-        let mut cache: LruCache<isize, isize> = LruCache::new(2);
+        let mut cache = LruCache::new(2);
         cache.insert(1, 10);
         cache.insert(2, 20);
         assert_opt_eq(cache.get(&1), 10);
@@ -293,7 +293,7 @@ mod tests {
 
     #[test]
     fn test_pop() {
-        let mut cache: LruCache<isize, isize> = LruCache::new(2);
+        let mut cache = LruCache::new(2);
         cache.insert(1, 10);
         cache.insert(2, 20);
         assert_eq!(cache.len(), 2);
@@ -306,7 +306,7 @@ mod tests {
 
     #[test]
     fn test_change_capacity() {
-        let mut cache: LruCache<isize, isize> = LruCache::new(2);
+        let mut cache = LruCache::new(2);
         assert_eq!(cache.capacity(), 2);
         cache.insert(1, 10);
         cache.insert(2, 20);
@@ -334,7 +334,7 @@ mod tests {
 
     #[test]
     fn test_remove() {
-        let mut cache: LruCache<isize, isize> = LruCache::new(3);
+        let mut cache = LruCache::new(3);
         cache.insert(1, 10);
         cache.insert(2, 20);
         cache.insert(3, 30);
@@ -355,7 +355,7 @@ mod tests {
 
     #[test]
     fn test_clear() {
-        let mut cache: LruCache<isize, isize> = LruCache::new(2);
+        let mut cache = LruCache::new(2);
         cache.insert(1, 10);
         cache.insert(2, 20);
         cache.clear();

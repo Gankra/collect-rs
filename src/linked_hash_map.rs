@@ -17,14 +17,14 @@
 //! use collect::LinkedHashMap;
 //!
 //! let mut map = LinkedHashMap::new();
-//! map.insert(2is, 20is);
+//! map.insert(2, 20);
 //! map.insert(1, 10);
 //! map.insert(3, 30);
 //! assert_eq!(*map.get(&1).unwrap(), 10);
 //! assert_eq!(*map.get(&2).unwrap(), 20);
 //! assert_eq!(*map.get(&3).unwrap(), 30);
 //!
-//! let items: Vec<(isize, isize)> = map.iter().map(|t| (*t.0, *t.1)).collect();
+//! let items: Vec<(i32, i32)> = map.iter().map(|t| (*t.0, *t.1)).collect();
 //! assert_eq!(vec![(2, 20), (1, 10), (3, 30)], items);
 //! ```
 
@@ -104,7 +104,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
-    /// map.insert(1is, "a");
+    /// map.insert(1, "a");
     /// map.insert(2, "b");
     /// assert_eq!(map.get(&1), Some(&"a"));
     /// assert_eq!(map.get(&2), Some(&"b"));
@@ -145,7 +145,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
-    /// map.insert(1is, "a");
+    /// map.insert(1, "a");
     /// map.insert(2, "b");
     /// map.insert(2, "c");
     /// map.insert(3, "d");
@@ -168,7 +168,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
-    /// map.insert(1is, "a");
+    /// map.insert(1, "a");
     /// map.insert(2, "b");
     /// map.insert(3, "d");
     ///
@@ -202,7 +202,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
-    /// map.insert(2is, "a");
+    /// map.insert(2, "a");
     ///
     /// assert_eq!(map.remove(&1), None);
     /// assert_eq!(map.remove(&2), Some("a"));
@@ -224,7 +224,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     ///
     /// ```rust
     /// use collect::LinkedHashMap;
-    /// let mut map: LinkedHashMap<isize, &str> = LinkedHashMap::new();
+    /// let mut map: LinkedHashMap<i32, &str> = LinkedHashMap::new();
     /// let capacity = map.capacity();
     /// ```
     pub fn capacity(&self) -> usize {
@@ -240,7 +240,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// ```rust
     /// use collect::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
-    /// map.insert(1is, 10is);
+    /// map.insert(1, 10);
     /// map.insert(2, 20);
     /// map.pop_front();
     /// assert_eq!(map.get(&1), None);
@@ -304,7 +304,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     ///
     /// let mut map = LinkedHashMap::new();
-    /// map.insert('a', 10is);
+    /// map.insert('a', 10);
     /// map.insert('c', 30);
     /// map.insert('b', 20);
     ///
@@ -328,7 +328,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// use collect::LinkedHashMap;
     ///
     /// let mut map = LinkedHashMap::new();
-    /// map.insert('a', 10is);
+    /// map.insert('a', 10);
     /// map.insert('c', 30);
     /// map.insert('b', 20);
     ///
@@ -501,7 +501,7 @@ mod tests {
     #[test]
     fn test_insert_and_get() {
         let mut map = LinkedHashMap::new();
-        map.insert(1is, 10is);
+        map.insert(1, 10);
         map.insert(2, 20);
         assert_opt_eq(map.get(&1), 10);
         assert_opt_eq(map.get(&2), 20);
@@ -511,7 +511,7 @@ mod tests {
     #[test]
     fn test_insert_update() {
         let mut map = LinkedHashMap::new();
-        map.insert("1".to_string(), vec![10is, 10]);
+        map.insert("1".to_string(), vec![10, 10]);
         map.insert("1".to_string(), vec![10, 19]);
         assert_opt_eq(map.get(&"1".to_string()), vec![10, 19]);
         assert_eq!(map.len(), 1);
@@ -538,7 +538,7 @@ mod tests {
     #[test]
     fn test_remove() {
         let mut map = LinkedHashMap::new();
-        map.insert(1is, 10is);
+        map.insert(1, 10);
         map.insert(2, 20);
         map.insert(3, 30);
         map.insert(4, 40);
@@ -558,7 +558,7 @@ mod tests {
     #[test]
     fn test_clear() {
         let mut map = LinkedHashMap::new();
-        map.insert(1is, 10is);
+        map.insert(1, 10);
         map.insert(2, 20);
         map.clear();
         assert!(map.get(&1).is_none());
