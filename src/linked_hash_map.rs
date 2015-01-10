@@ -24,7 +24,7 @@
 //! assert_eq!(*map.get(&2).unwrap(), 20);
 //! assert_eq!(*map.get(&3).unwrap(), 30);
 //!
-//! let items: Vec<(isize, isize)> = map.iter().map(|t| (*t.0, *t.1)).collect();
+//! let items: Vec<(i32, i32)> = map.iter().map(|t| (*t.0, *t.1)).collect();
 //! assert_eq!(vec![(2, 20), (1, 10), (3, 30)], items);
 //! ```
 
@@ -224,7 +224,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     ///
     /// ```rust
     /// use collect::LinkedHashMap;
-    /// let mut map: LinkedHashMap<isize, &str> = LinkedHashMap::new();
+    /// let mut map: LinkedHashMap<i32, &str> = LinkedHashMap::new();
     /// let capacity = map.capacity();
     /// ```
     pub fn capacity(&self) -> usize {

@@ -14,36 +14,36 @@ use std::rand;
 use std::rand::Rng;
 use test::Bencher;
 
-pub fn insert_rand_n<M, I, R>(n: usize,
+pub fn insert_rand_n<M, I, R>(n: u32,
                               map: &mut M,
                               b: &mut Bencher,
                               mut insert: I,
                               mut remove: R) where
-    I: FnMut(&mut M, usize),
-    R: FnMut(&mut M, usize),
+    I: FnMut(&mut M, u32),
+    R: FnMut(&mut M, u32),
 {
     // setup
     let mut rng = rand::weak_rng();
 
     for _ in range(0, n) {
-        insert(map, rng.gen::<usize>() % n);
+        insert(map, rng.gen::<u32>() % n);
     }
 
     // measure
     b.iter(|| {
-        let k = rng.gen::<usize>() % n;
+        let k = rng.gen::<u32>() % n;
         insert(map, k);
         remove(map, k);
     })
 }
 
-pub fn insert_seq_n<M, I, R>(n: usize,
+pub fn insert_seq_n<M, I, R>(n: u32,
                              map: &mut M,
                              b: &mut Bencher,
                              mut insert: I,
                              mut remove: R) where
-    I: FnMut(&mut M, usize),
-    R: FnMut(&mut M, usize),
+    I: FnMut(&mut M, u32),
+    R: FnMut(&mut M, u32),
 {
     // setup
     for i in range(0, n) {
@@ -59,17 +59,17 @@ pub fn insert_seq_n<M, I, R>(n: usize,
     })
 }
 
-pub fn find_rand_n<M, T, I, F>(n: usize,
+pub fn find_rand_n<M, T, I, F>(n: u32,
                                map: &mut M,
                                b: &mut Bencher,
                                mut insert: I,
                                mut find: F) where
-    I: FnMut(&mut M, usize),
-    F: FnMut(&M, usize) -> T,
+    I: FnMut(&mut M, u32),
+    F: FnMut(&M, u32) -> T,
 {
     // setup
     let mut rng = rand::weak_rng();
-    let mut keys: Vec<_> = range(0, n).map(|_| rng.gen::<usize>() % n).collect();
+    let mut keys: Vec<_> = range(0, n).map(|_| rng.gen::<u32>() % n).collect();
 
     for k in keys.iter() {
         insert(map, *k);
@@ -80,19 +80,19 @@ pub fn find_rand_n<M, T, I, F>(n: usize,
     // measure
     let mut i = 0;
     b.iter(|| {
-        let t = find(map, keys[i]);
+        let t = find(map, keys[i as usize]);
         i = (i + 1) % n;
         t
     })
 }
 
-pub fn find_seq_n<M, T, I, F>(n: usize,
+pub fn find_seq_n<M, T, I, F>(n: u32,
                               map: &mut M,
                               b: &mut Bencher,
                               mut insert: I,
                               mut find: F) where
-    I: FnMut(&mut M, usize),
-    F: FnMut(&M, usize) -> T,
+    I: FnMut(&mut M, u32),
+    F: FnMut(&M, u32) -> T,
 {
     // setup
     for i in range(0, n) {

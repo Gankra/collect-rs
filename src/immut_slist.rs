@@ -211,7 +211,7 @@ mod tests {
 
     #[test]
     fn test_basic() {
-        let mut m: ImmutSList<Box<isize>> = ImmutSList::new();
+        let mut m = ImmutSList::new();
         assert_eq!(m.head(), None);
         assert_eq!(m.tail().head(), None);
         m = m.append(box 1);
@@ -253,7 +253,7 @@ mod tests {
     }
 
     #[cfg(test)]
-    fn generate_test() -> ImmutSList<isize> {
+    fn generate_test() -> ImmutSList<i32> {
         list_from(&[0,1,2,3,4,5,6])
     }
 
@@ -266,7 +266,7 @@ mod tests {
     fn test_iterator() {
         let m = generate_test();
         for (i, elt) in m.iter().enumerate() {
-            assert_eq!(i as isize, *elt);
+            assert_eq!(i as i32, *elt);
         }
         let mut n = ImmutSList::new();
         assert_eq!(n.iter().next(), None);
@@ -319,7 +319,7 @@ mod tests {
 
     #[test]
     fn test_ord() {
-        let n: ImmutSList<isize> = list_from(&[]);
+        let n = list_from(&[]);
         let m = list_from(&[1,2,3]);
         assert!(n < m);
         assert!(m > n);
@@ -381,7 +381,7 @@ mod tests {
 
     #[bench]
     fn bench_append(b: &mut test::Bencher) {
-        let mut m: ImmutSList<isize> = ImmutSList::new();
+        let mut m: ImmutSList<i32> = ImmutSList::new();
         b.iter(|| {
             m = m.append(0);
         })
@@ -389,7 +389,7 @@ mod tests {
 
     #[bench]
     fn bench_append_tail(b: &mut test::Bencher) {
-        let mut m: ImmutSList<isize> = ImmutSList::new();
+        let mut m: ImmutSList<i32> = ImmutSList::new();
         b.iter(|| {
             m = m.append(0).tail();
         })
@@ -398,7 +398,7 @@ mod tests {
     #[bench]
     fn bench_iter(b: &mut test::Bencher) {
         let v = &[0; 128];
-        let m: ImmutSList<isize> = v.iter().map(|&x|x).collect();
+        let m: ImmutSList<i32> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().count() == 128);
         })

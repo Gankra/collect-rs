@@ -749,7 +749,7 @@ mod test {
     use super::DList;
     use std::hash;
 
-    fn generate_test() -> DList<isize> {
+    fn generate_test() -> DList<i32> {
         list_from(&[0,1,2,3,4,5,6])
     }
 
@@ -759,7 +759,7 @@ mod test {
 
     #[test]
     fn test_basic() {
-        let mut m: DList<Box<isize>> = DList::new();
+        let mut m = DList::new();
         assert_eq!(m.pop_front(), None);
         assert_eq!(m.pop_back(), None);
         assert_eq!(m.pop_front(), None);
@@ -802,7 +802,7 @@ mod test {
     fn test_iterator() {
         let m = generate_test();
         for (i, elt) in m.iter().enumerate() {
-            assert_eq!(i as isize, *elt);
+            assert_eq!(i as i32, *elt);
         }
         let mut n = DList::new();
         assert_eq!(n.iter().next(), None);
@@ -837,7 +837,7 @@ mod test {
     fn test_rev_iter() {
         let m = generate_test();
         for (i, elt) in m.iter().rev().enumerate() {
-            assert_eq!((6 - i) as isize, *elt);
+            assert_eq!(6 - i as i32, *elt);
         }
         let mut n = DList::new();
         assert_eq!(n.iter().rev().next(), None);
@@ -854,7 +854,7 @@ mod test {
         let mut m = generate_test();
         let mut len = m.len();
         for (i, elt) in m.iter_mut().enumerate() {
-            assert_eq!(i as isize, *elt);
+            assert_eq!(i as i32, *elt);
             len -= 1;
         }
         assert_eq!(len, 0);
@@ -923,7 +923,7 @@ mod test {
 
     #[test]
     fn test_ord() {
-        let n: DList<isize> = list_from(&[]);
+        let n = list_from(&[]);
         let m = list_from(&[1,2,3]);
         assert!(n < m);
         assert!(m > n);
@@ -1198,7 +1198,7 @@ mod bench{
 
     #[bench]
     fn bench_push_front(b: &mut test::Bencher) {
-        let mut m: DList<isize> = DList::new();
+        let mut m: DList<i32> = DList::new();
         b.iter(|| {
             m.push_front(0);
         })
@@ -1206,7 +1206,7 @@ mod bench{
 
     #[bench]
     fn bench_push_back(b: &mut test::Bencher) {
-        let mut m: DList<isize> = DList::new();
+        let mut m: DList<i32> = DList::new();
         b.iter(|| {
             m.push_back(0);
         })
@@ -1214,7 +1214,7 @@ mod bench{
 
     #[bench]
     fn bench_push_back_pop_back(b: &mut test::Bencher) {
-        let mut m: DList<isize> = DList::new();
+        let mut m: DList<i32> = DList::new();
         b.iter(|| {
             m.push_back(0);
             m.pop_back();
@@ -1223,7 +1223,7 @@ mod bench{
 
     #[bench]
     fn bench_push_front_pop_front(b: &mut test::Bencher) {
-        let mut m: DList<isize> = DList::new();
+        let mut m: DList<i32> = DList::new();
         b.iter(|| {
             m.push_front(0);
             m.pop_front();
@@ -1233,7 +1233,7 @@ mod bench{
     #[bench]
     fn bench_iter(b: &mut test::Bencher) {
         let v = &[0; 128];
-        let m: DList<isize> = v.iter().map(|&x|x).collect();
+        let m: DList<i32> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().count() == 128);
         })
@@ -1241,7 +1241,7 @@ mod bench{
     #[bench]
     fn bench_iter_mut(b: &mut test::Bencher) {
         let v = &[0; 128];
-        let mut m: DList<isize> = v.iter().map(|&x|x).collect();
+        let mut m: DList<i32> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().count() == 128);
         })
@@ -1249,7 +1249,7 @@ mod bench{
     #[bench]
     fn bench_iter_rev(b: &mut test::Bencher) {
         let v = &[0; 128];
-        let m: DList<isize> = v.iter().map(|&x|x).collect();
+        let m: DList<i32> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().rev().count() == 128);
         })
@@ -1257,7 +1257,7 @@ mod bench{
     #[bench]
     fn bench_iter_mut_rev(b: &mut test::Bencher) {
         let v = &[0; 128];
-        let mut m: DList<isize> = v.iter().map(|&x|x).collect();
+        let mut m: DList<i32> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().rev().count() == 128);
         })

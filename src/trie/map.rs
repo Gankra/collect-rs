@@ -242,10 +242,10 @@ impl<T> TrieMap<T> {
     ///
     /// ```rust
     /// use collect::TrieMap;
-    /// let mut map: TrieMap<isize> = [(1, 2), (2, 4), (3, 6)].iter().map(|&x| x).collect();
+    /// let mut map: TrieMap<i32> = [(1, 2), (2, 4), (3, 6)].iter().map(|&x| x).collect();
     ///
     /// for (key, value) in map.iter_mut() {
-    ///     *value = -(key as isize);
+    ///     *value = -(key as i32);
     /// }
     ///
     /// assert_eq!(map.get(&1), Some(&-1));
@@ -1372,7 +1372,7 @@ mod test {
     fn test_from_iter() {
         let xs = vec![(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)];
 
-        let map: TrieMap<isize> = xs.iter().map(|&x| x).collect();
+        let map: TrieMap<i32> = xs.iter().map(|&x| x).collect();
 
         for &(k, v) in xs.iter() {
             assert_eq!(map.get(&k), Some(&v));

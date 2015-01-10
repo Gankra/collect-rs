@@ -80,7 +80,7 @@ use compare::{Compare, Natural};
 ///
 /// struct Troll<'a> {
 ///     name: &'a str,
-///     level: usize,
+///     level: u32,
 /// }
 ///
 /// // Use a map to store trolls, sorted by level, and track a list of
@@ -198,7 +198,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     ///
     /// ```rust
     /// use collect::TreeMap;
-    /// let mut map: TreeMap<&str, isize> = TreeMap::new();
+    /// let mut map: TreeMap<&str, i32> = TreeMap::new();
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn new() -> TreeMap<K, V> { TreeMap::with_comparator(Natural) }
@@ -378,7 +378,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// map.insert("b", 2);
     ///
     /// // Not possible with a regular `.iter()`
-    /// let vec: Vec<(&str, isize)> = map.into_iter().collect();
+    /// let vec: Vec<(&str, i32)> = map.into_iter().collect();
     /// assert_eq!(vec, vec![("a", 1), ("b", 2), ("c", 3)]);
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
@@ -1350,7 +1350,7 @@ mod test_treemap {
 
     #[test]
     fn find_empty() {
-        let m: TreeMap<isize,isize> = TreeMap::new();
+        let m: TreeMap<i32,i32> = TreeMap::new();
         assert!(m.get(&5) == None);
     }
 
@@ -1365,7 +1365,7 @@ mod test_treemap {
 
     #[test]
     fn find_with_empty() {
-        let m: TreeMap<&'static str,isize> = TreeMap::new();
+        let m: TreeMap<&'static str,i32> = TreeMap::new();
         assert!(m.find_with(|&k| "test".cmp(k)) == None);
     }
 
@@ -1516,7 +1516,7 @@ mod test_treemap {
 
     #[test]
     fn test_rand_int() {
-        let mut map: TreeMap<isize,isize> = TreeMap::new();
+        let mut map: TreeMap<i32,i32> = TreeMap::new();
         let mut ctrl = vec![];
 
         check_equal(ctrl.as_slice(), &map);
@@ -1693,8 +1693,8 @@ mod test_treemap {
     #[test]
     fn test_keys() {
         let vec = vec![(1, 'a'), (2, 'b'), (3, 'c')];
-        let map = vec.into_iter().collect::<TreeMap<isize, char>>();
-        let keys = map.keys().map(|&k| k).collect::<Vec<isize>>();
+        let map: TreeMap<i32, char> = vec.into_iter().collect();
+        let keys: Vec<i32> = map.keys().map(|&k| k).collect();
         assert_eq!(keys.len(), 3);
         assert!(keys.contains(&1));
         assert!(keys.contains(&2));
@@ -1704,7 +1704,7 @@ mod test_treemap {
     #[test]
     fn test_values() {
         let vec = vec![(1, 'a'), (2, 'b'), (3, 'c')];
-        let map = vec.into_iter().collect::<TreeMap<isize, char>>();
+        let map = vec.into_iter().collect::<TreeMap<i32, char>>();
         let values = map.values().map(|&v| v).collect::<Vec<char>>();
         assert_eq!(values.len(), 3);
         assert!(values.contains(&'a'));
@@ -1825,7 +1825,7 @@ mod test_treemap {
     fn test_from_iter() {
         let xs = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)];
 
-        let map: TreeMap<isize, isize> = xs.iter().map(|&x| x).collect();
+        let map: TreeMap<i32, i32> = xs.iter().map(|&x| x).collect();
 
         for &(k, v) in xs.iter() {
             assert_eq!(map.get(&k), Some(&v));
@@ -1834,7 +1834,7 @@ mod test_treemap {
 
     #[test]
     fn test_index() {
-        let mut map: TreeMap<isize, isize> = TreeMap::new();
+        let mut map: TreeMap<i32, i32> = TreeMap::new();
 
         map.insert(1, 2);
         map.insert(2, 1);
@@ -1846,7 +1846,7 @@ mod test_treemap {
     #[test]
     #[should_fail]
     fn test_index_nonexistent() {
-        let mut map: TreeMap<isize, isize> = TreeMap::new();
+        let mut map: TreeMap<i32, i32> = TreeMap::new();
 
         map.insert(1, 2);
         map.insert(2, 1);
@@ -1931,7 +1931,7 @@ mod bench {
 
     #[bench]
     pub fn insert_rand_100(b: &mut Bencher) {
-        let mut m : TreeMap<usize,usize> = TreeMap::new();
+        let mut m: TreeMap<u32,u32> = TreeMap::new();
         insert_rand_n(100, &mut m, b,
                       |m, i| { m.insert(i, 1); },
                       |m, i| { m.remove(&i); });
@@ -1939,7 +1939,7 @@ mod bench {
 
     #[bench]
     pub fn insert_rand_10_000(b: &mut Bencher) {
-        let mut m : TreeMap<usize,usize> = TreeMap::new();
+        let mut m: TreeMap<u32,u32> = TreeMap::new();
         insert_rand_n(10_000, &mut m, b,
                       |m, i| { m.insert(i, 1); },
                       |m, i| { m.remove(&i); });
@@ -1948,7 +1948,7 @@ mod bench {
     // Insert seq
     #[bench]
     pub fn insert_seq_100(b: &mut Bencher) {
-        let mut m : TreeMap<usize,usize> = TreeMap::new();
+        let mut m: TreeMap<u32,u32> = TreeMap::new();
         insert_seq_n(100, &mut m, b,
                      |m, i| { m.insert(i, 1); },
                      |m, i| { m.remove(&i); });
@@ -1956,7 +1956,7 @@ mod bench {
 
     #[bench]
     pub fn insert_seq_10_000(b: &mut Bencher) {
-        let mut m : TreeMap<usize,usize> = TreeMap::new();
+        let mut m: TreeMap<u32,u32> = TreeMap::new();
         insert_seq_n(10_000, &mut m, b,
                      |m, i| { m.insert(i, 1); },
                      |m, i| { m.remove(&i); });
@@ -1965,7 +1965,7 @@ mod bench {
     // Find rand
     #[bench]
     pub fn find_rand_100(b: &mut Bencher) {
-        let mut m : TreeMap<usize,usize> = TreeMap::new();
+        let mut m: TreeMap<u32,u32> = TreeMap::new();
         find_rand_n(100, &mut m, b,
                     |m, i| { m.insert(i, 1); },
                     |m, i| { m.get(&i); });
@@ -1973,7 +1973,7 @@ mod bench {
 
     #[bench]
     pub fn find_rand_10_000(b: &mut Bencher) {
-        let mut m : TreeMap<usize,usize> = TreeMap::new();
+        let mut m: TreeMap<u32,u32> = TreeMap::new();
         find_rand_n(10_000, &mut m, b,
                     |m, i| { m.insert(i, 1); },
                     |m, i| { m.get(&i); });
@@ -1982,7 +1982,7 @@ mod bench {
     // Find seq
     #[bench]
     pub fn find_seq_100(b: &mut Bencher) {
-        let mut m : TreeMap<usize,usize> = TreeMap::new();
+        let mut m: TreeMap<u32,u32> = TreeMap::new();
         find_seq_n(100, &mut m, b,
                    |m, i| { m.insert(i, 1); },
                    |m, i| { m.get(&i); });
@@ -1990,14 +1990,14 @@ mod bench {
 
     #[bench]
     pub fn find_seq_10_000(b: &mut Bencher) {
-        let mut m : TreeMap<usize,usize> = TreeMap::new();
+        let mut m: TreeMap<u32,u32> = TreeMap::new();
         find_seq_n(10_000, &mut m, b,
                    |m, i| { m.insert(i, 1); },
                    |m, i| { m.get(&i); });
     }
 
     fn bench_iter(b: &mut Bencher, size: usize) {
-        let mut map = TreeMap::<usize, usize>::new();
+        let mut map = TreeMap::<u32, u32>::new();
         let mut rng = weak_rng();
 
         for _ in range(0, size) {
