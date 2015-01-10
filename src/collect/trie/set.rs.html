@@ -1614,7 +1614,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_from_iter</span>() {
-        <span class='kw'>let</span> <span class='ident'>xs</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>9us</span>, <span class='number'>8</span>, <span class='number'>7</span>, <span class='number'>6</span>, <span class='number'>5</span>, <span class='number'>4</span>, <span class='number'>3</span>, <span class='number'>2</span>, <span class='number'>1</span>];
+        <span class='kw'>let</span> <span class='ident'>xs</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>9</span>, <span class='number'>8</span>, <span class='number'>7</span>, <span class='number'>6</span>, <span class='number'>5</span>, <span class='number'>4</span>, <span class='number'>3</span>, <span class='number'>2</span>, <span class='number'>1</span>];
 
         <span class='kw'>let</span> <span class='ident'>set</span>: <span class='ident'>TrieSet</span> <span class='op'>=</span> <span class='ident'>xs</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -1652,9 +1652,9 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>TrieSet</span>::<span class='ident'>new</span>();
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span>) <span class='op'>&amp;&amp;</span> <span class='op'>!</span>(<span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span>));
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>2us</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>2</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>3us</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>3</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>1</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span>);
@@ -1670,10 +1670,10 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>TrieSet</span>::<span class='ident'>new</span>();
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;=</span> <span class='ident'>b</span> <span class='op'>&amp;&amp;</span> <span class='ident'>a</span> <span class='op'>&gt;=</span> <span class='ident'>b</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1us</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&gt;</span> <span class='ident'>b</span> <span class='op'>&amp;&amp;</span> <span class='ident'>a</span> <span class='op'>&gt;=</span> <span class='ident'>b</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span> <span class='op'>&amp;&amp;</span> <span class='ident'>b</span> <span class='op'>&lt;=</span> <span class='ident'>a</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>2us</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span>.<span class='ident'>insert</span>(<span class='number'>2</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span> <span class='op'>&gt;</span> <span class='ident'>a</span> <span class='op'>&amp;&amp;</span> <span class='ident'>b</span> <span class='op'>&gt;=</span> <span class='ident'>a</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span> <span class='op'>&amp;&amp;</span> <span class='ident'>a</span> <span class='op'>&lt;=</span> <span class='ident'>b</span>);
     }
@@ -1774,7 +1774,7 @@
 
         <span class='kw'>let</span> <span class='ident'>set</span>: <span class='ident'>TrieSet</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>a</span> <span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>b</span>;
         <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>set</span>.<span class='ident'>iter</span>().<span class='ident'>collect</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1us</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>5</span>]);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>5</span>]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -1784,7 +1784,7 @@
 
         <span class='kw'>let</span> <span class='ident'>set</span>: <span class='ident'>TrieSet</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>a</span> <span class='kw-2'>&amp;</span> <span class='kw-2'>&amp;</span><span class='ident'>b</span>;
         <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>set</span>.<span class='ident'>iter</span>().<span class='ident'>collect</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>2us</span>, <span class='number'>3</span>]);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>2</span>, <span class='number'>3</span>]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -1794,7 +1794,7 @@
 
         <span class='kw'>let</span> <span class='ident'>set</span>: <span class='ident'>TrieSet</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>a</span> <span class='op'>^</span> <span class='kw-2'>&amp;</span><span class='ident'>b</span>;
         <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>set</span>.<span class='ident'>iter</span>().<span class='ident'>collect</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1us</span>, <span class='number'>2</span>, <span class='number'>4</span>, <span class='number'>5</span>]);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>4</span>, <span class='number'>5</span>]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -1804,7 +1804,7 @@
 
         <span class='kw'>let</span> <span class='ident'>set</span>: <span class='ident'>TrieSet</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>a</span> <span class='op'>-</span> <span class='kw-2'>&amp;</span><span class='ident'>b</span>;
         <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>set</span>.<span class='ident'>iter</span>().<span class='ident'>collect</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1us</span>, <span class='number'>2</span>]);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>]);
     }
 }
 </pre>

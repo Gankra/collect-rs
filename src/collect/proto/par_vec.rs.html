@@ -313,7 +313,7 @@
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>slices</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
 
     <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>parent</span>.<span class='ident'>len</span>();
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>start</span> <span class='op'>=</span> <span class='number'>0us</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>start</span> <span class='op'>=</span> <span class='number'>0</span>;
 
     <span class='kw'>for</span> <span class='ident'>curr</span> <span class='kw'>in</span> <span class='ident'>range_inclusive</span>(<span class='number'>1</span>, <span class='ident'>slice_count</span>).<span class='ident'>rev</span>() {
         <span class='kw'>let</span> <span class='ident'>slice_len</span> <span class='op'>=</span> (<span class='ident'>len</span> <span class='op'>-</span> <span class='ident'>start</span>) <span class='op'>/</span> <span class='ident'>curr</span>;
@@ -370,12 +370,12 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_unwrap_safely</span>() {
-        <span class='kw'>let</span> (<span class='ident'>vec</span>, <span class='ident'>slices</span>) <span class='op'>=</span> <span class='ident'>ParVec</span>::<span class='ident'>new</span>([<span class='number'>5us</span>; <span class='ident'>TEST_MAX</span> <span class='kw'>as</span> <span class='ident'>usize</span>].<span class='ident'>to_vec</span>(), <span class='ident'>TEST_SLICES</span>);
+        <span class='kw'>let</span> (<span class='ident'>vec</span>, <span class='ident'>slices</span>) <span class='op'>=</span> <span class='ident'>ParVec</span>::<span class='ident'>new</span>([<span class='number'>5</span>; <span class='ident'>TEST_MAX</span> <span class='kw'>as</span> <span class='ident'>usize</span>].<span class='ident'>to_vec</span>(), <span class='ident'>TEST_SLICES</span>);
         <span class='ident'>mem</span>::<span class='ident'>drop</span>(<span class='ident'>slices</span>);
 
         <span class='kw'>let</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>into_inner</span>();
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>vec</span>, [<span class='number'>5us</span>; <span class='ident'>TEST_MAX</span> <span class='kw'>as</span> <span class='ident'>usize</span>].<span class='ident'>as_slice</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>vec</span>, [<span class='number'>5</span>; <span class='ident'>TEST_MAX</span> <span class='kw'>as</span> <span class='ident'>usize</span>].<span class='ident'>as_slice</span>());
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

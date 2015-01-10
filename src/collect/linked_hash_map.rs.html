@@ -664,14 +664,14 @@
 <span class='doccomment'>//! use collect::LinkedHashMap;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let mut map = LinkedHashMap::new();</span>
-<span class='doccomment'>//! map.insert(2is, 20is);</span>
+<span class='doccomment'>//! map.insert(2, 20);</span>
 <span class='doccomment'>//! map.insert(1, 10);</span>
 <span class='doccomment'>//! map.insert(3, 30);</span>
 <span class='doccomment'>//! assert_eq!(*map.get(&amp;1).unwrap(), 10);</span>
 <span class='doccomment'>//! assert_eq!(*map.get(&amp;2).unwrap(), 20);</span>
 <span class='doccomment'>//! assert_eq!(*map.get(&amp;3).unwrap(), 30);</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! let items: Vec&lt;(isize, isize)&gt; = map.iter().map(|t| (*t.0, *t.1)).collect();</span>
+<span class='doccomment'>//! let items: Vec&lt;(i32, i32)&gt; = map.iter().map(|t| (*t.0, *t.1)).collect();</span>
 <span class='doccomment'>//! assert_eq!(vec![(2, 20), (1, 10), (3, 30)], items);</span>
 <span class='doccomment'>//! ```</span>
 
@@ -751,7 +751,7 @@
     <span class='doccomment'>/// use collect::LinkedHashMap;</span>
     <span class='doccomment'>/// let mut map = LinkedHashMap::new();</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// map.insert(1is, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// map.insert(2, &quot;b&quot;);</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;1), Some(&amp;&quot;a&quot;));</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;2), Some(&amp;&quot;b&quot;));</span>
@@ -792,7 +792,7 @@
     <span class='doccomment'>/// use collect::LinkedHashMap;</span>
     <span class='doccomment'>/// let mut map = LinkedHashMap::new();</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// map.insert(1is, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// map.insert(2, &quot;b&quot;);</span>
     <span class='doccomment'>/// map.insert(2, &quot;c&quot;);</span>
     <span class='doccomment'>/// map.insert(3, &quot;d&quot;);</span>
@@ -815,7 +815,7 @@
     <span class='doccomment'>/// use collect::LinkedHashMap;</span>
     <span class='doccomment'>/// let mut map = LinkedHashMap::new();</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// map.insert(1is, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
     <span class='doccomment'>/// map.insert(2, &quot;b&quot;);</span>
     <span class='doccomment'>/// map.insert(3, &quot;d&quot;);</span>
     <span class='doccomment'>///</span>
@@ -849,7 +849,7 @@
     <span class='doccomment'>/// use collect::LinkedHashMap;</span>
     <span class='doccomment'>/// let mut map = LinkedHashMap::new();</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// map.insert(2is, &quot;a&quot;);</span>
+    <span class='doccomment'>/// map.insert(2, &quot;a&quot;);</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// assert_eq!(map.remove(&amp;1), None);</span>
     <span class='doccomment'>/// assert_eq!(map.remove(&amp;2), Some(&quot;a&quot;));</span>
@@ -871,7 +871,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::LinkedHashMap;</span>
-    <span class='doccomment'>/// let mut map: LinkedHashMap&lt;isize, &amp;str&gt; = LinkedHashMap::new();</span>
+    <span class='doccomment'>/// let mut map: LinkedHashMap&lt;i32, &amp;str&gt; = LinkedHashMap::new();</span>
     <span class='doccomment'>/// let capacity = map.capacity();</span>
     <span class='doccomment'>/// ```</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>capacity</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
@@ -887,7 +887,7 @@
     <span class='doccomment'>/// ```rust</span>
     <span class='doccomment'>/// use collect::LinkedHashMap;</span>
     <span class='doccomment'>/// let mut map = LinkedHashMap::new();</span>
-    <span class='doccomment'>/// map.insert(1is, 10is);</span>
+    <span class='doccomment'>/// map.insert(1, 10);</span>
     <span class='doccomment'>/// map.insert(2, 20);</span>
     <span class='doccomment'>/// map.pop_front();</span>
     <span class='doccomment'>/// assert_eq!(map.get(&amp;1), None);</span>
@@ -951,7 +951,7 @@
     <span class='doccomment'>/// use collect::LinkedHashMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = LinkedHashMap::new();</span>
-    <span class='doccomment'>/// map.insert(&#39;a&#39;, 10is);</span>
+    <span class='doccomment'>/// map.insert(&#39;a&#39;, 10);</span>
     <span class='doccomment'>/// map.insert(&#39;c&#39;, 30);</span>
     <span class='doccomment'>/// map.insert(&#39;b&#39;, 20);</span>
     <span class='doccomment'>///</span>
@@ -975,7 +975,7 @@
     <span class='doccomment'>/// use collect::LinkedHashMap;</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let mut map = LinkedHashMap::new();</span>
-    <span class='doccomment'>/// map.insert(&#39;a&#39;, 10is);</span>
+    <span class='doccomment'>/// map.insert(&#39;a&#39;, 10);</span>
     <span class='doccomment'>/// map.insert(&#39;c&#39;, 30);</span>
     <span class='doccomment'>/// map.insert(&#39;b&#39;, 20);</span>
     <span class='doccomment'>///</span>
@@ -1148,7 +1148,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_insert_and_get</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1is</span>, <span class='number'>10is</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>assert_opt_eq</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='number'>10</span>);
         <span class='ident'>assert_opt_eq</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='number'>20</span>);
@@ -1158,7 +1158,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_insert_update</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;1&quot;</span>.<span class='ident'>to_string</span>(), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>10is</span>, <span class='number'>10</span>]);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;1&quot;</span>.<span class='ident'>to_string</span>(), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>10</span>, <span class='number'>10</span>]);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;1&quot;</span>.<span class='ident'>to_string</span>(), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>10</span>, <span class='number'>19</span>]);
         <span class='ident'>assert_opt_eq</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;1&quot;</span>.<span class='ident'>to_string</span>()), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>10</span>, <span class='number'>19</span>]);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
@@ -1185,7 +1185,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_remove</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1is</span>, <span class='number'>10is</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>30</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>4</span>, <span class='number'>40</span>);
@@ -1205,7 +1205,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_clear</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1is</span>, <span class='number'>10is</span>);
+        <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>map</span>.<span class='ident'>clear</span>();
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>).<span class='ident'>is_none</span>());
