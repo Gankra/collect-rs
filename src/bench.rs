@@ -46,7 +46,7 @@ pub fn insert_seq_n<M, I, R>(n: usize,
     R: FnMut(&mut M, usize),
 {
     // setup
-    for i in range(0us, n) {
+    for i in range(0, n) {
         insert(map, i * 2);
     }
 
@@ -95,7 +95,7 @@ pub fn find_seq_n<M, T, I, F>(n: usize,
     F: FnMut(&M, usize) -> T,
 {
     // setup
-    for i in range(0us, n) {
+    for i in range(0, n) {
         insert(map, i);
     }
 

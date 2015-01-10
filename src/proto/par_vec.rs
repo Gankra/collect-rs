@@ -67,7 +67,7 @@ fn sub_slices<T>(parent: &[T], slice_count: usize) -> Vec<&[T]> {
     let mut slices = Vec::new();
 
     let len = parent.len();
-    let mut start = 0us;
+    let mut start = 0;
 
     for curr in range_inclusive(1, slice_count).rev() {
         let slice_len = (len - start) / curr;
@@ -124,12 +124,12 @@ mod test {
 
     #[test]
     fn test_unwrap_safely() {
-        let (vec, slices) = ParVec::new([5us; TEST_MAX as usize].to_vec(), TEST_SLICES);
+        let (vec, slices) = ParVec::new([5; TEST_MAX as usize].to_vec(), TEST_SLICES);
         mem::drop(slices);
 
         let vec = vec.into_inner();
 
-        assert_eq!(&*vec, [5us; TEST_MAX as usize].as_slice());
+        assert_eq!(&*vec, [5; TEST_MAX as usize].as_slice());
     }
 
     #[test]

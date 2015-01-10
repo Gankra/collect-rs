@@ -1254,9 +1254,9 @@ mod test {
     #[test]
     fn test_find_mut() {
         let mut m = TrieMap::new();
-        assert!(m.insert(1us, 12is).is_none());
-        assert!(m.insert(2us, 8is).is_none());
-        assert!(m.insert(5us, 14is).is_none());
+        assert!(m.insert(1, 12).is_none());
+        assert!(m.insert(2, 8).is_none());
+        assert!(m.insert(5, 14).is_none());
         let new = 100;
         match m.get_mut(&5) {
             None => panic!(), Some(x) => *x = new
@@ -1268,7 +1268,7 @@ mod test {
     fn test_find_mut_missing() {
         let mut m = TrieMap::new();
         assert!(m.get_mut(&0).is_none());
-        assert!(m.insert(1us, 12is).is_none());
+        assert!(m.insert(1, 12).is_none());
         assert!(m.get_mut(&0).is_none());
         assert!(m.insert(2, 8).is_none());
         assert!(m.get_mut(&0).is_none());
@@ -1277,33 +1277,33 @@ mod test {
     #[test]
     fn test_step() {
         let mut trie = TrieMap::new();
-        let n = 300us;
+        let n = 300;
 
-        for x in range_step(1us, n, 2) {
+        for x in range_step(1, n, 2) {
             assert!(trie.insert(x, x + 1).is_none());
             assert!(trie.contains_key(&x));
             check_integrity(&trie.root);
         }
 
-        for x in range_step(0us, n, 2) {
+        for x in range_step(0, n, 2) {
             assert!(!trie.contains_key(&x));
             assert!(trie.insert(x, x + 1).is_none());
             check_integrity(&trie.root);
         }
 
-        for x in range(0us, n) {
+        for x in range(0, n) {
             assert!(trie.contains_key(&x));
             assert!(!trie.insert(x, x + 1).is_none());
             check_integrity(&trie.root);
         }
 
-        for x in range_step(1us, n, 2) {
+        for x in range_step(1, n, 2) {
             assert!(trie.remove(&x).is_some());
             assert!(!trie.contains_key(&x));
             check_integrity(&trie.root);
         }
 
-        for x in range_step(0us, n, 2) {
+        for x in range_step(0, n, 2) {
             assert!(trie.contains_key(&x));
             assert!(!trie.insert(x, x + 1).is_none());
             check_integrity(&trie.root);
@@ -1314,14 +1314,14 @@ mod test {
     fn test_each_reverse() {
         let mut m = TrieMap::new();
 
-        assert!(m.insert(3, 6us).is_none());
+        assert!(m.insert(3, 6).is_none());
         assert!(m.insert(0, 0).is_none());
         assert!(m.insert(4, 8).is_none());
         assert!(m.insert(2, 4).is_none());
         assert!(m.insert(1, 2).is_none());
 
         let mut n = 4;
-        let mut vec = vec![];
+        let mut vec: Vec<&i32> = vec![];
         m.each_reverse(|k, v| {
             assert_eq!(*k, n);
             vec.push(v);
@@ -1355,22 +1355,22 @@ mod test {
     #[test]
     fn test_insert() {
         let mut m = TrieMap::new();
-        assert_eq!(m.insert(1us, 2is), None);
-        assert_eq!(m.insert(1us, 3is), Some(2));
-        assert_eq!(m.insert(1us, 4is), Some(3));
+        assert_eq!(m.insert(1, 2), None);
+        assert_eq!(m.insert(1, 3), Some(2));
+        assert_eq!(m.insert(1, 4), Some(3));
     }
 
     #[test]
     fn test_remove() {
         let mut m = TrieMap::new();
-        m.insert(1us, 2is);
+        m.insert(1, 2);
         assert_eq!(m.remove(&1), Some(2));
         assert_eq!(m.remove(&1), None);
     }
 
     #[test]
     fn test_from_iter() {
-        let xs = vec![(1us, 1is), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)];
+        let xs = vec![(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)];
 
         let map: TrieMap<isize> = xs.iter().map(|&x| x).collect();
 
@@ -1453,17 +1453,17 @@ mod test {
         assert_eq!(empty_map.lower_bound(0).next(), None);
         assert_eq!(empty_map.upper_bound(0).next(), None);
 
-        let last = 999us;
-        let step = 3us;
-        let value = 42us;
+        let last = 999;
+        let step = 3;
+        let value = 42;
 
         let mut map : TrieMap<usize> = TrieMap::new();
-        for x in range_step(0us, last, step) {
+        for x in range_step(0, last, step) {
             assert!(x % step == 0);
             map.insert(x, value);
         }
 
-        for i in range(0us, last - step) {
+        for i in range(0, last - step) {
             let mut lb = map.lower_bound(i);
             let mut ub = map.upper_bound(i);
             let next_key = i - i % step + step;
@@ -1497,12 +1497,12 @@ mod test {
 
         let mut m_lower = TrieMap::new();
         let mut m_upper = TrieMap::new();
-        for i in range(0us, 100) {
+        for i in range(0, 100) {
             m_lower.insert(2 * i, 4 * i);
             m_upper.insert(2 * i, 4 * i);
         }
 
-        for i in range(0us, 199) {
+        for i in range(0, 199) {
             let mut lb_it = m_lower.lower_bound_mut(i);
             let (k, v) = lb_it.next().unwrap();
             let lb = i + i % 2;
@@ -1510,7 +1510,7 @@ mod test {
             *v -= k;
         }
 
-        for i in range(0us, 198) {
+        for i in range(0, 198) {
             let mut ub_it = m_upper.upper_bound_mut(i);
             let (k, v) = ub_it.next().unwrap();
             let ub = i + 2 - i % 2;
@@ -1542,9 +1542,9 @@ mod test {
         let mut b = TrieMap::new();
 
         assert!(a == b);
-        assert!(a.insert(0, 5is).is_none());
+        assert!(a.insert(0, 5).is_none());
         assert!(a != b);
-        assert!(b.insert(0, 4is).is_none());
+        assert!(b.insert(0, 4).is_none());
         assert!(a != b);
         assert!(a.insert(5, 19).is_none());
         assert!(a != b);
@@ -1560,7 +1560,7 @@ mod test {
         let mut b = TrieMap::new();
 
         assert!(!(a < b) && !(b < a));
-        assert!(b.insert(2us, 5is).is_none());
+        assert!(b.insert(2, 5).is_none());
         assert!(a < b);
         assert!(a.insert(2, 7).is_none());
         assert!(!(a < b) && b < a);
@@ -1578,7 +1578,7 @@ mod test {
         let mut b = TrieMap::new();
 
         assert!(a <= b && a >= b);
-        assert!(a.insert(1us, 1is).is_none());
+        assert!(a.insert(1, 1).is_none());
         assert!(a > b && a >= b);
         assert!(b < a && b <= a);
         assert!(b.insert(2, 2).is_none());
@@ -1619,9 +1619,9 @@ mod test {
     fn test_index() {
         let mut map = TrieMap::new();
 
-        map.insert(1, 2is);
-        map.insert(2, 1is);
-        map.insert(3, 4is);
+        map.insert(1, 2);
+        map.insert(2, 1);
+        map.insert(3, 4);
 
         assert_eq!(map[2], 1);
     }
@@ -1631,9 +1631,9 @@ mod test {
     fn test_index_nonexistent() {
         let mut map = TrieMap::new();
 
-        map.insert(1, 2is);
-        map.insert(2, 1is);
-        map.insert(3, 4is);
+        map.insert(1, 2);
+        map.insert(2, 1);
+        map.insert(3, 4);
 
         map[4];
     }
@@ -1685,14 +1685,14 @@ mod test {
     #[test]
     fn test_entry_into_mut() {
         let mut map = TrieMap::new();
-        map.insert(3, 6us);
+        map.insert(3, 6);
 
         let value_ref = match map.entry(3) {
             Occupied(e) => e.into_mut(),
             Vacant(_) => panic!("Entry not found.")
         };
 
-        assert_eq!(*value_ref, 6us);
+        assert_eq!(*value_ref, 6);
     }
 
     #[test]
@@ -1759,7 +1759,7 @@ mod test {
     #[test]
     fn test_single_key() {
         let mut map = TrieMap::new();
-        map.insert(1, 2us);
+        map.insert(1, 2);
 
         match map.entry(1) {
             Occupied(e) => { e.take(); },
@@ -1815,12 +1815,12 @@ mod bench {
     fn bench_lower_bound(b: &mut Bencher) {
         let mut m = TrieMap::<usize>::new();
         let mut rng = weak_rng();
-        for _ in range(0us, MAP_SIZE) {
+        for _ in range(0, MAP_SIZE) {
             m.insert(rng.gen(), rng.gen());
         }
 
         b.iter(|| {
-            for _ in range(0us, 10) {
+            for _ in range(0, 10) {
                 m.lower_bound(rng.gen());
             }
         });
@@ -1830,12 +1830,12 @@ mod bench {
     fn bench_upper_bound(b: &mut Bencher) {
         let mut m = TrieMap::<usize>::new();
         let mut rng = weak_rng();
-        for _ in range(0us, MAP_SIZE) {
+        for _ in range(0, MAP_SIZE) {
             m.insert(rng.gen(), rng.gen());
         }
 
         b.iter(|| {
-            for _ in range(0us, 10) {
+            for _ in range(0, 10) {
                 m.upper_bound(rng.gen());
             }
         });
@@ -1847,7 +1847,7 @@ mod bench {
         let mut rng = weak_rng();
 
         b.iter(|| {
-            for _ in range(0us, MAP_SIZE) {
+            for _ in range(0, MAP_SIZE) {
                 m.insert(rng.gen(), [1; 10]);
             }
         });
@@ -1859,7 +1859,7 @@ mod bench {
         let mut rng = weak_rng();
 
         b.iter(|| {
-            for _ in range(0us, MAP_SIZE) {
+            for _ in range(0, MAP_SIZE) {
                 match m.entry(rng.gen()) {
                     Occupied(mut e) => { e.set([1; 10]); },
                     Vacant(e) => { e.set([1; 10]); }
@@ -1874,7 +1874,7 @@ mod bench {
         let mut rng = weak_rng();
 
         b.iter(|| {
-            for _ in range(0us, MAP_SIZE) {
+            for _ in range(0, MAP_SIZE) {
                 // only have the last few bits set.
                 m.insert(rng.gen::<usize>() & 0xff_ff, [1; 10]);
             }
@@ -1887,7 +1887,7 @@ mod bench {
         let mut rng = weak_rng();
 
         b.iter(|| {
-            for _ in range(0us, MAP_SIZE) {
+            for _ in range(0, MAP_SIZE) {
                 m.insert(rng.gen(), ());
             }
         });
@@ -1899,7 +1899,7 @@ mod bench {
         let mut rng = weak_rng();
 
         b.iter(|| {
-            for _ in range(0us, MAP_SIZE) {
+            for _ in range(0, MAP_SIZE) {
                 // only have the last few bits set.
                 m.insert(rng.gen::<usize>() & 0xff_ff, ());
             }

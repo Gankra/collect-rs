@@ -500,7 +500,7 @@ mod test {
     use std::hash;
 
     fn generate_test() -> BList<isize> {
-        list_from(&[0is,1,2,3,4,5,6])
+        list_from(&[0,1,2,3,4,5,6])
     }
 
     fn list_from<T: Clone>(v: &[T]) -> BList<T> {
@@ -529,7 +529,7 @@ mod test {
         assert_eq!(m.pop_front(), Some(box 1));
 
         let mut n = BList::new();
-        n.push_front(2is);
+        n.push_front(2);
         n.push_front(3);
         {
             assert_eq!(n.front().unwrap(), &3);
@@ -555,7 +555,7 @@ mod test {
         }
         let mut n = BList::new();
         assert_eq!(n.iter().next(), None);
-        n.push_front(4is);
+        n.push_front(4);
         let mut it = n.iter();
         assert_eq!(it.size_hint(), (1, Some(1)));
         assert_eq!(it.next().unwrap(), &4);
@@ -568,7 +568,7 @@ mod test {
     fn test_iterator_double_end() {
         let mut n = BList::new();
         assert_eq!(n.iter().next(), None);
-        n.push_front(4is);
+        n.push_front(4);
         n.push_front(5);
         n.push_front(6);
         let mut it = n.iter();
@@ -590,7 +590,7 @@ mod test {
         }
         let mut n = BList::new();
         assert_eq!(n.iter().rev().next(), None);
-        n.push_front(4is);
+        n.push_front(4);
         let mut it = n.iter().rev();
         assert_eq!(it.size_hint(), (1, Some(1)));
         assert_eq!(it.next().unwrap(), &4);
@@ -609,7 +609,7 @@ mod test {
         assert_eq!(len, 0);
         let mut n = BList::new();
         assert!(n.iter_mut().next().is_none());
-        n.push_front(4is);
+        n.push_front(4);
         n.push_back(5);
         let mut it = n.iter_mut();
         assert_eq!(it.size_hint(), (2, Some(2)));
@@ -623,7 +623,7 @@ mod test {
     fn test_iterator_mut_double_end() {
         let mut n = BList::new();
         assert!(n.iter_mut().next_back().is_none());
-        n.push_front(4is);
+        n.push_front(4);
         n.push_front(5);
         n.push_front(6);
         let mut it = n.iter_mut();
@@ -647,8 +647,8 @@ mod test {
         m.push_back(1);
         assert!(n == m);
 
-        let n = list_from(&[2is,3,4]);
-        let m = list_from(&[1is,2,3]);
+        let n = list_from(&[2,3,4]);
+        let m = list_from(&[1,2,3]);
         assert!(n != m);
     }
 
@@ -659,11 +659,11 @@ mod test {
 
       assert!(hash::hash::<_, hash::SipHasher>(&x) == hash::hash::<_, hash::SipHasher>(&y));
 
-      x.push_back(1is);
+      x.push_back(1);
       x.push_back(2);
       x.push_back(3);
 
-      y.push_front(3is);
+      y.push_front(3);
       y.push_front(2);
       y.push_front(1);
 
@@ -673,7 +673,7 @@ mod test {
     #[test]
     fn test_ord() {
         let n: BList<isize> = list_from(&[]);
-        let m = list_from(&[1is,2,3]);
+        let m = list_from(&[1,2,3]);
         assert!(n < m);
         assert!(m > n);
         assert!(n <= n);
@@ -732,9 +732,9 @@ mod bench{
 
     #[bench]
     fn bench_collect_into(b: &mut test::Bencher) {
-        let v = &[0is; 64];
+        let v = &[0i32; 64];
         b.iter(|| {
-            let _: BList<isize> = v.iter().map(|x| *x).collect();
+            let _: BList<i32> = v.iter().map(|x| *x).collect();
         })
     }
 
@@ -774,7 +774,7 @@ mod bench{
 
     #[bench]
     fn bench_iter(b: &mut test::Bencher) {
-        let v = &[0is; 128];
+        let v = &[0; 128];
         let m: BList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().count() == 128);
@@ -782,7 +782,7 @@ mod bench{
     }
     #[bench]
     fn bench_iter_mut(b: &mut test::Bencher) {
-        let v = &[0is; 128];
+        let v = &[0; 128];
         let mut m: BList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().count() == 128);
@@ -791,7 +791,7 @@ mod bench{
 
     #[bench]
     fn bench_iter_rev(b: &mut test::Bencher) {
-        let v = &[0is; 128];
+        let v = &[0; 128];
         let m: BList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter().rev().count() == 128);
@@ -799,7 +799,7 @@ mod bench{
     }
     #[bench]
     fn bench_iter_mut_rev(b: &mut test::Bencher) {
-        let v = &[0is; 128];
+        let v = &[0; 128];
         let mut m: BList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.iter_mut().rev().count() == 128);
@@ -808,7 +808,7 @@ mod bench{
 
     #[bench]
     fn bench_trav(b: &mut test::Bencher) {
-        let v = &[0is; 128];
+        let v = &[0; 128];
         let m: BList<isize> = v.iter().map(|&x|x).collect();
         b.iter(|| {
             assert!(m.traversal().count() == 128);

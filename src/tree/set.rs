@@ -844,7 +844,7 @@ mod test {
     fn test_clear() {
         let mut s = TreeSet::new();
         s.clear();
-        assert!(s.insert(5is));
+        assert!(s.insert(5));
         assert!(s.insert(12));
         assert!(s.insert(19));
         s.clear();
@@ -860,8 +860,8 @@ mod test {
         let mut ys = TreeSet::new();
         assert!(xs.is_disjoint(&ys));
         assert!(ys.is_disjoint(&xs));
-        assert!(xs.insert(5is));
-        assert!(ys.insert(11is));
+        assert!(xs.insert(5));
+        assert!(ys.insert(11));
         assert!(xs.is_disjoint(&ys));
         assert!(ys.is_disjoint(&xs));
         assert!(xs.insert(7));
@@ -879,13 +879,13 @@ mod test {
     #[test]
     fn test_subset_and_superset() {
         let mut a = TreeSet::new();
-        assert!(a.insert(0is));
+        assert!(a.insert(0));
         assert!(a.insert(5));
         assert!(a.insert(11));
         assert!(a.insert(7));
 
         let mut b = TreeSet::new();
-        assert!(b.insert(0is));
+        assert!(b.insert(0));
         assert!(b.insert(7));
         assert!(b.insert(19));
         assert!(b.insert(250));
@@ -909,7 +909,7 @@ mod test {
     fn test_iterator() {
         let mut m = TreeSet::new();
 
-        assert!(m.insert(3is));
+        assert!(m.insert(3));
         assert!(m.insert(0));
         assert!(m.insert(4));
         assert!(m.insert(2));
@@ -926,7 +926,7 @@ mod test {
     fn test_rev_iter() {
         let mut m = TreeSet::new();
 
-        assert!(m.insert(3is));
+        assert!(m.insert(3));
         assert!(m.insert(0));
         assert!(m.insert(4));
         assert!(m.insert(2));
@@ -941,7 +941,7 @@ mod test {
 
     #[test]
     fn test_move_iter() {
-        let s: TreeSet<isize> = range(0is, 5).collect();
+        let s: TreeSet<isize> = range(0, 5).collect();
 
         let mut n = 0;
         for x in s.into_iter() {
@@ -952,7 +952,7 @@ mod test {
 
     #[test]
     fn test_move_iter_size_hint() {
-        let s: TreeSet<isize> = vec!(0is, 1).into_iter().collect();
+        let s: TreeSet<isize> = vec!(0, 1).into_iter().collect();
 
         let mut it = s.into_iter();
 
@@ -970,7 +970,7 @@ mod test {
     fn test_clone_eq() {
       let mut m = TreeSet::new();
 
-      m.insert(1is);
+      m.insert(1);
       m.insert(2);
 
       assert!(m.clone() == m);
@@ -981,11 +981,11 @@ mod test {
       let mut x = TreeSet::new();
       let mut y = TreeSet::new();
 
-      x.insert(1is);
+      x.insert(1);
       x.insert(2);
       x.insert(3);
 
-      y.insert(3is);
+      y.insert(3);
       y.insert(2);
       y.insert(1);
 
@@ -1126,9 +1126,9 @@ mod test {
     #[test]
     fn test_zip() {
         let mut x = TreeSet::new();
-        x.insert(5us);
-        x.insert(12us);
-        x.insert(11us);
+        x.insert(5);
+        x.insert(12);
+        x.insert(11);
 
         let mut y = TreeSet::new();
         y.insert("foo");
@@ -1140,10 +1140,10 @@ mod test {
 
         // FIXME: #5801: this needs a type hint to compile...
         let result: Option<(&usize, & &'static str)> = z.next();
-        assert_eq!(result.unwrap(), (&5us, &("bar")));
+        assert_eq!(result.unwrap(), (&5, &("bar")));
 
         let result: Option<(&usize, & &'static str)> = z.next();
-        assert_eq!(result.unwrap(), (&11us, &("foo")));
+        assert_eq!(result.unwrap(), (&11, &("foo")));
 
         let result: Option<(&usize, & &'static str)> = z.next();
         assert!(result.is_none());
@@ -1151,7 +1151,7 @@ mod test {
 
     #[test]
     fn test_from_iter() {
-        let xs = [1is, 2, 3, 4, 5, 6, 7, 8, 9];
+        let xs = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
         let set: TreeSet<isize> = xs.iter().map(|&x| x).collect();
 
@@ -1178,7 +1178,7 @@ mod test {
 
         let mut m = TreeSet::with_comparator(Natural.rev());
 
-        assert!(m.insert(3is));
+        assert!(m.insert(3));
         assert!(m.insert(0));
         assert!(m.insert(4));
         assert!(m.insert(2));

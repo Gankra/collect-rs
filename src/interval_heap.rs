@@ -37,7 +37,7 @@ use compare::{Compare, Natural};
 fn is_root(x: usize) -> bool { x < 2 }
 
 /// Set LSB to zero for the "left" item index of a node.
-fn left(x: usize) -> usize { x & !1us }
+fn left(x: usize) -> usize { x & !1 }
 
 /// Returns index of "left" item of parent node.
 fn parent_left(x: usize) -> usize {
@@ -382,7 +382,7 @@ mod test {
         while ofs < x.len() {
             let ofz = ofs + (ofs + 1 < x.len()) as usize;
             if x[ofz] < x[ofs] { return false; }
-            let parent = (ofs / 2 - 1) & !1us;
+            let parent = (ofs / 2 - 1) & !1;
             if x[ofs] < x[parent] { return false; }
             if x[parent+1] < x[ofz] { return false; }
             ofs += 2;
@@ -394,10 +394,10 @@ mod test {
     fn fuzz_push_into_sorted_vec() {
         let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
-        for _ in range(0, 100us) {
+        for _ in range(0, 100) {
             tmp.clear();
             let mut ih = IntervalHeap::from_vec(tmp);
-            for _ in range(0, 100us) {
+            for _ in range(0, 100) {
                 ih.push(rng.next_u32());
                 assert!(is_interval_heap(as_slice(&ih)));
             }
@@ -412,10 +412,10 @@ mod test {
     fn fuzz_pop_min() {
         let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
-        for _ in range(0, 100us) {
+        for _ in range(0, 100) {
             tmp.clear();
             let mut ih = IntervalHeap::from_vec(tmp);
-            for _ in range(0, 100us) {
+            for _ in range(0, 100) {
                 ih.push(rng.next_u32());
             }
             let mut tmpx: Option<u32> = None;
@@ -437,10 +437,10 @@ mod test {
     fn fuzz_pop_max() {
         let mut rng = thread_rng();
         let mut tmp = Vec::with_capacity(100);
-        for _ in range(0, 100us) {
+        for _ in range(0, 100) {
             tmp.clear();
             let mut ih = IntervalHeap::from_vec(tmp);
-            for _ in range(0, 100us) {
+            for _ in range(0, 100) {
                 ih.push(rng.next_u32());
             }
             let mut tmpx: Option<u32> = None;

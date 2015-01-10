@@ -688,7 +688,7 @@ mod test {
 
     #[test]
     fn test_from_iter() {
-        let xs = vec![9us, 8, 7, 6, 5, 4, 3, 2, 1];
+        let xs = vec![9, 8, 7, 6, 5, 4, 3, 2, 1];
 
         let set: TrieSet = xs.iter().map(|&x| x).collect();
 
@@ -726,9 +726,9 @@ mod test {
         let mut b = TrieSet::new();
 
         assert!(!(a < b) && !(b < a));
-        assert!(b.insert(2us));
+        assert!(b.insert(2));
         assert!(a < b);
-        assert!(a.insert(3us));
+        assert!(a.insert(3));
         assert!(!(a < b) && b < a);
         assert!(b.insert(1));
         assert!(b < a);
@@ -744,10 +744,10 @@ mod test {
         let mut b = TrieSet::new();
 
         assert!(a <= b && a >= b);
-        assert!(a.insert(1us));
+        assert!(a.insert(1));
         assert!(a > b && a >= b);
         assert!(b < a && b <= a);
-        assert!(b.insert(2us));
+        assert!(b.insert(2));
         assert!(b > a && b >= a);
         assert!(a < b && a <= b);
     }
@@ -848,7 +848,7 @@ mod test {
 
         let set: TrieSet = &a | &b;
         let v: Vec<usize> = set.iter().collect();
-        assert_eq!(v, vec![1us, 2, 3, 4, 5]);
+        assert_eq!(v, vec![1, 2, 3, 4, 5]);
     }
 
     #[test]
@@ -858,7 +858,7 @@ mod test {
 
         let set: TrieSet = &a & &b;
         let v: Vec<usize> = set.iter().collect();
-        assert_eq!(v, vec![2us, 3]);
+        assert_eq!(v, vec![2, 3]);
     }
 
     #[test]
@@ -868,7 +868,7 @@ mod test {
 
         let set: TrieSet = &a ^ &b;
         let v: Vec<usize> = set.iter().collect();
-        assert_eq!(v, vec![1us, 2, 4, 5]);
+        assert_eq!(v, vec![1, 2, 4, 5]);
     }
 
     #[test]
@@ -878,6 +878,6 @@ mod test {
 
         let set: TrieSet = &a - &b;
         let v: Vec<usize> = set.iter().collect();
-        assert_eq!(v, vec![1us, 2]);
+        assert_eq!(v, vec![1, 2]);
     }
 }
