@@ -1,11 +1,12 @@
 use std::cmp::Ordering;
-use std::collections::{dlist, ring_buf, DList, RingBuf};
+use std::collections::{ring_buf, RingBuf};
 use std::iter;
 use std::fmt;
 use std::mem;
 use std::hash::{Hash, Hasher, Writer};
 use std::num::Int;
 use traverse::Traversal;
+use proto::dlist::{self, DList};
 
 /// A skeleton implementation of a BList, based on the [Space-Efficient Linked List]
 /// (http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html) described in
@@ -205,11 +206,16 @@ impl<T> BList<T> {
     /// effort to preserve the node-size lower-bound invariant. This can have negative effects
     /// on the effeciency of the resulting list, but is otherwise much faster than a proper
     /// invariant-preserving `append`.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the lists have a different value of `B`.
     pub fn append_lazy(&mut self, other: &mut BList<T>) {
-        let list = mem::replace(&mut other.list, DList::new());
-        self.list.append(list);
+        assert!(self.b == other.b);
+        self.list.append(&mut other.list);
+        self.len += other.len;
+        other.len = 0;
     }
-
 }
 
 
@@ -721,6 +727,36 @@ mod test {
                                                                    .map(|&s| s)
                                                                    .collect();
         assert_eq!(format!("{:?}", list), r#"["just", "one", "test", "more"]"#);
+    }
+
+    #[test]
+    fn test_append_lazy() {
+        let mut u = list_from(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        let mut v = list_from(&[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110]);
+        let w = list_from(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+                            10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110]);
+        let x = list_from(&[]);
+
+        // Normal append
+        u.append_lazy(&mut v);
+        assert_eq!(u.len(), 22);
+        assert_eq!(v.len(), 0);
+        assert_eq!(u, w);
+        assert_eq!(v, x);
+
+        // no-op append
+        u.append_lazy(&mut v);
+        assert_eq!(u.len(), 22);
+        assert_eq!(v.len(), 0);
+        assert_eq!(u, w);
+        assert_eq!(v, x);
+
+        // append into empty
+        v.append_lazy(&mut u);
+        assert_eq!(v.len(), 22);
+        assert_eq!(u.len(), 0);
+        assert_eq!(v, w);
+        assert_eq!(u, x);
     }
 }
 
