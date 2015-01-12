@@ -994,7 +994,7 @@ impl<'a, T> OccupiedEntry<'a, T> {
 
     /// Sets the value of the entry, and returns the entry's old value.
     #[inline]
-    pub fn set(&mut self, value: T) -> T {
+    pub fn insert(&mut self, value: T) -> T {
         match *self.search_stack.peek_ref() {
             External(_, ref mut stored_value) => {
                 mem::replace(stored_value, value)
@@ -1006,7 +1006,7 @@ impl<'a, T> OccupiedEntry<'a, T> {
 
     /// Takes the value out of the entry, and returns it.
     #[inline]
-    pub fn take(self) -> T {
+    pub fn remove(self) -> T {
         // This function removes the external leaf-node, then unwinds the search-stack
         // deleting now-childless ancestors.
         let mut search_stack = self.search_stack;
@@ -1048,7 +1048,7 @@ impl<'a, T> OccupiedEntry<'a, T> {
 
 impl<'a, T> VacantEntry<'a, T> {
     /// Set the vacant entry to the given value.
-    pub fn set(self, value: T) -> &'a mut T {
+    pub fn insert(self, value: T) -> &'a mut T {
         let search_stack = self.search_stack;
         let old_length = search_stack.length;
         let key = search_stack.key;
@@ -1703,7 +1703,7 @@ mod test {
         // Remove every odd key, checking that the correct value is returned.
         for i in range_step(1, SQUARES_UPPER_LIM, 2) {
             match map.entry(i) {
-                Occupied(e) => assert_eq!(e.take(), i * i),
+                Occupied(e) => assert_eq!(e.remove(), i * i),
                 Vacant(_) => panic!("Key not found.")
             }
         }
@@ -1725,7 +1725,7 @@ mod test {
         // Change all the entries to cubes.
         for i in range(0, SQUARES_UPPER_LIM) {
             match map.entry(i) {
-                Occupied(mut e) => assert_eq!(e.set(i * i * i), i * i),
+                Occupied(mut e) => assert_eq!(e.insert(i * i * i), i * i),
                 Vacant(_) => panic!("Key not found.")
             }
             assert_eq!(map.get(&i).unwrap(), &(i * i * i));
@@ -1741,7 +1741,7 @@ mod test {
             match map.entry(i) {
                 Vacant(e) => {
                     // Insert i^2.
-                    let inserted_val = e.set(i * i);
+                    let inserted_val = e.insert(i * i);
                     assert_eq!(*inserted_val, i * i);
 
                     // Update it to i^3 using the returned mutable reference.
@@ -1762,7 +1762,7 @@ mod test {
         map.insert(1, 2);
 
         match map.entry(1) {
-            Occupied(e) => { e.take(); },
+            Occupied(e) => { e.remove(); },
             _ => ()
         }
     }
@@ -1861,8 +1861,8 @@ mod bench {
         b.iter(|| {
             for _ in range(0, MAP_SIZE) {
                 match m.entry(rng.gen()) {
-                    Occupied(mut e) => { e.set([1; 10]); },
-                    Vacant(e) => { e.set([1; 10]); }
+                    Occupied(mut e) => { e.insert([1; 10]); },
+                    Vacant(e) => { e.insert([1; 10]); }
                 }
             }
         });
@@ -1949,7 +1949,7 @@ mod bench {
             let keys: Vec<usize> = map.keys().collect();
             for key in keys.iter() {
                 match map.entry(*key) {
-                    Occupied(e) => { black_box(e.take()); },
+                    Occupied(e) => { black_box(e.remove()); },
                     _ => ()
                 }
             }
