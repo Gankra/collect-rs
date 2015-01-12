@@ -206,8 +206,8 @@ impl<T> BList<T> {
     /// on the effeciency of the resulting list, but is otherwise much faster than a proper
     /// invariant-preserving `append`.
     pub fn append_lazy(&mut self, other: &mut BList<T>) {
-        let list = mem::replace(&mut other.list, DList::new());
-        self.list.append(list);
+        let mut list = mem::replace(&mut other.list, DList::new());
+        self.list.append(&mut list);
     }
 
 }
