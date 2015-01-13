@@ -446,12 +446,6 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
         self.length = 0
     }
 
-    /// Deprecated: Renamed to `get`.
-    #[deprecated = "Renamed to `get`"]
-    pub fn find(&self, key: &K) -> Option<&V> {
-        self.get(key)
-    }
-
     /// Returns a reference to the value corresponding to the key.
     ///
     /// The key may be any borrowed form of the map's key type, but the ordering
@@ -505,12 +499,6 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
         self.get(key).is_some()
     }
 
-    /// Deprecated: Renamed to `get_mut`.
-    #[deprecated = "Renamed to `get_mut`"]
-    pub fn find_mut(&mut self, key: &K) -> Option<&mut V> {
-        self.get_mut(key)
-    }
-
     /// Returns a mutable reference to the value corresponding to the key.
     ///
     /// The key may be any borrowed form of the map's key type, but the ordering
@@ -544,12 +532,6 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
         f(&mut self.root, &self.cmp, key)
     }
 
-    /// Deprecated: Renamed to `insert`.
-    #[deprecated = "Renamed to `insert`"]
-    pub fn swap(&mut self, key: K, value: V) -> Option<V> {
-        self.insert(key, value)
-    }
-
     /// Inserts a key-value pair from the map. If the key already had a value
     /// present in the map, that value is returned. Otherwise, `None` is returned.
     ///
@@ -573,12 +555,6 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
         if ret.is_none() { self.length += 1 }
         debug_assert!(self.is_valid());
         ret
-    }
-
-    /// Deprecated: Renamed to `remove`.
-    #[deprecated = "Renamed to `remove`"]
-    pub fn pop(&mut self, key: &K) -> Option<V> {
-        self.remove(key)
     }
 
     /// Removes a key from the map, returning the value at the key if the key
