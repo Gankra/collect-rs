@@ -833,6 +833,17 @@ pub enum Entry<'a, T: 'a> {
     Vacant(VacantEntry<'a, T>)
 }
 
+impl<'a, T> Entry<'a, T> {
+    /// Returns a mutable reference to the value if occupied, or the `VacantEntry` if
+    /// vacant.
+    pub fn get(self) -> Result<&'a mut T, VacantEntry<'a, T>> {
+        match self {
+            Occupied(entry) => Ok(entry.into_mut()),
+            Vacant(entry) => Err(entry),
+        }
+    }
+}
+
 /// A view into an occupied entry in a TrieMap.
 pub struct OccupiedEntry<'a, T: 'a> {
     search_stack: SearchStack<'a, T>
