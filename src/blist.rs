@@ -2,7 +2,6 @@ use std::cmp::Ordering;
 use std::collections::{ring_buf, RingBuf};
 use std::iter;
 use std::fmt;
-use std::mem;
 use std::hash::{Hash, Hasher, Writer};
 use std::num::Int;
 use traverse::Traversal;
