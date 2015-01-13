@@ -280,6 +280,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn iter<'a>(&'a self) -> Iter<'a, K, V> {
+        debug_assert!(self.is_valid());
         Iter {
             stack: vec!(),
             node: deref(&self.root),
@@ -332,6 +333,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, K, V> {
+        debug_assert!(self.is_valid());
         IterMut {
             stack: vec!(),
             node: deref_mut(&mut self.root),
@@ -383,6 +385,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn into_iter(self) -> IntoIter<K, V> {
+        debug_assert!(self.is_valid());
         let TreeMap { root, length, .. } = self;
         let stk = match root {
             None => vec!(),
@@ -475,6 +478,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
             tree_find_with(node, |k| cmp.compare(key, k))
         }
 
+        debug_assert!(self.is_valid());
         f(&self.root, &self.cmp, key)
     }
 
@@ -536,6 +540,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
             tree_find_with_mut(node, |k| cmp.compare(key, k))
         }
 
+        debug_assert!(self.is_valid());
         f(&mut self.root, &self.cmp, key)
     }
 
@@ -563,8 +568,10 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn insert(&mut self, key: K, value: V) -> Option<V> {
+        debug_assert!(self.is_valid());
         let ret = insert(&mut self.root, key, value, &self.cmp);
         if ret.is_none() { self.length += 1 }
+        debug_assert!(self.is_valid());
         ret
     }
 
@@ -594,8 +601,10 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     pub fn remove<Q: ?Sized>(&mut self, key: &Q) -> Option<V>
         where C: Compare<Q, K>
     {
+        debug_assert!(self.is_valid());
         let ret = remove(&mut self.root, key, &self.cmp);
         if ret.is_some() { self.length -= 1 }
+        debug_assert!(self.is_valid());
         ret
     }
 
@@ -655,6 +664,56 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     {
         tree_find_with_mut(&mut self.root, f)
     }
+
+    fn check_left(&self, node: &Option<Box<TreeNode<K, V>>>,
+                  parent: &Box<TreeNode<K, V>>, len: &mut usize) -> bool {
+        if let Some(ref node) = *node {
+            *len += 1;
+            self.cmp.compares_lt(&node.key, &parent.key) && // 2a
+            node.level == parent.level - 1 && // 2c
+            self.check_left(&node.left, node, len) &&
+            self.check_right(&node.right, node, false, len)
+        } else {
+            parent.level == 1 // 2f
+        }
+    }
+
+    fn check_right(&self, node: &Option<Box<TreeNode<K, V>>>,
+                   parent: &Box<TreeNode<K, V>>, parent_red: bool,
+                   len: &mut usize) -> bool {
+        if let Some(ref node) = *node {
+            *len += 1;
+            let red = node.level == parent.level;
+            self.cmp.compares_gt(&node.key, &parent.key) && // 2b
+            (!parent_red || !red) && // 2d
+            (red || node.level == parent.level - 1) && // 2e
+            self.check_left(&node.left, node, len) &&
+            self.check_right(&node.right, node, red, len)
+        } else {
+            parent.level == 1 // 2f
+        }
+    }
+
+    /// Checks if the map is valid.
+    ///
+    /// The map is valid if:
+    ///
+    /// 1. The root is `None` and the length is zero, OR
+    /// 2a. Each node's key is greater than the key of its left child, AND
+    /// 2b. Each node's key is less than the key of its right child, AND
+    /// 2c. Each node that is a left child is black, AND
+    /// 2d. Each red node has no red children, AND
+    /// 2e. Each node that is a right child is red or black, AND
+    /// 2f. Each node that has no children has a level of 1, AND
+    /// 2g. The length of the map is equal to the number of nodes
+    fn is_valid(&self) -> bool {
+        self.root.as_ref().map_or(self.length == 0, |node| { // 1
+            let mut len = 1;
+            self.check_left(&node.left, node, &mut len) &&
+            self.check_right(&node.right, node, false, &mut len) &&
+            len == self.length // 2g
+        })
+    }
 }
 
 // range iterators.
@@ -695,6 +754,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// Gets a lazy iterator that should be initialized using
     /// `traverse_left`/`traverse_right`/`traverse_complete`.
     fn iter_for_traversal<'a>(&'a self) -> (Iter<'a, K, V>, &'a C) {
+        debug_assert!(self.is_valid());
         (Iter {
             stack: vec!(),
             node: deref(&self.root),
@@ -750,6 +810,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// Gets a lazy iterator that should be initialized using
     /// `traverse_left`/`traverse_right`/`traverse_complete`.
     fn iter_mut_for_traversal<'a>(&'a mut self) -> (IterMut<'a, K, V>, &'a C) {
+        debug_assert!(self.is_valid());
         (IterMut {
             stack: vec!(),
             node: deref_mut(&mut self.root),
@@ -1346,7 +1407,7 @@ mod test_treemap {
     use std::rand::Rng;
     use std::rand;
 
-    use super::{TreeMap, TreeNode};
+    use super::TreeMap;
 
     #[test]
     fn find_empty() {
@@ -1474,46 +1535,6 @@ mod test_treemap {
         }
     }
 
-    fn check_left<K: Ord, V>(node: &Option<Box<TreeNode<K, V>>>,
-                                  parent: &Box<TreeNode<K, V>>) {
-        match *node {
-          Some(ref r) => {
-            assert_eq!(r.key.cmp(&parent.key), ::std::cmp::Ordering::Less);
-            assert!(r.level == parent.level - 1); // left is black
-            check_left(&r.left, r);
-            check_right(&r.right, r, false);
-          }
-          None => assert!(parent.level == 1) // parent is leaf
-        }
-    }
-
-    fn check_right<K: Ord, V>(node: &Option<Box<TreeNode<K, V>>>,
-                                   parent: &Box<TreeNode<K, V>>,
-                                   parent_red: bool) {
-        match *node {
-          Some(ref r) => {
-            assert_eq!(r.key.cmp(&parent.key), ::std::cmp::Ordering::Greater);
-            let red = r.level == parent.level;
-            if parent_red { assert!(!red) } // no dual horizontal links
-            // Right red or black
-            assert!(red || r.level == parent.level - 1);
-            check_left(&r.left, r);
-            check_right(&r.right, r, red);
-          }
-          None => assert!(parent.level == 1) // parent is leaf
-        }
-    }
-
-    fn check_structure<K: Ord, V>(map: &TreeMap<K, V>) {
-        match map.root {
-          Some(ref r) => {
-            check_left(&r.left, r);
-            check_right(&r.right, r, false);
-          }
-          None => ()
-        }
-    }
-
     #[test]
     fn test_rand_int() {
         let mut map: TreeMap<i32,i32> = TreeMap::new();
@@ -1532,7 +1553,6 @@ mod test_treemap {
                 if !ctrl.iter().any(|x| x == &(k, v)) {
                     assert!(map.insert(k, v).is_none());
                     ctrl.push((k, v));
-                    check_structure(&map);
                     check_equal(ctrl.as_slice(), &map);
                 }
             }
@@ -1541,7 +1561,6 @@ mod test_treemap {
                 let r = rng.gen_range(0, ctrl.len());
                 let (key, _) = ctrl.remove(r);
                 assert!(map.remove(&key).is_some());
-                check_structure(&map);
                 check_equal(ctrl.as_slice(), &map);
             }
         }
