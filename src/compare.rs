@@ -245,7 +245,6 @@ pub trait CompareExt<Lhs: ?Sized, Rhs: ?Sized = Lhs> : Compare<Lhs, Rhs> + Sized
     /// # Examples
     ///
     /// ```rust
-    /// #![allow(unstable)]
     /// use collect::compare::{Compare, CompareExt, Natural};
     /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///

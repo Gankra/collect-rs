@@ -31,7 +31,6 @@ use compare::{Compare, Natural};
 /// # Examples
 ///
 /// ```rust
-/// #![allow(unstable)]
 /// use collect::TreeMap;
 ///
 /// let mut map = TreeMap::new();
