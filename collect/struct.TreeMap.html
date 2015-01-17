@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>collect</a>::<wbr><a class='struct' href=''>TreeMap</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-41' href='../src/collect/tree/map.rs.html#127-131'>[src]</a></span></h1>
+        </span><a id='src-41' href='../src/collect/tree/map.rs.html#126-130'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct TreeMap&lt;K, V, C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;K&gt; = <a class='struct' href='../collect/compare/struct.Natural.html' title='collect::compare::Natural'>Natural</a>&lt;K&gt;&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>This is implemented as an AA tree, which is a simplified variation of
@@ -54,7 +54,6 @@ operations are more frequent but also cheaper.</p>
 
 <h1 id="examples" class='section-header'><a
                            href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unstable</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TreeMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>new</span>();
@@ -305,8 +304,6 @@ map, with the values being mutable.</p>
 <span class='ident'>a</span>.<span class='ident'>clear</span>();
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>is_empty</span>());
 </pre>
-</div><h4 id='method.find' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `get`'></a><code>fn <a href='#method.find' class='fnname'>find</a>(&amp;self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt;</code></h4>
-<div class='docblock'><p>Deprecated: Renamed to <code>get</code>.</p>
 </div><h4 id='method.get' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get' class='fnname'>get</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(&amp;self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
 <div class='docblock'><p>Returns a reference to the value corresponding to the key.</p>
 
@@ -337,8 +334,6 @@ on the borrowed form <em>must</em> match the ordering on the key type.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='boolval'>true</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='boolval'>false</span>);
 </pre>
-</div><h4 id='method.find_mut' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `get_mut`'></a><code>fn <a href='#method.find_mut' class='fnname'>find_mut</a>(&amp;mut self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut V&gt;</code></h4>
-<div class='docblock'><p>Deprecated: Renamed to <code>get_mut</code>.</p>
 </div><h4 id='method.get_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(&amp;mut self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
 <div class='docblock'><p>Returns a mutable reference to the value corresponding to the key.</p>
 
@@ -357,8 +352,6 @@ on the borrowed form <em>must</em> match the ordering on the key type.</p>
 }
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>1</span>], <span class='string'>&quot;b&quot;</span>);
 </pre>
-</div><h4 id='method.swap' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `insert`'></a><code>fn <a href='#method.swap' class='fnname'>swap</a>(&amp;mut self, key: K, value: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
-<div class='docblock'><p>Deprecated: Renamed to <code>insert</code>.</p>
 </div><h4 id='method.insert' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, key: K, value: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
 <div class='docblock'><p>Inserts a key-value pair from the map. If the key already had a value
 present in the map, that value is returned. Otherwise, <code>None</code> is returned.</p>
@@ -375,8 +368,6 @@ present in the map, that value is returned. Otherwise, <code>None</code> is retu
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37</span>, <span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>37</span>], <span class='string'>&quot;c&quot;</span>);
 </pre>
-</div><h4 id='method.pop' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `remove`'></a><code>fn <a href='#method.pop' class='fnname'>pop</a>(&amp;mut self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
-<div class='docblock'><p>Deprecated: Renamed to <code>remove</code>.</p>
 </div><h4 id='method.remove' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(&amp;mut self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
 <div class='docblock'><p>Removes a key from the map, returning the value at the key if the key
 was previously in the map.</p>
@@ -704,8 +695,6 @@ map, with the values being mutable.</p>
 <span class='ident'>a</span>.<span class='ident'>clear</span>();
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>is_empty</span>());
 </pre>
-</div><h4 id='method.find' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `get`'></a><code>fn <a href='#method.find' class='fnname'>find</a>(&amp;self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt;</code></h4>
-<div class='docblock'><p>Deprecated: Renamed to <code>get</code>.</p>
 </div><h4 id='method.get' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get' class='fnname'>get</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(&amp;self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
 <div class='docblock'><p>Returns a reference to the value corresponding to the key.</p>
 
@@ -736,8 +725,6 @@ on the borrowed form <em>must</em> match the ordering on the key type.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='boolval'>true</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='boolval'>false</span>);
 </pre>
-</div><h4 id='method.find_mut' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `get_mut`'></a><code>fn <a href='#method.find_mut' class='fnname'>find_mut</a>(&amp;mut self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut V&gt;</code></h4>
-<div class='docblock'><p>Deprecated: Renamed to <code>get_mut</code>.</p>
 </div><h4 id='method.get_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(&amp;mut self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
 <div class='docblock'><p>Returns a mutable reference to the value corresponding to the key.</p>
 
@@ -756,8 +743,6 @@ on the borrowed form <em>must</em> match the ordering on the key type.</p>
 }
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>1</span>], <span class='string'>&quot;b&quot;</span>);
 </pre>
-</div><h4 id='method.swap' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `insert`'></a><code>fn <a href='#method.swap' class='fnname'>swap</a>(&amp;mut self, key: K, value: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
-<div class='docblock'><p>Deprecated: Renamed to <code>insert</code>.</p>
 </div><h4 id='method.insert' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, key: K, value: V) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
 <div class='docblock'><p>Inserts a key-value pair from the map. If the key already had a value
 present in the map, that value is returned. Otherwise, <code>None</code> is returned.</p>
@@ -774,8 +759,6 @@ present in the map, that value is returned. Otherwise, <code>None</code> is retu
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37</span>, <span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>37</span>], <span class='string'>&quot;c&quot;</span>);
 </pre>
-</div><h4 id='method.pop' class='method'><a class='stability Deprecated' title='Deprecated: Renamed to `remove`'></a><code>fn <a href='#method.pop' class='fnname'>pop</a>(&amp;mut self, key: &amp;K) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt;</code></h4>
-<div class='docblock'><p>Deprecated: Renamed to <code>remove</code>.</p>
 </div><h4 id='method.remove' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>&lt;Q: ?<a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(&amp;mut self, key: &amp;Q) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;V&gt; <span class='where'>where C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;Q, K&gt;</span></code></h4>
 <div class='docblock'><p>Removes a key from the map, returning the value at the key if the key
 was previously in the map.</p>
