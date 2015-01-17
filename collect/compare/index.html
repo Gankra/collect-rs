@@ -57,7 +57,7 @@ data structures.</p>
 
 <p>The most basic comparator is <a href="struct.Natural.html"><code>Natural</code></a>, which simply delegates
 to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/trait.Ord.html"><code>Ord</code></a>:</p>
-<pre class='rust '>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
@@ -71,7 +71,7 @@ to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/tr
 </pre>
 
 <p>There are convenience methods for checking each of the six relations:</p>
-<pre class='rust '>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1</span>;
@@ -90,7 +90,7 @@ to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/tr
 consume a comparator to produce a new one with different behavior, similar to
 <a href="http://doc.rust-lang.org/std/iter/trait.IteratorExt.html">iterator adaptors</a>. For
 example, all comparators can be <a href="trait.CompareExt.html#method.rev">reversed</a>:</p>
-<pre class='rust '>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::<span class='ident'>Greater</span>;
 
@@ -101,7 +101,7 @@ example, all comparators can be <a href="trait.CompareExt.html#method.rev">rever
 <p>It is possible to implement a comparator that is not based on the natural ordering of
 a type by using a closure of type <code>Fn(&amp;Lhs, &amp;Rhs) -&gt; Ordering</code>. For example, vectors
 can be compared by their length instead of their contents:</p>
-<pre class='rust '>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Greater</span>};
 
@@ -118,7 +118,7 @@ can be compared by their length instead of their contents:</p>
 <p>Comparators can be combined <a href="https://en.wikipedia.org/wiki/Lexicographical_order">lexicographically</a> in order to compare values
 first by one key, <a href="trait.CompareExt.html#method.then">then</a>, if the first keys were
 equal, by another:</p>
-<pre class='rust '>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
@@ -147,7 +147,7 @@ equal, by another:</p>
 <p>It is often repetitive to compare two values of the same type by the same key, so the
 <a href="struct.Extract.html">key-extraction logic</a> can be factored out, simplifying the
 previous example:</p>
-<pre class='rust '>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Extract</span>, <span class='ident'>Natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Greater</span>};
 

@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>lru_cache</a>::<wbr><a class='struct' href=''>LruCache</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-24691' href='../../src/collect/lru_cache.rs.html#51-54'>[src]</a></span></h1>
+        </span><a id='src-25056' href='../../src/collect/lru_cache.rs.html#51-54'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct LruCache&lt;K, V&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>An LRU Cache.</p>
@@ -52,7 +52,7 @@
 <div class='docblock'><p>Create an LRU Cache that holds at most <code>capacity</code> items.</p>
 
 <h1 id="example" class='section-header'><a
-                           href="#example">Example</a></h1><pre class='rust '>
+                           href="#example">Example</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LruCache</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>i32</span>, <span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>10</span>);
 </pre>
@@ -63,7 +63,7 @@
 returned.</p>
 
 <h1 id="example" class='section-header'><a
-                           href="#example">Example</a></h1><pre class='rust '>
+                           href="#example">Example</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LruCache</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
 
@@ -76,7 +76,7 @@ returned.</p>
 <div class='docblock'><p>Return a value corresponding to the key in the cache.</p>
 
 <h1 id="example" class='section-header'><a
-                           href="#example">Example</a></h1><pre class='rust '>
+                           href="#example">Example</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LruCache</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
 
@@ -94,7 +94,7 @@ returned.</p>
 <div class='docblock'><p>Remove and return a value corresponding to the key from the cache.</p>
 
 <h1 id="example" class='section-header'><a
-                           href="#example">Example</a></h1><pre class='rust '>
+                           href="#example">Example</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LruCache</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
 
@@ -109,7 +109,7 @@ returned.</p>
 <div class='docblock'><p>Return the maximum number of key-value pairs the cache can hold.</p>
 
 <h1 id="example" class='section-header'><a
-                           href="#example">Example</a></h1><pre class='rust '>
+                           href="#example">Example</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LruCache</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>i32</span>, <span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cache</span>.<span class='ident'>capacity</span>(), <span class='number'>2</span>);
@@ -121,7 +121,7 @@ returned.</p>
 least-recently-used key-value pairs if necessary.</p>
 
 <h1 id="example" class='section-header'><a
-                           href="#example">Example</a></h1><pre class='rust '>
+                           href="#example">Example</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>LruCache</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>2</span>);
 

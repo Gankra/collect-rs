@@ -62,7 +62,7 @@ for very small numbers. For example, 1 and 2 are identical in all but their leas
 differentiate them.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -100,7 +100,7 @@ differentiate them.</p>
 <div class='docblock'><p>Creates an empty <code>TrieMap</code>.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 </pre>
@@ -109,7 +109,7 @@ differentiate them.</p>
 Returns <code>true</code> if <code>f</code> returns <code>true</code> for all elements.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>2</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>3</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -132,7 +132,7 @@ The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, ordered by keys.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>3</span>, <span class='string'>&quot;c&quot;</span>), (<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>2</span>, <span class='string'>&quot;b&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -145,7 +145,7 @@ The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
 ability to mutate the values.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>1</span>, <span class='number'>2</span>), (<span class='number'>2</span>, <span class='number'>4</span>), (<span class='number'>3</span>, <span class='number'>6</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -161,7 +161,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Return the number of elements in the map.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -173,7 +173,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Return true if the map contains no elements.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -185,7 +185,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Clears the map, removing all values.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -199,7 +199,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Returns a reference to the value corresponding to the key.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -211,7 +211,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Returns true if the map contains a value for the specified key.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -225,7 +225,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Returns a mutable reference to the value corresponding to the key.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -243,7 +243,7 @@ ability to mutate the values.</p>
 present in the map, that value is returned. Otherwise, <code>None</code> is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -261,7 +261,7 @@ present in the map, that value is returned. Otherwise, <code>None</code> is retu
 was previously in the map.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -274,7 +274,7 @@ was previously in the map.</p>
 If all keys in the map are less than <code>key</code> an empty iterator is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>2</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -287,7 +287,7 @@ If all keys in the map are less than <code>key</code> an empty iterator is retur
 If all keys in the map are not greater than <code>key</code> an empty iterator is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>2</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -300,7 +300,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 If all keys in the map are less than <code>key</code> an empty iterator is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>2</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -321,7 +321,7 @@ If all keys in the map are less than <code>key</code> an empty iterator is retur
 If all keys in the map are not greater than <code>key</code> an empty iterator is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>2</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -343,7 +343,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 <div class='docblock'><p>Creates an empty <code>TrieMap</code>.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
 </pre>
@@ -352,7 +352,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 Returns <code>true</code> if <code>f</code> returns <code>true</code> for all elements.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>2</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>3</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -375,7 +375,7 @@ The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, ordered by keys.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>3</span>, <span class='string'>&quot;c&quot;</span>), (<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>2</span>, <span class='string'>&quot;b&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -388,7 +388,7 @@ The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
 ability to mutate the values.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>1</span>, <span class='number'>2</span>), (<span class='number'>2</span>, <span class='number'>4</span>), (<span class='number'>3</span>, <span class='number'>6</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -404,7 +404,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Return the number of elements in the map.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -416,7 +416,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Return true if the map contains no elements.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -428,7 +428,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Clears the map, removing all values.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -442,7 +442,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Returns a reference to the value corresponding to the key.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -454,7 +454,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Returns true if the map contains a value for the specified key.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -468,7 +468,7 @@ ability to mutate the values.</p>
 <div class='docblock'><p>Returns a mutable reference to the value corresponding to the key.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -486,7 +486,7 @@ ability to mutate the values.</p>
 present in the map, that value is returned. Otherwise, <code>None</code> is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -504,7 +504,7 @@ present in the map, that value is returned. Otherwise, <code>None</code> is retu
 was previously in the map.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>TrieMap</span>::<span class='ident'>new</span>();
@@ -517,7 +517,7 @@ was previously in the map.</p>
 If all keys in the map are less than <code>key</code> an empty iterator is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>2</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -530,7 +530,7 @@ If all keys in the map are less than <code>key</code> an empty iterator is retur
 If all keys in the map are not greater than <code>key</code> an empty iterator is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>2</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -543,7 +543,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 If all keys in the map are less than <code>key</code> an empty iterator is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>2</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
@@ -564,7 +564,7 @@ If all keys in the map are less than <code>key</code> an empty iterator is retur
 If all keys in the map are not greater than <code>key</code> an empty iterator is returned.</p>
 
 <h1 id="examples" class='section-header'><a
-                           href="#examples">Examples</a></h1><pre class='rust '>
+                           href="#examples">Examples</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>TrieMap</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> [(<span class='number'>2</span>, <span class='string'>&quot;a&quot;</span>), (<span class='number'>4</span>, <span class='string'>&quot;b&quot;</span>), (<span class='number'>6</span>, <span class='string'>&quot;c&quot;</span>)].<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>).<span class='ident'>collect</span>();
 
