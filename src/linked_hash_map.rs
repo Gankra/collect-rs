@@ -20,9 +20,9 @@
 //! map.insert(2, 20);
 //! map.insert(1, 10);
 //! map.insert(3, 30);
-//! assert_eq!(*map.get(&1).unwrap(), 10);
-//! assert_eq!(*map.get(&2).unwrap(), 20);
-//! assert_eq!(*map.get(&3).unwrap(), 30);
+//! assert_eq!(map[1], 10);
+//! assert_eq!(map[2], 20);
+//! assert_eq!(map[3], 30);
 //!
 //! let items: Vec<(i32, i32)> = map.iter().map(|t| (*t.0, *t.1)).collect();
 //! assert_eq!(vec![(2, 20), (1, 10), (3, 30)], items);
@@ -37,6 +37,7 @@ use std::iter::{Iterator, Extend};
 use std::iter;
 use std::marker;
 use std::mem;
+use std::ops::{Index, IndexMut};
 use std::ptr;
 
 // FIXME(conventions): implement indexing?
@@ -106,8 +107,8 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     ///
     /// map.insert(1, "a");
     /// map.insert(2, "b");
-    /// assert_eq!(map.get(&1), Some(&"a"));
-    /// assert_eq!(map.get(&2), Some(&"b"));
+    /// assert_eq!(map[1], "a");
+    /// assert_eq!(map[2], "b");
     /// ```
     pub fn insert(&mut self, k: K, v: V) -> Option<V> {
         let (node_ptr, node_opt, old_val) = match self.map.get_mut(&KeyRef{k: &k}) {
@@ -155,6 +156,24 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// ```
     pub fn get(&self, k: &K) -> Option<&V> {
         self.map.get(&KeyRef{k: k}).map(|e| &e.value)
+    }
+
+    /// Returns the mutable reference corresponding to the key in the map.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::LinkedHashMap;
+    /// let mut map = LinkedHashMap::new();
+    ///
+    /// map.insert(1, "a");
+    /// map.insert(2, "b");
+    ///
+    /// *map.get_mut(&1).unwrap() = "c";
+    /// assert_eq!(map.get(&1), Some(&"c"));
+    /// ```
+    pub fn get_mut(&mut self, k: &K) -> Option<&mut V> {
+        self.map.get_mut(&KeyRef{k: k}).map(|e| &mut e.value)
     }
 
     /// Returns the value corresponding to the key in the map.
@@ -346,6 +365,26 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     }
 }
 
+impl<K, V> Index<K> for LinkedHashMap<K, V>
+    where K: Hash<HmHasher> + Eq
+{
+    type Output = V;
+
+    fn index(&self, index: &K) -> &V {
+        self.get(index).expect("no entry found for key")
+    }
+}
+
+impl<K, V> IndexMut<K> for LinkedHashMap<K, V>
+    where K: Hash<HmHasher> + Eq
+{
+    type Output = V;
+
+    fn index_mut(&mut self, index: &K) -> &mut V {
+        self.get_mut(index).expect("no entry found for key")
+    }
+}
+
 impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     #[inline]
     fn detach(&mut self, node: *mut LinkedHashMapEntry<K, V>) {
@@ -506,6 +545,16 @@ mod tests {
         assert_opt_eq(map.get(&1), 10);
         assert_opt_eq(map.get(&2), 20);
         assert_eq!(map.len(), 2);
+    }
+
+    #[test]
+    fn test_index() {
+        let mut map = LinkedHashMap::new();
+        map.insert(1, 10);
+        map.insert(2, 20);
+        assert_eq!(10, map[1]);
+        map[2] = 22;
+        assert_eq!(22, map[2]);
     }
 
     #[test]
