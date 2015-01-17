@@ -177,7 +177,7 @@ impl<K, V, C> Default for TreeMap<K, V, C> where C: Compare<K> + Default {
 impl<K, V, C, Q: ?Sized> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     type Output = V;
     #[inline]
-    fn index<'a>(&'a self, i: &Q) -> &'a V {
+    fn index(&self, i: &Q) -> &V {
         self.get(i).expect("no entry found for key")
     }
 }
@@ -185,7 +185,7 @@ impl<K, V, C, Q: ?Sized> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> 
 impl<K, V, C, Q: ?Sized> ops::IndexMut<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     type Output = V;
     #[inline]
-    fn index_mut<'a>(&'a mut self, i: &Q) -> &'a mut V {
+    fn index_mut(&mut self, i: &Q) -> &mut V {
         self.get_mut(i).expect("no entry found for key")
     }
 }
@@ -278,7 +278,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// }
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> Iter<'a, K, V> {
+    pub fn iter(&self) -> Iter<K, V> {
+        debug_assert!(self.is_valid());
         Iter {
             stack: vec!(),
             node: deref(&self.root),
@@ -303,7 +304,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     ///     println!("{}: {}", key, value);
     /// }
     /// ```
-    pub fn rev_iter<'a>(&'a self) -> RevIter<'a, K, V> {
+    pub fn rev_iter(&self) -> RevIter<K, V> {
         RevIter{iter: self.iter()}
     }
 
@@ -330,7 +331,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&"c"), Some(&3));
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, K, V> {
+    pub fn iter_mut(&mut self) -> IterMut<K, V> {
+        debug_assert!(self.is_valid());
         IterMut {
             stack: vec!(),
             node: deref_mut(&mut self.root),
@@ -361,7 +363,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&"b"), Some(&12));
     /// assert_eq!(map.get(&"c"), Some(&13));
     /// ```
-    pub fn rev_iter_mut<'a>(&'a mut self) -> RevIterMut<'a, K, V> {
+    pub fn rev_iter_mut(&mut self) -> RevIterMut<K, V> {
         RevIterMut{iter: self.iter_mut()}
     }
 
@@ -382,6 +384,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn into_iter(self) -> IntoIter<K, V> {
+        debug_assert!(self.is_valid());
         let TreeMap { root, length, .. } = self;
         let stk = match root {
             None => vec!(),
@@ -468,6 +471,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
             tree_find_with(node, |k| cmp.compare(key, k))
         }
 
+        debug_assert!(self.is_valid());
         f(&self.root, &self.cmp, key)
     }
 
@@ -523,6 +527,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
             tree_find_with_mut(node, |k| cmp.compare(key, k))
         }
 
+        debug_assert!(self.is_valid());
         f(&mut self.root, &self.cmp, key)
     }
 
@@ -544,8 +549,10 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn insert(&mut self, key: K, value: V) -> Option<V> {
+        debug_assert!(self.is_valid());
         let ret = insert(&mut self.root, key, value, &self.cmp);
         if ret.is_none() { self.length += 1 }
+        debug_assert!(self.is_valid());
         ret
     }
 
@@ -569,8 +576,10 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     pub fn remove<Q: ?Sized>(&mut self, key: &Q) -> Option<V>
         where C: Compare<Q, K>
     {
+        debug_assert!(self.is_valid());
         let ret = remove(&mut self.root, key, &self.cmp);
         if ret.is_some() { self.length -= 1 }
+        debug_assert!(self.is_valid());
         ret
     }
 
@@ -625,10 +634,60 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[inline]
     #[experimental = "likely to be renamed, may be removed"]
-    pub fn find_with_mut<'a, F>(&'a mut self, f: F) -> Option<&'a mut V> where
+    pub fn find_with_mut<F>(&mut self, f: F) -> Option<&mut V> where
         F: FnMut(&K) -> Ordering
     {
         tree_find_with_mut(&mut self.root, f)
+    }
+
+    fn check_left(&self, node: &Option<Box<TreeNode<K, V>>>,
+                  parent: &Box<TreeNode<K, V>>, len: &mut usize) -> bool {
+        if let Some(ref node) = *node {
+            *len += 1;
+            self.cmp.compares_lt(&node.key, &parent.key) && // 2a
+            node.level == parent.level - 1 && // 2c
+            self.check_left(&node.left, node, len) &&
+            self.check_right(&node.right, node, false, len)
+        } else {
+            parent.level == 1 // 2f
+        }
+    }
+
+    fn check_right(&self, node: &Option<Box<TreeNode<K, V>>>,
+                   parent: &Box<TreeNode<K, V>>, parent_red: bool,
+                   len: &mut usize) -> bool {
+        if let Some(ref node) = *node {
+            *len += 1;
+            let red = node.level == parent.level;
+            self.cmp.compares_gt(&node.key, &parent.key) && // 2b
+            (!parent_red || !red) && // 2d
+            (red || node.level == parent.level - 1) && // 2e
+            self.check_left(&node.left, node, len) &&
+            self.check_right(&node.right, node, red, len)
+        } else {
+            parent.level == 1 // 2f
+        }
+    }
+
+    /// Checks if the map is valid.
+    ///
+    /// The map is valid if:
+    ///
+    /// 1. The root is `None` and the length is zero, OR
+    /// 2a. Each node's key is greater than the key of its left child, AND
+    /// 2b. Each node's key is less than the key of its right child, AND
+    /// 2c. Each node that is a left child is black, AND
+    /// 2d. Each red node has no red children, AND
+    /// 2e. Each node that is a right child is red or black, AND
+    /// 2f. Each node that has no children has a level of 1, AND
+    /// 2g. The length of the map is equal to the number of nodes
+    fn is_valid(&self) -> bool {
+        self.root.as_ref().map_or(self.length == 0, |node| { // 1
+            let mut len = 1;
+            self.check_left(&node.left, node, &mut len) &&
+            self.check_right(&node.right, node, false, &mut len) &&
+            len == self.length // 2g
+        })
     }
 }
 
@@ -669,7 +728,8 @@ macro_rules! bound_setup {
 impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// Gets a lazy iterator that should be initialized using
     /// `traverse_left`/`traverse_right`/`traverse_complete`.
-    fn iter_for_traversal<'a>(&'a self) -> (Iter<'a, K, V>, &'a C) {
+    fn iter_for_traversal(&self) -> (Iter<K, V>, &C) {
+        debug_assert!(self.is_valid());
         (Iter {
             stack: vec!(),
             node: deref(&self.root),
@@ -696,7 +756,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.lower_bound(&5).next(), Some((&6, &"c")));
     /// assert_eq!(map.lower_bound(&10).next(), None);
     /// ```
-    pub fn lower_bound<'a>(&'a self, k: &K) -> Iter<'a, K, V> {
+    pub fn lower_bound(&self, k: &K) -> Iter<K, V> {
         bound_setup!(self.iter_for_traversal(), k, true)
     }
 
@@ -718,13 +778,14 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.upper_bound(&5).next(), Some((&6, &"c")));
     /// assert_eq!(map.upper_bound(&10).next(), None);
     /// ```
-    pub fn upper_bound<'a>(&'a self, k: &K) -> Iter<'a, K, V> {
+    pub fn upper_bound(&self, k: &K) -> Iter<K, V> {
         bound_setup!(self.iter_for_traversal(), k, false)
     }
 
     /// Gets a lazy iterator that should be initialized using
     /// `traverse_left`/`traverse_right`/`traverse_complete`.
-    fn iter_mut_for_traversal<'a>(&'a mut self) -> (IterMut<'a, K, V>, &'a C) {
+    fn iter_mut_for_traversal(&mut self) -> (IterMut<K, V>, &C) {
+        debug_assert!(self.is_valid());
         (IterMut {
             stack: vec!(),
             node: deref_mut(&mut self.root),
@@ -763,7 +824,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// assert_eq!(map.get(&8), Some(&"changed"));
     /// ```
-    pub fn lower_bound_mut<'a>(&'a mut self, k: &K) -> IterMut<'a, K, V> {
+    pub fn lower_bound_mut(&mut self, k: &K) -> IterMut<K, V> {
         bound_setup!(self.iter_mut_for_traversal(), k, true)
     }
 
@@ -797,7 +858,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// assert_eq!(map.get(&8), Some(&"changed"));
     /// ```
-    pub fn upper_bound_mut<'a>(&'a mut self, k: &K) -> IterMut<'a, K, V> {
+    pub fn upper_bound_mut(&mut self, k: &K) -> IterMut<K, V> {
         bound_setup!(self.iter_mut_for_traversal(), k, false)
     }
 }
@@ -999,7 +1060,7 @@ define_iterator! {
     addr_mut = mut
 }
 
-fn deref<'a, K, V>(node: &'a Option<Box<TreeNode<K, V>>>) -> *const TreeNode<K, V> {
+fn deref<K, V>(node: &Option<Box<TreeNode<K, V>>>) -> *const TreeNode<K, V> {
     match *node {
         Some(ref n) => {
             let n: &TreeNode<K, V> = &**n;
@@ -1129,13 +1190,13 @@ fn split<K, V>(node: &mut Box<TreeNode<K, V>>) {
 // Next 2 functions have the same convention: comparator gets
 // at input current key and returns search_key cmp cur_key
 // (i.e. search_key.cmp(&cur_key))
-fn tree_find_with<'r, K, V, F>(
-    node: &'r Option<Box<TreeNode<K, V>>>,
+fn tree_find_with<K, V, F>(
+    node: &Option<Box<TreeNode<K, V>>>,
     mut f: F,
-) -> Option<&'r V> where
+) -> Option<&V> where
     F: FnMut(&K) -> Ordering,
 {
-    let mut current: &'r Option<Box<TreeNode<K, V>>> = node;
+    let mut current = node;
     loop {
         match *current {
             Some(ref r) => {
@@ -1151,10 +1212,10 @@ fn tree_find_with<'r, K, V, F>(
 }
 
 // See comments above tree_find_with
-fn tree_find_with_mut<'r, K, V, F>(
-    node: &'r mut Option<Box<TreeNode<K, V>>>,
+fn tree_find_with_mut<K, V, F>(
+    node: &mut Option<Box<TreeNode<K, V>>>,
     mut f: F,
-) -> Option<&'r mut V> where
+) -> Option<&mut V> where
     F: FnMut(&K) -> Ordering,
 {
 
@@ -1321,7 +1382,7 @@ mod test_treemap {
     use std::rand::Rng;
     use std::rand;
 
-    use super::{TreeMap, TreeNode};
+    use super::TreeMap;
 
     #[test]
     fn find_empty() {
@@ -1449,46 +1510,6 @@ mod test_treemap {
         }
     }
 
-    fn check_left<K: Ord, V>(node: &Option<Box<TreeNode<K, V>>>,
-                                  parent: &Box<TreeNode<K, V>>) {
-        match *node {
-          Some(ref r) => {
-            assert_eq!(r.key.cmp(&parent.key), ::std::cmp::Ordering::Less);
-            assert!(r.level == parent.level - 1); // left is black
-            check_left(&r.left, r);
-            check_right(&r.right, r, false);
-          }
-          None => assert!(parent.level == 1) // parent is leaf
-        }
-    }
-
-    fn check_right<K: Ord, V>(node: &Option<Box<TreeNode<K, V>>>,
-                                   parent: &Box<TreeNode<K, V>>,
-                                   parent_red: bool) {
-        match *node {
-          Some(ref r) => {
-            assert_eq!(r.key.cmp(&parent.key), ::std::cmp::Ordering::Greater);
-            let red = r.level == parent.level;
-            if parent_red { assert!(!red) } // no dual horizontal links
-            // Right red or black
-            assert!(red || r.level == parent.level - 1);
-            check_left(&r.left, r);
-            check_right(&r.right, r, red);
-          }
-          None => assert!(parent.level == 1) // parent is leaf
-        }
-    }
-
-    fn check_structure<K: Ord, V>(map: &TreeMap<K, V>) {
-        match map.root {
-          Some(ref r) => {
-            check_left(&r.left, r);
-            check_right(&r.right, r, false);
-          }
-          None => ()
-        }
-    }
-
     #[test]
     fn test_rand_int() {
         let mut map: TreeMap<i32,i32> = TreeMap::new();
@@ -1507,7 +1528,6 @@ mod test_treemap {
                 if !ctrl.iter().any(|x| x == &(k, v)) {
                     assert!(map.insert(k, v).is_none());
                     ctrl.push((k, v));
-                    check_structure(&map);
                     check_equal(ctrl.as_slice(), &map);
                 }
             }
@@ -1516,7 +1536,6 @@ mod test_treemap {
                 let r = rng.gen_range(0, ctrl.len());
                 let (key, _) = ctrl.remove(r);
                 assert!(map.remove(&key).is_some());
-                check_structure(&map);
                 check_equal(ctrl.as_slice(), &map);
             }
         }
