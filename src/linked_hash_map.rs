@@ -20,9 +20,9 @@
 //! map.insert(2, 20);
 //! map.insert(1, 10);
 //! map.insert(3, 30);
-//! assert_eq!(*map.get(&1).unwrap(), 10);
-//! assert_eq!(*map.get(&2).unwrap(), 20);
-//! assert_eq!(*map.get(&3).unwrap(), 30);
+//! assert_eq!(map[1], 10);
+//! assert_eq!(map[2], 20);
+//! assert_eq!(map[3], 30);
 //!
 //! let items: Vec<(i32, i32)> = map.iter().map(|t| (*t.0, *t.1)).collect();
 //! assert_eq!(vec![(2, 20), (1, 10), (3, 30)], items);
@@ -37,6 +37,7 @@ use std::iter::{Iterator, Extend};
 use std::iter;
 use std::marker;
 use std::mem;
+use std::ops::{Index, IndexMut};
 use std::ptr;
 
 // FIXME(conventions): implement indexing?
@@ -106,8 +107,8 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     ///
     /// map.insert(1, "a");
     /// map.insert(2, "b");
-    /// assert_eq!(map.get(&1), Some(&"a"));
-    /// assert_eq!(map.get(&2), Some(&"b"));
+    /// assert_eq!(map[1], "a");
+    /// assert_eq!(map[2], "b");
     /// ```
     pub fn insert(&mut self, k: K, v: V) -> Option<V> {
         let (node_ptr, node_opt, old_val) = match self.map.get_mut(&KeyRef{k: &k}) {
@@ -155,6 +156,24 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
     /// ```
     pub fn get(&self, k: &K) -> Option<&V> {
         self.map.get(&KeyRef{k: k}).map(|e| &e.value)
+    }
+
+    /// Returns the mutable reference corresponding to the key in the map.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::LinkedHashMap;
+    /// let mut map = LinkedHashMap::new();
+    ///
+    /// map.insert(1, "a");
+    /// map.insert(2, "b");
+    ///
+    /// *map.get_mut(&1).unwrap() = "c";
+    /// assert_eq!(map.get(&1), Some(&"c"));
+    /// ```
+    pub fn get_mut(&mut self, k: &K) -> Option<&mut V> {
+        self.map.get_mut(&KeyRef{k: k}).map(|e| &mut e.value)
     }
 
     /// Returns the value corresponding to the key in the map.
@@ -297,6 +316,35 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
         }
     }
 
+    /// A double-ended iterator visiting all key-value pairs in order of insertion.
+    /// Iterator element type is `(&'a K, &'a mut V)`
+    /// # Examples
+    /// ```rust
+    /// use collect::LinkedHashMap;
+    ///
+    /// let mut map = LinkedHashMap::new();
+    /// map.insert("a", 10);
+    /// map.insert("c", 30);
+    /// map.insert("b", 20);
+    ///
+    /// {
+    ///     let mut iter = map.iter_mut();
+    ///     let mut entry = iter.next().unwrap();
+    ///     assert_eq!(&"a", entry.0);
+    ///     *entry.1 = 17;
+    /// }
+    ///
+    /// assert_eq!(&17, map.get(&"a").unwrap());
+    /// ```
+    pub fn iter_mut(&mut self) -> IterMut<K, V> {
+        IterMut {
+            head: unsafe { (*self.head).prev },
+            tail: self.head,
+            remaining: self.len(),
+            marker: marker::ContravariantLifetime
+        }
+    }
+
     /// A double-ended iterator visiting all key in order of insertion.
     ///
     /// # Examples
@@ -343,6 +391,26 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
         let second: fn((&'a K, &'a V)) -> &'a V = second; // coerce to fn ptr
 
         Values { inner: self.iter().map(second) }
+    }
+}
+
+impl<K, V> Index<K> for LinkedHashMap<K, V>
+    where K: Hash<HmHasher> + Eq
+{
+    type Output = V;
+
+    fn index(&self, index: &K) -> &V {
+        self.get(index).expect("no entry found for key")
+    }
+}
+
+impl<K, V> IndexMut<K> for LinkedHashMap<K, V>
+    where K: Hash<HmHasher> + Eq
+{
+    type Output = V;
+
+    fn index_mut(&mut self, index: &K) -> &mut V {
+        self.get_mut(index).expect("no entry found for key")
     }
 }
 
@@ -414,6 +482,13 @@ pub struct Iter<'a, K: 'a, V: 'a> {
     marker: marker::ContravariantLifetime<'a>,
 }
 
+pub struct IterMut<'a, K: 'a, V: 'a> {
+    head: *mut LinkedHashMapEntry<K, V>,
+    tail: *mut LinkedHashMapEntry<K, V>,
+    remaining: usize,
+    marker: marker::ContravariantLifetime<'a>,
+}
+
 impl<'a, K, V> Iterator for Iter<'a, K, V> {
     type Item = (&'a K, &'a V);
 
@@ -424,6 +499,27 @@ impl<'a, K, V> Iterator for Iter<'a, K, V> {
             self.remaining -= 1;
             unsafe {
                 let r = Some((&(*self.head).key, &(*self.head).value));
+                self.head = (*self.head).prev;
+                r
+            }
+        }
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (self.remaining, Some(self.remaining))
+    }
+}
+
+impl<'a, K, V> Iterator for IterMut<'a, K, V> {
+    type Item = (&'a K, &'a mut V);
+
+    fn next(&mut self) -> Option<(&'a K, &'a mut V)> {
+        if self.head == self.tail {
+            None
+        } else {
+            self.remaining -= 1;
+            unsafe {
+                let r = Some((&(*self.head).key, &mut (*self.head).value));
                 self.head = (*self.head).prev;
                 r
             }
@@ -450,7 +546,24 @@ impl<'a, K, V> DoubleEndedIterator for Iter<'a, K, V> {
     }
 }
 
+impl<'a, K, V> DoubleEndedIterator for IterMut<'a, K, V> {
+    fn next_back(&mut self) -> Option<(&'a K, &'a mut V)> {
+        if self.head == self.tail {
+            None
+        } else {
+            self.remaining -= 1;
+            unsafe {
+                self.tail = (*self.tail).next;
+                let r = Some((&(*self.tail).key, &mut (*self.tail).value));
+                r
+            }
+        }
+    }
+}
+
 impl<'a, K, V> ExactSizeIterator for Iter<'a, K, V> {}
+
+impl<'a, K, V> ExactSizeIterator for IterMut<'a, K, V> {}
 
 
 pub struct Keys<'a, K: 'a, V: 'a> {
@@ -506,6 +619,16 @@ mod tests {
         assert_opt_eq(map.get(&1), 10);
         assert_opt_eq(map.get(&2), 20);
         assert_eq!(map.len(), 2);
+    }
+
+    #[test]
+    fn test_index() {
+        let mut map = LinkedHashMap::new();
+        map.insert(1, 10);
+        map.insert(2, 20);
+        assert_eq!(10, map[1]);
+        map[2] = 22;
+        assert_eq!(22, map[2]);
     }
 
     #[test]
@@ -600,5 +723,34 @@ mod tests {
         assert_eq!((&"b", &20), mixed_iter.next().unwrap());
         assert_eq!(None, mixed_iter.next());
         assert_eq!(None, mixed_iter.next_back());
+    }
+
+    #[test]
+    fn test_iter_mut() {
+        let mut map = LinkedHashMap::new();
+        map.insert("a", 10);
+        map.insert("c", 30);
+        map.insert("b", 20);
+
+        {
+            let mut iter = map.iter_mut();
+            let entry = iter.next().unwrap();
+            assert_eq!(&"a", entry.0);
+            *entry.1 = 17;
+
+            // reverse iterator
+            let mut iter = iter.rev();
+            let entry = iter.next().unwrap();
+            assert_eq!(&"b", entry.0);
+            *entry.1 = 23;
+
+            let entry = iter.next().unwrap();
+            assert_eq!(&"c", entry.0);
+            assert_eq!(None, iter.next());
+            assert_eq!(None, iter.next());
+        }
+
+        assert_eq!(17, map["a"]);
+        assert_eq!(23, map["b"]);
     }
 }
