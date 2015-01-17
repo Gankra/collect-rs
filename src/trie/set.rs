@@ -17,7 +17,6 @@ use std::default::Default;
 use std::fmt;
 use std::fmt::Show;
 use std::iter::{self, Peekable};
-use std::hash::Hash;
 use std::ops;
 
 use trie_map::{TrieMap, self};

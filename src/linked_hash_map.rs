@@ -40,8 +40,6 @@ use std::mem;
 use std::ops::{Index, IndexMut};
 use std::ptr;
 
-// FIXME(conventions): implement indexing?
-
 struct KeyRef<K> { k: *const K }
 
 struct LinkedHashMapEntry<K, V> {

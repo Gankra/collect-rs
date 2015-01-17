@@ -314,12 +314,6 @@ impl<T> TrieMap<T> {
         self.length = 0;
     }
 
-    /// Deprecated: renamed to `get`.
-    #[deprecated = "renamed to `get`"]
-    pub fn find(&self, key: &usize) -> Option<&T> {
-        self.get(key)
-    }
-
     /// Returns a reference to the value corresponding to the key.
     ///
     /// # Examples
@@ -371,12 +365,6 @@ impl<T> TrieMap<T> {
         self.get(key).is_some()
     }
 
-    /// Deprecated: renamed to `get_mut`.
-    #[deprecated = "renamed to `get_mut`"]
-    pub fn find_mut(&mut self, key: &usize) -> Option<&mut T> {
-        self.get_mut(key)
-    }
-
     /// Returns a mutable reference to the value corresponding to the key.
     ///
     /// # Examples
@@ -396,12 +384,6 @@ impl<T> TrieMap<T> {
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn get_mut<'a>(&'a mut self, key: &usize) -> Option<&'a mut T> {
         find_mut(&mut self.root.children[chunk(*key, 0)], *key, 1)
-    }
-
-    /// Deprecated: Renamed to `insert`.
-    #[deprecated = "Renamed to `insert`"]
-    pub fn swap(&mut self, key: usize, value: T) -> Option<T> {
-        self.insert(key, value)
     }
 
     /// Inserts a key-value pair from the map. If the key already had a value
@@ -427,12 +409,6 @@ impl<T> TrieMap<T> {
                                     key, value, 1);
         if old_val.is_none() { self.length += 1 }
         old_val
-    }
-
-    /// Deprecated: Renamed to `remove`.
-    #[deprecated = "Renamed to `remove`"]
-    pub fn pop(&mut self, key: &usize) -> Option<T> {
-        self.remove(key)
     }
 
     /// Removes a key from the map, returning the value at the key if the key

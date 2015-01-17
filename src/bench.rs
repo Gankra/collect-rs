@@ -8,8 +8,6 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
- #![allow(dead_code)]
-
 use std::rand;
 use std::rand::Rng;
 use test::Bencher;
