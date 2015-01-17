@@ -70,12 +70,6 @@ impl<K: Hash<HmHasher> + Eq, V> LruCache<K, V> {
         }
     }
 
-    /// Deprecated: Replaced with `insert`.
-    #[deprecated = "Replaced with `insert`"]
-    pub fn put(&mut self, k: K, v: V) {
-        self.insert(k, v);
-    }
-
     /// Inserts a key-value pair into the cache. If the key already existed, the old value is
     /// returned.
     ///
@@ -120,12 +114,6 @@ impl<K: Hash<HmHasher> + Eq, V> LruCache<K, V> {
         self.map.get_refresh(k)
     }
 
-    /// Deprecated: Renamed to `remove`.
-    #[deprecated = "Renamed to `remove`"]
-    pub fn pop(&mut self, k: &K) -> Option<V> {
-        self.remove(k)
-    }
-
     /// Remove and return a value corresponding to the key from the cache.
     ///
     /// # Example
@@ -158,12 +146,6 @@ impl<K: Hash<HmHasher> + Eq, V> LruCache<K, V> {
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn capacity(&self) -> usize {
         self.max_size
-    }
-
-    /// Deprecated: Renamed to `set_capacity`.
-    #[deprecated = "Renamed to `set_capacity`"]
-    pub fn change_capacity(&mut self, capacity: usize) {
-        self.set_capacity(capacity)
     }
 
     /// Change the number of key-value pairs the cache can hold. Remove
