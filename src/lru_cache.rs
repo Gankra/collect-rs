@@ -42,9 +42,8 @@ use std::hash::Hash;
 use std::collections::hash_map::Hasher as HmHasher;
 use std::iter::{range, Iterator, Extend};
 
-use linked_hash_map::LinkedHashMap;
+use linked_hash_map::{self, LinkedHashMap};
 
-// FIXME(conventions): implement iterators?
 // FIXME(conventions): implement indexing?
 
 /// An LRU Cache.
@@ -204,6 +203,93 @@ impl<K: Hash<HmHasher> + Eq, V> LruCache<K, V> {
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn clear(&mut self) { self.map.clear(); }
 
+    /// A double-ended iterator visiting all key-value pairs in order of insertion.
+    /// Iterator element type is `(&'a K, &'a mut V)`
+    ///
+    /// # Examples
+    /// ```
+    /// use collect::LruCache;
+    ///
+    /// let mut cache = LruCache::new(3);
+    /// cache.insert("a", 10);
+    /// cache.insert("c", 30);
+    /// cache.insert("b", 20);
+    ///
+    /// let mut iter = cache.iter();
+    /// assert_eq!((&"a", &10), iter.next().unwrap());
+    /// assert_eq!((&"c", &30), iter.next().unwrap());
+    /// assert_eq!((&"b", &20), iter.next().unwrap());
+    /// ```
+    pub fn iter(&self) -> Iter<K, V> {
+        Iter(self.map.iter())
+    }
+
+    /// A double-ended iterator visiting all key-value pairs in order of insertion.
+    /// Iterator element type is `(&'a K, &'a V)`
+    ///
+    /// # Examples
+    /// ```
+    /// use collect::LruCache;
+    ///
+    /// let mut cache = LruCache::new(3);
+    /// cache.insert("a", 10);
+    /// cache.insert("c", 30);
+    /// cache.insert("b", 20);
+    ///
+    /// {
+    ///     let mut iter = cache.iter_mut();
+    ///     let mut entry = iter.next().unwrap();
+    ///     assert_eq!(&"a", entry.0);
+    ///     *entry.1 = 17;
+    /// }
+    ///
+    /// assert_eq!(&17, cache.get(&"a").unwrap());
+    /// ```
+    pub fn iter_mut(&mut self) -> IterMut<K, V> {
+        IterMut(self.map.iter_mut())
+    }
+
+    /// A double-ended iterator visiting all keys in order of insertion.
+    ///
+    /// # Examples
+    /// ```
+    /// use collect::LruCache;
+    ///
+    /// let mut cache = LruCache::new(3);
+    /// cache.insert('a', 10);
+    /// cache.insert('c', 30);
+    /// cache.insert('b', 20);
+    ///
+    /// let mut keys = cache.keys();
+    /// assert_eq!(&'a', keys.next().unwrap());
+    /// assert_eq!(&'c', keys.next().unwrap());
+    /// assert_eq!(&'b', keys.next().unwrap());
+    /// assert_eq!(None, keys.next());
+    /// ```
+    pub fn keys<'a>(&'a self) -> Keys<'a, K, V> {
+        Keys(self.map.keys())
+    }
+
+    /// A double-ended iterator visiting all values in order of insertion.
+    ///
+    /// # Examples
+    /// ```
+    /// use collect::LruCache;
+    ///
+    /// let mut cache = LruCache::new(3);
+    /// cache.insert('a', 10);
+    /// cache.insert('c', 30);
+    /// cache.insert('b', 20);
+    ///
+    /// let mut values = cache.values();
+    /// assert_eq!(&10, values.next().unwrap());
+    /// assert_eq!(&30, values.next().unwrap());
+    /// assert_eq!(&20, values.next().unwrap());
+    /// assert_eq!(None, values.next());
+    /// ```
+    pub fn values<'a>(&'a self) -> Values<'a, K, V> {
+        Values(self.map.values())
+    }
 }
 
 impl<K: Hash<HmHasher> + Eq, V> Extend<(K, V)> for LruCache<K, V> {
@@ -230,8 +316,68 @@ impl<A: fmt::Show + Hash<HmHasher> + Eq, B: fmt::Show> fmt::Show for LruCache<A,
 }
 
 unsafe impl<K: Send, V: Send> Send for LruCache<K, V> {}
-
 unsafe impl<K: Sync, V: Sync> Sync for LruCache<K, V> {}
+
+pub struct Iter<'a, K: 'a, V: 'a>(linked_hash_map::Iter<'a, K, V>);
+
+impl<'a, K, V> Iterator for Iter<'a, K, V> {
+    type Item = (&'a K, &'a V);
+
+    fn next(&mut self) -> Option<(&'a K, &'a V)> { self.0.next() }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
+}
+
+impl<'a, K, V> DoubleEndedIterator for Iter<'a, K, V> {
+    fn next_back(&mut self) -> Option<(&'a K, &'a V)> { self.0.next_back() }
+}
+
+impl<'a, K, V> ExactSizeIterator for Iter<'a, K, V> {}
+
+pub struct IterMut<'a, K: 'a, V: 'a>(linked_hash_map::IterMut<'a, K, V>);
+
+impl<'a, K, V> Iterator for IterMut<'a, K, V> {
+    type Item = (&'a K, &'a mut V);
+
+    fn next(&mut self) -> Option<(&'a K, &'a mut V)> { self.0.next() }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
+}
+
+impl<'a, K, V> DoubleEndedIterator for IterMut<'a, K, V> {
+    fn next_back(&mut self) -> Option<(&'a K, &'a mut V)> { self.0.next_back() }
+}
+
+impl<'a, K, V> ExactSizeIterator for IterMut<'a, K, V> {}
+
+pub struct Keys<'a, K: 'a, V: 'a>(linked_hash_map::Keys<'a, K, V>);
+
+impl<'a, K, V> Iterator for Keys<'a, K, V> {
+    type Item = &'a K;
+
+    fn next(&mut self) -> Option<&'a K> { self.0.next() }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
+}
+
+impl<'a, K, V> DoubleEndedIterator for Keys<'a, K, V> {
+    fn next_back(&mut self) -> Option<&'a K> { self.0.next_back() }
+}
+
+impl<'a, K, V> ExactSizeIterator for Keys<'a, K, V> {}
+
+pub struct Values<'a, K: 'a, V: 'a>(linked_hash_map::Values<'a, K, V>);
+
+impl<'a, K, V> Iterator for Values<'a, K, V> {
+    type Item = &'a V;
+
+    fn next(&mut self) -> Option<&'a V> { self.0.next() }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
+}
+
+impl<'a, K, V> DoubleEndedIterator for Values<'a, K, V> {
+    fn next_back(&mut self) -> Option<&'a V> { self.0.next_back() }
+}
+
+impl<'a, K, V> ExactSizeIterator for Values<'a, K, V> {}
+
 
 #[cfg(test)]
 mod tests {
@@ -344,5 +490,70 @@ mod tests {
         assert!(cache.get(&1).is_none());
         assert!(cache.get(&2).is_none());
         assert_eq!(format!("{:?}", cache), "{}");
+    }
+
+    #[test]
+    fn test_iter() {
+        let mut cache = LruCache::new(3);
+
+        // empty iter
+        assert_eq!(None, cache.iter().next());
+
+        cache.insert("a", 10);
+        cache.insert("b", 20);
+        cache.insert("c", 30);
+
+        // regular iter
+        let mut iter = cache.iter();
+        assert_eq!((&"a", &10), iter.next().unwrap());
+        assert_eq!((&"b", &20), iter.next().unwrap());
+        assert_eq!((&"c", &30), iter.next().unwrap());
+        assert_eq!(None, iter.next());
+        assert_eq!(None, iter.next());
+
+        // reversed iter
+        let mut rev_iter = cache.iter().rev();
+        assert_eq!((&"c", &30), rev_iter.next().unwrap());
+        assert_eq!((&"b", &20), rev_iter.next().unwrap());
+        assert_eq!((&"a", &10), rev_iter.next().unwrap());
+        assert_eq!(None, rev_iter.next());
+        assert_eq!(None, rev_iter.next());
+
+        // mixed
+        let mut mixed_iter = cache.iter();
+        assert_eq!((&"a", &10), mixed_iter.next().unwrap());
+        assert_eq!((&"c", &30), mixed_iter.next_back().unwrap());
+        assert_eq!((&"b", &20), mixed_iter.next().unwrap());
+        assert_eq!(None, mixed_iter.next());
+        assert_eq!(None, mixed_iter.next_back());
+    }
+
+    #[test]
+    fn test_iter_mut() {
+        let mut cache = LruCache::new(3);
+        cache.insert("a", 10);
+        cache.insert("c", 30);
+        cache.insert("b", 20);
+
+        {
+            let mut iter = cache.iter_mut();
+            let entry = iter.next().unwrap();
+            assert_eq!(&"a", entry.0);
+            *entry.1 = 17;
+
+            // reverse iterator
+            let mut iter = iter.rev();
+            let entry = iter.next().unwrap();
+            assert_eq!(&"b", entry.0);
+            *entry.1 = 23;
+
+            let entry = iter.next().unwrap();
+            assert_eq!(&"c", entry.0);
+            assert_eq!(None, iter.next());
+            assert_eq!(None, iter.next());
+        }
+
+        assert_eq!(&17, cache.get(&"a").unwrap());
+        assert_eq!(&23, cache.get(&"b").unwrap());
     }
 }
