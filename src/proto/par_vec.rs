@@ -73,7 +73,7 @@ fn sub_slices<T>(parent: &[T], slice_count: usize) -> Vec<&[T]> {
         let slice_len = (len - start) / curr;
         let end = min(start + slice_len, len);
 
-        slices.push(parent.slice(start, end));
+        slices.push(&parent[start..end]);
         start += slice_len;
     }
 
