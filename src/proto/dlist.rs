@@ -1,5 +1,5 @@
 use std::cmp::Ordering;
-use std::fmt::{self, Show};
+use std::fmt::{self, Debug};
 use std::hash::{Hash, Hasher, Writer};
 use std::iter;
 use std::marker::NoCopy;
@@ -711,7 +711,7 @@ impl<A: Ord> Ord for DList<A> {
     }
 }
 
-impl<A: fmt::Show> fmt::Show for DList<A> {
+impl<A: fmt::Debug> fmt::Debug for DList<A> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "["));
 

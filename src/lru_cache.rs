@@ -214,7 +214,7 @@ impl<K: Hash<HmHasher> + Eq, V> Extend<(K, V)> for LruCache<K, V> {
     }
 }
 
-impl<A: fmt::Show + Hash<HmHasher> + Eq, B: fmt::Show> fmt::Show for LruCache<A, B> {
+impl<A: fmt::Debug + Hash<HmHasher> + Eq, B: fmt::Debug> fmt::Debug for LruCache<A, B> {
     /// Return a string that lists the key-value pairs from most-recently
     /// used to least-recently used.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

@@ -34,7 +34,7 @@ pub struct EnumSet<E> {
 
 impl<E> Copy for EnumSet<E> {}
 
-impl<E:CLike+fmt::Show> fmt::Show for EnumSet<E> {
+impl<E:CLike+fmt::Debug> fmt::Debug for EnumSet<E> {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(fmt, "{{"));
         let mut first = true;
@@ -266,7 +266,7 @@ mod test {
 
     use super::{EnumSet, CLike};
 
-    #[derive(PartialEq, Show)]
+    #[derive(PartialEq, Debug)]
     #[repr(u32)]
     enum Foo {
         A, B, C

@@ -11,7 +11,7 @@
 use std::default::Default;
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::fmt;
-use std::fmt::Show;
+use std::fmt::Debug;
 use std::iter;
 use std::mem::{replace, swap};
 use std::ops;
@@ -156,7 +156,7 @@ impl<K: Ord, V: Ord> Ord for TreeMap<K, V> {
     }
 }
 
-impl<K: Show, V: Show, C> Show for TreeMap<K, V, C> where C: Compare<K> {
+impl<K: Debug, V: Debug, C> Debug for TreeMap<K, V, C> where C: Compare<K> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
 

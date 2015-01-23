@@ -3,7 +3,7 @@ extern crate alloc;
 use self::alloc::arc;
 
 use std::cmp::min;
-use std::fmt::{Formatter, Show};
+use std::fmt::{Formatter, Debug};
 use std::fmt::Error as FmtError;
 use std::iter::range_inclusive;
 use std::sync::Arc;
@@ -104,7 +104,7 @@ impl<T: Send> ops::DerefMut for ParSlice<T> {
     }
 }
 
-impl<T: Send> Show for ParSlice<T> where T: Show {
+impl<T: Send> Debug for ParSlice<T> where T: Debug {
     fn fmt(&self, f: &mut Formatter) -> Result<(), FmtError> {
         write!(f, "{:?}", self.data)
     }

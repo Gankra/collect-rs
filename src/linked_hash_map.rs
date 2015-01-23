@@ -441,7 +441,7 @@ impl<K: Hash<HmHasher> + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
     }
 }
 
-impl<A: fmt::Show + Hash<HmHasher> + Eq, B: fmt::Show> fmt::Show for LinkedHashMap<A, B> {
+impl<A: fmt::Debug + Hash<HmHasher> + Eq, B: fmt::Debug> fmt::Debug for LinkedHashMap<A, B> {
     /// Returns a string that lists the key-value pairs in insertion order.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));

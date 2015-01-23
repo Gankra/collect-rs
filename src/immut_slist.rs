@@ -179,7 +179,7 @@ impl <T> Clone for ImmutSList<T> {
     }
 }
 
-impl<T: std::fmt::Show> std::fmt::Show for ImmutSList<T> {
+impl<T: std::fmt::Debug> std::fmt::Debug for ImmutSList<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         try!(write!(f, "["));
 

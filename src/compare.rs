@@ -129,7 +129,7 @@
 use std::borrow::BorrowFrom;
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
-use std::fmt::{self, Show};
+use std::fmt::{self, Debug};
 
 /// Returns the maximum of two values according to the given comparator, or `lhs` if they
 /// are equal.
@@ -402,10 +402,10 @@ impl<C, Lb: ?Sized, Rb: ?Sized> PartialEq for Borrow<C, Lb, Rb>
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<C, Lb: ?Sized, Rb: ?Sized> Eq for Borrow<C, Lb, Rb> where C: Compare<Lb, Rb> + Eq {}
 
-// FIXME: replace with `derive(Show)` once
+// FIXME: replace with `derive(Debug)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<C, Lb: ?Sized, Rb: ?Sized> Show for Borrow<C, Lb, Rb>
-    where C: Compare<Lb, Rb> + Show {
+impl<C, Lb: ?Sized, Rb: ?Sized> Debug for Borrow<C, Lb, Rb>
+    where C: Compare<Lb, Rb> + Debug {
 
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Borrow({:?})", self.0)
@@ -511,10 +511,10 @@ impl<E, C, T: ?Sized, K> PartialEq for Extract<E, C, T, K>
 impl<E, C, T: ?Sized, K> Eq for Extract<E, C, T, K>
     where E: Fn(&T) -> K + Eq, C: Compare<K> + Eq {}
 
-// FIXME: replace with `derive(Show)` once
+// FIXME: replace with `derive(Debug)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Show for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Show, C: Compare<K> + Show {
+impl<E, C, T: ?Sized, K> Debug for Extract<E, C, T, K>
+    where E: Fn(&T) -> K + Debug, C: Compare<K> + Debug {
 
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Extract {{ ext: {:?}, cmp: {:?} }}", self.ext, self.cmp)
@@ -525,7 +525,7 @@ impl<E, C, T: ?Sized, K> Show for Extract<E, C, T, K>
 /// (https://en.wikipedia.org/wiki/Lexicographical_order) combines two others.
 ///
 /// See [`CompareExt::then`](trait.CompareExt.html#method.then) for an example.
-#[derive(Clone, Copy, Default, PartialEq, Eq, Show)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
 pub struct Lexicographic<C, D>(C, D);
 
 impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Lexicographic<C, D>
@@ -600,16 +600,16 @@ impl<T: Ord + ?Sized> PartialEq for Natural<T> {
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<T: Ord + ?Sized> Eq for Natural<T> {}
 
-// FIXME: replace with `derive(Show)` once
+// FIXME: replace with `derive(Debug)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<T: Ord + ?Sized> Show for Natural<T> {
+impl<T: Ord + ?Sized> Debug for Natural<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result { write!(f, "Natural") }
 }
 
 /// A comparator that reverses the ordering of another.
 ///
 /// See [`CompareExt::rev`](trait.CompareExt.html#method.rev) for an example.
-#[derive(Clone, Copy, Default, PartialEq, Eq, Show)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
 pub struct Rev<C>(C);
 
 impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Rev<C> where C: Compare<Lhs, Rhs> {
@@ -636,7 +636,7 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Rev<C> where C: Compare<
 /// expects `C: Compare<U, T>`.
 ///
 /// See [`CompareExt::swap`](trait.CompareExt.html#method.swap) for an example.
-#[derive(Clone, Copy, Default, PartialEq, Eq, Show)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
 pub struct Swap<C>(C);
 
 impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Rhs, Lhs> for Swap<C>

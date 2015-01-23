@@ -15,7 +15,7 @@
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
 use std::fmt;
-use std::fmt::Show;
+use std::fmt::Debug;
 use std::iter::{self, Peekable};
 use std::ops;
 
@@ -55,7 +55,7 @@ pub struct TrieSet {
     map: TrieMap<()>
 }
 
-impl Show for TrieSet {
+impl Debug for TrieSet {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
 

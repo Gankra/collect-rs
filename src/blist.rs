@@ -475,7 +475,7 @@ impl<A: Ord> Ord for BList<A> {
     }
 }
 
-impl<A: fmt::Show> fmt::Show for BList<A> {
+impl<A: fmt::Debug> fmt::Debug for BList<A> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "["));
 
