@@ -697,7 +697,7 @@ mod test {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut set = TrieSet::new();
         let empty = TrieSet::new();
 

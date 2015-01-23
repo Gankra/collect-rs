@@ -1738,7 +1738,7 @@ mod test_treemap {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut map = TreeMap::new();
         let empty: TreeMap<i32, i32> = TreeMap::new();
 

@@ -639,7 +639,7 @@ mod tests {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut map = LinkedHashMap::new();
         assert_eq!(format!("{:?}", map), "{}");
         map.insert(1, 10);

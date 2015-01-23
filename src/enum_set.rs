@@ -291,7 +291,7 @@ mod test {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut e = EnumSet::new();
         assert_eq!("{}", format!("{:?}", e));
         e.insert(A);

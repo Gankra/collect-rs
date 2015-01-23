@@ -1591,7 +1591,7 @@ mod test {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut map = TrieMap::new();
         let empty: TrieMap<char> = TrieMap::new();
 

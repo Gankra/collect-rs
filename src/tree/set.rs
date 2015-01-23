@@ -1155,7 +1155,7 @@ mod test {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut set = TreeSet::new();
         let empty: TreeSet<i32> = TreeSet::new();
 

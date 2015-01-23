@@ -360,7 +360,7 @@ mod tests {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let list: ImmutSList<i32> = range(0, 10).rev().collect();
         assert_eq!(format!("{:?}", list), "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
 

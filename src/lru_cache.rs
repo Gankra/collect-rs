@@ -298,7 +298,7 @@ mod tests {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut cache: LruCache<i32, i32> = LruCache::new(3);
         cache.insert(1, 10);
         cache.insert(2, 20);

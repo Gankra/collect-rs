@@ -964,7 +964,7 @@ mod test {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let list: DList<i32> = range(0, 10).collect();
         assert_eq!(format!("{:?}", list), "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
 
