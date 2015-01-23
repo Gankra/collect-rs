@@ -645,13 +645,13 @@ mod tests {
         map.insert(1, 10);
         map.insert(2, 20);
         map.insert(3, 30);
-        assert_eq!(format!("{:?}", map), "{1i32: 10i32, 2i32: 20i32, 3i32: 30i32}");
+        assert_eq!(format!("{:?}", map), "{1: 10, 2: 20, 3: 30}");
         map.insert(2, 22);
-        assert_eq!(format!("{:?}", map), "{1i32: 10i32, 3i32: 30i32, 2i32: 22i32}");
+        assert_eq!(format!("{:?}", map), "{1: 10, 3: 30, 2: 22}");
         map.get(&3);
-        assert_eq!(format!("{:?}", map), "{1i32: 10i32, 3i32: 30i32, 2i32: 22i32}");
+        assert_eq!(format!("{:?}", map), "{1: 10, 3: 30, 2: 22}");
         map.get_refresh(&3);
-        assert_eq!(format!("{:?}", map), "{1i32: 10i32, 2i32: 22i32, 3i32: 30i32}");
+        assert_eq!(format!("{:?}", map), "{1: 10, 2: 22, 3: 30}");
         map.clear();
         assert_eq!(format!("{:?}", map), "{}");
     }

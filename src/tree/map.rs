@@ -1745,7 +1745,7 @@ mod test_treemap {
         map.insert(1, 2);
         map.insert(3, 4);
 
-        assert_eq!(format!("{:?}", map), "{1i32: 2i32, 3i32: 4i32}");
+        assert_eq!(format!("{:?}", map), "{1: 2, 3: 4}");
         assert_eq!(format!("{:?}", empty), "{}");
     }
 

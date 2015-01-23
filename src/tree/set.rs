@@ -1162,7 +1162,7 @@ mod test {
         set.insert(1);
         set.insert(2);
 
-        assert_eq!(format!("{:?}", set), "{1i32, 2i32}");
+        assert_eq!(format!("{:?}", set), "{1, 2}");
         assert_eq!(format!("{:?}", empty), "{}");
     }
 

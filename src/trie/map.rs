@@ -1598,7 +1598,7 @@ mod test {
         map.insert(1, 'a');
         map.insert(2, 'b');
 
-        assert_eq!(format!("{:?}", map), "{1u: 'a', 2u: 'b'}");
+        assert_eq!(format!("{:?}", map), "{1: 'a', 2: 'b'}");
         assert_eq!(format!("{:?}", empty), "{}");
     }
 
