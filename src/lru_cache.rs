@@ -214,7 +214,7 @@ impl<K: Hash<HmHasher> + Eq, V> Extend<(K, V)> for LruCache<K, V> {
     }
 }
 
-impl<A: fmt::Show + Hash<HmHasher> + Eq, B: fmt::Show> fmt::Show for LruCache<A, B> {
+impl<A: fmt::Debug + Hash<HmHasher> + Eq, B: fmt::Debug> fmt::Debug for LruCache<A, B> {
     /// Return a string that lists the key-value pairs from most-recently
     /// used to least-recently used.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -298,20 +298,20 @@ mod tests {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut cache: LruCache<i32, i32> = LruCache::new(3);
         cache.insert(1, 10);
         cache.insert(2, 20);
         cache.insert(3, 30);
-        assert_eq!(format!("{:?}", cache), "{3i32: 30i32, 2i32: 20i32, 1i32: 10i32}");
+        assert_eq!(format!("{:?}", cache), "{3: 30, 2: 20, 1: 10}");
         cache.insert(2, 22);
-        assert_eq!(format!("{:?}", cache), "{2i32: 22i32, 3i32: 30i32, 1i32: 10i32}");
+        assert_eq!(format!("{:?}", cache), "{2: 22, 3: 30, 1: 10}");
         cache.insert(6, 60);
-        assert_eq!(format!("{:?}", cache), "{6i32: 60i32, 2i32: 22i32, 3i32: 30i32}");
+        assert_eq!(format!("{:?}", cache), "{6: 60, 2: 22, 3: 30}");
         cache.get(&3);
-        assert_eq!(format!("{:?}", cache), "{3i32: 30i32, 6i32: 60i32, 2i32: 22i32}");
+        assert_eq!(format!("{:?}", cache), "{3: 30, 6: 60, 2: 22}");
         cache.set_capacity(2);
-        assert_eq!(format!("{:?}", cache), "{3i32: 30i32, 6i32: 60i32}");
+        assert_eq!(format!("{:?}", cache), "{3: 30, 6: 60}");
     }
 
     #[test]

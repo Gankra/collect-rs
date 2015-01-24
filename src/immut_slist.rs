@@ -179,7 +179,7 @@ impl <T> Clone for ImmutSList<T> {
     }
 }
 
-impl<T: std::fmt::Show> std::fmt::Show for ImmutSList<T> {
+impl<T: std::fmt::Debug> std::fmt::Debug for ImmutSList<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         try!(write!(f, "["));
 
@@ -360,9 +360,9 @@ mod tests {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let list: ImmutSList<i32> = range(0, 10).rev().collect();
-        assert_eq!(format!("{:?}", list), "[0i32, 1i32, 2i32, 3i32, 4i32, 5i32, 6i32, 7i32, 8i32, 9i32]");
+        assert_eq!(format!("{:?}", list), "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
 
         let list: ImmutSList<&str> = vec!["just", "one", "test", "more"].iter()
                                                                    .rev()

@@ -11,7 +11,7 @@
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
 use std::fmt;
-use std::fmt::Show;
+use std::fmt::Debug;
 use std::iter::Peekable;
 use std::iter;
 use std::hash::{Hash, Hasher, Writer};
@@ -105,7 +105,7 @@ impl<T: Ord> Ord for TreeSet<T> {
     }
 }
 
-impl<T: Show, C> Show for TreeSet<T, C> where C: Compare<T> {
+impl<T: Debug, C> Debug for TreeSet<T, C> where C: Compare<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
 
@@ -1155,14 +1155,14 @@ mod test {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut set = TreeSet::new();
         let empty: TreeSet<i32> = TreeSet::new();
 
         set.insert(1);
         set.insert(2);
 
-        assert_eq!(format!("{:?}", set), "{1i32, 2i32}");
+        assert_eq!(format!("{:?}", set), "{1, 2}");
         assert_eq!(format!("{:?}", empty), "{}");
     }
 

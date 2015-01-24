@@ -211,7 +211,7 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
     /// according to the given comparator.
     pub fn from_vec_and_comparator(mut vec: Vec<T>, cmp: C) -> IntervalHeap<T, C> {
         for to in 2 .. vec.len() + 1 {
-            interval_heap_push(vec.slice_to_mut(to), &cmp);
+            interval_heap_push(&mut vec[..to], &cmp);
         }
         let heap = IntervalHeap { data: vec, cmp: cmp };
         debug_assert!(heap.is_valid());
@@ -332,7 +332,7 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
         let mut vec = self.data;
         for hsize in range(2, vec.len()).rev() {
             vec.swap(1, hsize);
-            update_max(vec.slice_to_mut(hsize), &self.cmp);
+            update_max(&mut vec[..hsize], &self.cmp);
         }
         vec
     }

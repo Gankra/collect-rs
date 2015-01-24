@@ -15,7 +15,7 @@
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
 use std::fmt;
-use std::fmt::Show;
+use std::fmt::Debug;
 use std::iter::{self, Peekable};
 use std::ops;
 
@@ -55,7 +55,7 @@ pub struct TrieSet {
     map: TrieMap<()>
 }
 
-impl Show for TrieSet {
+impl Debug for TrieSet {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
 
@@ -697,14 +697,14 @@ mod test {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut set = TrieSet::new();
         let empty = TrieSet::new();
 
         set.insert(1);
         set.insert(2);
 
-        assert_eq!(format!("{:?}", set), "{1u, 2u}");
+        assert_eq!(format!("{:?}", set), "{1, 2}");
         assert_eq!(format!("{:?}", empty), "{}");
     }
 

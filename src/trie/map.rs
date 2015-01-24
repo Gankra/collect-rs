@@ -15,7 +15,7 @@ use self::TrieNode::*;
 
 use std::cmp::Ordering;
 use std::default::Default;
-use std::fmt::Show;
+use std::fmt::Debug;
 use std::fmt;
 use std::hash::{Hash, Hasher, Writer};
 use std::iter;
@@ -135,7 +135,7 @@ impl<T: Ord> Ord for TrieMap<T> {
     }
 }
 
-impl<T: Show> Show for TrieMap<T> {
+impl<T: Debug> Debug for TrieMap<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
 
@@ -1591,14 +1591,14 @@ mod test {
     }
 
     #[test]
-    fn test_show() {
+    fn test_debug() {
         let mut map = TrieMap::new();
         let empty: TrieMap<char> = TrieMap::new();
 
         map.insert(1, 'a');
         map.insert(2, 'b');
 
-        assert_eq!(format!("{:?}", map), "{1u: 'a', 2u: 'b'}");
+        assert_eq!(format!("{:?}", map), "{1: 'a', 2: 'b'}");
         assert_eq!(format!("{:?}", empty), "{}");
     }
 

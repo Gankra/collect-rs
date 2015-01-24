@@ -3,7 +3,7 @@ extern crate alloc;
 use self::alloc::arc;
 
 use std::cmp::min;
-use std::fmt::{Formatter, Show};
+use std::fmt::{Formatter, Debug};
 use std::fmt::Error as FmtError;
 use std::iter::range_inclusive;
 use std::sync::Arc;
@@ -73,7 +73,7 @@ fn sub_slices<T>(parent: &[T], slice_count: usize) -> Vec<&[T]> {
         let slice_len = (len - start) / curr;
         let end = min(start + slice_len, len);
 
-        slices.push(parent.slice(start, end));
+        slices.push(&parent[start..end]);
         start += slice_len;
     }
 
@@ -104,7 +104,7 @@ impl<T: Send> ops::DerefMut for ParSlice<T> {
     }
 }
 
-impl<T: Send> Show for ParSlice<T> where T: Show {
+impl<T: Send> Debug for ParSlice<T> where T: Debug {
     fn fmt(&self, f: &mut Formatter) -> Result<(), FmtError> {
         write!(f, "{:?}", self.data)
     }
