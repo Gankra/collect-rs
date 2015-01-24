@@ -940,7 +940,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='self'>self</span>, <span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Show</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::{<span class='self'>self</span>, <span class='ident'>Peekable</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 
@@ -980,7 +980,7 @@
     <span class='ident'>map</span>: <span class='ident'>TrieMap</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
 }
 
-<span class='kw'>impl</span> <span class='ident'>Show</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
+<span class='kw'>impl</span> <span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{{&quot;</span>));
 
@@ -1622,14 +1622,14 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_show</span>() {
+    <span class='kw'>fn</span> <span class='ident'>test_debug</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>set</span> <span class='op'>=</span> <span class='ident'>TrieSet</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='ident'>empty</span> <span class='op'>=</span> <span class='ident'>TrieSet</span>::<span class='ident'>new</span>();
 
         <span class='ident'>set</span>.<span class='ident'>insert</span>(<span class='number'>1</span>);
         <span class='ident'>set</span>.<span class='ident'>insert</span>(<span class='number'>2</span>);
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>set</span>), <span class='string'>&quot;{1u, 2u}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>set</span>), <span class='string'>&quot;{1, 2}&quot;</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>empty</span>), <span class='string'>&quot;{}&quot;</span>);
     }
 

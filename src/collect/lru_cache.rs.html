@@ -605,7 +605,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>fmt</span>::<span class='ident'>Show</span> <span class='op'>+</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>HmHasher</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>B</span>: <span class='ident'>fmt</span>::<span class='ident'>Show</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Show</span> <span class='kw'>for</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>B</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>HmHasher</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>B</span>: <span class='ident'>fmt</span>::<span class='ident'>Debug</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>B</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Return a string that lists the key-value pairs from most-recently</span>
     <span class='doccomment'>/// used to least-recently used.</span>
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
@@ -689,20 +689,20 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_show</span>() {
+    <span class='kw'>fn</span> <span class='ident'>test_debug</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cache</span>: <span class='ident'>LruCache</span><span class='op'>&lt;</span><span class='ident'>i32</span>, <span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>LruCache</span>::<span class='ident'>new</span>(<span class='number'>3</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>30</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3i32: 30i32, 2i32: 20i32, 1i32: 10i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3: 30, 2: 20, 1: 10}&quot;</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>22</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{2i32: 22i32, 3i32: 30i32, 1i32: 10i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{2: 22, 3: 30, 1: 10}&quot;</span>);
         <span class='ident'>cache</span>.<span class='ident'>insert</span>(<span class='number'>6</span>, <span class='number'>60</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{6i32: 60i32, 2i32: 22i32, 3i32: 30i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{6: 60, 2: 22, 3: 30}&quot;</span>);
         <span class='ident'>cache</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3i32: 30i32, 6i32: 60i32, 2i32: 22i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3: 30, 6: 60, 2: 22}&quot;</span>);
         <span class='ident'>cache</span>.<span class='ident'>set_capacity</span>(<span class='number'>2</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3i32: 30i32, 6i32: 60i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>cache</span>), <span class='string'>&quot;{3: 30, 6: 60}&quot;</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

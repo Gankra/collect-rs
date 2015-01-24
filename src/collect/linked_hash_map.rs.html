@@ -1238,7 +1238,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>fmt</span>::<span class='ident'>Show</span> <span class='op'>+</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>HmHasher</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>B</span>: <span class='ident'>fmt</span>::<span class='ident'>Show</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Show</span> <span class='kw'>for</span> <span class='ident'>LinkedHashMap</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>B</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>HmHasher</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Eq</span>, <span class='ident'>B</span>: <span class='ident'>fmt</span>::<span class='ident'>Debug</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>LinkedHashMap</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>B</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Returns a string that lists the key-value pairs in insertion order.</span>
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{{&quot;</span>));
@@ -1436,19 +1436,19 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_show</span>() {
+    <span class='kw'>fn</span> <span class='ident'>test_debug</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>LinkedHashMap</span>::<span class='ident'>new</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{}&quot;</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>10</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>20</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>3</span>, <span class='number'>30</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1i32: 10i32, 2i32: 20i32, 3i32: 30i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1: 10, 2: 20, 3: 30}&quot;</span>);
         <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='number'>22</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1i32: 10i32, 3i32: 30i32, 2i32: 22i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1: 10, 3: 30, 2: 22}&quot;</span>);
         <span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1i32: 10i32, 3i32: 30i32, 2i32: 22i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1: 10, 3: 30, 2: 22}&quot;</span>);
         <span class='ident'>map</span>.<span class='ident'>get_refresh</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1i32: 10i32, 2i32: 22i32, 3i32: 30i32}&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{1: 10, 2: 22, 3: 30}&quot;</span>);
         <span class='ident'>map</span>.<span class='ident'>clear</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>map</span>), <span class='string'>&quot;{}&quot;</span>);
     }
