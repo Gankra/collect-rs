@@ -10,8 +10,7 @@
 
 use std::default::Default;
 use std::cmp::Ordering::{self, Less, Equal, Greater};
-use std::fmt;
-use std::fmt::Debug;
+use std::fmt::{self, Debug};
 use std::iter;
 use std::mem::{replace, swap};
 use std::ops;
@@ -50,8 +49,8 @@ use compare::{Compare, Natural};
 /// }
 ///
 /// // Prints `foo`, `bar`, `quux`
-/// for key in map.values() {
-///     println!("{}", key);
+/// for value in map.values() {
+///     println!("{}", value);
 /// }
 ///
 /// map.remove(&1);
@@ -63,7 +62,7 @@ use compare::{Compare, Natural};
 ///
 /// for key in range(0, 4) {
 ///     match map.get(&key) {
-///         Some(val) => println!("{} has a value: {}", key, val),
+///         Some(value) => println!("{} has a value: {}", key, value),
 ///         None => println!("{} not in map", key),
 ///     }
 /// }
@@ -177,7 +176,7 @@ impl<K, V, C> Default for TreeMap<K, V, C> where C: Compare<K> + Default {
 impl<K, V, C, Q: ?Sized> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     type Output = V;
     #[inline]
-    fn index<'a>(&'a self, i: &Q) -> &'a V {
+    fn index(&self, i: &Q) -> &V {
         self.get(i).expect("no entry found for key")
     }
 }
@@ -185,7 +184,7 @@ impl<K, V, C, Q: ?Sized> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> 
 impl<K, V, C, Q: ?Sized> ops::IndexMut<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     type Output = V;
     #[inline]
-    fn index_mut<'a>(&'a mut self, i: &Q) -> &'a mut V {
+    fn index_mut(&mut self, i: &Q) -> &mut V {
         self.get_mut(i).expect("no entry found for key")
     }
 }
@@ -278,9 +277,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// }
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> Iter<'a, K, V> {
+    pub fn iter(&self) -> Iter<K, V> {
         Iter {
-            stack: vec!(),
+            stack: vec![],
             node: deref(&self.root),
             remaining_min: self.length,
             remaining_max: self.length
@@ -303,7 +302,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     ///     println!("{}: {}", key, value);
     /// }
     /// ```
-    pub fn rev_iter<'a>(&'a self) -> RevIter<'a, K, V> {
+    pub fn rev_iter(&self) -> RevIter<K, V> {
         RevIter{iter: self.iter()}
     }
 
@@ -330,9 +329,9 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&"c"), Some(&3));
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, K, V> {
+    pub fn iter_mut(&mut self) -> IterMut<K, V> {
         IterMut {
-            stack: vec!(),
+            stack: vec![],
             node: deref_mut(&mut self.root),
             remaining_min: self.length,
             remaining_max: self.length
@@ -361,7 +360,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&"b"), Some(&12));
     /// assert_eq!(map.get(&"c"), Some(&13));
     /// ```
-    pub fn rev_iter_mut<'a>(&'a mut self) -> RevIterMut<'a, K, V> {
+    pub fn rev_iter_mut(&mut self) -> RevIterMut<K, V> {
         RevIterMut{iter: self.iter_mut()}
     }
 
@@ -384,8 +383,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     pub fn into_iter(self) -> IntoIter<K, V> {
         let TreeMap { root, length, .. } = self;
         let stk = match root {
-            None => vec!(),
-            Some(box tn) => vec!(tn)
+            None => vec![],
+            Some(box tn) => vec![tn]
         };
         IntoIter {
             stack: stk,
@@ -625,7 +624,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[inline]
     #[experimental = "likely to be renamed, may be removed"]
-    pub fn find_with_mut<'a, F>(&'a mut self, f: F) -> Option<&'a mut V> where
+    pub fn find_with_mut<F>(&mut self, f: F) -> Option<&mut V> where
         F: FnMut(&K) -> Ordering
     {
         tree_find_with_mut(&mut self.root, f)
@@ -669,9 +668,9 @@ macro_rules! bound_setup {
 impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// Gets a lazy iterator that should be initialized using
     /// `traverse_left`/`traverse_right`/`traverse_complete`.
-    fn iter_for_traversal<'a>(&'a self) -> (Iter<'a, K, V>, &'a C) {
+    fn iter_for_traversal(&self) -> (Iter<K, V>, &C) {
         (Iter {
-            stack: vec!(),
+            stack: vec![],
             node: deref(&self.root),
             remaining_min: 0,
             remaining_max: self.length
@@ -696,7 +695,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.lower_bound(&5).next(), Some((&6, &"c")));
     /// assert_eq!(map.lower_bound(&10).next(), None);
     /// ```
-    pub fn lower_bound<'a>(&'a self, k: &K) -> Iter<'a, K, V> {
+    pub fn lower_bound(&self, k: &K) -> Iter<K, V> {
         bound_setup!(self.iter_for_traversal(), k, true)
     }
 
@@ -718,15 +717,15 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.upper_bound(&5).next(), Some((&6, &"c")));
     /// assert_eq!(map.upper_bound(&10).next(), None);
     /// ```
-    pub fn upper_bound<'a>(&'a self, k: &K) -> Iter<'a, K, V> {
+    pub fn upper_bound(&self, k: &K) -> Iter<K, V> {
         bound_setup!(self.iter_for_traversal(), k, false)
     }
 
     /// Gets a lazy iterator that should be initialized using
     /// `traverse_left`/`traverse_right`/`traverse_complete`.
-    fn iter_mut_for_traversal<'a>(&'a mut self) -> (IterMut<'a, K, V>, &'a C) {
+    fn iter_mut_for_traversal(&mut self) -> (IterMut<K, V>, &C) {
         (IterMut {
-            stack: vec!(),
+            stack: vec![],
             node: deref_mut(&mut self.root),
             remaining_min: 0,
             remaining_max: self.length
@@ -763,7 +762,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// assert_eq!(map.get(&8), Some(&"changed"));
     /// ```
-    pub fn lower_bound_mut<'a>(&'a mut self, k: &K) -> IterMut<'a, K, V> {
+    pub fn lower_bound_mut(&mut self, k: &K) -> IterMut<K, V> {
         bound_setup!(self.iter_mut_for_traversal(), k, true)
     }
 
@@ -797,7 +796,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// assert_eq!(map.get(&8), Some(&"changed"));
     /// ```
-    pub fn upper_bound_mut<'a>(&'a mut self, k: &K) -> IterMut<'a, K, V> {
+    pub fn upper_bound_mut(&mut self, k: &K) -> IterMut<K, V> {
         bound_setup!(self.iter_mut_for_traversal(), k, false)
     }
 }
@@ -885,7 +884,7 @@ macro_rules! define_iterator {
         item!(impl<'a, K, V> $name<'a, K, V> {
             #[inline(always)]
             fn next_(&mut self, forward: bool) -> Option<(&'a K, &'a $($addr_mut)* V)> {
-                while !self.stack.is_empty() || !self.node.is_null() {
+                loop {
                     if !self.node.is_null() {
                         let node = unsafe {addr!(& $($addr_mut)* *self.node)};
                         {
@@ -898,21 +897,21 @@ macro_rules! define_iterator {
                         }
                         self.stack.push(node);
                     } else {
-                        let node = self.stack.pop().unwrap();
-                        let next_node = if forward {
-                            addr!(& $($addr_mut)* node.right)
-                        } else {
-                            addr!(& $($addr_mut)* node.left)
-                        };
-                        self.node = $deref(next_node);
-                        self.remaining_max -= 1;
-                        if self.remaining_min > 0 {
-                            self.remaining_min -= 1;
-                        }
-                        return Some((&node.key, addr!(& $($addr_mut)* node.value)));
+                        return self.stack.pop().map(|node| {
+                            let next_node = if forward {
+                                addr!(& $($addr_mut)* node.right)
+                            } else {
+                                addr!(& $($addr_mut)* node.left)
+                            };
+                            self.node = $deref(next_node);
+                            self.remaining_max -= 1;
+                            if self.remaining_min > 0 {
+                                self.remaining_min -= 1;
+                            }
+                            (&node.key, addr!(& $($addr_mut)* node.value))
+                        });
                     }
                 }
-                None
             }
 
             /// traverse_left, traverse_right and traverse_complete are
@@ -999,7 +998,7 @@ define_iterator! {
     addr_mut = mut
 }
 
-fn deref<'a, K, V>(node: &'a Option<Box<TreeNode<K, V>>>) -> *const TreeNode<K, V> {
+fn deref<K, V>(node: &Option<Box<TreeNode<K, V>>>) -> *const TreeNode<K, V> {
     match *node {
         Some(ref n) => {
             let n: &TreeNode<K, V> = &**n;
@@ -1129,13 +1128,13 @@ fn split<K, V>(node: &mut Box<TreeNode<K, V>>) {
 // Next 2 functions have the same convention: comparator gets
 // at input current key and returns search_key cmp cur_key
 // (i.e. search_key.cmp(&cur_key))
-fn tree_find_with<'r, K, V, F>(
-    node: &'r Option<Box<TreeNode<K, V>>>,
+fn tree_find_with<K, V, F>(
+    node: &Option<Box<TreeNode<K, V>>>,
     mut f: F,
-) -> Option<&'r V> where
+) -> Option<&V> where
     F: FnMut(&K) -> Ordering,
 {
-    let mut current: &'r Option<Box<TreeNode<K, V>>> = node;
+    let mut current = node;
     loop {
         match *current {
             Some(ref r) => {
@@ -1151,10 +1150,10 @@ fn tree_find_with<'r, K, V, F>(
 }
 
 // See comments above tree_find_with
-fn tree_find_with_mut<'r, K, V, F>(
-    node: &'r mut Option<Box<TreeNode<K, V>>>,
+fn tree_find_with_mut<K, V, F>(
+    node: &mut Option<Box<TreeNode<K, V>>>,
     mut f: F,
-) -> Option<&'r mut V> where
+) -> Option<&mut V> where
     F: FnMut(&K) -> Ordering,
 {
 
