@@ -142,7 +142,7 @@ unsafe fn reallocate<T>(ptr: NonZero<*mut T>,
                         new_cap: NonZero<usize>) -> NonZero<*mut T> {
     if mem::size_of::<T>() == 0 { return empty() }
 
-    let old_size = allocation_size::<T>(old_cap);
+    let old_size = unchecked_allocation_size::<T>(old_cap);
     let new_size = allocation_size::<T>(new_cap);
 
     // Reallocate
@@ -157,13 +157,17 @@ unsafe fn reallocate<T>(ptr: NonZero<*mut T>,
 unsafe fn deallocate<T>(ptr: NonZero<*mut T>, cap: NonZero<usize>) {
     if mem::size_of::<T>() == 0 { return }
 
-    let old_size = allocation_size::<T>(cap);
+    let old_size = unchecked_allocation_size::<T>(cap);
 
     heap::deallocate(*ptr as *mut u8, old_size, mem::align_of::<T>())
 }
 
 fn allocation_size<T>(cap: NonZero<usize>) -> usize {
     mem::size_of::<T>().checked_mul(*cap).expect("Capacity overflow")
+}
+
+fn unchecked_allocation_size<T>(cap: NonZero<usize>) -> usize {
+    mem::size_of::<T>() * (*cap)
 }
 
 fn empty<T>() -> NonZero<*mut T> {
