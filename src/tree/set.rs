@@ -10,8 +10,7 @@
 
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
-use std::fmt;
-use std::fmt::Debug;
+use std::fmt::{self, Debug};
 use std::iter::Peekable;
 use std::iter;
 use std::hash::{Hash, Hasher, Writer};
@@ -161,7 +160,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> Iter<'a, T> {
+    pub fn iter(&self) -> Iter<T> {
         Iter { iter: self.map.iter() }
     }
 
@@ -179,7 +178,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// }
     /// ```
     #[inline]
-    pub fn rev_iter<'a>(&'a self) -> RevIter<'a, T> {
+    pub fn rev_iter(&self) -> RevIter<T> {
         RevIter { iter: self.map.rev_iter() }
     }
 
@@ -219,7 +218,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(set.lower_bound(&10).next(), None);
     /// ```
     #[inline]
-    pub fn lower_bound<'a>(&'a self, v: &T) -> Iter<'a, T> {
+    pub fn lower_bound(&self, v: &T) -> Iter<T> {
         Iter { iter: self.map.lower_bound(v) }
     }
 
@@ -238,7 +237,7 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(set.upper_bound(&10).next(), None);
     /// ```
     #[inline]
-    pub fn upper_bound<'a>(&'a self, v: &T) -> Iter<'a, T> {
+    pub fn upper_bound(&self, v: &T) -> Iter<T> {
         Iter { iter: self.map.upper_bound(v) }
     }
 
