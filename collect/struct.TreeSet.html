@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>collect</a>::<wbr><a class='struct' href=''>TreeSet</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-4262' href='../src/collect/tree/set.rs.html#79-81'>[src]</a></span></h1>
+        </span><a id='src-4185' href='../src/collect/tree/set.rs.html#78-80'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct TreeSet&lt;T, C: <a class='trait' href='../collect/compare/trait.Compare.html' title='collect::compare::Compare'>Compare</a>&lt;T&gt; = <a class='struct' href='../collect/compare/struct.Natural.html' title='collect::compare::Natural'>Natural</a>&lt;T&gt;&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>An implementation of a set on top of the <code>TreeMap</code> container.</p>
@@ -109,7 +109,7 @@
 <div class='docblock'><p>Creates an empty <code>TreeSet</code> ordered according to the given comparator.</p>
 </div><h4 id='method.comparator' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.comparator' class='fnname'>comparator</a>(&amp;self) -&gt; &amp;C</code></h4>
 <div class='docblock'><p>Returns the comparator according to which the <code>TreeSet</code> is ordered.</p>
-</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the values in the set, in ascending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -122,7 +122,7 @@
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
 }
 </pre>
-</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../collect/tree_set/struct.RevIter.html' title='collect::tree_set::RevIter'>RevIter</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>(&amp;self) -&gt; <a class='struct' href='../collect/tree_set/struct.RevIter.html' title='collect::tree_set::RevIter'>RevIter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the values in the set, in descending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -148,7 +148,7 @@ set in ascending order. The set cannot be used after calling this.</p>
 <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>set</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>();
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>5</span>]);
 </pre>
-</div><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, v: &amp;T) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>(&amp;self, v: &amp;T) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator pointing to the first value not less than <code>v</code> (greater or equal).
 If all elements in the set are less than <code>v</code> empty iterator is returned.</p>
 
@@ -161,7 +161,7 @@ If all elements in the set are less than <code>v</code> empty iterator is return
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>set</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>set</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, v: &amp;T) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>(&amp;self, v: &amp;T) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator pointing to the first value greater than <code>v</code>.
 If all elements in the set are less than or equal to <code>v</code> an
 empty iterator is returned.</p>
@@ -402,7 +402,7 @@ ordering on the value type.</p>
 <div class='docblock'><p>Creates an empty <code>TreeSet</code> ordered according to the given comparator.</p>
 </div><h4 id='method.comparator' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.comparator' class='fnname'>comparator</a>(&amp;self) -&gt; &amp;C</code></h4>
 <div class='docblock'><p>Returns the comparator according to which the <code>TreeSet</code> is ordered.</p>
-</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the values in the set, in ascending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -415,7 +415,7 @@ ordering on the value type.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
 }
 </pre>
-</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../collect/tree_set/struct.RevIter.html' title='collect::tree_set::RevIter'>RevIter</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.rev_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rev_iter' class='fnname'>rev_iter</a>(&amp;self) -&gt; <a class='struct' href='../collect/tree_set/struct.RevIter.html' title='collect::tree_set::RevIter'>RevIter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator over the values in the set, in descending order.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -441,7 +441,7 @@ set in ascending order. The set cannot be used after calling this.</p>
 <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>set</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>();
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>5</span>]);
 </pre>
-</div><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>&lt;'a&gt;(&amp;'a self, v: &amp;T) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.lower_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.lower_bound' class='fnname'>lower_bound</a>(&amp;self, v: &amp;T) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator pointing to the first value not less than <code>v</code> (greater or equal).
 If all elements in the set are less than <code>v</code> empty iterator is returned.</p>
 
@@ -454,7 +454,7 @@ If all elements in the set are less than <code>v</code> empty iterator is return
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>set</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>5</span>).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>6</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>set</span>.<span class='ident'>lower_bound</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>).<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>&lt;'a&gt;(&amp;'a self, v: &amp;T) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;'a, T&gt;</code></h4>
+</div><h4 id='method.upper_bound' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.upper_bound' class='fnname'>upper_bound</a>(&amp;self, v: &amp;T) -&gt; <a class='struct' href='../collect/tree_set/struct.Iter.html' title='collect::tree_set::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a lazy iterator pointing to the first value greater than <code>v</code>.
 If all elements in the set are less than or equal to <code>v</code> an
 empty iterator is returned.</p>
