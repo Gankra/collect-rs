@@ -13,9 +13,7 @@
 // FIXME(conventions): implement iter_mut and into_iter
 
 use std::cmp::Ordering::{self, Less, Equal, Greater};
-use std::default::Default;
-use std::fmt;
-use std::fmt::Debug;
+use std::fmt::{self, Debug};
 use std::iter::{self, Peekable};
 use std::ops;
 
@@ -50,7 +48,7 @@ use trie_map::{TrieMap, self};
 /// set.clear();
 /// assert!(set.is_empty());
 /// ```
-#[derive(Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TrieSet {
     map: TrieMap<()>
 }
@@ -66,11 +64,6 @@ impl Debug for TrieSet {
 
         write!(f, "}}")
     }
-}
-
-impl Default for TrieSet {
-    #[inline]
-    fn default() -> TrieSet { TrieSet::new() }
 }
 
 impl TrieSet {
@@ -132,7 +125,7 @@ impl TrieSet {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> Iter<'a> {
+    pub fn iter(&self) -> Iter {
         Iter { iter: self.map.iter() }
     }
 
@@ -149,7 +142,7 @@ impl TrieSet {
     /// assert_eq!(set.lower_bound(5).next(), Some(6));
     /// assert_eq!(set.lower_bound(10).next(), None);
     /// ```
-    pub fn lower_bound<'a>(&'a self, val: usize) -> Iter<'a> {
+    pub fn lower_bound(&self, val: usize) -> Iter {
         Iter { iter: self.map.lower_bound(val) }
     }
 
@@ -166,7 +159,7 @@ impl TrieSet {
     /// assert_eq!(set.upper_bound(5).next(), Some(6));
     /// assert_eq!(set.upper_bound(10).next(), None);
     /// ```
-    pub fn upper_bound<'a>(&'a self, val: usize) -> Iter<'a> {
+    pub fn upper_bound(&self, val: usize) -> Iter {
         Iter { iter: self.map.upper_bound(val) }
     }
 
@@ -299,7 +292,7 @@ impl TrieSet {
     /// assert!(!v.is_empty());
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn is_empty(&self) -> bool { self.len() == 0 }
+    pub fn is_empty(&self) -> bool { self.map.is_empty() }
 
     /// Clears the set, removing all values.
     ///
