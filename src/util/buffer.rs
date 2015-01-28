@@ -39,12 +39,14 @@ impl<T> Buffer<T> {
     /// ```
     pub fn new() -> Buffer<T> {
         Buffer {
-            buffer: unsafe { NonZero::new(heap::EMPTY as *mut T) },
+            buffer: empty()
             cap: 0
         }
     }
 
     /// Create a new buffer with space for cap Ts.
+    ///
+    /// Unlike `std::rt::heap::allocate`, cap == 0 is allowed.
     ///
     /// ```
     /// # use collect::util::buffer::Buffer;
@@ -63,6 +65,8 @@ impl<T> Buffer<T> {
 
     /// Reallocate this buffer to fit a new number of Ts.
     ///
+    /// Unlike `std::rt::heap::reallocate`, cap == 0 is allowed.
+    ///
     /// ```
     /// # use collect::util::buffer::Buffer;
     ///
@@ -73,17 +77,17 @@ impl<T> Buffer<T> {
     /// assert_eq!(buffer.capacity(), 1024);
     /// ```
     pub fn reallocate(&mut self, cap: usize) {
-        *self = if self.cap == 0 || cap == 0 {
-            Buffer::allocate(cap)
+        if self.cap == 0 || cap == 0 {
+            // Safe to drop the old buffer because either it never
+            // allocated or we're getting rid of the allocation.
+            *self = Buffer::allocate(cap)
         } else {
-            Buffer {
-                buffer: unsafe {
-                    reallocate(self.buffer,
-                               NonZero::new(self.cap),
-                               NonZero::new(cap))
-                },
-                cap: cap
-            }
+            let buffer = mem::replace(&mut self.buffer, empty());
+            self.buffer = unsafe {
+                reallocate(buffer, NonZero::new(self.cap),
+                           NonZero::new(cap))
+            };
+            self.cap = cap;
         }
     }
 
