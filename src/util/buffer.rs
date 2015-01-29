@@ -39,7 +39,7 @@ impl<T> Buffer<T> {
     /// ```
     pub fn new() -> Buffer<T> {
         Buffer {
-            buffer: empty()
+            buffer: empty(),
             cap: 0
         }
     }
@@ -82,9 +82,14 @@ impl<T> Buffer<T> {
             // allocated or we're getting rid of the allocation.
             *self = Buffer::allocate(cap)
         } else {
+            // We need to set the capacity to 0 because if the capacity
+            // overflows unwinding is triggered, which if we don't
+            // change the capacity would try to free empty().
+            let old_cap = mem::replace(&mut self.cap, 0);
             let buffer = mem::replace(&mut self.buffer, empty());
+
             self.buffer = unsafe {
-                reallocate(buffer, NonZero::new(self.cap),
+                reallocate(buffer, NonZero::new(old_cap),
                            NonZero::new(cap))
             };
             self.cap = cap;
@@ -150,12 +155,17 @@ unsafe fn reallocate<T>(ptr: NonZero<*mut T>,
     let new_size = allocation_size::<T>(new_cap);
 
     // Reallocate
-    let ptr = heap::reallocate(*ptr as *mut u8, old_size, new_size, mem::align_of::<T>());
+    let new = heap::reallocate(*ptr as *mut u8, old_size, new_size, mem::align_of::<T>());
 
     // Check for allocation failure
-    if ptr.is_null() { ::alloc::oom() }
+    if new.is_null() {
+        // Cleanup old buffer.
+        deallocate(ptr, old_cap);
 
-    NonZero::new(ptr as *mut T)
+        ::alloc::oom()
+    }
+
+    NonZero::new(new as *mut T)
 }
 
 unsafe fn deallocate<T>(ptr: NonZero<*mut T>, cap: NonZero<usize>) {
