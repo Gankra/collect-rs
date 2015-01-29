@@ -1,0 +1,883 @@
+// Copyright 2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// FIXME(conventions): implement bounded iterators
+// FIXME(conventions): replace each_reverse by making iter DoubleEnded
+// FIXME(conventions): implement iter_mut and into_iter
+
+use std::cmp::Ordering::{self, Less, Equal, Greater};
+use std::default::Default;
+use std::fmt;
+use std::fmt::Show;
+use std::iter::{self, Peekable};
+use std::hash::Hash;
+use std::ops;
+
+use cow_trie_map::{CowTrieMap, self};
+
+/// A set implemented as a radix trie.
+///
+/// # Examples
+///
+/// ```rust
+/// use collect::CowTrieSet;
+///
+/// let mut set = CowTrieSet::new();
+/// set.insert(6);
+/// set.insert(28);
+/// set.insert(6);
+///
+/// assert_eq!(set.len(), 2);
+///
+/// if !set.contains(&3) {
+///     println!("3 is not in the set");
+/// }
+///
+/// // Print contents in order
+/// for x in set.iter() {
+///     println!("{}", x);
+/// }
+///
+/// set.remove(&6);
+/// assert_eq!(set.len(), 1);
+///
+/// set.clear();
+/// assert!(set.is_empty());
+/// ```
+#[derive(Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+pub struct CowTrieSet {
+    map: CowTrieMap<()>
+}
+
+impl Show for CowTrieSet {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        try!(write!(f, "{{"));
+
+        for (i, x) in self.iter().enumerate() {
+            if i != 0 { try!(write!(f, ", ")); }
+            try!(write!(f, "{:?}", x));
+        }
+
+        write!(f, "}}")
+    }
+}
+
+impl Default for CowTrieSet {
+    #[inline]
+    fn default() -> CowTrieSet { CowTrieSet::new() }
+}
+
+impl CowTrieSet {
+    /// Creates an empty CowTrieSet.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    /// let mut set = CowTrieSet::new();
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn new() -> CowTrieSet {
+        CowTrieSet{map: CowTrieMap::new()}
+    }
+
+    /// Visits all values in reverse order. Aborts traversal when `f` returns `false`.
+    /// Returns `true` if `f` returns `true` for all elements.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let set: CowTrieSet = [1, 2, 3, 4, 5].iter().map(|&x| x).collect();
+    ///
+    /// let mut vec = Vec::new();
+    /// assert_eq!(true, set.each_reverse(|&x| { vec.push(x); true }));
+    /// assert_eq!(vec, vec![5, 4, 3, 2, 1]);
+    ///
+    /// // Stop when we reach 3
+    /// let mut vec = Vec::new();
+    /// assert_eq!(false, set.each_reverse(|&x| { vec.push(x); x != 3 }));
+    /// assert_eq!(vec, vec![5, 4, 3]);
+    /// ```
+    #[inline]
+    pub fn each_reverse<F>(&self, mut f: F) -> bool where F: FnMut(&usize) -> bool {
+        self.map.each_reverse(|k, _| f(k))
+    }
+
+    /// Gets an iterator over the values in the set, in sorted order.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let mut set = CowTrieSet::new();
+    /// set.insert(3);
+    /// set.insert(2);
+    /// set.insert(1);
+    /// set.insert(2);
+    ///
+    /// // Print 1, 2, 3
+    /// for x in set.iter() {
+    ///     println!("{}", x);
+    /// }
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn iter<'a>(&'a self) -> Iter<'a> {
+        Iter { iter: self.map.iter() }
+    }
+
+    /// Gets an iterator pointing to the first value that is not less than `val`.
+    /// If all values in the set are less than `val` an empty iterator is returned.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let set: CowTrieSet = [2, 4, 6, 8].iter().map(|&x| x).collect();
+    /// assert_eq!(set.lower_bound(4).next(), Some(4));
+    /// assert_eq!(set.lower_bound(5).next(), Some(6));
+    /// assert_eq!(set.lower_bound(10).next(), None);
+    /// ```
+    pub fn lower_bound<'a>(&'a self, val: usize) -> Iter<'a> {
+        Iter { iter: self.map.lower_bound(val) }
+    }
+
+    /// Gets an iterator pointing to the first value that key is greater than `val`.
+    /// If all values in the set are less than or equal to `val` an empty iterator is returned.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let set: CowTrieSet = [2, 4, 6, 8].iter().map(|&x| x).collect();
+    /// assert_eq!(set.upper_bound(4).next(), Some(6));
+    /// assert_eq!(set.upper_bound(5).next(), Some(6));
+    /// assert_eq!(set.upper_bound(10).next(), None);
+    /// ```
+    pub fn upper_bound<'a>(&'a self, val: usize) -> Iter<'a> {
+        Iter { iter: self.map.upper_bound(val) }
+    }
+
+    /// Visits the values representing the difference, in ascending order.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let b: CowTrieSet = [3, 4, 5].iter().map(|&x| x).collect();
+    ///
+    /// // Can be seen as `a - b`.
+    /// for x in a.difference(&b) {
+    ///     println!("{}", x); // Print 1 then 2
+    /// }
+    ///
+    /// let diff1: CowTrieSet = a.difference(&b).collect();
+    /// assert_eq!(diff1, [1, 2].iter().map(|&x| x).collect());
+    ///
+    /// // Note that difference is not symmetric,
+    /// // and `b - a` means something else:
+    /// let diff2: CowTrieSet = b.difference(&a).collect();
+    /// assert_eq!(diff2, [4, 5].iter().map(|&x| x).collect());
+    /// ```
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn difference<'a>(&'a self, other: &'a CowTrieSet) -> Difference<'a> {
+        Difference { a: self.iter().peekable(), b: other.iter().peekable() }
+    }
+
+    /// Visits the values representing the symmetric difference, in ascending order.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let b: CowTrieSet = [3, 4, 5].iter().map(|&x| x).collect();
+    ///
+    /// // Print 1, 2, 4, 5 in ascending order.
+    /// for x in a.symmetric_difference(&b) {
+    ///     println!("{}", x);
+    /// }
+    ///
+    /// let diff1: CowTrieSet = a.symmetric_difference(&b).collect();
+    /// let diff2: CowTrieSet = b.symmetric_difference(&a).collect();
+    ///
+    /// assert_eq!(diff1, diff2);
+    /// assert_eq!(diff1, [1, 2, 4, 5].iter().map(|&x| x).collect());
+    /// ```
+    #[unstable = "matches collection reform specification, waiting for dust to settle."]
+    pub fn symmetric_difference<'a>(&'a self, other: &'a CowTrieSet) -> SymmetricDifference<'a> {
+        SymmetricDifference { a: self.iter().peekable(), b: other.iter().peekable() }
+    }
+
+    /// Visits the values representing the intersection, in ascending order.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let b: CowTrieSet = [2, 3, 4].iter().map(|&x| x).collect();
+    ///
+    /// // Print 2, 3 in ascending order.
+    /// for x in a.intersection(&b) {
+    ///     println!("{}", x);
+    /// }
+    ///
+    /// let diff: CowTrieSet = a.intersection(&b).collect();
+    /// assert_eq!(diff, [2, 3].iter().map(|&x| x).collect());
+    /// ```
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn intersection<'a>(&'a self, other: &'a CowTrieSet) -> Intersection<'a> {
+        Intersection { a: self.iter().peekable(), b: other.iter().peekable() }
+    }
+
+    /// Visits the values representing the union, in ascending order.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let b: CowTrieSet = [3, 4, 5].iter().map(|&x| x).collect();
+    ///
+    /// // Print 1, 2, 3, 4, 5 in ascending order.
+    /// for x in a.union(&b) {
+    ///     println!("{}", x);
+    /// }
+    ///
+    /// let diff: CowTrieSet = a.union(&b).collect();
+    /// assert_eq!(diff, [1, 2, 3, 4, 5].iter().map(|&x| x).collect());
+    /// ```
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn union<'a>(&'a self, other: &'a CowTrieSet) -> Union<'a> {
+        Union { a: self.iter().peekable(), b: other.iter().peekable() }
+    }
+
+    /// Return the number of elements in the set
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let mut v = CowTrieSet::new();
+    /// assert_eq!(v.len(), 0);
+    /// v.insert(1);
+    /// assert_eq!(v.len(), 1);
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn len(&self) -> usize { self.map.len() }
+
+    /// Returns true if the set contains no elements
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let mut v = CowTrieSet::new();
+    /// assert!(v.is_empty());
+    /// v.insert(1);
+    /// assert!(!v.is_empty());
+    /// ```
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn is_empty(&self) -> bool { self.len() == 0 }
+
+    /// Clears the set, removing all values.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let mut v = CowTrieSet::new();
+    /// v.insert(1);
+    /// v.clear();
+    /// assert!(v.is_empty());
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn clear(&mut self) { self.map.clear() }
+
+    /// Returns `true` if the set contains a value.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let set: CowTrieSet = [1, 2, 3].iter().map(|&x| x).collect();
+    /// assert_eq!(set.contains(&1), true);
+    /// assert_eq!(set.contains(&4), false);
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn contains(&self, value: &usize) -> bool {
+        self.map.contains_key(value)
+    }
+
+    /// Returns `true` if the set has no elements in common with `other`.
+    /// This is equivalent to checking for an empty intersection.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let mut b: CowTrieSet = CowTrieSet::new();
+    ///
+    /// assert_eq!(a.is_disjoint(&b), true);
+    /// b.insert(4);
+    /// assert_eq!(a.is_disjoint(&b), true);
+    /// b.insert(1);
+    /// assert_eq!(a.is_disjoint(&b), false);
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn is_disjoint(&self, other: &CowTrieSet) -> bool {
+        self.iter().all(|v| !other.contains(&v))
+    }
+
+    /// Returns `true` if the set is a subset of another.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let sup: CowTrieSet = [1, 2, 3].iter().map(|&x| x).collect();
+    /// let mut set: CowTrieSet = CowTrieSet::new();
+    ///
+    /// assert_eq!(set.is_subset(&sup), true);
+    /// set.insert(2);
+    /// assert_eq!(set.is_subset(&sup), true);
+    /// set.insert(4);
+    /// assert_eq!(set.is_subset(&sup), false);
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn is_subset(&self, other: &CowTrieSet) -> bool {
+        self.iter().all(|v| other.contains(&v))
+    }
+
+    /// Returns `true` if the set is a superset of another.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let sub: CowTrieSet = [1, 2].iter().map(|&x| x).collect();
+    /// let mut set: CowTrieSet = CowTrieSet::new();
+    ///
+    /// assert_eq!(set.is_superset(&sub), false);
+    ///
+    /// set.insert(0);
+    /// set.insert(1);
+    /// assert_eq!(set.is_superset(&sub), false);
+    ///
+    /// set.insert(2);
+    /// assert_eq!(set.is_superset(&sub), true);
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn is_superset(&self, other: &CowTrieSet) -> bool {
+        other.is_subset(self)
+    }
+
+    /// Adds a value to the set. Returns `true` if the value was not already
+    /// present in the set.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let mut set = CowTrieSet::new();
+    ///
+    /// assert_eq!(set.insert(2), true);
+    /// assert_eq!(set.insert(2), false);
+    /// assert_eq!(set.len(), 1);
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn insert(&mut self, value: usize) -> bool {
+        self.map.insert(value, ()).is_none()
+    }
+
+    /// Removes a value from the set. Returns `true` if the value was
+    /// present in the set.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let mut set = CowTrieSet::new();
+    ///
+    /// set.insert(2);
+    /// assert_eq!(set.remove(&2), true);
+    /// assert_eq!(set.remove(&2), false);
+    /// ```
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn remove(&mut self, value: &usize) -> bool {
+        self.map.remove(value).is_some()
+    }
+}
+
+impl iter::FromIterator<usize> for CowTrieSet {
+    fn from_iter<Iter: Iterator<Item=usize>>(iter: Iter) -> CowTrieSet {
+        let mut set = CowTrieSet::new();
+        set.extend(iter);
+        set
+    }
+}
+
+impl Extend<usize> for CowTrieSet {
+    fn extend<Iter: Iterator<Item=usize>>(&mut self, mut iter: Iter) {
+        for elem in iter {
+            self.insert(elem);
+        }
+    }
+}
+
+#[unstable = "matches collection reform specification, waiting for dust to settle"]
+impl<'a, 'b> ops::BitOr<&'b CowTrieSet> for &'a CowTrieSet {
+    type Output = CowTrieSet;
+
+    /// Returns the union of `self` and `rhs` as a new `CowTrieSet`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = vec![1, 2, 3].into_iter().collect();
+    /// let b: CowTrieSet = vec![3, 4, 5].into_iter().collect();
+    ///
+    /// let set: CowTrieSet = &a | &b;
+    /// let v: Vec<usize> = set.iter().collect();
+    /// assert_eq!(v, vec![1, 2, 3, 4, 5]);
+    /// ```
+    fn bitor(self, rhs: &CowTrieSet) -> CowTrieSet {
+        self.union(rhs).collect()
+    }
+}
+
+#[unstable = "matches collection reform specification, waiting for dust to settle"]
+impl<'a, 'b> ops::BitAnd<&'b CowTrieSet> for &'a CowTrieSet {
+    type Output = CowTrieSet;
+
+    /// Returns the intersection of `self` and `rhs` as a new `CowTrieSet`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = vec![1, 2, 3].into_iter().collect();
+    /// let b: CowTrieSet = vec![2, 3, 4].into_iter().collect();
+    ///
+    /// let set: CowTrieSet = &a & &b;
+    /// let v: Vec<usize> = set.iter().collect();
+    /// assert_eq!(v, vec![2, 3]);
+    /// ```
+    fn bitand(self, rhs: &CowTrieSet) -> CowTrieSet {
+        self.intersection(rhs).collect()
+    }
+}
+
+#[unstable = "matches collection reform specification, waiting for dust to settle"]
+impl<'a, 'b> ops::BitXor<&'b CowTrieSet> for &'a CowTrieSet {
+    type Output = CowTrieSet;
+
+    /// Returns the symmetric difference of `self` and `rhs` as a new `CowTrieSet`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = vec![1, 2, 3].into_iter().collect();
+    /// let b: CowTrieSet = vec![3, 4, 5].into_iter().collect();
+    ///
+    /// let set: CowTrieSet = &a ^ &b;
+    /// let v: Vec<usize> = set.iter().collect();
+    /// assert_eq!(v, vec![1, 2, 4, 5]);
+    /// ```
+    fn bitxor(self, rhs: &CowTrieSet) -> CowTrieSet {
+        self.symmetric_difference(rhs).collect()
+    }
+}
+
+#[unstable = "matches collection reform specification, waiting for dust to settle"]
+impl<'a, 'b> ops::Sub<&'b CowTrieSet> for &'a CowTrieSet {
+    type Output = CowTrieSet;
+
+    /// Returns the difference of `self` and `rhs` as a new `CowTrieSet`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use collect::CowTrieSet;
+    ///
+    /// let a: CowTrieSet = vec![1, 2, 3].into_iter().collect();
+    /// let b: CowTrieSet = vec![3, 4, 5].into_iter().collect();
+    ///
+    /// let set: CowTrieSet = &a - &b;
+    /// let v: Vec<usize> = set.iter().collect();
+    /// assert_eq!(v, vec![1, 2]);
+    /// ```
+    fn sub(self, rhs: &CowTrieSet) -> CowTrieSet {
+        self.difference(rhs).collect()
+    }
+}
+
+/// A forward iterator over a set.
+pub struct Iter<'a> {
+    iter: cow_trie_map::Iter<'a, ()>
+}
+
+/// An iterator producing elements in the set difference (in-order).
+pub struct Difference<'a> {
+    a: Peekable<usize, Iter<'a>>,
+    b: Peekable<usize, Iter<'a>>,
+}
+
+/// An iterator producing elements in the set symmetric difference (in-order).
+pub struct SymmetricDifference<'a> {
+    a: Peekable<usize, Iter<'a>>,
+    b: Peekable<usize, Iter<'a>>,
+}
+
+/// An iterator producing elements in the set intersection (in-order).
+pub struct Intersection<'a> {
+    a: Peekable<usize, Iter<'a>>,
+    b: Peekable<usize, Iter<'a>>,
+}
+
+/// An iterator producing elements in the set union (in-order).
+pub struct Union<'a> {
+    a: Peekable<usize, Iter<'a>>,
+    b: Peekable<usize, Iter<'a>>,
+}
+
+/// Compare `x` and `y`, but return `short` if x is None and `long` if y is None
+fn cmp_opt(x: Option<&usize>, y: Option<&usize>, short: Ordering, long: Ordering) -> Ordering {
+    match (x, y) {
+        (None    , _       ) => short,
+        (_       , None    ) => long,
+        (Some(x1), Some(y1)) => x1.cmp(y1),
+    }
+}
+
+impl<'a> Iterator for Iter<'a> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
+        self.iter.next().map(|(key, _)| key)
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.iter.size_hint()
+    }
+}
+
+impl<'a> Iterator for Difference<'a> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
+        loop {
+            match cmp_opt(self.a.peek(), self.b.peek(), Less, Less) {
+                Less    => return self.a.next(),
+                Equal   => { self.a.next(); self.b.next(); }
+                Greater => { self.b.next(); }
+            }
+        }
+    }
+}
+
+impl<'a> Iterator for SymmetricDifference<'a> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
+        loop {
+            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
+                Less => return self.a.next(),
+                Equal => { self.a.next(); self.b.next(); }
+                Greater => return self.b.next(),
+            }
+        }
+    }
+}
+
+impl<'a> Iterator for Intersection<'a> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
+        loop {
+            let o_cmp = match (self.a.peek(), self.b.peek()) {
+                (None    , _       ) => None,
+                (_       , None    ) => None,
+                (Some(a1), Some(b1)) => Some(a1.cmp(b1)),
+            };
+            match o_cmp {
+                None          => return None,
+                Some(Less)    => { self.a.next(); }
+                Some(Equal)   => { self.b.next(); return self.a.next() }
+                Some(Greater) => { self.b.next(); }
+            }
+        }
+    }
+}
+
+impl<'a> Iterator for Union<'a> {
+    type Item = usize;
+    fn next(&mut self) -> Option<usize> {
+        loop {
+            match cmp_opt(self.a.peek(), self.b.peek(), Greater, Less) {
+                Less    => return self.a.next(),
+                Equal   => { self.b.next(); return self.a.next() }
+                Greater => return self.b.next(),
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use std::usize;
+
+    use super::CowTrieSet;
+
+    #[test]
+    fn test_sane_chunk() {
+        let x = 1;
+        let y = 1 << (usize::BITS - 1);
+
+        let mut trie = CowTrieSet::new();
+
+        assert!(trie.insert(x));
+        assert!(trie.insert(y));
+
+        assert_eq!(trie.len(), 2);
+
+        let expected = [x, y];
+
+        for (i, x) in trie.iter().enumerate() {
+            assert_eq!(expected[i], x);
+        }
+    }
+
+    #[test]
+    fn test_from_iter() {
+        let xs = vec![9, 8, 7, 6, 5, 4, 3, 2, 1];
+
+        let set: CowTrieSet = xs.iter().map(|&x| x).collect();
+
+        for x in xs.iter() {
+            assert!(set.contains(x));
+        }
+    }
+
+    #[test]
+    fn test_show() {
+        let mut set = CowTrieSet::new();
+        let empty = CowTrieSet::new();
+
+        set.insert(1);
+        set.insert(2);
+
+        assert_eq!(format!("{:?}", set), "{1u, 2u}");
+        assert_eq!(format!("{:?}", empty), "{}");
+    }
+
+    #[test]
+    fn test_clone() {
+        let mut a = CowTrieSet::new();
+
+        a.insert(1);
+        a.insert(2);
+        a.insert(3);
+
+        assert!(a.clone() == a);
+    }
+
+    #[test]
+    fn test_lt() {
+        let mut a = CowTrieSet::new();
+        let mut b = CowTrieSet::new();
+
+        assert!(!(a < b) && !(b < a));
+        assert!(b.insert(2));
+        assert!(a < b);
+        assert!(a.insert(3));
+        assert!(!(a < b) && b < a);
+        assert!(b.insert(1));
+        assert!(b < a);
+        assert!(a.insert(0));
+        assert!(a < b);
+        assert!(a.insert(6));
+        assert!(a < b && !(b < a));
+    }
+
+    #[test]
+    fn test_ord() {
+        let mut a = CowTrieSet::new();
+        let mut b = CowTrieSet::new();
+
+        assert!(a <= b && a >= b);
+        assert!(a.insert(1));
+        assert!(a > b && a >= b);
+        assert!(b < a && b <= a);
+        assert!(b.insert(2));
+        assert!(b > a && b >= a);
+        assert!(a < b && a <= b);
+    }
+
+    struct Counter<'a, 'b> {
+        i: &'a mut usize,
+        expected: &'b [usize],
+    }
+
+    impl<'a, 'b> FnMut(usize) -> bool for Counter<'a, 'b> {
+        extern "rust-call" fn call_mut(&mut self, (x,): (usize,)) -> bool {
+            assert_eq!(x, self.expected[*self.i]);
+            *self.i += 1;
+            true
+        }
+    }
+
+    fn check<F>(a: &[usize], b: &[usize], expected: &[usize], f: F) where
+        // FIXME Replace `Counter` with `Box<FnMut(&usize) -> bool>`
+        F: FnOnce(&CowTrieSet, &CowTrieSet, Counter) -> bool,
+    {
+        let mut set_a = CowTrieSet::new();
+        let mut set_b = CowTrieSet::new();
+
+        for x in a.iter() { assert!(set_a.insert(*x)) }
+        for y in b.iter() { assert!(set_b.insert(*y)) }
+
+        let mut i = 0;
+        f(&set_a, &set_b, Counter { i: &mut i, expected: expected });
+        assert_eq!(i, expected.len());
+    }
+
+    #[test]
+    fn test_intersection() {
+        fn check_intersection(a: &[usize], b: &[usize], expected: &[usize]) {
+            check(a, b, expected, |x, y, f| x.intersection(y).all(f))
+        }
+
+        check_intersection(&[], &[], &[]);
+        check_intersection(&[1, 2, 3], &[], &[]);
+        check_intersection(&[], &[1, 2, 3], &[]);
+        check_intersection(&[2], &[1, 2, 3], &[2]);
+        check_intersection(&[1, 2, 3], &[2], &[2]);
+        check_intersection(&[11, 1, 3, 77, 103, 5],
+                           &[2, 11, 77, 5, 3],
+                           &[3, 5, 11, 77]);
+    }
+
+    #[test]
+    fn test_difference() {
+        fn check_difference(a: &[usize], b: &[usize], expected: &[usize]) {
+            check(a, b, expected, |x, y, f| x.difference(y).all(f))
+        }
+
+        check_difference(&[], &[], &[]);
+        check_difference(&[1, 12], &[], &[1, 12]);
+        check_difference(&[], &[1, 2, 3, 9], &[]);
+        check_difference(&[1, 3, 5, 9, 11],
+                         &[3, 9],
+                         &[1, 5, 11]);
+        check_difference(&[11, 22, 33, 40, 42],
+                         &[14, 23, 34, 38, 39, 50],
+                         &[11, 22, 33, 40, 42]);
+    }
+
+    #[test]
+    fn test_symmetric_difference() {
+        fn check_symmetric_difference(a: &[usize], b: &[usize], expected: &[usize]) {
+            check(a, b, expected, |x, y, f| x.symmetric_difference(y).all(f))
+        }
+
+        check_symmetric_difference(&[], &[], &[]);
+        check_symmetric_difference(&[1, 2, 3], &[2], &[1, 3]);
+        check_symmetric_difference(&[2], &[1, 2, 3], &[1, 3]);
+        check_symmetric_difference(&[1, 3, 5, 9, 11],
+                                   &[3, 9, 14, 22],
+                                   &[1, 5, 11, 14, 22]);
+    }
+
+    #[test]
+    fn test_union() {
+        fn check_union(a: &[usize], b: &[usize], expected: &[usize]) {
+            check(a, b, expected, |x, y, f| x.union(y).all(f))
+        }
+
+        check_union(&[], &[], &[]);
+        check_union(&[1, 2, 3], &[2], &[1, 2, 3]);
+        check_union(&[2], &[1, 2, 3], &[1, 2, 3]);
+        check_union(&[1, 3, 5, 9, 11, 16, 19, 24],
+                    &[1, 5, 9, 13, 19],
+                    &[1, 3, 5, 9, 11, 13, 16, 19, 24]);
+    }
+
+    #[test]
+    fn test_bit_or() {
+        let a: CowTrieSet = vec![1, 2, 3].into_iter().collect();
+        let b: CowTrieSet = vec![3, 4, 5].into_iter().collect();
+
+        let set: CowTrieSet = &a | &b;
+        let v: Vec<usize> = set.iter().collect();
+        assert_eq!(v, vec![1, 2, 3, 4, 5]);
+    }
+
+    #[test]
+    fn test_bit_and() {
+        let a: CowTrieSet = vec![1, 2, 3].into_iter().collect();
+        let b: CowTrieSet = vec![2, 3, 4].into_iter().collect();
+
+        let set: CowTrieSet = &a & &b;
+        let v: Vec<usize> = set.iter().collect();
+        assert_eq!(v, vec![2, 3]);
+    }
+
+    #[test]
+    fn test_bit_xor() {
+        let a: CowTrieSet = vec![1, 2, 3].into_iter().collect();
+        let b: CowTrieSet = vec![3, 4, 5].into_iter().collect();
+
+        let set: CowTrieSet = &a ^ &b;
+        let v: Vec<usize> = set.iter().collect();
+        assert_eq!(v, vec![1, 2, 4, 5]);
+    }
+
+    #[test]
+    fn test_sub() {
+        let a: CowTrieSet = vec![1, 2, 3].into_iter().collect();
+        let b: CowTrieSet = vec![3, 4, 5].into_iter().collect();
+
+        let set: CowTrieSet = &a - &b;
+        let v: Vec<usize> = set.iter().collect();
+        assert_eq!(v, vec![1, 2]);
+    }
+}

@@ -44,13 +44,15 @@ pub use tree_map::TreeMap;
 pub use tree_set::TreeSet;
 pub use trie_map::TrieMap;
 pub use trie_set::TrieSet;
-
+pub use cow_trie_map::CowTrieMap;
+pub use cow_trie_set::CowTrieSet;
 
 
 // privates
 
 mod tree;
 mod trie;
+mod cow_trie;
 #[cfg(test)] mod bench;
 
 
@@ -83,7 +85,13 @@ pub mod trie_set {
     pub use trie::set::*;
 }
 
+pub mod cow_trie_map {
+    pub use cow_trie::map::*;
+}
 
+pub mod cow_trie_set {
+    pub use cow_trie::set::*;
+}
 
 pub mod proto;
 
