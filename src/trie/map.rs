@@ -15,12 +15,10 @@ use self::TrieNode::*;
 
 use std::cmp::Ordering;
 use std::default::Default;
-use std::fmt::Debug;
-use std::fmt;
+use std::fmt::{self, Debug};
 use std::hash::{Hash, Hasher, Writer};
 use std::iter;
-use std::mem::zeroed;
-use std::mem;
+use std::mem::{self, zeroed};
 use std::ops;
 use std::ptr;
 use std::slice;
@@ -225,7 +223,7 @@ impl<T> TrieMap<T> {
     /// }
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter<'a>(&'a self) -> Iter<'a, T> {
+    pub fn iter(&self) -> Iter<T> {
         let mut iter = unsafe {Iter::new()};
         iter.stack[0] = self.root.children.iter();
         iter.length = 1;
@@ -253,7 +251,7 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.get(&3), Some(&-3));
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, T> {
+    pub fn iter_mut(&mut self) -> IterMut<T> {
         let mut iter = unsafe {IterMut::new()};
         iter.stack[0] = self.root.children.iter_mut();
         iter.length = 1;
@@ -382,7 +380,7 @@ impl<T> TrieMap<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn get_mut<'a>(&'a mut self, key: &usize) -> Option<&'a mut T> {
+    pub fn get_mut(&mut self, key: &usize) -> Option<&mut T> {
         find_mut(&mut self.root.children[chunk(*key, 0)], *key, 1)
     }
 
@@ -521,7 +519,7 @@ macro_rules! bound {
 impl<T> TrieMap<T> {
     // If `upper` is true then returns upper_bound else returns lower_bound.
     #[inline]
-    fn bound<'a>(&'a self, key: usize, upper: bool) -> Iter<'a, T> {
+    fn bound(&self, key: usize, upper: bool) -> Iter<T> {
         bound!(Iter, self = self,
                key = key, is_upper = upper,
                iter = iter,
@@ -541,7 +539,7 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.lower_bound(5).next(), Some((6, &"c")));
     /// assert_eq!(map.lower_bound(10).next(), None);
     /// ```
-    pub fn lower_bound<'a>(&'a self, key: usize) -> Iter<'a, T> {
+    pub fn lower_bound(&self, key: usize) -> Iter<T> {
         self.bound(key, false)
     }
 
@@ -558,12 +556,12 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.upper_bound(5).next(), Some((6, &"c")));
     /// assert_eq!(map.upper_bound(10).next(), None);
     /// ```
-    pub fn upper_bound<'a>(&'a self, key: usize) -> Iter<'a, T> {
+    pub fn upper_bound(&self, key: usize) -> Iter<T> {
         self.bound(key, true)
     }
     // If `upper` is true then returns upper_bound else returns lower_bound.
     #[inline]
-    fn bound_mut<'a>(&'a mut self, key: usize, upper: bool) -> IterMut<'a, T> {
+    fn bound_mut(&mut self, key: usize, upper: bool) -> IterMut<T> {
         bound!(IterMut, self = self,
                key = key, is_upper = upper,
                iter = iter_mut,
@@ -591,7 +589,7 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.get(&4), Some(&"changed"));
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// ```
-    pub fn lower_bound_mut<'a>(&'a mut self, key: usize) -> IterMut<'a, T> {
+    pub fn lower_bound_mut(&mut self, key: usize) -> IterMut<T> {
         self.bound_mut(key, false)
     }
 
@@ -616,7 +614,7 @@ impl<T> TrieMap<T> {
     /// assert_eq!(map.get(&4), Some(&"b"));
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// ```
-    pub fn upper_bound_mut<'a>(&'a mut self, key: usize) -> IterMut<'a, T> {
+    pub fn upper_bound_mut(&mut self, key: usize) -> IterMut<T> {
         self.bound_mut(key, true)
     }
 }
@@ -648,7 +646,7 @@ impl<S: Hasher+Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
 impl<T> ops::Index<usize> for TrieMap<T> {
     type Output = T;
     #[inline]
-    fn index<'a>(&'a self, i: &usize) -> &'a T {
+    fn index(&self, i: &usize) -> &T {
         self.get(i).expect("key not present")
     }
 }
@@ -656,7 +654,7 @@ impl<T> ops::Index<usize> for TrieMap<T> {
 impl<T> ops::IndexMut<usize> for TrieMap<T> {
     type Output = T;
     #[inline]
-    fn index_mut<'a>(&'a mut self, i: &usize) -> &'a mut T {
+    fn index_mut(&mut self, i: &usize) -> &mut T {
         self.get_mut(i).expect("key not present")
     }
 }
@@ -708,7 +706,7 @@ fn chunk(n: usize, idx: usize) -> usize {
     (n >> sh) & MASK
 }
 
-fn find_mut<'r, T>(child: &'r mut TrieNode<T>, key: usize, idx: usize) -> Option<&'r mut T> {
+fn find_mut<T>(child: &mut TrieNode<T>, key: usize, idx: usize) -> Option<&mut T> {
     match *child {
         External(stored, ref mut value) if stored == key => Some(value),
         External(..) => None,
@@ -892,7 +890,7 @@ impl<'a, T> SearchStack<'a, T> {
 impl<T> TrieMap<T> {
     /// Gets the given key's corresponding entry in the map for in-place manipulation.
     #[inline]
-    pub fn entry<'a>(&'a mut self, key: usize) -> Entry<'a, T> {
+    pub fn entry(&mut self, key: usize) -> Entry<T> {
         // Create an empty search stack.
         let mut search_stack = SearchStack::new(self, key);
 
@@ -931,7 +929,7 @@ impl<T> TrieMap<T> {
 ///
 /// This function is safe only if `node` points to a valid `TrieNode`.
 #[inline]
-unsafe fn next_child<'a, T>(node: *mut TrieNode<T>, key: usize, idx: usize)
+unsafe fn next_child<T>(node: *mut TrieNode<T>, key: usize, idx: usize)
     -> (Option<*mut TrieNode<T>>, bool) {
     match *node {
         // If the node is internal, tell the caller to descend further.
