@@ -28,6 +28,7 @@
 #[cfg(test)] extern crate test;
 extern crate core;
 extern crate traverse;
+extern crate alloc;
 
 
 
@@ -85,5 +86,6 @@ pub mod trie_set {
 
 
 
+pub mod util;
 pub mod proto;
 
