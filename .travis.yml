@@ -6,9 +6,9 @@ env:
   global:
     - secure: "PdLSLIwcxQynRSxfkZrhYPQu8goMpbO3BUoIvUohRzF2xYFB6sS/4+uxyzCuy85TV+2Q6TYdh/G3GDcRVU24G4mMIV2AH3PwiRmC/bzclqbj6CWtBlgHkKP4WYsIaqxuLl4X/7W8EbNjAqW3bD/WuzESGbY26v3pu+MLoQvxduA="
 script:
-- cargo build --features all
-- cargo test --features all
-- cargo doc --features all
+- cargo build
+- cargo test
+- cargo doc
 
 after_success:
   - test "$TRAVIS_PULL_REQUEST" == false && test "$TRAVIS_BRANCH" == "master" && bash deploy-docs.sh
