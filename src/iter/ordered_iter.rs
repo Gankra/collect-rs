@@ -10,7 +10,10 @@ use std::collections::{
     bitv_set
 };
 
-use super::super::{tree_set, tree_map, trie_set, trie_map};
+#[cfg(feature="tree_map")]
+use super::super::{tree_set, tree_map};
+#[cfg(feature="trie_map")]
+use super::super::{trie_set, trie_map};
 
 /// Allows an iterator to be do an inner join with another
 /// iterator to combine their values or filter based on their keys.
@@ -242,9 +245,13 @@ impl<K: Ord+Eq,
 
 impl<'a, K: Ord> OrderedSetIterator<&'a K> for btree_set::Iter<'a, K> {}
 impl<'a, K: Ord, V> OrderedMapIterator<&'a K, &'a V> for btree_map::Iter<'a, K, V> {}
+#[cfg(feature="tree_map")]
 impl<'a, K> OrderedSetIterator<&'a K> for tree_set::Iter<'a, K> {}
+#[cfg(feature="tree_map")]
 impl<'a, K, V> OrderedMapIterator<&'a K, &'a V> for tree_map::Iter<'a, K, V> {}
+#[cfg(feature="trie_map")]
 impl<'a> OrderedSetIterator<usize> for trie_set::Iter<'a> {}
+#[cfg(feature="trie_map")]
 impl<'a, V> OrderedMapIterator<usize, &'a V> for trie_map::Iter<'a, V> {}
 impl<'a, V> OrderedMapIterator<usize, &'a V> for vec_map::Iter<'a, V> {}
 impl<'a> OrderedSetIterator<usize> for bitv_set::Iter<'a> {}

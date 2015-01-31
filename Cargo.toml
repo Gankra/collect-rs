@@ -14,5 +14,23 @@ documentation = "http://Gankro.github.io/collect-rs/collect"
 keywords = ["data-structures"]
 readme = "README.md"
 
-[dependencies]
-traverse = "*"
+[features]
+blist = ["traverse"]
+enum_set = []
+immut_slist  = []
+interval_heap = ["compare"]
+linked_hash_map = []
+lru_cache = []
+tree_map = ["compare"]
+trie_map = []
+compare = []
+proto = []
+string_joiner = []
+ordered_iter = []
+all = ["blist", "enum_set", "immut_slist", "interval_heap",
+       "linked_hash_map", "lru_cache", "tree_map", "trie_map",
+       "compare", "proto", "string_joiner", "ordered_iter"]
+
+
+[dependencies.traverse]
+optional = true
