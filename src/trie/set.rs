@@ -749,7 +749,8 @@ mod test {
         expected: &'b [usize],
     }
 
-    impl<'a, 'b> FnMut(usize) -> bool for Counter<'a, 'b> {
+    impl<'a, 'b> FnMut<(usize,)> for Counter<'a, 'b> {
+        type Output = bool;
         extern "rust-call" fn call_mut(&mut self, (x,): (usize,)) -> bool {
             assert_eq!(x, self.expected[*self.i]);
             *self.i += 1;

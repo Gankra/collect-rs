@@ -996,7 +996,8 @@ mod test {
         expected: &'b [i32],
     }
 
-    impl<'a, 'b, 'c> FnMut(&'c i32) -> bool for Counter<'a, 'b> {
+    impl<'a, 'b, 'c> FnMut<(&'c i32,)> for Counter<'a, 'b> {
+        type Output = bool;
         extern "rust-call" fn call_mut(&mut self, (&x,): (&'c i32,)) -> bool {
             assert_eq!(x, self.expected[*self.i]);
             *self.i += 1;
