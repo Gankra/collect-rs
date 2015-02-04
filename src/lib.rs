@@ -27,63 +27,61 @@
 
 #[cfg(test)] extern crate test;
 extern crate core;
+
+#[cfg(feature="traverse")]
 extern crate traverse;
 
 
 
-
 // Re-Exports
-
-pub use blist::BList;
-pub use enum_set::EnumSet;
-pub use immut_slist::ImmutSList;
-pub use interval_heap::IntervalHeap;
-pub use linked_hash_map::LinkedHashMap;
-pub use lru_cache::LruCache;
-pub use tree_map::TreeMap;
-pub use tree_set::TreeSet;
-pub use trie_map::TrieMap;
-pub use trie_set::TrieSet;
-
-
+#[cfg(feature="blist")] pub use blist::BList;
+#[cfg(feature="enum_set")] pub use enum_set::EnumSet;
+#[cfg(feature="immut_slist")] pub use immut_slist::ImmutSList;
+#[cfg(feature="interval_heap")] pub use interval_heap::IntervalHeap;
+#[cfg(feature="linked_hash_map")] pub use linked_hash_map::LinkedHashMap;
+#[cfg(feature="lru_cache")] pub use lru_cache::LruCache;
+#[cfg(feature="tree_map")] pub use tree_map::TreeMap;
+#[cfg(feature="tree_map")] pub use tree_set::TreeSet;
+#[cfg(feature="trie_map")] pub use trie_map::TrieMap;
+#[cfg(feature="trie_map")] pub use trie_set::TrieSet;
 
 // privates
-
-mod tree;
-mod trie;
+#[cfg(feature="tree_map")] mod tree;
+#[cfg(feature="trie_map")] mod trie;
 #[cfg(test)] mod bench;
-
-
 
 // publics
 
-pub mod compare;
+#[cfg(feature="compare")] pub mod compare;
 pub mod iter;
 
-pub mod blist;
-pub mod enum_set;
-pub mod immut_slist;
-pub mod interval_heap;
-pub mod linked_hash_map;
-pub mod lru_cache;
+#[cfg(feature="blist")] pub mod blist;
+#[cfg(feature="enum_set")] pub mod enum_set;
+#[cfg(feature="immut_slist")] pub mod immut_slist;
+#[cfg(feature="interval_heap")] pub mod interval_heap;
+#[cfg(feature="linked_hash_map")] pub mod linked_hash_map;
+#[cfg(feature="lru_cache")] pub mod lru_cache;
 
+#[cfg(feature="tree_map")]
 pub mod tree_map {
     pub use tree::map::*;
 }
 
+#[cfg(feature="tree_map")]
 pub mod tree_set {
     pub use tree::set::*;
 }
 
+#[cfg(feature="trie_map")]
 pub mod trie_map {
     pub use trie::map::*;
 }
 
+#[cfg(feature="trie_map")]
 pub mod trie_set {
     pub use trie::set::*;
 }
 
-
-
+#[cfg(feature="proto")]
 pub mod proto;
 
