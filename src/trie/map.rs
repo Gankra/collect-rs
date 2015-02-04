@@ -628,7 +628,7 @@ impl<T> iter::FromIterator<(usize, T)> for TrieMap<T> {
 }
 
 impl<T> Extend<(usize, T)> for TrieMap<T> {
-    fn extend<Iter: Iterator<Item=(usize, T)>>(&mut self, mut iter: Iter) {
+    fn extend<Iter: Iterator<Item=(usize, T)>>(&mut self, iter: Iter) {
         for (k, v) in iter {
             self.insert(k, v);
         }

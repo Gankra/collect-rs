@@ -4,7 +4,7 @@ use std::iter;
 use std::fmt;
 use std::hash::{Hash, Hasher, Writer};
 use std::num::Int;
-use traverse::Traversal;
+// use traverse::Traversal;
 use proto::dlist::{self, DList};
 
 /// A skeleton implementation of a BList, based on the [Space-Efficient Linked List]
@@ -189,6 +189,7 @@ impl<T> BList<T> {
         })
     }
 
+    /* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
     pub fn traversal(&self) -> Trav<T> {
         Trav { list: self }
     }
@@ -200,6 +201,7 @@ impl<T> BList<T> {
     pub fn into_traversal(self) -> IntoTrav<T> {
         IntoTrav { list: self }
     }
+    */
 
     /// Lazily moves the contents of `other` to the end of `self`, in the sense that it makes no
     /// effort to preserve the node-size lower-bound invariant. This can have negative effects
@@ -384,7 +386,7 @@ impl<T> DoubleEndedIterator for IntoIter<T> {
 }
 impl<T> ExactSizeIterator for IntoIter<T> {}
 
-
+/* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
 pub struct Trav<'a, T: 'a> {
     list: &'a BList<T>,
 }
@@ -432,7 +434,7 @@ impl<T> Traversal for IntoTrav<T> {
         }
     }
 }
-
+*/
 
 impl<A> iter::FromIterator<A> for BList<A> {
     fn from_iter<T: Iterator<Item=A>>(iterator: T) -> BList<A> {
@@ -443,7 +445,7 @@ impl<A> iter::FromIterator<A> for BList<A> {
 }
 
 impl<A> Extend<A> for BList<A> {
-    fn extend<T: Iterator<Item=A>>(&mut self, mut iterator: T) {
+    fn extend<T: Iterator<Item=A>>(&mut self, iterator: T) {
         for elt in iterator { self.push_back(elt); }
     }
 }
@@ -763,7 +765,7 @@ mod test {
 mod bench{
     use super::BList;
     use test;
-    use traverse::Traversal;
+    // use traverse::Traversal;
 
     #[bench]
     fn bench_collect_into(b: &mut test::Bencher) {
@@ -841,6 +843,7 @@ mod bench{
         })
     }
 
+    /* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
     #[bench]
     fn bench_trav(b: &mut test::Bencher) {
         let v = &[0; 128];
@@ -849,4 +852,5 @@ mod bench{
             assert!(m.traversal().count() == 128);
         })
     }
+    */
 }

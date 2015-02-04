@@ -447,7 +447,7 @@ impl iter::FromIterator<usize> for TrieSet {
 }
 
 impl Extend<usize> for TrieSet {
-    fn extend<Iter: Iterator<Item=usize>>(&mut self, mut iter: Iter) {
+    fn extend<Iter: Iterator<Item=usize>>(&mut self, iter: Iter) {
         for elem in iter {
             self.insert(elem);
         }

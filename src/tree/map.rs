@@ -598,7 +598,6 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(*ua.unwrap(), "Curl-Rust/0.1");
     /// ```
     #[inline]
-    #[experimental = "likely to be renamed, may be removed"]
     pub fn find_with<F>(&self, f: F) -> Option<&V> where F: FnMut(&K) -> Ordering {
         tree_find_with(&self.root, f)
     }
@@ -623,7 +622,6 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(t.get(&"User-Agent"), Some(&new_ua));
     /// ```
     #[inline]
-    #[experimental = "likely to be renamed, may be removed"]
     pub fn find_with_mut<F>(&mut self, f: F) -> Option<&mut V> where
         F: FnMut(&K) -> Ordering
     {
@@ -1299,7 +1297,7 @@ impl<K, V, C> iter::FromIterator<(K, V)> for TreeMap<K, V, C> where C: Compare<K
 
 impl<K, V, C> Extend<(K, V)> for TreeMap<K, V, C> where C: Compare<K> {
     #[inline]
-    fn extend<T: Iterator<Item=(K, V)>>(&mut self, mut iter: T) {
+    fn extend<T: Iterator<Item=(K, V)>>(&mut self, iter: T) {
         for (k, v) in iter {
             self.insert(k, v);
         }
@@ -1780,7 +1778,7 @@ mod test_treemap {
                         (&x5, &y5)];
         let mut i = 0;
 
-        for x in b {
+        for x in b.by_ref() {
             assert_eq!(expected[i], x);
             i += 1;
 

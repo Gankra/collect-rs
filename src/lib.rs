@@ -19,11 +19,17 @@
 //! Note that anything include in collect-rs is theoretically a candidate for inclusion in
 //! libcollections. As such, this project is licensed under the same terms as Rust itself.
 
-#![allow(unstable)]
+// there's too many combinations to track this stuff properly
+#![allow(unused_features)]
+
+#![cfg_attr(test, feature(test, rand, std_misc))]
+
 #![feature(box_syntax)]
 #![feature(old_impl_check)]
 #![feature(unboxed_closures)]
 #![feature(unsafe_destructor)]
+
+#![feature(core, hash, alloc)]
 
 #[cfg(test)] extern crate test;
 extern crate core;
