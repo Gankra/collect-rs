@@ -22,7 +22,7 @@ impl<A: ToString, T: Iterator<Item=A>> StringJoiner for T {
     match self.next() {
       Some(elem) => {
         let mut output = elem.to_string();
-        for elem in *self {
+        for elem in self.by_ref() {
           output.push_str(sep);
           output.push_str(elem.to_string().as_slice());
         }

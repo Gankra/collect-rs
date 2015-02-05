@@ -8,6 +8,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+
+// some stuff is conditionally used by feature, so just allow this to be dead
+#![allow(dead_code)]
+
 use std::rand;
 use std::rand::Rng;
 use test::Bencher;

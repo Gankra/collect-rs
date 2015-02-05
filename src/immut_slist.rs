@@ -143,7 +143,7 @@ impl<'a, T> Iterator for Iter<'a, T> {
 }
 
 impl<T> iter::FromIterator<T> for ImmutSList<T> {
-    fn from_iter<I: Iterator<Item=T>>(mut iterator: I) -> ImmutSList<T> {
+    fn from_iter<I: Iterator<Item=T>>(iterator: I) -> ImmutSList<T> {
         let mut list = ImmutSList::new();
         for elem in iterator {
             list = list.append(elem);

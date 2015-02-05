@@ -391,7 +391,7 @@ impl<T, C: Compare<T> + Default> iter::FromIterator<T> for IntervalHeap<T, C> {
 impl<T, C: Compare<T>> Extend<T> for IntervalHeap<T, C> {
     /// Extends the interval heap by a new chunk of items given by
     /// an iterator.
-    fn extend<Iter: Iterator<Item=T>>(&mut self, mut iter: Iter) {
+    fn extend<Iter: Iterator<Item=T>>(&mut self, iter: Iter) {
         let (lower, _) = iter.size_hint();
         self.reserve(lower);
         for elem in iter {

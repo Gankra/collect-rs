@@ -434,7 +434,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
 
 
 impl<K: Hash<HmHasher> + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
-    fn extend<T: Iterator<Item=(K, V)>>(&mut self, mut iter: T) {
+    fn extend<T: Iterator<Item=(K, V)>>(&mut self, iter: T) {
         for (k, v) in iter{
             self.insert(k, v);
         }

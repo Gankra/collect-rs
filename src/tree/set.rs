@@ -818,7 +818,7 @@ impl<T, C> iter::FromIterator<T> for TreeSet<T, C> where C: Compare<T> + Default
 
 impl<T, C> Extend<T> for TreeSet<T, C> where C: Compare<T> {
     #[inline]
-    fn extend<Iter: Iterator<Item=T>>(&mut self, mut iter: Iter) {
+    fn extend<Iter: Iterator<Item=T>>(&mut self, iter: Iter) {
         for elem in iter {
             self.insert(elem);
         }
