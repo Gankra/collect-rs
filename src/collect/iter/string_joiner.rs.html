@@ -110,7 +110,7 @@
     <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>next</span>() {
       <span class='prelude-val'>Some</span>(<span class='ident'>elem</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>output</span> <span class='op'>=</span> <span class='ident'>elem</span>.<span class='ident'>to_string</span>();
-        <span class='kw'>for</span> <span class='ident'>elem</span> <span class='kw'>in</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>for</span> <span class='ident'>elem</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>by_ref</span>() {
           <span class='ident'>output</span>.<span class='ident'>push_str</span>(<span class='ident'>sep</span>);
           <span class='ident'>output</span>.<span class='ident'>push_str</span>(<span class='ident'>elem</span>.<span class='ident'>to_string</span>().<span class='ident'>as_slice</span>());
         }

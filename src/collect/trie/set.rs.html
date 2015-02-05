@@ -915,6 +915,7 @@
 <span id="873">873</span>
 <span id="874">874</span>
 <span id="875">875</span>
+<span id="876">876</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -1365,7 +1366,7 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Extend</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TrieSet</span> {
-    <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>usize</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>iter</span>: <span class='ident'>Iter</span>) {
+    <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>usize</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>iter</span>: <span class='ident'>Iter</span>) {
         <span class='kw'>for</span> <span class='ident'>elem</span> <span class='kw'>in</span> <span class='ident'>iter</span> {
             <span class='self'>self</span>.<span class='ident'>insert</span>(<span class='ident'>elem</span>);
         }
@@ -1667,7 +1668,8 @@
         <span class='ident'>expected</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> [<span class='ident'>usize</span>],
     }
 
-    <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>FnMut</span>(<span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> <span class='kw'>for</span> <span class='ident'>Counter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> {
+    <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>FnMut</span><span class='op'>&lt;</span>(<span class='ident'>usize</span>,)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Counter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> {
+        <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>bool</span>;
         <span class='kw'>extern</span> <span class='string'>&quot;rust-call&quot;</span> <span class='kw'>fn</span> <span class='ident'>call_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, (<span class='ident'>x</span>,): (<span class='ident'>usize</span>,)) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='self'>self</span>.<span class='ident'>expected</span>[<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>i</span>]);
             <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;

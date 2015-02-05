@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>trie_map</a>::<wbr><a class='struct' href=''>TrieMap</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-6527' href='../../src/collect/trie/map.rs.html#89-92'>[src]</a></span></h1>
+        </span><a id='src-6680' href='../../src/collect/trie/map.rs.html#89-92'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct TrieMap&lt;T&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A map implemented as a radix trie.</p>
@@ -96,7 +96,7 @@ differentiate them.</p>
 <span class='ident'>map</span>.<span class='ident'>clear</span>();
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>is_empty</span>());
 </pre>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Creates an empty <code>TrieMap</code>.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -122,13 +122,13 @@ Returns <code>true</code> if <code>f</code> returns <code>true</code> for all el
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='boolval'>false</span>, <span class='ident'>map</span>.<span class='ident'>each_reverse</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>key</span>, <span class='kw-2'>&amp;</span><span class='ident'>value</span><span class='op'>|</span> { <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>value</span>); <span class='ident'>key</span> <span class='op'>!=</span> <span class='number'>2</span> }));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;c&quot;</span>, <span class='string'>&quot;b&quot;</span>]);
 </pre>
-</div><h4 id='method.keys' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Keys.html' title='collect::trie_map::Keys'>Keys</a>&lt;'r, T&gt;</code></h4>
+</div><h4 id='method.keys' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Keys.html' title='collect::trie_map::Keys'>Keys</a>&lt;'r, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator visiting all keys in ascending order by the keys.
 The iterator&#39;s element type is <code>usize</code>.</p>
-</div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Values.html' title='collect::trie_map::Values'>Values</a>&lt;'r, T&gt;</code></h4>
+</div><h4 id='method.values' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Values.html' title='collect::trie_map::Values'>Values</a>&lt;'r, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator visiting all values in ascending order by the keys.
 The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
-</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, ordered by keys.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -140,7 +140,7 @@ The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
 }
 </pre>
-</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, with the
 ability to mutate the values.</p>
 
@@ -157,7 +157,7 @@ ability to mutate the values.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>3</span>));
 </pre>
-</div><h4 id='method.len' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+</div><h4 id='method.len' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
 <div class='docblock'><p>Return the number of elements in the map.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -169,7 +169,7 @@ ability to mutate the values.</p>
 <span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
 </pre>
-</div><h4 id='method.is_empty' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.is_empty' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>Return true if the map contains no elements.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -181,7 +181,7 @@ ability to mutate the values.</p>
 <span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>);
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>is_empty</span>());
 </pre>
-</div><h4 id='method.clear' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self)</code></h4>
+</div><h4 id='method.clear' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self)</code></h4>
 <div class='docblock'><p>Clears the map, removing all values.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -193,7 +193,7 @@ ability to mutate the values.</p>
 <span class='ident'>a</span>.<span class='ident'>clear</span>();
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>is_empty</span>());
 </pre>
-</div><h4 id='method.get' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get' class='fnname'>get</a>(&amp;self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code></h4>
+</div><h4 id='method.get' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.get' class='fnname'>get</a>(&amp;self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code></h4>
 <div class='docblock'><p>Returns a reference to the value corresponding to the key.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -205,7 +205,7 @@ ability to mutate the values.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.contains_key' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.contains_key' class='fnname'>contains_key</a>(&amp;self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.contains_key' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.contains_key' class='fnname'>contains_key</a>(&amp;self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>Returns true if the map contains a value for the specified key.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -217,7 +217,7 @@ ability to mutate the values.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='boolval'>true</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='boolval'>false</span>);
 </pre>
-</div><h4 id='method.get_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>(&amp;mut self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut T&gt;</code></h4>
+</div><h4 id='method.get_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>(&amp;mut self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut T&gt;</code></h4>
 <div class='docblock'><p>Returns a mutable reference to the value corresponding to the key.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -232,7 +232,7 @@ ability to mutate the values.</p>
 }
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>1</span>], <span class='string'>&quot;b&quot;</span>);
 </pre>
-</div><h4 id='method.insert' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, value: T) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.insert' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, value: T) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Inserts a key-value pair from the map. If the key already had a value
 present in the map, that value is returned. Otherwise, <code>None</code> is returned.</p>
 
@@ -248,7 +248,7 @@ present in the map, that value is returned. Otherwise, <code>None</code> is retu
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37</span>, <span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>37</span>], <span class='string'>&quot;c&quot;</span>);
 </pre>
-</div><h4 id='method.remove' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>(&amp;mut self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.remove' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>(&amp;mut self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Removes a key from the map, returning the value at the key if the key
 was previously in the map.</p>
 
@@ -331,7 +331,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 </pre>
 </div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.entry' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.entry' class='fnname'>entry</a>(&amp;mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='../../collect/trie_map/enum.Entry.html' title='collect::trie_map::Entry'>Entry</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets the given key&#39;s corresponding entry in the map for in-place manipulation.</p>
-</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h4>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Creates an empty <code>TrieMap</code>.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -357,13 +357,13 @@ Returns <code>true</code> if <code>f</code> returns <code>true</code> for all el
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='boolval'>false</span>, <span class='ident'>map</span>.<span class='ident'>each_reverse</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>key</span>, <span class='kw-2'>&amp;</span><span class='ident'>value</span><span class='op'>|</span> { <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>value</span>); <span class='ident'>key</span> <span class='op'>!=</span> <span class='number'>2</span> }));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;c&quot;</span>, <span class='string'>&quot;b&quot;</span>]);
 </pre>
-</div><h4 id='method.keys' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Keys.html' title='collect::trie_map::Keys'>Keys</a>&lt;'r, T&gt;</code></h4>
+</div><h4 id='method.keys' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.keys' class='fnname'>keys</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Keys.html' title='collect::trie_map::Keys'>Keys</a>&lt;'r, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator visiting all keys in ascending order by the keys.
 The iterator&#39;s element type is <code>usize</code>.</p>
-</div><h4 id='method.values' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Values.html' title='collect::trie_map::Values'>Values</a>&lt;'r, T&gt;</code></h4>
+</div><h4 id='method.values' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.values' class='fnname'>values</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='type' href='../../collect/trie_map/type.Values.html' title='collect::trie_map::Values'>Values</a>&lt;'r, T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator visiting all values in ascending order by the keys.
 The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
-</div><h4 id='method.iter' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../../collect/trie_map/struct.Iter.html' title='collect::trie_map::Iter'>Iter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, ordered by keys.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -375,7 +375,7 @@ The iterator&#39;s element type is <code>&amp;&#39;r T</code>.</p>
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>value</span>);
 }
 </pre>
-</div><h4 id='method.iter_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.iter_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/trie_map/struct.IterMut.html' title='collect::trie_map::IterMut'>IterMut</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the key-value pairs in the map, with the
 ability to mutate the values.</p>
 
@@ -392,7 +392,7 @@ ability to mutate the values.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>3</span>));
 </pre>
-</div><h4 id='method.len' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+</div><h4 id='method.len' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
 <div class='docblock'><p>Return the number of elements in the map.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -404,7 +404,7 @@ ability to mutate the values.</p>
 <span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
 </pre>
-</div><h4 id='method.is_empty' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.is_empty' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>Return true if the map contains no elements.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -416,7 +416,7 @@ ability to mutate the values.</p>
 <span class='ident'>a</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>);
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>is_empty</span>());
 </pre>
-</div><h4 id='method.clear' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self)</code></h4>
+</div><h4 id='method.clear' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;mut self)</code></h4>
 <div class='docblock'><p>Clears the map, removing all values.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -428,7 +428,7 @@ ability to mutate the values.</p>
 <span class='ident'>a</span>.<span class='ident'>clear</span>();
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>is_empty</span>());
 </pre>
-</div><h4 id='method.get' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get' class='fnname'>get</a>(&amp;self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code></h4>
+</div><h4 id='method.get' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.get' class='fnname'>get</a>(&amp;self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code></h4>
 <div class='docblock'><p>Returns a reference to the value corresponding to the key.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -440,7 +440,7 @@ ability to mutate the values.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>None</span>);
 </pre>
-</div><h4 id='method.contains_key' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.contains_key' class='fnname'>contains_key</a>(&amp;self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.contains_key' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.contains_key' class='fnname'>contains_key</a>(&amp;self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>Returns true if the map contains a value for the specified key.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -452,7 +452,7 @@ ability to mutate the values.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='boolval'>true</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>contains_key</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='boolval'>false</span>);
 </pre>
-</div><h4 id='method.get_mut' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>(&amp;mut self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut T&gt;</code></h4>
+</div><h4 id='method.get_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>(&amp;mut self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut T&gt;</code></h4>
 <div class='docblock'><p>Returns a mutable reference to the value corresponding to the key.</p>
 
 <h1 id="examples" class='section-header'><a
@@ -467,7 +467,7 @@ ability to mutate the values.</p>
 }
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>1</span>], <span class='string'>&quot;b&quot;</span>);
 </pre>
-</div><h4 id='method.insert' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, value: T) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.insert' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.insert' class='fnname'>insert</a>(&amp;mut self, key: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, value: T) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Inserts a key-value pair from the map. If the key already had a value
 present in the map, that value is returned. Otherwise, <code>None</code> is returned.</p>
 
@@ -483,7 +483,7 @@ present in the map, that value is returned. Otherwise, <code>None</code> is retu
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>37</span>, <span class='string'>&quot;c&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='number'>37</span>], <span class='string'>&quot;c&quot;</span>);
 </pre>
-</div><h4 id='method.remove' class='method'><a class='stability Unstable' title='Unstable: matches collection reform specification, waiting for dust to settle'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>(&amp;mut self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></h4>
+</div><h4 id='method.remove' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.remove' class='fnname'>remove</a>(&amp;mut self, key: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Removes a key from the map, returning the value at the key if the key
 was previously in the map.</p>
 
@@ -575,7 +575,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 <h4 id='method.gt' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.gt' class='fnname'>gt</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <h4 id='method.ge' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.ge' class='fnname'>ge</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.cmp' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.cmp' class='fnname'>cmp</a>(&amp;self, other: &amp;<a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></code></h4>
-</div><h3 class='impl'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.default' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.FromIterator.html' title='core::iter::FromIterator'>FromIterator</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, T)</a>&gt; for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.from_iter' class='method'><a class='stability Unstable' title='Unstable'></a><code>fn <a href='#method.from_iter' class='fnname'>from_iter</a>&lt;Iter: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, T)</a>&gt;&gt;(iter: Iter) -&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Extend.html' title='core::iter::Extend'>Extend</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, T)</a>&gt; for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.extend' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.extend' class='fnname'>extend</a>&lt;Iter: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, T)</a>&gt;&gt;(&amp;mut self, iter: Iter)</code></h4>
@@ -593,7 +593,7 @@ If all keys in the map are not greater than <code>key</code> an empty iterator i
 <h4 id='method.gt' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.gt' class='fnname'>gt</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <h4 id='method.ge' class='tymethod'><a class='stability Stable' title='Stable'></a><code>fn <a href='#tymethod.ge' class='fnname'>ge</a>(&amp;self, other: &amp;Rhs) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.cmp' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.cmp' class='fnname'>cmp</a>(&amp;self, other: &amp;<a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></code></h4>
-</div><h3 class='impl'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a>&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.default' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.FromIterator.html' title='core::iter::FromIterator'>FromIterator</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, T)</a>&gt; for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.from_iter' class='method'><a class='stability Unstable' title='Unstable'></a><code>fn <a href='#method.from_iter' class='fnname'>from_iter</a>&lt;Iter: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, T)</a>&gt;&gt;(iter: Iter) -&gt; <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Extend.html' title='core::iter::Extend'>Extend</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, T)</a>&gt; for <a class='struct' href='../../collect/struct.TrieMap.html' title='collect::TrieMap'>TrieMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.extend' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.extend' class='fnname'>extend</a>&lt;Iter: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=<a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, T)</a>&gt;&gt;(&amp;mut self, iter: Iter)</code></h4>
