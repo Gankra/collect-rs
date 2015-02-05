@@ -1083,11 +1083,10 @@ pub struct IterMut<'a, T:'a> {
 }
 
 /// A forward iterator over the keys of a map.
-pub type Keys<'a, T> = iter::Map<(usize, &'a T), usize, Iter<'a, T>, fn((usize, &'a T)) -> usize>;
+pub type Keys<'a, T> = iter::Map<Iter<'a, T>, fn((usize, &'a T)) -> usize>;
 
 /// A forward iterator over the values of a map.
-pub type Values<'a, T> =
-    iter::Map<(usize, &'a T), &'a T, Iter<'a, T>, fn((usize, &'a T)) -> &'a T>;
+pub type Values<'a, T> = iter::Map<Iter<'a, T>, fn((usize, &'a T)) -> &'a T>;
 
 // FIXME #5846: see `addr!` above.
 macro_rules! item { ($i:item) => {$i}}

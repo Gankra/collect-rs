@@ -221,24 +221,24 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
 
 /// The iterator returned by `LinearMap::iter`.
 pub struct Iter<'a, K:'a, V:'a> {
-    iter: Map<(&'a (K, V)), (&'a K, &'a V), slice::Iter<'a, (K, V)>,
+    iter: Map<slice::Iter<'a, (K, V)>,
               fn(&'a (K, V)) -> (&'a K, &'a V)>,
 }
 
 /// The iterator returned by `LinearMap::iter_mut`.
 pub struct IterMut<'a, K:'a, V:'a> {
-    iter: Map<(&'a mut (K, V)), (&'a K, &'a mut V), slice::IterMut<'a, (K, V)>,
+    iter: Map<slice::IterMut<'a, (K, V)>,
               fn(&'a mut (K, V)) -> (&'a K, &'a mut V)>,
 }
 
 /// The iterator returned by `LinearMap::keys`.
 pub struct Keys<'a, K:'a, V:'a> {
-    iter: Map<(&'a K, &'a V), &'a K, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>,
+    iter: Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>,
 }
 
 /// The iterator returned by `LinearMap::values`.
 pub struct Values<'a, K:'a, V:'a> {
-    iter: Map<(&'a K, &'a V), &'a V, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>,
+    iter: Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>,
 }
 
 impl<'a, K:'a, V:'a> Iterator for Iter<'a, K, V> {

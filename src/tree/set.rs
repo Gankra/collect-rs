@@ -579,33 +579,33 @@ pub struct RevIter<'a, T:'a> {
 }
 
 /// A lazy forward iterator over a set that consumes the set while iterating.
-pub struct IntoIter<T>(iter::Map<(T, ()), T, tree_map::IntoIter<T, ()>, fn((T, ())) -> T>);
+pub struct IntoIter<T>(iter::Map<tree_map::IntoIter<T, ()>, fn((T, ())) -> T>);
 
 /// A lazy iterator producing elements in the set difference (in-order).
 pub struct Difference<'a, T:'a, C:'a> {
-    a: Peekable<&'a T, Iter<'a, T>>,
-    b: Peekable<&'a T, Iter<'a, T>>,
+    a: Peekable<Iter<'a, T>>,
+    b: Peekable<Iter<'a, T>>,
     cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set symmetric difference (in-order).
 pub struct SymmetricDifference<'a, T:'a, C:'a> {
-    a: Peekable<&'a T, Iter<'a, T>>,
-    b: Peekable<&'a T, Iter<'a, T>>,
+    a: Peekable<Iter<'a, T>>,
+    b: Peekable<Iter<'a, T>>,
     cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set intersection (in-order).
 pub struct Intersection<'a, T:'a, C:'a> {
-    a: Peekable<&'a T, Iter<'a, T>>,
-    b: Peekable<&'a T, Iter<'a, T>>,
+    a: Peekable<Iter<'a, T>>,
+    b: Peekable<Iter<'a, T>>,
     cmp: &'a C,
 }
 
 /// A lazy iterator producing elements in the set union (in-order).
 pub struct Union<'a, T:'a, C:'a> {
-    a: Peekable<&'a T, Iter<'a, T>>,
-    b: Peekable<&'a T, Iter<'a, T>>,
+    a: Peekable<Iter<'a, T>>,
+    b: Peekable<Iter<'a, T>>,
     cmp: &'a C,
 }
 
