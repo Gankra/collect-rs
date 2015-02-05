@@ -80,8 +80,8 @@ pub struct InnerJoinMapIterator<A, B> {a: A, b: B}
 pub struct InnerJoinMapSetIterator<A, B> {map: A, set: B}
 pub struct InnerJoinSetIterator<A, B> {a: A, b: B}
 pub struct OuterJoinIterator<A: Iterator<Item=VA>, B: Iterator<Item=VB>, VA, VB> {
-    left: Peekable<VA, A>,
-    right: Peekable<VB, B>
+    left: Peekable<A>,
+    right: Peekable<B>
 }
 
 #[old_impl_check]

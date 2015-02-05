@@ -565,7 +565,7 @@ impl<'a, K, V> ExactSizeIterator for IterMut<'a, K, V> {}
 
 
 pub struct Keys<'a, K: 'a, V: 'a> {
-    inner: iter::Map<(&'a K, &'a V), &'a K, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>
+    inner: iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>
 }
 
 impl<'a, K, V> Iterator for Keys<'a, K, V> {
@@ -583,7 +583,7 @@ impl<'a, K, V> ExactSizeIterator for Keys<'a, K, V> {}
 
 
 pub struct Values<'a, K: 'a, V: 'a> {
-    inner: iter::Map<(&'a K, &'a V), &'a V, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>
+    inner: iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>
 }
 
 impl<'a, K, V> Iterator for Values<'a, K, V> {

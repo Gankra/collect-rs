@@ -553,26 +553,26 @@ pub struct Iter<'a> {
 
 /// An iterator producing elements in the set difference (in-order).
 pub struct Difference<'a> {
-    a: Peekable<usize, Iter<'a>>,
-    b: Peekable<usize, Iter<'a>>,
+    a: Peekable<Iter<'a>>,
+    b: Peekable<Iter<'a>>,
 }
 
 /// An iterator producing elements in the set symmetric difference (in-order).
 pub struct SymmetricDifference<'a> {
-    a: Peekable<usize, Iter<'a>>,
-    b: Peekable<usize, Iter<'a>>,
+    a: Peekable<Iter<'a>>,
+    b: Peekable<Iter<'a>>,
 }
 
 /// An iterator producing elements in the set intersection (in-order).
 pub struct Intersection<'a> {
-    a: Peekable<usize, Iter<'a>>,
-    b: Peekable<usize, Iter<'a>>,
+    a: Peekable<Iter<'a>>,
+    b: Peekable<Iter<'a>>,
 }
 
 /// An iterator producing elements in the set union (in-order).
 pub struct Union<'a> {
-    a: Peekable<usize, Iter<'a>>,
-    b: Peekable<usize, Iter<'a>>,
+    a: Peekable<Iter<'a>>,
+    b: Peekable<Iter<'a>>,
 }
 
 /// Compare `x` and `y`, but return `short` if x is None and `long` if y is None

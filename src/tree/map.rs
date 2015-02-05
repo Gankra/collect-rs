@@ -850,11 +850,11 @@ pub struct RevIterMut<'a, K:'a, V:'a> {
 
 /// TreeMap keys iterator.
 pub struct Keys<'a, K: 'a, V: 'a>
-    (iter::Map<(&'a K, &'a V), &'a K, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>);
+    (iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>);
 
 /// TreeMap values iterator.
 pub struct Values<'a, K: 'a, V: 'a>
-    (iter::Map<(&'a K, &'a V), &'a V, Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>);
+    (iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>);
 
 
 // FIXME #5846 we want to be able to choose between &x and &mut x
