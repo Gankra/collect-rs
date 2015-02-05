@@ -637,11 +637,17 @@ macro_rules! bound_setup {
      // whether we are looking for the lower or upper bound.
      $is_lower_bound:expr) => {
         {
+            // FIXME: redundant, but a bug in method-level where clauses requires it
+            fn compare<C, Q: ?Sized, K>(cmp: &C, k: &Q, node_k: &K) -> Ordering
+                where C: Compare<Q, K> {
+                cmp.compare(k, node_k)
+            }
+
             let (mut iter, cmp) = $iter;
             loop {
                 if !iter.node.is_null() {
                     let node_k = unsafe {&(*iter.node).key};
-                    match cmp.compare($k, node_k) {
+                    match compare(cmp, $k, node_k) {
                         Less => iter.traverse_left(),
                         Greater => iter.traverse_right(),
                         Equal => {
@@ -693,7 +699,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.lower_bound(&5).next(), Some((&6, &"c")));
     /// assert_eq!(map.lower_bound(&10).next(), None);
     /// ```
-    pub fn lower_bound(&self, k: &K) -> Iter<K, V> {
+    pub fn lower_bound<Q: ?Sized>(&self, k: &Q) -> Iter<K, V> where C: Compare<Q, K> {
         bound_setup!(self.iter_for_traversal(), k, true)
     }
 
@@ -715,7 +721,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.upper_bound(&5).next(), Some((&6, &"c")));
     /// assert_eq!(map.upper_bound(&10).next(), None);
     /// ```
-    pub fn upper_bound(&self, k: &K) -> Iter<K, V> {
+    pub fn upper_bound<Q: ?Sized>(&self, k: &Q) -> Iter<K, V> where C: Compare<Q, K> {
         bound_setup!(self.iter_for_traversal(), k, false)
     }
 
@@ -760,7 +766,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// assert_eq!(map.get(&8), Some(&"changed"));
     /// ```
-    pub fn lower_bound_mut(&mut self, k: &K) -> IterMut<K, V> {
+    pub fn lower_bound_mut<Q: ?Sized>(&mut self, k: &Q) -> IterMut<K, V> where C: Compare<Q, K> {
         bound_setup!(self.iter_mut_for_traversal(), k, true)
     }
 
@@ -794,7 +800,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// assert_eq!(map.get(&6), Some(&"changed"));
     /// assert_eq!(map.get(&8), Some(&"changed"));
     /// ```
-    pub fn upper_bound_mut(&mut self, k: &K) -> IterMut<K, V> {
+    pub fn upper_bound_mut<Q: ?Sized>(&mut self, k: &Q) -> IterMut<K, V> where C: Compare<Q, K> {
         bound_setup!(self.iter_mut_for_traversal(), k, false)
     }
 }
