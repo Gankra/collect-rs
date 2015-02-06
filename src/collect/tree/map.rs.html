@@ -2039,7 +2039,6 @@
 <span id="1997">1997</span>
 <span id="1998">1998</span>
 <span id="1999">1999</span>
-<span id="2000">2000</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -3358,8 +3357,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test_treemap</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rand</span>::<span class='ident'>Rng</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rand</span>;
+    <span class='kw'>use</span> <span class='ident'>rand</span>::{<span class='self'>self</span>, <span class='ident'>Rng</span>};
 
     <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>TreeMap</span>, <span class='ident'>TreeNode</span>};
 
@@ -3938,7 +3936,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>bench</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rand</span>::{<span class='ident'>weak_rng</span>, <span class='ident'>Rng</span>};
+    <span class='kw'>use</span> <span class='ident'>rand</span>::{<span class='ident'>weak_rng</span>, <span class='ident'>Rng</span>};
     <span class='kw'>use</span> <span class='ident'>test</span>::{<span class='ident'>Bencher</span>, <span class='ident'>black_box</span>};
 
     <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>TreeMap</span>;
