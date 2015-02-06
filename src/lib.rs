@@ -22,7 +22,7 @@
 // there's too many combinations to track this stuff properly
 #![allow(unused_features)]
 
-#![cfg_attr(test, feature(test, rand, std_misc))]
+#![cfg_attr(test, feature(test, std_misc))]
 
 #![feature(box_syntax)]
 #![feature(old_impl_check)]
@@ -31,6 +31,7 @@
 
 #![feature(core, hash, alloc)]
 
+#[cfg(test)] extern crate rand;
 #[cfg(test)] extern crate test;
 extern crate core;
 

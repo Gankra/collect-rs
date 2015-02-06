@@ -116,8 +116,8 @@ mod test {
     use self::test::Bencher;
     use super::ParVec;
     use std::mem;
-    use std::rand::{thread_rng, Rng};
     use std::iter::range_inclusive;
+    use rand::{thread_rng, Rng};
 
     const TEST_SLICES: usize = 8;
     const TEST_MAX: u32 = 1000;

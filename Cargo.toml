@@ -33,3 +33,6 @@ ordered_iter = []
 
 [dependencies.traverse]
 optional = true
+
+[dev-dependencies]
+rand = "*"

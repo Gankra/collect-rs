@@ -12,8 +12,7 @@
 // some stuff is conditionally used by feature, so just allow this to be dead
 #![allow(dead_code)]
 
-use std::rand;
-use std::rand::Rng;
+use rand::{self, Rng};
 use test::Bencher;
 
 pub fn insert_rand_n<M, I, R>(n: u32,

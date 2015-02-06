@@ -408,7 +408,7 @@ impl<'a, T> Iterator for Iter<'a, T> {
 
 #[cfg(test)]
 mod test {
-    use std::rand::{thread_rng, Rng};
+    use rand::{thread_rng, Rng};
     use super::IntervalHeap;
 
     #[test]

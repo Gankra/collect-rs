@@ -1315,8 +1315,7 @@ impl<S: Hasher+Writer, K: Hash<S>, V: Hash<S>, C> Hash<S> for TreeMap<K, V, C> w
 
 #[cfg(test)]
 mod test_treemap {
-    use std::rand::Rng;
-    use std::rand;
+    use rand::{self, Rng};
 
     use super::{TreeMap, TreeNode};
 
@@ -1895,7 +1894,7 @@ mod test_treemap {
 
 #[cfg(test)]
 mod bench {
-    use std::rand::{weak_rng, Rng};
+    use rand::{weak_rng, Rng};
     use test::{Bencher, black_box};
 
     use super::TreeMap;
