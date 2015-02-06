@@ -1754,7 +1754,7 @@ mod test {
 
 #[cfg(test)]
 mod bench {
-    use std::rand::{weak_rng, Rng};
+    use rand::{weak_rng, Rng};
     use test::{Bencher, black_box};
 
     use super::{TrieMap, Occupied, Vacant};
