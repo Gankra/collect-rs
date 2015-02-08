@@ -182,7 +182,6 @@ impl<K, V, C, Q: ?Sized> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> 
 }
 
 impl<K, V, C, Q: ?Sized> ops::IndexMut<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
-    type Output = V;
     #[inline]
     fn index_mut(&mut self, i: &Q) -> &mut V {
         self.get_mut(i).expect("no entry found for key")
