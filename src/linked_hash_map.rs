@@ -405,8 +405,6 @@ impl<K, V> Index<K> for LinkedHashMap<K, V>
 impl<K, V> IndexMut<K> for LinkedHashMap<K, V>
     where K: Hash<HmHasher> + Eq
 {
-    type Output = V;
-
     fn index_mut(&mut self, index: &K) -> &mut V {
         self.get_mut(index).expect("no entry found for key")
     }

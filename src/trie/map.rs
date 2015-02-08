@@ -652,7 +652,6 @@ impl<T> ops::Index<usize> for TrieMap<T> {
 }
 
 impl<T> ops::IndexMut<usize> for TrieMap<T> {
-    type Output = T;
     #[inline]
     fn index_mut(&mut self, i: &usize) -> &mut T {
         self.get_mut(i).expect("key not present")
