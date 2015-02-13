@@ -61,6 +61,7 @@ extern crate traverse;
 
 #[cfg(feature="compare")] pub mod compare;
 pub mod iter;
+pub mod macros;
 
 #[cfg(feature="blist")] pub mod blist;
 #[cfg(feature="enum_set")] pub mod enum_set;
