@@ -1966,4 +1966,28 @@ mod bench {
     pub fn iter_100000(b: &mut Bencher) {
         bench_iter(b, 100000);
     }
+
+    fn bench_lower_bound(b: &mut Bencher, size: u32) {
+        let mut map = TreeMap::<u32, u32>::new();
+        find_seq_n(size, &mut map, b,
+                   |m, i| { m.insert(i, 1); },
+                   |m, i| for entry in m.lower_bound(&i) {
+                       black_box(entry);
+                   });
+    }
+
+    #[bench]
+    pub fn lower_bound_20(b: &mut Bencher) {
+        bench_lower_bound(b, 20);
+    }
+
+    #[bench]
+    pub fn lower_bound_1000(b: &mut Bencher) {
+        bench_lower_bound(b, 1000);
+    }
+
+    #[bench]
+    pub fn lower_bound_100000(b: &mut Bencher) {
+        bench_lower_bound(b, 100000);
+    }
 }
