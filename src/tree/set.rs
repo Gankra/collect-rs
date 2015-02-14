@@ -637,6 +637,8 @@ impl<T> Iterator for IntoIter<T> {
     #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
 }
 
+impl<T> ExactSizeIterator for IntoIter<T> {}
+
 impl<'a, T, C> Iterator for Difference<'a, T, C> where C: Compare<T> {
     type Item = &'a T;
     fn next(&mut self) -> Option<&'a T> {
