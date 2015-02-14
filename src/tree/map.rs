@@ -1053,6 +1053,8 @@ impl<K, V> Iterator for IntoIter<K,V> {
     }
 }
 
+impl<K, V> ExactSizeIterator for IntoIter<K, V> {}
+
 impl<'a, K, V> Iterator for Keys<'a, K, V> {
     type Item = &'a K;
     #[inline] fn next(&mut self) -> Option<&'a K> { self.0.next() }
