@@ -594,6 +594,108 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
         node::traverse_mut(&mut self.root, |node| f(node.key()))
             .as_mut().map(|node| node.value_mut())
     }
+
+    /// Returns a reference to the map's maximum key and a reference to its corresponding
+    /// value, or `None` if the map is empty.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::TreeMap;
+    ///
+    /// let mut map = TreeMap::new();
+    /// assert!(map.max().is_none());
+    ///
+    /// map.insert(1, "a");
+    /// map.insert(3, "c");
+    /// map.insert(2, "b");
+    ///
+    /// assert_eq!(map.max(), Some((&3, &"c")));
+    /// ```
+    pub fn max(&self) -> Option<(&K, &V)> {
+        node::traverse(&self.root, node::max)
+            .as_ref().map(|node| (node.key(), node.value()))
+    }
+
+    /// Returns a reference to the map's maximum key and a mutable reference to its
+    /// corresponding value, or `None` if the map is empty.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::TreeMap;
+    ///
+    /// let mut map = TreeMap::new();
+    /// assert!(map.max_mut().is_none());
+    ///
+    /// map.insert(1, "a");
+    /// map.insert(3, "c");
+    /// map.insert(2, "b");
+    ///
+    /// {
+    ///     let max = map.max_mut().unwrap();
+    ///     assert_eq!(max.0, &3);
+    ///     assert_eq!(max.1, &"c");
+    ///     *max.1 = "d";
+    /// }
+    ///
+    /// assert_eq!(map[3], "d");
+    /// ```
+    pub fn max_mut(&mut self) -> Option<(&K, &mut V)> {
+        node::traverse_mut(&mut self.root, node::max)
+            .as_mut().map(|node| node.key_value_mut())
+    }
+
+    /// Returns a reference to the map's minimum key and a reference to its corresponding
+    /// value, or `None` if the map is empty.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::TreeMap;
+    ///
+    /// let mut map = TreeMap::new();
+    /// assert!(map.min().is_none());
+    ///
+    /// map.insert(1, "a");
+    /// map.insert(3, "c");
+    /// map.insert(2, "b");
+    ///
+    /// assert_eq!(map.min(), Some((&1, &"a")));
+    /// ```
+    pub fn min(&self) -> Option<(&K, &V)> {
+        node::traverse(&self.root, node::min)
+            .as_ref().map(|node| (node.key(), node.value()))
+    }
+
+    /// Returns a reference to the map's minimum key and a mutable reference to its
+    /// corresponding value, or `None` if the map is empty.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::TreeMap;
+    ///
+    /// let mut map = TreeMap::new();
+    /// assert!(map.min_mut().is_none());
+    ///
+    /// map.insert(1, "a");
+    /// map.insert(3, "c");
+    /// map.insert(2, "b");
+    ///
+    /// {
+    ///     let min = map.min_mut().unwrap();
+    ///     assert_eq!(min.0, &1);
+    ///     assert_eq!(min.1, &"a");
+    ///     *min.1 = "aa";
+    /// }
+    ///
+    /// assert_eq!(map[1], "aa");
+    /// ```
+    pub fn min_mut(&mut self) -> Option<(&K, &mut V)> {
+        node::traverse_mut(&mut self.root, node::min)
+            .as_mut().map(|node| node.key_value_mut())
+    }
 }
 
 impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {

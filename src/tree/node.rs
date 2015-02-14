@@ -21,6 +21,8 @@ impl<K, V> Node<K, V> {
     pub fn value(&self) -> &V { &self.value }
 
     pub fn value_mut(&mut self) -> &mut V { &mut self.value }
+
+    pub fn key_value_mut(&mut self) -> (&K, &mut V) { (&self.key, &mut self.value) }
 }
 
 impl<K, V> Node<K, V> {
@@ -72,6 +74,14 @@ pub fn traverse_mut<K, V, F>(node: &mut Option<Box<Node<K, V>>>, f: F)
 
     let node = traverse(node, f);
     unsafe { mem::transmute(node) }
+}
+
+pub fn max<K, V>(node: &Node<K, V>) -> Ordering {
+    if node.right.is_some() { Greater } else { Equal }
+}
+
+pub fn min<K, V>(node: &Node<K, V>) -> Ordering {
+    if node.left.is_some() { Less } else { Equal }
 }
 
 pub fn insert<K, V, C>(node: &mut Option<Box<Node<K, V>>>, key: K, value: V, cmp: &C)
