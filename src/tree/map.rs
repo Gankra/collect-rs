@@ -420,7 +420,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     #[inline]
-    pub fn is_empty(&self) -> bool { self.len() == 0 }
+    pub fn is_empty(&self) -> bool { self.root.is_none() }
 
     /// Clears the map, removing all values.
     ///
@@ -460,13 +460,7 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     pub fn get<Q: ?Sized>(&self, key: &Q) -> Option<&V>
         where C: Compare<Q, K>
     {
-        // FIXME: redundant, but a bug in method-level where clauses requires it
-        fn f<'r, K, V, C, Q: ?Sized>(node: &'r Option<Box<TreeNode<K, V>>>, cmp: &C, key: &Q)
-            -> Option<&'r V> where C: Compare<Q, K> {
-            tree_find_with(node, |k| cmp.compare(key, k))
-        }
-
-        f(&self.root, &self.cmp, key)
+        tree_find_with(&self.root, |k| Compare::compare(&self.cmp, key, k))
     }
 
     /// Returns true if the map contains a value for the specified key.
@@ -515,13 +509,8 @@ impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     pub fn get_mut<Q: ?Sized>(&mut self, key: &Q) -> Option<&mut V>
         where C: Compare<Q, K>
     {
-        // FIXME: redundant, but a bug in method-level where clauses requires it
-        fn f<'r, K, V, C, Q: ?Sized>(node: &'r mut Option<Box<TreeNode<K, V>>>, cmp: &C, key: &Q)
-            -> Option<&'r mut V> where C: Compare<Q, K> {
-            tree_find_with_mut(node, |k| cmp.compare(key, k))
-        }
-
-        f(&mut self.root, &self.cmp, key)
+        let cmp = &self.cmp;
+        tree_find_with_mut(&mut self.root, |k| Compare::compare(cmp, key, k))
     }
 
     /// Inserts a key-value pair from the map. If the key already had a value
@@ -636,17 +625,11 @@ macro_rules! bound_setup {
      // whether we are looking for the lower or upper bound.
      $is_lower_bound:expr) => {
         {
-            // FIXME: redundant, but a bug in method-level where clauses requires it
-            fn compare<C, Q: ?Sized, K>(cmp: &C, k: &Q, node_k: &K) -> Ordering
-                where C: Compare<Q, K> {
-                cmp.compare(k, node_k)
-            }
-
             let (mut iter, cmp) = $iter;
             loop {
                 if !iter.node.is_null() {
                     let node_k = unsafe {&(*iter.node).key};
-                    match compare(cmp, $k, node_k) {
+                    match Compare::compare(cmp, $k, node_k) {
                         Less => iter.traverse_left(),
                         Greater => iter.traverse_right(),
                         Equal => {
@@ -666,7 +649,6 @@ macro_rules! bound_setup {
         }
     }
 }
-
 
 impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
     /// Gets a lazy iterator that should be initialized using
@@ -860,7 +842,6 @@ pub struct Keys<'a, K: 'a, V: 'a>
 /// TreeMap values iterator.
 pub struct Values<'a, K: 'a, V: 'a>
     (iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>);
-
 
 // FIXME #5846 we want to be able to choose between &x and &mut x
 // (with many different `x`) below, so we need to optionally pass mut
@@ -1070,7 +1051,6 @@ impl<K, V> Iterator for IntoIter<K,V> {
     fn size_hint(&self) -> (usize, Option<usize>) {
         (self.remaining, Some(self.remaining))
     }
-
 }
 
 impl<'a, K, V> Iterator for Keys<'a, K, V> {
@@ -1084,7 +1064,6 @@ impl<'a, K, V> Iterator for Values<'a, K, V> {
     #[inline] fn next(&mut self) -> Option<&'a V> { self.0.next() }
     #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
 }
-
 
 // Nodes keep track of their level in the tree, starting at 1 in the
 // leaves and with a red child sharing the level of the parent.
@@ -1132,24 +1111,20 @@ fn split<K, V>(node: &mut Box<TreeNode<K, V>>) {
 // at input current key and returns search_key cmp cur_key
 // (i.e. search_key.cmp(&cur_key))
 fn tree_find_with<K, V, F>(
-    node: &Option<Box<TreeNode<K, V>>>,
+    mut node: &Option<Box<TreeNode<K, V>>>,
     mut f: F,
 ) -> Option<&V> where
     F: FnMut(&K) -> Ordering,
 {
-    let mut current = node;
-    loop {
-        match *current {
-            Some(ref r) => {
-                match f(&r.key) {
-                    Less => current = &r.left,
-                    Greater => current = &r.right,
-                    Equal => return Some(&r.value)
-                }
-            }
-            None => return None
-        }
+    while let Some(ref r) = *node {
+        node = match f(&r.key) {
+            Less => &r.left,
+            Greater => &r.right,
+            Equal => return Some(&r.value)
+        };
     }
+
+    None
 }
 
 // See comments above tree_find_with
@@ -1180,30 +1155,24 @@ fn insert<K, V, C>(node: &mut Option<Box<TreeNode<K, V>>>, key: K, value: V, cmp
     -> Option<V> where C: Compare<K> {
 
     match *node {
-      Some(ref mut save) => {
-        match cmp.compare(&key, &save.key) {
-          Less => {
-            let inserted = insert(&mut save.left, key, value, cmp);
+        Some(ref mut save) => {
+            let old_value = match cmp.compare(&key, &save.key) {
+                Less => insert(&mut save.left, key, value, cmp),
+                Greater => insert(&mut save.right, key, value, cmp),
+                Equal => {
+                    save.key = key;
+                    return Some(replace(&mut save.value, value));
+                }
+            };
+
             skew(save);
             split(save);
-            inserted
-          }
-          Greater => {
-            let inserted = insert(&mut save.right, key, value, cmp);
-            skew(save);
-            split(save);
-            inserted
-          }
-          Equal => {
-            save.key = key;
-            Some(replace(&mut save.value, value))
-          }
+            old_value
         }
-      }
-      None => {
-       *node = Some(box TreeNode::new(key, value));
-        None
-      }
+        None => {
+            *node = Some(box TreeNode::new(key, value));
+            None
+        }
     }
 }
 
@@ -1287,9 +1256,7 @@ fn remove<K, V, C, Q: ?Sized>(node: &mut Option<Box<TreeNode<K, V>>>, key: &Q, c
         }
       }
     }
-    return match node.take() {
-        Some(box TreeNode{value, ..}) => Some(value), None => panic!()
-    };
+    Some(node.take().unwrap().value)
 }
 
 impl<K, V, C> iter::FromIterator<(K, V)> for TreeMap<K, V, C> where C: Compare<K> + Default {
@@ -1498,12 +1465,9 @@ mod test_treemap {
     }
 
     fn check_structure<K: Ord, V>(map: &TreeMap<K, V>) {
-        match map.root {
-          Some(ref r) => {
+        if let Some(ref r) = map.root {
             check_left(&r.left, r);
             check_right(&r.right, r, false);
-          }
-          None => ()
         }
     }
 
