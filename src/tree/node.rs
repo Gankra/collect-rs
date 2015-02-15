@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use std::cmp::Ordering::*;
-use std::mem::{self, replace, swap};
+use std::mem::{replace, swap};
 
 use compare::Compare;
 
@@ -69,11 +69,23 @@ pub fn traverse<K, V, F>(mut node: &Option<Box<Node<K, V>>>, mut f: F)
     node
 }
 
-pub fn traverse_mut<K, V, F>(node: &mut Option<Box<Node<K, V>>>, f: F)
+pub fn traverse_mut<K, V, F>(mut node: &mut Option<Box<Node<K, V>>>, mut f: F)
     -> &mut Option<Box<Node<K, V>>> where F: FnMut(&Node<K, V>) -> Ordering {
 
-    let node = traverse(node, f);
-    unsafe { mem::transmute(node) }
+    loop {
+        let curr = node;
+
+        node = match *curr {
+            None => break,
+            Some(ref mut r) => match f(r) {
+                Less => &mut r.left,
+                Greater => &mut r.right,
+                Equal => break,
+            },
+        };
+    }
+
+    node
 }
 
 pub fn max<K, V>(node: &Node<K, V>) -> Ordering {
