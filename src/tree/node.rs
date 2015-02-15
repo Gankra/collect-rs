@@ -153,14 +153,9 @@ pub fn remove<K, V, C, Q: ?Sized>(node: &mut Option<Box<Node<K, V>>>, key: &Q, c
           Equal => {
             if save.left.is_some() {
                 if save.right.is_some() {
-                    let mut left = save.left.take().unwrap();
-                    if left.right.is_some() {
-                        heir_swap(save, &mut left.right);
-                    } else {
-                        swap(&mut save.key, &mut left.key);
-                        swap(&mut save.value, &mut left.value);
-                    }
-                    save.left = Some(left);
+                    let mut left = save.left.take();
+                    heir_swap(save, &mut left);
+                    save.left = left;
                     (remove(&mut save.left, key, cmp), true)
                 } else {
                     let new = save.left.take().unwrap();
