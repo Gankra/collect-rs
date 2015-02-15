@@ -55,9 +55,9 @@ extern crate traverse;
 #[cfg(feature="trie_map")] pub use trie_set::TrieSet;
 
 // privates
+#[cfg(test)] #[macro_use] mod bench;
 #[cfg(feature="tree_map")] mod tree;
 #[cfg(feature="trie_map")] mod trie;
-#[cfg(test)] mod bench;
 
 // publics
 
