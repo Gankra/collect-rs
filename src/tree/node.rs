@@ -124,15 +124,20 @@ pub fn insert<K, V, C>(node: &mut Option<Box<Node<K, V>>>, key: K, value: V, cmp
 pub fn remove<K, V, C, Q: ?Sized>(node: &mut Option<Box<Node<K, V>>>, key: &Q, cmp: &C)
     -> Option<V> where C: Compare<Q, K> {
 
-    fn heir_swap<K, V>(node: &mut Box<Node<K, V>>,
-                            child: &mut Option<Box<Node<K, V>>>) {
-        // *could* be done without recursion, but it won't borrow check
-        for x in child.iter_mut() {
-            if x.right.is_some() {
-                heir_swap(node, &mut x.right);
-            } else {
-                swap(&mut node.key, &mut x.key);
-                swap(&mut node.value, &mut x.value);
+    fn heir_swap<K, V>(node: &mut Node<K, V>, mut child: &mut Option<Box<Node<K, V>>>) {
+        loop {
+            let curr = child;
+
+            child = match *curr {
+                None => return,
+                Some(ref mut x) =>
+                    if x.right.is_some() {
+                        &mut x.right
+                    } else {
+                        swap(&mut node.key, &mut x.key);
+                        swap(&mut node.value, &mut x.value);
+                        return;
+                    },
             }
         }
     }
