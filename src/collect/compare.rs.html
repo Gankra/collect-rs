@@ -960,7 +960,7 @@
     <span class='doccomment'>/// assert_eq!(cmp.compare(a_str, b_str), Less);</span>
     <span class='doccomment'>/// assert_eq!(cmp.compare(&amp;b_string, a_str), Greater);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>borrow</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> { <span class='ident'>Borrow</span>(<span class='self'>self</span>) }
+    <span class='kw'>fn</span> <span class='ident'>borrow</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='kw'>Self</span>, <span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> { <span class='ident'>Borrow</span>(<span class='self'>self</span>) }
 
     <span class='doccomment'>/// Reverses the ordering of the comparator.</span>
     <span class='doccomment'>///</span>
@@ -978,7 +978,7 @@
     <span class='doccomment'>/// assert_eq!(cmp.compare(b, a), Less);</span>
     <span class='doccomment'>/// assert_eq!(cmp.compare(a, a), Equal);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>rev</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Rev</span><span class='op'>&lt;</span><span class='ident'>Self</span><span class='op'>&gt;</span> { <span class='ident'>Rev</span>(<span class='self'>self</span>) }
+    <span class='kw'>fn</span> <span class='ident'>rev</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Rev</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> { <span class='ident'>Rev</span>(<span class='self'>self</span>) }
 
     <span class='doccomment'>/// Swaps the comparator&#39;s parameters, maintaining the underlying ordering.</span>
     <span class='doccomment'>///</span>
@@ -1001,7 +1001,7 @@
     <span class='doccomment'>/// assert_eq!(cmp.compare(&amp;1u16, &amp;2u8), Greater);</span>
     <span class='doccomment'>/// assert_eq!(cmp.compare(&amp;1u16, &amp;1u8), Equal);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>swap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Swap</span><span class='op'>&lt;</span><span class='ident'>Self</span><span class='op'>&gt;</span> { <span class='ident'>Swap</span>(<span class='self'>self</span>) }
+    <span class='kw'>fn</span> <span class='ident'>swap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Swap</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> { <span class='ident'>Swap</span>(<span class='self'>self</span>) }
 
     <span class='doccomment'>/// [Lexicographically](https://en.wikipedia.org/wiki/Lexicographical_order) combines</span>
     <span class='doccomment'>/// the comparator with another.</span>
@@ -1026,7 +1026,7 @@
     <span class='doccomment'>/// let cmp = cmp.then(|&amp;: lhs: &amp;Foo, rhs: &amp;Foo| lhs.key2.cmp(&amp;rhs.key2));</span>
     <span class='doccomment'>/// assert_eq!(cmp.compare(f1, f2), Less);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>then</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>then</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>Lexicographic</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>D</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>then</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>then</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>Lexicographic</span><span class='op'>&lt;</span><span class='kw'>Self</span>, <span class='ident'>D</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> {
         <span class='ident'>Lexicographic</span>(<span class='self'>self</span>, <span class='ident'>then</span>)
     }
 }

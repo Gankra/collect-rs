@@ -621,7 +621,7 @@
     <span class='kw'>fn</span> <span class='ident'>to_u32</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span>;
     <span class='doccomment'>/// Converts a `u32` to a C-like enum. This method only needs to be safe</span>
     <span class='doccomment'>/// for possible return values of `to_u32` of this trait.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_u32</span>(<span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>;
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_u32</span>(<span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 }
 
 <span class='kw'>fn</span> <span class='ident'>bit</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span>(<span class='ident'>e</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
