@@ -328,7 +328,7 @@
 
 <span class='doccomment'>/// A slice of `ParVec` that can be sent to another task for processing.</span>
 <span class='doccomment'>/// Automatically releases the slice on drop.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> {
     <span class='comment'>// Just to keep the source vector alive while the slice is,</span>
     <span class='comment'>// since the ParVec can die asynchronously.</span>
     <span class='ident'>_vec</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,

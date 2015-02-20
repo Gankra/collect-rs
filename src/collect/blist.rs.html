@@ -898,10 +898,10 @@
 <span id="856">856</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>ring_buf</span>, <span class='ident'>RingBuf</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>vec_deque</span>, <span class='ident'>VecDeque</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::{<span class='self'>self</span>, <span class='ident'>IntoIterator</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Hash</span>, <span class='ident'>Hasher</span>, <span class='ident'>Writer</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Hash</span>, <span class='ident'>Hasher</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>num</span>::<span class='ident'>Int</span>;
 <span class='comment'>// use traverse::Traversal;</span>
 <span class='kw'>use</span> <span class='ident'>proto</span>::<span class='ident'>dlist</span>::{<span class='self'>self</span>, <span class='ident'>DList</span>};
@@ -921,7 +921,7 @@
 <span class='doccomment'>/// `O(1)` time, though (assuming it takes `O(1)` time to allocate an array of size `B`).</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>list</span>: <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,
+    <span class='ident'>list</span>: <span class='ident'>DList</span><span class='op'>&lt;</span><span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>b</span>: <span class='ident'>usize</span>,
     <span class='ident'>len</span>: <span class='ident'>usize</span>,
 }
@@ -930,7 +930,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Creates a new BList with a reasonable choice for B.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='comment'>// RingBuf always has capacity = 2^k - 1, for some k;</span>
+        <span class='comment'>// VecDeque always has capacity = 2^k - 1, for some k;</span>
         <span class='comment'>// b = 6 gets us max_len = b + 1 = 7 = 2^3 - 1</span>
         <span class='ident'>BList</span>::<span class='ident'>with_b</span>(<span class='number'>6</span>)
     }
@@ -1121,8 +1121,8 @@
 
 
 <span class='doccomment'>/// Makes a new block for insertion in the list.</span>
-<span class='kw'>fn</span> <span class='ident'>make_block</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>b</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-     <span class='ident'>RingBuf</span>::<span class='ident'>with_capacity</span>(<span class='ident'>block_max</span>(<span class='ident'>b</span>))
+<span class='kw'>fn</span> <span class='ident'>make_block</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>b</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+     <span class='ident'>VecDeque</span>::<span class='ident'>with_capacity</span>(<span class='ident'>block_max</span>(<span class='ident'>b</span>))
 }
 
 <span class='doccomment'>/// Gets the largest a block is allowed to become.</span>
@@ -1141,40 +1141,40 @@
     <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>I</span>;
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>ring_buf</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>ring_buf</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>iter</span>() }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>vec_deque</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>vec_deque</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>iter</span>() }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>ring_buf</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>ring_buf</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>iter_mut</span>() }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>vec_deque</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>vec_deque</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>iter_mut</span>() }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>ring_buf</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>ring_buf</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>into_iter</span>() }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>vec_deque</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>vec_deque</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>into_iter</span>() }
 }
 
 <span class='doccomment'>/// A by-ref iterator for a BList</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>
-    (<span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>dlist</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>ring_buf</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span>);
+    (<span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>dlist</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>vec_deque</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span>);
 <span class='doccomment'>/// A by-mut-ref iterator for a BList</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>
-    (<span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>dlist</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>ring_buf</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span>);
+    (<span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>dlist</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>vec_deque</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span>);
 <span class='doccomment'>/// A by-value iterator for a BList</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
-    (<span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>dlist</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>RingBuf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>ring_buf</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>);
+    (<span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>dlist</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>vec_deque</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>);
 
 <span class='doccomment'>/// An iterator that abstracts over all three kinds of ownership for a BList</span>
-<span class='kw'>struct</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>RingBufIter</span><span class='op'>&gt;</span> {
+<span class='kw'>struct</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>VecDequeIter</span><span class='op'>&gt;</span> {
     <span class='ident'>list_iter</span>: <span class='ident'>DListIter</span>,
-    <span class='ident'>left_block_iter</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>RingBufIter</span><span class='op'>&gt;</span>,
-    <span class='ident'>right_block_iter</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>RingBufIter</span><span class='op'>&gt;</span>,
+    <span class='ident'>left_block_iter</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span><span class='op'>&gt;</span>,
+    <span class='ident'>right_block_iter</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span><span class='op'>&gt;</span>,
     <span class='ident'>len</span>: <span class='ident'>usize</span>,
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>,
-    <span class='ident'>RingBufIter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;</span>,
+    <span class='ident'>VecDequeIter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;</span>,
     <span class='ident'>DListIter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-    <span class='ident'>T</span>: <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>RingBufIter</span><span class='op'>&gt;&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>RingBufIter</span><span class='op'>&gt;</span> {
+    <span class='ident'>T</span>: <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span><span class='op'>&gt;&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>VecDequeIter</span><span class='op'>&gt;</span> {
     <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>A</span>;
     <span class='comment'>// I would like to thank all my friends and the fact that Iterator::next doesn&#39;t</span>
     <span class='comment'>// borrow self, for this passing borrowck with minimal gymnastics</span>
@@ -1222,9 +1222,9 @@
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>,
-    <span class='ident'>RingBufIter</span>: <span class='ident'>DoubleEndedIterator</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;</span>,
+    <span class='ident'>VecDequeIter</span>: <span class='ident'>DoubleEndedIterator</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;</span>,
     <span class='ident'>DListIter</span>: <span class='ident'>DoubleEndedIterator</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-    <span class='ident'>T</span>: <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>RingBufIter</span><span class='op'>&gt;&gt;</span> <span class='ident'>DoubleEndedIterator</span> <span class='kw'>for</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>RingBufIter</span><span class='op'>&gt;</span> {
+    <span class='ident'>T</span>: <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span><span class='op'>&gt;&gt;</span> <span class='ident'>DoubleEndedIterator</span> <span class='kw'>for</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>VecDequeIter</span><span class='op'>&gt;</span> {
     <span class='comment'>// see `next` for details. This should be an exact mirror.</span>
     <span class='kw'>fn</span> <span class='ident'>next_back</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>&gt;</span> <span class='number'>0</span> { <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>-=</span> <span class='number'>1</span>; }
@@ -1336,16 +1336,16 @@ impl&lt;T&gt; Traversal for IntoTrav&lt;T&gt; {
 */</span>
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iterator</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>BList</span>::<span class='ident'>new</span>();
-        <span class='ident'>ret</span>.<span class='ident'>extend</span>(<span class='ident'>iterator</span>);
+        <span class='ident'>ret</span>.<span class='ident'>extend</span>(<span class='ident'>iter</span>);
         <span class='ident'>ret</span>
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='ident'>Extend</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>iterator</span>: <span class='ident'>T</span>) {
-        <span class='kw'>for</span> <span class='ident'>elt</span> <span class='kw'>in</span> <span class='ident'>iterator</span> { <span class='self'>self</span>.<span class='ident'>push_back</span>(<span class='ident'>elt</span>); }
+    <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>iter</span>: <span class='ident'>T</span>) {
+        <span class='kw'>for</span> <span class='ident'>elt</span> <span class='kw'>in</span> <span class='ident'>iter</span> { <span class='self'>self</span>.<span class='ident'>push_back</span>(<span class='ident'>elt</span>); }
     }
 }
 
@@ -1389,8 +1389,8 @@ impl&lt;T&gt; Traversal for IntoTrav&lt;T&gt; {
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Hasher</span><span class='op'>+</span><span class='ident'>Writer</span>, <span class='ident'>A</span>: <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;&gt;</span> <span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>Hash</span><span class='op'>&gt;</span> <span class='ident'>Hash</span> <span class='kw'>for</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>hash</span><span class='op'>&lt;</span><span class='ident'>H</span>: <span class='ident'>Hasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>H</span>) {
         <span class='self'>self</span>.<span class='ident'>len</span>().<span class='ident'>hash</span>(<span class='ident'>state</span>);
         <span class='kw'>for</span> <span class='ident'>elt</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>() {
             <span class='ident'>elt</span>.<span class='ident'>hash</span>(<span class='ident'>state</span>);

@@ -42,9 +42,8 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>collect</a>::<wbr><a class='mod' href=''>compare</a><wbr></span><span class='out-of-band'><span id='render-detail'>
-            <a id="collapse-all" href="#">[-]
-            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-12307' href='../../src/collect/compare.rs.html#1-658'>[src]</a></span></h1>
+            <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-12295' href='../../src/collect/compare.rs.html#1-672'>[src]</a></span></h1>
 <div class='docblock'><p>Comparators.</p>
 
 <p>A comparator is any type that implements the <a href="trait.Compare.html"><code>Compare</code></a> trait,
@@ -58,13 +57,13 @@ data structures.</p>
 <p>The most basic comparator is <a href="struct.Natural.html"><code>Natural</code></a>, which simply delegates
 to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/trait.Ord.html"><code>Ord</code></a>:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1</span>;
 <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2</span>;
 
-<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>;
+<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>natural</span>();
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='ident'>a</span>, <span class='ident'>b</span>), <span class='ident'>Less</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='ident'>b</span>, <span class='ident'>a</span>), <span class='ident'>Greater</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='ident'>a</span>, <span class='ident'>a</span>), <span class='ident'>Equal</span>);
@@ -72,12 +71,12 @@ to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/tr
 
 <p>There are convenience methods for checking each of the six relations:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1</span>;
 <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2</span>;
 
-<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>;
+<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>natural</span>();
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_lt</span>(<span class='ident'>a</span>, <span class='ident'>b</span>));
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_le</span>(<span class='ident'>a</span>, <span class='ident'>b</span>));
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compares_ge</span>(<span class='ident'>b</span>, <span class='ident'>a</span>));
@@ -91,10 +90,10 @@ consume a comparator to produce a new one with different behavior, similar to
 <a href="http://doc.rust-lang.org/std/iter/trait.IteratorExt.html">iterator adaptors</a>. For
 example, all comparators can be <a href="trait.CompareExt.html#method.rev">reversed</a>:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::<span class='ident'>Greater</span>;
 
-<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>Natural</span>.<span class='ident'>rev</span>();
+<span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>natural</span>().<span class='ident'>rev</span>();
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>, <span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='ident'>Greater</span>);
 </pre>
 
@@ -148,7 +147,7 @@ equal, by another:</p>
 <a href="struct.Extract.html">key-extraction logic</a> can be factored out, simplifying the
 previous example:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Extract</span>, <span class='ident'>Natural</span>};
+<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>CompareExt</span>, <span class='ident'>Extract</span>, <span class='ident'>natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>struct</span> <span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>age</span>: <span class='ident'>u8</span> }
@@ -157,8 +156,8 @@ previous example:</p>
 <span class='kw'>let</span> <span class='ident'>ruff2</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='string'>&quot;Ruff&quot;</span>, <span class='ident'>age</span>: <span class='number'>2</span> };
 <span class='kw'>let</span> <span class='ident'>fido3</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='string'>&quot;Fido&quot;</span>, <span class='ident'>age</span>: <span class='number'>3</span> };
 
-<span class='kw'>let</span> <span class='ident'>name_age_cmp</span> <span class='op'>=</span> <span class='ident'>Extract</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span><span class='op'>|</span> <span class='ident'>p</span>.<span class='ident'>name</span>, <span class='ident'>Natural</span>)
-             .<span class='ident'>then</span>(<span class='ident'>Extract</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span><span class='op'>|</span> <span class='ident'>p</span>.<span class='ident'>age</span>, <span class='ident'>Natural</span>));
+<span class='kw'>let</span> <span class='ident'>name_age_cmp</span> <span class='op'>=</span> <span class='ident'>Extract</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span><span class='op'>|</span> <span class='ident'>p</span>.<span class='ident'>name</span>, <span class='ident'>natural</span>())
+             .<span class='ident'>then</span>(<span class='ident'>Extract</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pet</span><span class='op'>|</span> <span class='ident'>p</span>.<span class='ident'>age</span>, <span class='ident'>natural</span>()));
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>ruff2</span>), <span class='ident'>Less</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name_age_cmp</span>.<span class='ident'>compare</span>(<span class='ident'>fido4</span>, <span class='ident'>fido3</span>), <span class='ident'>Greater</span>);
@@ -238,6 +237,12 @@ are equal.</p>
                         <td class='docblock short'><p>Returns the minimum of two values according to the given comparator, or <code>lhs</code> if they
 are equal.</p>
 </td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.natural.html'
+                               title='collect::compare::natural'>natural</a></td>
+                        <td class='docblock short'></td>
                     </tr>
                 </table></section>
     <section id='search' class="content hidden"></section>

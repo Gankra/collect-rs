@@ -448,7 +448,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{
     <span class='ident'>btree_map</span>, <span class='ident'>btree_set</span>,
     <span class='ident'>vec_map</span>,
-    <span class='ident'>bitv_set</span>
+    <span class='ident'>bit_set</span>
 };
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;tree_map&quot;</span>)]</span>
@@ -695,7 +695,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;trie_map&quot;</span>)]</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>OrderedMapIterator</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>V</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>trie_map</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {}
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>OrderedMapIterator</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>V</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>vec_map</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {}
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>OrderedSetIterator</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>bitv_set</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {}
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>OrderedSetIterator</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>bit_set</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {}
 
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='ident'>Ord</span>, <span class='ident'>VA</span>, <span class='ident'>VB</span>,

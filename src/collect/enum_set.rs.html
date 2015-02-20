@@ -535,7 +535,6 @@
 <span id="493">493</span>
 <span id="494">494</span>
 <span id="495">495</span>
-<span id="496">496</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2012 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -554,24 +553,22 @@
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>hash</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>marker</span>::<span class='ident'>InvariantType</span>;
+<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>num</span>::<span class='ident'>Int</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>u32</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::{<span class='self'>self</span>, <span class='ident'>IntoIterator</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
 
 <span class='comment'>// FIXME(conventions): implement union family of methods? (general design may be wrong here)</span>
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>)]</span>
 <span class='doccomment'>/// A specialized set implementation to use enum types.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='comment'>// We must maintain the invariant that no bits are set</span>
     <span class='comment'>// for which no variant exists</span>
     <span class='ident'>bits</span>: <span class='ident'>u32</span>,
-    <span class='ident'>invariant_type</span>: <span class='ident'>InvariantType</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>,
+    <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>E</span><span class='op'>&gt;</span>,
 }
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>Copy</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {}
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>+</span><span class='ident'>fmt</span>::<span class='ident'>Debug</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
@@ -588,8 +585,8 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span>:<span class='ident'>hash</span>::<span class='ident'>Hasher</span><span class='op'>+</span><span class='ident'>hash</span>::<span class='ident'>Writer</span>,<span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>hash</span>::<span class='ident'>Hash</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>: <span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>hash</span>::<span class='ident'>Hash</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>hash</span><span class='op'>&lt;</span><span class='ident'>H</span>: <span class='ident'>hash</span>::<span class='ident'>Hasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>H</span>) {
         <span class='self'>self</span>.<span class='ident'>bits</span>.<span class='ident'>hash</span>(<span class='ident'>state</span>);
     }
 }
@@ -639,7 +636,7 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>new_with_bits</span>(<span class='ident'>bits</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>EnumSet</span> { <span class='ident'>bits</span>: <span class='ident'>bits</span>, <span class='ident'>invariant_type</span>: <span class='ident'>InvariantType</span> }
+        <span class='ident'>EnumSet</span> { <span class='ident'>bits</span>: <span class='ident'>bits</span>, <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span> }
     }
 
     <span class='doccomment'>/// Returns the number of elements in the given `EnumSet`.</span>
@@ -751,11 +748,12 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='ident'>index</span>: <span class='ident'>u32</span>,
     <span class='ident'>bits</span>: <span class='ident'>u32</span>,
+    <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>E</span><span class='op'>&gt;</span>,
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>bits</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>Iter</span> { <span class='ident'>index</span>: <span class='number'>0</span>, <span class='ident'>bits</span>: <span class='ident'>bits</span> }
+        <span class='ident'>Iter</span> { <span class='ident'>index</span>: <span class='number'>0</span>, <span class='ident'>bits</span>: <span class='ident'>bits</span>, <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span> }
     }
 }
 
@@ -783,7 +781,7 @@
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>I</span>:<span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iterator</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iterator</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>EnumSet</span>::<span class='ident'>new</span>();
         <span class='ident'>ret</span>.<span class='ident'>extend</span>(<span class='ident'>iterator</span>);
         <span class='ident'>ret</span>
@@ -791,8 +789,8 @@
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>:<span class='ident'>CLike</span><span class='op'>&gt;</span> <span class='ident'>Extend</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>EnumSet</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>iterator</span>: <span class='ident'>I</span>) {
-        <span class='kw'>for</span> <span class='ident'>element</span> <span class='kw'>in</span> <span class='ident'>iterator</span> {
+    <span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>iter</span>: <span class='ident'>I</span>) {
+        <span class='kw'>for</span> <span class='ident'>element</span> <span class='kw'>in</span> <span class='ident'>iter</span> {
             <span class='self'>self</span>.<span class='ident'>insert</span>(<span class='ident'>element</span>);
         }
     }
