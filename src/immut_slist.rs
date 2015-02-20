@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
-use std::iter;
+use std::iter::{self, IntoIterator};
 use std::rc::{try_unwrap, Rc};
-use std::hash::{Hash, Hasher, Writer};
+use std::hash::{Hash, Hasher};
 use std;
 
 struct Node<T> {
@@ -143,9 +143,9 @@ impl<'a, T> Iterator for Iter<'a, T> {
 }
 
 impl<T> iter::FromIterator<T> for ImmutSList<T> {
-    fn from_iter<I: Iterator<Item=T>>(iterator: I) -> ImmutSList<T> {
+    fn from_iter<I: IntoIterator<Item=T>>(iter: I) -> ImmutSList<T> {
         let mut list = ImmutSList::new();
-        for elem in iterator {
+        for elem in iter {
             list = list.append(elem);
         }
         list
@@ -192,8 +192,8 @@ impl<T: std::fmt::Debug> std::fmt::Debug for ImmutSList<T> {
     }
 }
 
-impl<S: Hasher+Writer, A: Hash<S>> Hash<S> for ImmutSList<A> {
-    fn hash(&self, state: &mut S) {
+impl<A: Hash> Hash for ImmutSList<A> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         self.len().hash(state);
         for elt in self.iter() {
             elt.hash(state);

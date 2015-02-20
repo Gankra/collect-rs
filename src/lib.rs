@@ -21,6 +21,7 @@
 
 // there's too many combinations to track this stuff properly
 #![allow(unused_features)]
+#![allow(raw_pointer_derive)]
 
 #![cfg_attr(test, feature(test))]
 

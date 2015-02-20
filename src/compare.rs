@@ -13,13 +13,13 @@
 //! (http://doc.rust-lang.org/std/cmp/trait.Ord.html):
 //!
 //! ```rust
-//! use collect::compare::{Compare, Natural};
+//! use collect::compare::{Compare, natural};
 //! use std::cmp::Ordering::{Less, Equal, Greater};
 //!
 //! let a = &1;
 //! let b = &2;
 //!
-//! let cmp = Natural;
+//! let cmp = natural();
 //! assert_eq!(cmp.compare(a, b), Less);
 //! assert_eq!(cmp.compare(b, a), Greater);
 //! assert_eq!(cmp.compare(a, a), Equal);
@@ -28,12 +28,12 @@
 //! There are convenience methods for checking each of the six relations:
 //!
 //! ```rust
-//! use collect::compare::{Compare, Natural};
+//! use collect::compare::{Compare, natural};
 //!
 //! let a = &1;
 //! let b = &2;
 //!
-//! let cmp = Natural;
+//! let cmp = natural();
 //! assert!(cmp.compares_lt(a, b));
 //! assert!(cmp.compares_le(a, b));
 //! assert!(cmp.compares_ge(b, a));
@@ -48,10 +48,10 @@
 //! example, all comparators can be [reversed](trait.CompareExt.html#method.rev):
 //!
 //! ```rust
-//! use collect::compare::{Compare, CompareExt, Natural};
+//! use collect::compare::{Compare, CompareExt, natural};
 //! use std::cmp::Ordering::Greater;
 //!
-//! let cmp = Natural.rev();
+//! let cmp = natural().rev();
 //! assert_eq!(cmp.compare(&1, &2), Greater);
 //! ```
 //!
@@ -109,7 +109,7 @@
 //! previous example:
 //!
 //! ```rust
-//! use collect::compare::{Compare, CompareExt, Extract, Natural};
+//! use collect::compare::{Compare, CompareExt, Extract, natural};
 //! use std::cmp::Ordering::{Less, Greater};
 //!
 //! struct Pet { name: &'static str, age: u8 }
@@ -118,17 +118,18 @@
 //! let ruff2 = &Pet { name: "Ruff", age: 2 };
 //! let fido3 = &Pet { name: "Fido", age: 3 };
 //!
-//! let name_age_cmp = Extract::new(|p: &Pet| p.name, Natural)
-//!              .then(Extract::new(|p: &Pet| p.age, Natural));
+//! let name_age_cmp = Extract::new(|p: &Pet| p.name, natural())
+//!              .then(Extract::new(|p: &Pet| p.age, natural()));
 //!
 //! assert_eq!(name_age_cmp.compare(fido4, ruff2), Less);
 //! assert_eq!(name_age_cmp.compare(fido4, fido3), Greater);
 //! assert_eq!(name_age_cmp.compare(ruff2, fido3), Greater);
 //! ```
 
-use std::borrow::BorrowFrom;
+use std::borrow::Borrow as StdBorrow;
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
+use std::marker::PhantomData;
 use std::fmt::{self, Debug};
 
 /// Returns the maximum of two values according to the given comparator, or `lhs` if they
@@ -137,7 +138,7 @@ use std::fmt::{self, Debug};
 /// # Examples
 ///
 /// ```rust
-/// use collect::compare::{Extract, Natural, max};
+/// use collect::compare::{Extract, natural, max};
 ///
 /// struct Foo { key: char, id: u8 }
 ///
@@ -145,7 +146,7 @@ use std::fmt::{self, Debug};
 /// let f2 = &Foo { key: 'a', id: 2};
 /// let f3 = &Foo { key: 'b', id: 3};
 ///
-/// let cmp = Extract::new(|f: &Foo| f.key, Natural);
+/// let cmp = Extract::new(|f: &Foo| f.key, natural());
 /// assert_eq!(max(&cmp, f1, f2).id, f1.id);
 /// assert_eq!(max(&cmp, f1, f3).id, f3.id);
 /// ```
@@ -163,7 +164,7 @@ pub fn max<'a, C: ?Sized, T: ?Sized>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
 /// # Examples
 ///
 /// ```rust
-/// use collect::compare::{Extract, Natural, min};
+/// use collect::compare::{Extract, natural, min};
 ///
 /// struct Foo { key: char, id: u8 }
 ///
@@ -171,7 +172,7 @@ pub fn max<'a, C: ?Sized, T: ?Sized>(cmp: &C, lhs: &'a T, rhs: &'a T) -> &'a T
 /// let f2 = &Foo { key: 'b', id: 2};
 /// let f3 = &Foo { key: 'a', id: 3};
 ///
-/// let cmp = Extract::new(|f: &Foo| f.key, Natural);
+/// let cmp = Extract::new(|f: &Foo| f.key, natural());
 /// assert_eq!(min(&cmp, f1, f2).id, f1.id);
 /// assert_eq!(min(&cmp, f1, f3).id, f3.id);
 /// ```
@@ -245,7 +246,7 @@ pub trait CompareExt<Lhs: ?Sized, Rhs: ?Sized = Lhs> : Compare<Lhs, Rhs> + Sized
     /// # Examples
     ///
     /// ```rust
-    /// use collect::compare::{Compare, CompareExt, Natural};
+    /// use collect::compare::{Compare, CompareExt, natural};
     /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///
     /// let a_str = "a";
@@ -254,25 +255,25 @@ pub trait CompareExt<Lhs: ?Sized, Rhs: ?Sized = Lhs> : Compare<Lhs, Rhs> + Sized
     /// let b_str = "b";
     /// let b_string = b_str.to_string();
     ///
-    /// let cmp = Natural::<str>.borrow();
+    /// let cmp = natural::<str>().borrow();
     /// assert_eq!(cmp.compare(a_str, &a_string), Equal);
     /// assert_eq!(cmp.compare(a_str, b_str), Less);
     /// assert_eq!(cmp.compare(&b_string, a_str), Greater);
     /// ```
-    fn borrow(self) -> Borrow<Self, Lhs, Rhs> { Borrow(self) }
+    fn borrow(self) -> Borrow<Self, Lhs, Rhs> { Borrow(self, PhantomData, PhantomData) }
 
     /// Reverses the ordering of the comparator.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// use collect::compare::{Compare, CompareExt, Natural};
+    /// use collect::compare::{Compare, CompareExt, natural};
     /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///
     /// let a = &1;
     /// let b = &2;
     ///
-    /// let cmp = Natural.rev();
+    /// let cmp = natural().rev();
     /// assert_eq!(cmp.compare(a, b), Greater);
     /// assert_eq!(cmp.compare(b, a), Less);
     /// assert_eq!(cmp.compare(a, a), Equal);
@@ -335,37 +336,40 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized> CompareExt<Lhs, Rhs> for C where C: Compare<Lh
 /// A comparator that borrows its parameters before comparing them.
 ///
 /// See [`CompareExt::borrow`](trait.CompareExt.html#method.borrow) for an example.
-pub struct Borrow<C, Lb: ?Sized, Rb: ?Sized>(C) where C: Compare<Lb, Rb>;
+pub struct Borrow<C, Lb: ?Sized, Rb: ?Sized>(C, PhantomData<*mut Lb>, PhantomData<*mut Rb>);
 
 impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for Borrow<C, Lb, Rb>
-    where C: Compare<Lb, Rb>, Lb: BorrowFrom<Lhs>, Rb: BorrowFrom<Rhs> {
+    where C: Compare<Lb, Rb>,
+          Lhs: StdBorrow<Lb>,
+          Rhs: StdBorrow<Rb>,
+{
 
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
-        self.0.compare(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+        self.0.compare(lhs.borrow(), rhs.borrow())
     }
 
     fn compares_lt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
-        self.0.compares_lt(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+        self.0.compares_lt(lhs.borrow(), rhs.borrow())
     }
 
     fn compares_le(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
-        self.0.compares_le(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+        self.0.compares_le(lhs.borrow(), rhs.borrow())
     }
 
     fn compares_ge(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
-        self.0.compares_ge(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+        self.0.compares_ge(lhs.borrow(), rhs.borrow())
     }
 
     fn compares_gt(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
-        self.0.compares_gt(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+        self.0.compares_gt(lhs.borrow(), rhs.borrow())
     }
 
     fn compares_eq(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
-        self.0.compares_eq(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+        self.0.compares_eq(lhs.borrow(), rhs.borrow())
     }
 
     fn compares_ne(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
-        self.0.compares_ne(BorrowFrom::borrow_from(lhs), BorrowFrom::borrow_from(rhs))
+        self.0.compares_ne(lhs.borrow(), rhs.borrow())
     }
 }
 
@@ -374,7 +378,7 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for 
 impl<C, Lb: ?Sized, Rb: ?Sized> Clone for Borrow<C, Lb, Rb>
     where C: Compare<Lb, Rb> + Clone {
 
-    fn clone(&self) -> Borrow<C, Lb, Rb> { Borrow(self.0.clone()) }
+    fn clone(&self) -> Borrow<C, Lb, Rb> { Borrow(self.0.clone(), PhantomData, PhantomData) }
 }
 
 // FIXME: replace with `derive(Copy)` once
@@ -387,7 +391,7 @@ impl<C, Lb: ?Sized, Rb: ?Sized> Copy for Borrow<C, Lb, Rb>
 impl<C, Lb: ?Sized, Rb: ?Sized> Default for Borrow<C, Lb, Rb>
     where C: Compare<Lb, Rb> + Default {
 
-    fn default() -> Borrow<C, Lb, Rb> { Borrow(Default::default()) }
+    fn default() -> Borrow<C, Lb, Rb> { Borrow(Default::default(), PhantomData, PhantomData) }
 }
 
 // FIXME: replace with `derive(PartialEq)` once
@@ -417,18 +421,20 @@ impl<C, Lb: ?Sized, Rb: ?Sized> Debug for Borrow<C, Lb, Rb>
 /// # Examples
 ///
 /// ```rust
-/// use collect::compare::{Compare, Extract, Natural};
+/// use collect::compare::{Compare, Extract, natural};
 /// use std::cmp::Ordering::Greater;
 ///
 /// let a = vec![1, 2, 3];
 /// let b = vec![4, 5];
 ///
-/// let cmp = Extract::new(|vec: &Vec<u8>| vec.len(), Natural);
+/// let cmp = Extract::new(|vec: &Vec<u8>| vec.len(), natural());
 /// assert_eq!(cmp.compare(&a, &b), Greater);
 /// ```
 pub struct Extract<E, C, T: ?Sized, K> where E: Fn(&T) -> K, C: Compare<K> {
     ext: E,
     cmp: C,
+    phantom1: PhantomData<*mut T>,
+    phantom2: PhantomData<*mut K>,
 }
 
 // FIXME: convert to default method on `CompareExt` once where clauses permit equality
@@ -436,7 +442,9 @@ pub struct Extract<E, C, T: ?Sized, K> where E: Fn(&T) -> K, C: Compare<K> {
 impl<E, C, T: ?Sized, K> Extract<E, C, T, K> where E: Fn(&T) -> K, C: Compare<K> {
     /// Returns a comparator that extracts a sort key using `ext` and compares it using
     /// `cmp`.
-    pub fn new(ext: E, cmp: C) -> Extract<E, C, T, K> { Extract { ext: ext, cmp: cmp } }
+    pub fn new(ext: E, cmp: C) -> Extract<E, C, T, K> {
+        Extract { ext: ext, cmp: cmp, phantom1: PhantomData, phantom2: PhantomData }
+    }
 }
 
 impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T, K>
@@ -477,7 +485,8 @@ impl<E, C, T: ?Sized, K> Clone for Extract<E, C, T, K>
     where E: Fn(&T) -> K + Clone, C: Compare<K> + Clone {
 
     fn clone(&self) -> Extract<E, C, T, K> {
-        Extract { ext: self.ext.clone(), cmp: self.cmp.clone() }
+        Extract { ext: self.ext.clone(), cmp: self.cmp.clone(),
+                  phantom1: PhantomData, phantom2: PhantomData }
     }
 }
 
@@ -492,7 +501,8 @@ impl<E, C, T: ?Sized, K> Default for Extract<E, C, T, K>
     where E: Fn(&T) -> K + Default, C: Compare<K> + Default {
 
     fn default() -> Extract<E, C, T, K> {
-        Extract { ext: Default::default(), cmp: Default::default() }
+        Extract { ext: Default::default(), cmp: Default::default(),
+                  phantom1: PhantomData, phantom2: PhantomData }
     }
 }
 
@@ -545,18 +555,22 @@ impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Lexicographic<C, D>
 /// # Examples
 ///
 /// ```rust
-/// use collect::compare::{Compare, Natural};
+/// use collect::compare::{Compare, natural};
 /// use std::cmp::Ordering::{Less, Equal, Greater};
 ///
 /// let a = &1;
 /// let b = &2;
 ///
-/// let cmp = Natural;
+/// let cmp = natural();
 /// assert_eq!(cmp.compare(a, b), Less);
 /// assert_eq!(cmp.compare(b, a), Greater);
 /// assert_eq!(cmp.compare(a, a), Equal);
 /// ```
-pub struct Natural<T: Ord + ?Sized>;
+pub struct Natural<T: Ord + ?Sized>(PhantomData<*mut T>);
+
+pub fn natural<T: Ord + ?Sized>() -> Natural<T> {
+    Natural(PhantomData)
+}
 
 impl<T: Ord + ?Sized> Compare<T> for Natural<T> {
     fn compare(&self, lhs: &T, rhs: &T) -> Ordering { Ord::cmp(lhs, rhs) }
@@ -587,7 +601,7 @@ impl<T: Ord + ?Sized> Copy for Natural<T> {}
 // FIXME: replace with `derive(Default)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
 impl<T: Ord + ?Sized> Default for Natural<T> {
-    fn default() -> Natural<T> { Natural }
+    fn default() -> Natural<T> { natural() }
 }
 
 // FIXME: replace with `derive(PartialEq)` once

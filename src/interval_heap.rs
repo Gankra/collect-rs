@@ -2,9 +2,9 @@
 
 use std::slice;
 use std::default::Default;
-use std::iter;
+use std::iter::{self, IntoIterator};
 
-use compare::{Compare, Natural};
+use compare::{Compare, Natural, natural};
 
 // An interval heap is a binary tree structure with the following properties:
 //
@@ -158,7 +158,7 @@ impl<T: Ord> IntervalHeap<T> {
     /// let heap = IntervalHeap::<u32>::new();
     /// assert!(heap.is_empty());
     /// ```
-    pub fn new() -> IntervalHeap<T> { IntervalHeap::with_comparator(Natural) }
+    pub fn new() -> IntervalHeap<T> { IntervalHeap::with_comparator(natural()) }
 
     /// Returns an empty heap with the given capacity and ordered according to the
     /// natural order of its elements.
@@ -175,7 +175,7 @@ impl<T: Ord> IntervalHeap<T> {
     /// assert!(heap.capacity() >= 5);
     /// ```
     pub fn with_capacity(capacity: usize) -> IntervalHeap<T> {
-        IntervalHeap::with_capacity_and_comparator(capacity, Natural)
+        IntervalHeap::with_capacity_and_comparator(capacity, natural())
     }
 
     /// Returns a heap containing all the elements of the given vector and ordered
@@ -191,7 +191,7 @@ impl<T: Ord> IntervalHeap<T> {
     /// assert_eq!(heap.get_min_max(), Some((&1, &6)));
     /// ```
     pub fn from_vec(vec: Vec<T>) -> IntervalHeap<T> {
-        IntervalHeap::from_vec_and_comparator(vec, Natural)
+        IntervalHeap::from_vec_and_comparator(vec, natural())
     }
 }
 
@@ -383,15 +383,16 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
 
 impl<T, C: Compare<T> + Default> iter::FromIterator<T> for IntervalHeap<T, C> {
     /// Creates an interval heap with all the items from an iterator
-    fn from_iter<Iter: Iterator<Item=T>>(iter: Iter) -> IntervalHeap<T, C> {
-        IntervalHeap::from_vec_and_comparator(iter.collect(), Default::default())
+    fn from_iter<I: IntoIterator<Item=T>>(iter: I) -> IntervalHeap<T, C> {
+        IntervalHeap::from_vec_and_comparator(iter.into_iter().collect(), Default::default())
     }
 }
 
 impl<T, C: Compare<T>> Extend<T> for IntervalHeap<T, C> {
     /// Extends the interval heap by a new chunk of items given by
     /// an iterator.
-    fn extend<Iter: Iterator<Item=T>>(&mut self, iter: Iter) {
+    fn extend<I: IntoIterator<Item=T>>(&mut self, iterable: I) {
+        let iter = iterable.into_iter();
         let (lower, _) = iter.size_hint();
         self.reserve(lower);
         for elem in iter {
@@ -494,7 +495,7 @@ mod test {
     #[test]
     fn test_is_valid() {
         fn new(data: Vec<i32>) -> IntervalHeap<i32> {
-            IntervalHeap { data: data, cmp: ::compare::Natural }
+            IntervalHeap { data: data, cmp: ::compare::natural() }
         }
 
         assert!(new(vec![]).is_valid());

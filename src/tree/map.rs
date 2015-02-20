@@ -11,13 +11,13 @@
 use std::default::Default;
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::fmt::{self, Debug};
-use std::iter;
+use std::iter::{self, IntoIterator};
 use std::mem::{replace, swap};
 use std::ops;
 use std::ptr;
-use std::hash::{Hash, Hasher, Writer};
+use std::hash::{Hash, Hasher};
 
-use compare::{Compare, Natural};
+use compare::{Compare, Natural, natural};
 
 // FIXME(conventions): implement bounded iterators
 // FIXME(conventions): replace rev_iter(_mut) by making iter(_mut) DoubleEnded
@@ -198,7 +198,7 @@ impl<K: Ord, V> TreeMap<K, V> {
     /// let mut map: TreeMap<&str, i32> = TreeMap::new();
     /// ```
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn new() -> TreeMap<K, V> { TreeMap::with_comparator(Natural) }
+    pub fn new() -> TreeMap<K, V> { TreeMap::with_comparator(natural()) }
 }
 
 impl<K, V, C> TreeMap<K, V, C> where C: Compare<K> {
@@ -1293,7 +1293,7 @@ fn remove<K, V, C, Q: ?Sized>(node: &mut Option<Box<TreeNode<K, V>>>, key: &Q, c
 }
 
 impl<K, V, C> iter::FromIterator<(K, V)> for TreeMap<K, V, C> where C: Compare<K> + Default {
-    fn from_iter<T: Iterator<Item=(K, V)>>(iter: T) -> TreeMap<K, V, C> {
+    fn from_iter<T: IntoIterator<Item=(K, V)>>(iter: T) -> TreeMap<K, V, C> {
         let mut map: TreeMap<K, V, C> = Default::default();
         map.extend(iter);
         map
@@ -1302,15 +1302,15 @@ impl<K, V, C> iter::FromIterator<(K, V)> for TreeMap<K, V, C> where C: Compare<K
 
 impl<K, V, C> Extend<(K, V)> for TreeMap<K, V, C> where C: Compare<K> {
     #[inline]
-    fn extend<T: Iterator<Item=(K, V)>>(&mut self, iter: T) {
+    fn extend<T: IntoIterator<Item=(K, V)>>(&mut self, iter: T) {
         for (k, v) in iter {
             self.insert(k, v);
         }
     }
 }
 
-impl<S: Hasher+Writer, K: Hash<S>, V: Hash<S>, C> Hash<S> for TreeMap<K, V, C> where C: Compare<K> {
-    fn hash(&self, state: &mut S) {
+impl<K: Hash, V: Hash, C> Hash for TreeMap<K, V, C> where C: Compare<K> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         for elt in self.iter() {
             elt.hash(state);
         }
@@ -1849,9 +1849,9 @@ mod test_treemap {
 
     #[test]
     fn test_comparator_iterator() {
-        use compare::{CompareExt, Natural};
+        use compare::{CompareExt, natural};
 
-        let mut m = TreeMap::with_comparator(Natural.rev());
+        let mut m = TreeMap::with_comparator(natural().rev());
 
         assert!(m.insert(3, 6).is_none());
         assert!(m.insert(0, 0).is_none());
@@ -1870,9 +1870,9 @@ mod test_treemap {
 
     #[test]
     fn test_comparator_borrowed() {
-        use compare::{CompareExt, Natural};
+        use compare::{CompareExt, natural};
 
-        let mut m = TreeMap::with_comparator(Natural::<str>.borrow());
+        let mut m = TreeMap::with_comparator(natural::<str>().borrow());
 
         assert!(m.insert("a".to_string(), 1).is_none());
 

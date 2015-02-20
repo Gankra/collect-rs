@@ -14,7 +14,7 @@
 
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::fmt::{self, Debug};
-use std::iter::{self, Peekable};
+use std::iter::{self, Peekable, IntoIterator};
 use std::ops;
 
 use trie_map::{TrieMap, self};
@@ -439,7 +439,7 @@ impl TrieSet {
 }
 
 impl iter::FromIterator<usize> for TrieSet {
-    fn from_iter<Iter: Iterator<Item=usize>>(iter: Iter) -> TrieSet {
+    fn from_iter<I: IntoIterator<Item=usize>>(iter: I) -> TrieSet {
         let mut set = TrieSet::new();
         set.extend(iter);
         set
@@ -447,7 +447,7 @@ impl iter::FromIterator<usize> for TrieSet {
 }
 
 impl Extend<usize> for TrieSet {
-    fn extend<Iter: Iterator<Item=usize>>(&mut self, iter: Iter) {
+    fn extend<I: IntoIterator<Item=usize>>(&mut self, iter: I) {
         for elem in iter {
             self.insert(elem);
         }

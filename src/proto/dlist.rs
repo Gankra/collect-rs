@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
 use std::fmt::{self, Debug};
-use std::hash::{Hash, Hasher, Writer};
-use std::iter;
-use std::marker::NoCopy;
+use std::hash::{Hash, Hasher};
+use std::iter::{self, IntoIterator};
+use std::marker::{NoCopy, PhantomData};
 use std::{ptr, mem};
 
 // FIXME(Gankro): Although the internal interface we have here is *safer* than std's DList,
@@ -305,6 +305,7 @@ impl<T> DList<T> {
             nelem: self.len(),
             head: head_raw,
             tail: self.tail.clone(),
+            phantom: PhantomData,
         }
     }
 
@@ -557,6 +558,7 @@ pub struct IterMut<'a, T:'a> {
     head: Raw<T>,
     tail: Raw<T>,
     nelem: usize,
+    phantom: PhantomData<&'a mut T>,
 }
 
 /// An iterator over mutable references to the items of a `DList`.
@@ -670,16 +672,16 @@ impl<T> Drop for DList<T> {
 }
 
 impl<A> iter::FromIterator<A> for DList<A> {
-    fn from_iter<T: Iterator<Item=A>>(iterator: T) -> DList<A> {
+    fn from_iter<T: IntoIterator<Item=A>>(iter: T) -> DList<A> {
         let mut ret = DList::new();
-        ret.extend(iterator);
+        ret.extend(iter);
         ret
     }
 }
 
 impl<A> Extend<A> for DList<A> {
-    fn extend<T: Iterator<Item=A>>(&mut self, iterator: T) {
-        for elt in iterator { self.push_back(elt); }
+    fn extend<T: IntoIterator<Item=A>>(&mut self, iter: T) {
+        for elt in iter { self.push_back(elt); }
     }
 }
 
@@ -724,8 +726,8 @@ impl<A: fmt::Debug> fmt::Debug for DList<A> {
     }
 }
 
-impl<S: Hasher+Writer, A: Hash<S>> Hash<S> for DList<A> {
-    fn hash(&self, state: &mut S) {
+impl<A: Hash> Hash for DList<A> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         self.len().hash(state);
         for elt in self.iter() {
             elt.hash(state);
