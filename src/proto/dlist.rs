@@ -741,10 +741,23 @@ impl<T: Clone> Clone for DList<T> {
     }
 }
 
+impl<'a, T> IntoIterator for &'a DList<T> {
+    type Item = &'a T;
+    type IntoIter = Iter<'a, T>;
+    fn into_iter(self) -> Iter<'a, T> { self.iter() }
+}
 
+impl<'a, T> IntoIterator for &'a mut DList<T> {
+    type Item = &'a mut T;
+    type IntoIter = IterMut<'a, T>;
+    fn into_iter(self) -> IterMut<'a, T> { self.iter_mut() }
+}
 
-
-
+impl<T> IntoIterator for DList<T> {
+    type Item = T;
+    type IntoIter = IntoIter<T>;
+    fn into_iter(self) -> IntoIter<T> { self.into_iter() }
+}
 
 #[cfg(test)]
 mod test {

@@ -833,6 +833,18 @@ impl<T: Hash, C> Hash for TreeSet<T, C> where C: Compare<T> {
     }
 }
 
+impl<'a, T, C> IntoIterator for &'a TreeSet<T, C> where C: Compare<T> {
+    type Item = &'a T;
+    type IntoIter = Iter<'a, T>;
+    fn into_iter(self) -> Iter<'a, T> { self.iter() }
+}
+
+impl<T, C> IntoIterator for TreeSet<T, C> where C: Compare<T> {
+    type Item = T;
+    type IntoIter = IntoIter<T>;
+    fn into_iter(self) -> IntoIter<T> { self.into_iter() }
+}
+
 #[cfg(test)]
 mod test {
     use std::hash;

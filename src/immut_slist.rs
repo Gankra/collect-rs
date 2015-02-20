@@ -201,6 +201,12 @@ impl<A: Hash> Hash for ImmutSList<A> {
     }
 }
 
+impl<'a, T> IntoIterator for &'a ImmutSList<T> {
+    type Item = &'a T;
+    type IntoIter = Iter<'a, T>;
+    fn into_iter(self) -> Iter<'a, T> { self.iter() }
+}
+
 #[cfg(test)]
 mod tests {
     use std::hash;
