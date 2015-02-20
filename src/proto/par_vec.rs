@@ -82,7 +82,7 @@ fn sub_slices<T>(parent: &[T], slice_count: usize) -> Vec<&[T]> {
 
 /// A slice of `ParVec` that can be sent to another task for processing.
 /// Automatically releases the slice on drop.
-pub struct ParSlice<T: Send> {
+pub struct ParSlice<T: Send + 'static> {
     // Just to keep the source vector alive while the slice is,
     // since the ParVec can die asynchronously.
     _vec: Arc<Vec<T>>,

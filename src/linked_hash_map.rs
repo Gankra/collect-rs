@@ -31,9 +31,8 @@
 use std::cmp::{PartialEq, Eq};
 use std::collections::HashMap;
 use std::fmt;
-use std::hash::{Hash, Hasher, Writer};
-use std::collections::hash_map::Hasher as HmHasher;
-use std::iter::{Iterator, Extend};
+use std::hash::{Hash, Hasher};
+use std::iter::{Iterator, IntoIterator, Extend};
 use std::iter;
 use std::marker;
 use std::mem;
@@ -55,8 +54,8 @@ pub struct LinkedHashMap<K, V> {
     head: *mut LinkedHashMapEntry<K, V>,
 }
 
-impl<S: Hasher+Writer, K: Hash<S>> Hash<S> for KeyRef<K> {
-    fn hash(&self, state: &mut S) {
+impl<K: Hash> Hash for KeyRef<K> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         unsafe { (*self.k).hash(state) }
     }
 }
@@ -80,7 +79,7 @@ impl<K, V> LinkedHashMapEntry<K, V> {
     }
 }
 
-impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
+impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     /// Creates a linked hash map.
     pub fn new() -> LinkedHashMap<K, V> {
         let map = LinkedHashMap {
@@ -310,7 +309,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
             head: unsafe { (*self.head).prev },
             tail: self.head,
             remaining: self.len(),
-            marker: marker::ContravariantLifetime,
+            marker: marker::PhantomData,
         }
     }
 
@@ -339,7 +338,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
             head: unsafe { (*self.head).prev },
             tail: self.head,
             remaining: self.len(),
-            marker: marker::ContravariantLifetime
+            marker: marker::PhantomData
         }
     }
 
@@ -393,7 +392,7 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
 }
 
 impl<K, V> Index<K> for LinkedHashMap<K, V>
-    where K: Hash<HmHasher> + Eq
+    where K: Hash + Eq
 {
     type Output = V;
 
@@ -403,14 +402,14 @@ impl<K, V> Index<K> for LinkedHashMap<K, V>
 }
 
 impl<K, V> IndexMut<K> for LinkedHashMap<K, V>
-    where K: Hash<HmHasher> + Eq
+    where K: Hash + Eq
 {
     fn index_mut(&mut self, index: &K) -> &mut V {
         self.get_mut(index).expect("no entry found for key")
     }
 }
 
-impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
+impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     #[inline]
     fn detach(&mut self, node: *mut LinkedHashMapEntry<K, V>) {
         unsafe {
@@ -431,15 +430,15 @@ impl<K: Hash<HmHasher> + Eq, V> LinkedHashMap<K, V> {
 }
 
 
-impl<K: Hash<HmHasher> + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
-    fn extend<T: Iterator<Item=(K, V)>>(&mut self, iter: T) {
-        for (k, v) in iter{
+impl<K: Hash + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
+    fn extend<T: IntoIterator<Item=(K, V)>>(&mut self, iter: T) {
+        for (k, v) in iter {
             self.insert(k, v);
         }
     }
 }
 
-impl<A: fmt::Debug + Hash<HmHasher> + Eq, B: fmt::Debug> fmt::Debug for LinkedHashMap<A, B> {
+impl<A: fmt::Debug + Hash + Eq, B: fmt::Debug> fmt::Debug for LinkedHashMap<A, B> {
     /// Returns a string that lists the key-value pairs in insertion order.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{{"));
@@ -475,14 +474,14 @@ pub struct Iter<'a, K: 'a, V: 'a> {
     head: *const LinkedHashMapEntry<K, V>,
     tail: *const LinkedHashMapEntry<K, V>,
     remaining: usize,
-    marker: marker::ContravariantLifetime<'a>,
+    marker: marker::PhantomData<(&'a K, &'a V)>,
 }
 
 pub struct IterMut<'a, K: 'a, V: 'a> {
     head: *mut LinkedHashMapEntry<K, V>,
     tail: *mut LinkedHashMapEntry<K, V>,
     remaining: usize,
-    marker: marker::ContravariantLifetime<'a>,
+    marker: marker::PhantomData<(&'a K, &'a mut V)>,
 }
 
 impl<'a, K, V> Iterator for Iter<'a, K, V> {

@@ -7,7 +7,7 @@ use std::iter::Peekable;
 use std::collections::{
     btree_map, btree_set,
     vec_map,
-    bitv_set
+    bit_set
 };
 
 #[cfg(feature="tree_map")]
@@ -254,7 +254,7 @@ impl<'a> OrderedSetIterator<usize> for trie_set::Iter<'a> {}
 #[cfg(feature="trie_map")]
 impl<'a, V> OrderedMapIterator<usize, &'a V> for trie_map::Iter<'a, V> {}
 impl<'a, V> OrderedMapIterator<usize, &'a V> for vec_map::Iter<'a, V> {}
-impl<'a> OrderedSetIterator<usize> for bitv_set::Iter<'a> {}
+impl<'a> OrderedSetIterator<usize> for bit_set::Iter<'a> {}
 
 
 impl<K: Ord, VA, VB,

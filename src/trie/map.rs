@@ -16,8 +16,8 @@ use self::TrieNode::*;
 use std::cmp::Ordering;
 use std::default::Default;
 use std::fmt::{self, Debug};
-use std::hash::{Hash, Hasher, Writer};
-use std::iter;
+use std::hash::{Hash, Hasher};
+use std::iter::{self, IntoIterator};
 use std::mem::{self, zeroed};
 use std::ops;
 use std::ptr;
@@ -620,7 +620,7 @@ impl<T> TrieMap<T> {
 }
 
 impl<T> iter::FromIterator<(usize, T)> for TrieMap<T> {
-    fn from_iter<Iter: Iterator<Item=(usize, T)>>(iter: Iter) -> TrieMap<T> {
+    fn from_iter<I: IntoIterator<Item=(usize, T)>>(iter: I) -> TrieMap<T> {
         let mut map = TrieMap::new();
         map.extend(iter);
         map
@@ -628,15 +628,15 @@ impl<T> iter::FromIterator<(usize, T)> for TrieMap<T> {
 }
 
 impl<T> Extend<(usize, T)> for TrieMap<T> {
-    fn extend<Iter: Iterator<Item=(usize, T)>>(&mut self, iter: Iter) {
+    fn extend<I: IntoIterator<Item=(usize, T)>>(&mut self, iter: I) {
         for (k, v) in iter {
             self.insert(k, v);
         }
     }
 }
 
-impl<S: Hasher+Writer, T: Hash<S>> Hash<S> for TrieMap<T> {
-    fn hash(&self, state: &mut S) {
+impl<T: Hash> Hash for TrieMap<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         for elt in self.iter() {
             elt.hash(state);
         }

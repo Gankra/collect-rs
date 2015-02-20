@@ -11,12 +11,11 @@
 use std::cmp::Ordering::{self, Less, Equal, Greater};
 use std::default::Default;
 use std::fmt::{self, Debug};
-use std::iter::Peekable;
-use std::iter;
-use std::hash::{Hash, Hasher, Writer};
+use std::iter::{self, Peekable, IntoIterator};
+use std::hash::{Hash, Hasher};
 use std::ops;
 
-use compare::{Compare, Natural};
+use compare::{Compare, Natural, natural};
 use tree_map::{self, TreeMap};
 
 // FIXME(conventions): implement bounded iterators
@@ -133,7 +132,7 @@ impl<T: Ord> TreeSet<T> {
     /// ```
     #[inline]
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
-    pub fn new() -> TreeSet<T> { TreeSet::with_comparator(Natural) }
+    pub fn new() -> TreeSet<T> { TreeSet::with_comparator(natural()) }
 }
 
 impl<T, C> TreeSet<T, C> where C: Compare<T> {
@@ -809,7 +808,7 @@ impl<'a, 'b, T, C> ops::Sub<&'b TreeSet<T, C>> for &'a TreeSet<T, C>
 }
 
 impl<T, C> iter::FromIterator<T> for TreeSet<T, C> where C: Compare<T> + Default {
-    fn from_iter<Iter: Iterator<Item=T>>(iter: Iter) -> TreeSet<T, C> {
+    fn from_iter<Iter: IntoIterator<Item=T>>(iter: Iter) -> TreeSet<T, C> {
         let mut set: TreeSet<T, C> = Default::default();
         set.extend(iter);
         set
@@ -818,15 +817,16 @@ impl<T, C> iter::FromIterator<T> for TreeSet<T, C> where C: Compare<T> + Default
 
 impl<T, C> Extend<T> for TreeSet<T, C> where C: Compare<T> {
     #[inline]
-    fn extend<Iter: Iterator<Item=T>>(&mut self, iter: Iter) {
+    fn extend<Iter: IntoIterator<Item=T>>(&mut self, iter: Iter) {
         for elem in iter {
             self.insert(elem);
         }
     }
 }
 
-impl<S: Hasher+Writer, T: Hash<S>, C> Hash<S> for TreeSet<T, C> where C: Compare<T> {
-    fn hash(&self, state: &mut S) {
+
+impl<T: Hash, C> Hash for TreeSet<T, C> where C: Compare<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         for elt in self.iter() {
             elt.hash(state);
         }
@@ -1168,9 +1168,9 @@ mod test {
 
     #[test]
     fn test_comparator_iterator() {
-        use compare::{CompareExt, Natural};
+        use compare::{CompareExt, natural};
 
-        let mut m = TreeSet::with_comparator(Natural.rev());
+        let mut m = TreeSet::with_comparator(natural().rev());
 
         assert!(m.insert(3));
         assert!(m.insert(0));
@@ -1188,9 +1188,9 @@ mod test {
 
     #[test]
     fn test_comparator_borrowed() {
-        use compare::{CompareExt, Natural};
+        use compare::{CompareExt, natural};
 
-        let mut m = TreeSet::with_comparator(Natural::<str>.borrow());
+        let mut m = TreeSet::with_comparator(natural::<str>().borrow());
 
         assert!(m.insert("a".to_string()));
 

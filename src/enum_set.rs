@@ -15,24 +15,22 @@
 
 use core::fmt;
 use core::hash;
-use core::marker::InvariantType;
+use core::marker::PhantomData;
 use core::num::Int;
 use core::u32;
-use std::iter;
+use std::iter::{self, IntoIterator};
 use std::ops;
 
 // FIXME(conventions): implement union family of methods? (general design may be wrong here)
 
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A specialized set implementation to use enum types.
 pub struct EnumSet<E> {
     // We must maintain the invariant that no bits are set
     // for which no variant exists
     bits: u32,
-    invariant_type: InvariantType<E>,
+    phantom: PhantomData<*mut E>,
 }
-
-impl<E> Copy for EnumSet<E> {}
 
 impl<E:CLike+fmt::Debug> fmt::Debug for EnumSet<E> {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
@@ -49,8 +47,8 @@ impl<E:CLike+fmt::Debug> fmt::Debug for EnumSet<E> {
     }
 }
 
-impl<W:hash::Hasher+hash::Writer,E:CLike> hash::Hash<W> for EnumSet<E> {
-    fn hash(&self, state: &mut W) {
+impl<E: CLike> hash::Hash for EnumSet<E> {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
         self.bits.hash(state);
     }
 }
@@ -100,7 +98,7 @@ impl<E:CLike> EnumSet<E> {
     }
 
     fn new_with_bits(bits: u32) -> EnumSet<E> {
-        EnumSet { bits: bits, invariant_type: InvariantType }
+        EnumSet { bits: bits, phantom: PhantomData }
     }
 
     /// Returns the number of elements in the given `EnumSet`.
@@ -212,11 +210,12 @@ impl<E:CLike> ops::BitXor for EnumSet<E> {
 pub struct Iter<E> {
     index: u32,
     bits: u32,
+    phantom: PhantomData<*mut E>,
 }
 
 impl<E:CLike> Iter<E> {
     fn new(bits: u32) -> Iter<E> {
-        Iter { index: 0, bits: bits }
+        Iter { index: 0, bits: bits, phantom: PhantomData }
     }
 }
 
@@ -244,7 +243,7 @@ impl<E:CLike> Iterator for Iter<E> {
 }
 
 impl<E:CLike> iter::FromIterator<E> for EnumSet<E> {
-    fn from_iter<I:Iterator<Item=E>>(iterator: I) -> EnumSet<E> {
+    fn from_iter<I: IntoIterator<Item=E>>(iterator: I) -> EnumSet<E> {
         let mut ret = EnumSet::new();
         ret.extend(iterator);
         ret
@@ -252,8 +251,8 @@ impl<E:CLike> iter::FromIterator<E> for EnumSet<E> {
 }
 
 impl<E:CLike> Extend<E> for EnumSet<E> {
-    fn extend<I: Iterator<Item=E>>(&mut self, iterator: I) {
-        for element in iterator {
+    fn extend<I: IntoIterator<Item=E>>(&mut self, iter: I) {
+        for element in iter {
             self.insert(element);
         }
     }
