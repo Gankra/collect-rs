@@ -1,5 +1,6 @@
 use std::cmp::Ordering;
 use std::cmp::Ordering::*;
+use std::marker::{MarkerTrait, PhantomData};
 use std::mem::{replace, swap};
 
 use compare::Compare;
@@ -204,7 +205,7 @@ pub fn remove<K, V, C, Q: ?Sized>(node: &mut Option<Box<Node<K, V>>>, key: &Q, c
     Some(node.take().unwrap().value)
 }
 
-trait Dir {
+trait Dir: MarkerTrait {
     fn pre<N>(node: &mut N) -> Option<N> where N: NodeRef;
     fn post<N>(node: &mut N) -> Option<N> where N: NodeRef;
 }
@@ -283,11 +284,12 @@ pub struct Iter<N, S, D> where N: NodeRef, S: IterSize, D: Dir {
     stack: Vec<N>,
     node: Option<N>,
     size: S,
+    _dir: PhantomData<*mut D>,
 }
 
 impl<N, S, D> Iter<N, S, D> where N: NodeRef, S: IterSize, D: Dir {
     pub fn new(node: Option<N>, size: S) -> Iter<N, S, D> {
-        Iter { stack: vec![], node: node, size: size }
+        Iter { stack: vec![], node: node, size: size, _dir: PhantomData }
     }
 }
 
@@ -342,6 +344,7 @@ impl<N, S, D> Clone for Iter<N, S, D>
             stack: self.stack.clone(),
             node: self.node.clone(),
             size: self.size.clone(),
+            _dir: PhantomData,
         }
     }
 }
