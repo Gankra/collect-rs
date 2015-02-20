@@ -258,6 +258,12 @@ impl<E:CLike> Extend<E> for EnumSet<E> {
     }
 }
 
+impl<'a, E:CLike> IntoIterator for &'a EnumSet<E> {
+    type Item = E;
+    type IntoIter = Iter<E>;
+    fn into_iter(self) -> Iter<E> { self.iter() }
+}
+
 #[cfg(test)]
 mod test {
     use self::Foo::*;

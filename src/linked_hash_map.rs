@@ -32,7 +32,7 @@ use std::cmp::{PartialEq, Eq};
 use std::collections::HashMap;
 use std::fmt;
 use std::hash::{Hash, Hasher};
-use std::iter::{Iterator, IntoIterator, Extend};
+use std::iter::IntoIterator;
 use std::iter;
 use std::marker;
 use std::mem;
@@ -596,6 +596,17 @@ impl<'a, K, V> DoubleEndedIterator for Values<'a, K, V> {
 
 impl<'a, K, V> ExactSizeIterator for Values<'a, K, V> {}
 
+impl<'a, K: Hash + Eq, V> IntoIterator for &'a LinkedHashMap<K, V> {
+    type Item = (&'a K, &'a V);
+    type IntoIter = Iter<'a, K, V>;
+    fn into_iter(self) -> Iter<'a, K, V> { self.iter() }
+}
+
+impl<'a, K: Hash + Eq, V> IntoIterator for &'a mut LinkedHashMap<K, V> {
+    type Item = (&'a K, &'a mut V);
+    type IntoIter = IterMut<'a, K, V>;
+    fn into_iter(self) -> IterMut<'a, K, V> { self.iter_mut() }
+}
 
 #[cfg(test)]
 mod tests {

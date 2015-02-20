@@ -407,6 +407,12 @@ impl<'a, T> Iterator for Iter<'a, T> {
     #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
 }
 
+impl<'a, T, C: Compare<T>> IntoIterator for &'a IntervalHeap<T, C> {
+    type Item = &'a T;
+    type IntoIter = Iter<'a, T>;
+    fn into_iter(self) -> Iter<'a, T> { self.iter() }
+}
+
 #[cfg(test)]
 mod test {
     use rand::{thread_rng, Rng};

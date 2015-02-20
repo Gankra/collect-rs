@@ -653,6 +653,12 @@ impl<'a> Iterator for Union<'a> {
     }
 }
 
+impl<'a> IntoIterator for &'a TrieSet {
+    type Item = usize;
+    type IntoIter = Iter<'a>;
+    fn into_iter(self) -> Iter<'a> { self.iter() }
+}
+
 #[cfg(test)]
 mod test {
     use std::usize;

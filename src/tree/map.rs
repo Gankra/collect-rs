@@ -1317,6 +1317,23 @@ impl<K: Hash, V: Hash, C> Hash for TreeMap<K, V, C> where C: Compare<K> {
     }
 }
 
+impl<'a, K, V, C> IntoIterator for &'a TreeMap<K, V, C> where C: Compare<K> {
+    type Item = (&'a K, &'a V);
+    type IntoIter = Iter<'a, K, V>;
+    fn into_iter(self) -> Iter<'a, K, V> { self.iter() }
+}
+
+impl<'a, K, V, C> IntoIterator for &'a mut TreeMap<K, V, C> where C: Compare<K> {
+    type Item = (&'a K, &'a mut V);
+    type IntoIter = IterMut<'a, K, V>;
+    fn into_iter(self) -> IterMut<'a, K, V> { self.iter_mut() }
+}
+
+impl<K, V, C> IntoIterator for TreeMap<K, V, C> where C: Compare<K> {
+    type Item = (K, V);
+    type IntoIter = IntoIter<K, V>;
+    fn into_iter(self) -> IntoIter<K, V> { self.into_iter() }
+}
 
 #[cfg(test)]
 mod test_treemap {
