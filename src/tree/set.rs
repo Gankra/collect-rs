@@ -217,8 +217,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(set.lower_bound(&10).next(), None);
     /// ```
     #[inline]
-    pub fn lower_bound(&self, v: &T) -> Iter<T> {
-        Iter { iter: self.map.lower_bound(v) }
+    pub fn lower_bound(&self, v: &T) -> BoundIter<T> {
+        BoundIter { iter: self.map.lower_bound(v) }
     }
 
     /// Gets a lazy iterator pointing to the first value greater than `v`.
@@ -236,8 +236,8 @@ impl<T, C> TreeSet<T, C> where C: Compare<T> {
     /// assert_eq!(set.upper_bound(&10).next(), None);
     /// ```
     #[inline]
-    pub fn upper_bound(&self, v: &T) -> Iter<T> {
-        Iter { iter: self.map.upper_bound(v) }
+    pub fn upper_bound(&self, v: &T) -> BoundIter<T> {
+        BoundIter { iter: self.map.upper_bound(v) }
     }
 
     /// Visits the values representing the difference, in ascending order.
@@ -572,6 +572,11 @@ pub struct Iter<'a, T:'a> {
     iter: tree_map::Iter<'a, T, ()>
 }
 
+/// A lazy forward iterator over a set.
+pub struct BoundIter<'a, T: 'a> {
+    iter: tree_map::BoundIter<'a, T, ()>,
+}
+
 /// A lazy backward iterator over a set.
 pub struct RevIter<'a, T:'a> {
     iter: tree_map::RevIter<'a, T, ()>
@@ -618,11 +623,30 @@ fn cmp_opt<T, C: Compare<T>>(x: Option<& &T>, y: Option<& &T>,
     }
 }
 
+impl<'a, T> Clone for Iter<'a, T> {
+    fn clone(&self) -> Iter<'a, T> { Iter { iter: self.iter.clone() } }
+}
 
 impl<'a, T> Iterator for Iter<'a, T> {
     type Item = &'a T;
     #[inline] fn next(&mut self) -> Option<&'a T> { self.iter.next().map(|(value, _)| value) }
     #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
+}
+
+impl<'a, T> ExactSizeIterator for Iter<'a, T> {}
+
+impl<'a, T> Clone for BoundIter<'a, T> {
+    fn clone(&self) -> BoundIter<'a, T> { BoundIter { iter: self.iter.clone() } }
+}
+
+impl<'a, T> Iterator for BoundIter<'a, T> {
+    type Item = &'a T;
+    #[inline] fn next(&mut self) -> Option<&'a T> { self.iter.next().map(|(value, _)| value) }
+    #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
+}
+
+impl<'a, T> Clone for RevIter<'a, T> {
+    fn clone(&self) -> RevIter<'a, T> { RevIter { iter: self.iter.clone() } }
 }
 
 impl<'a, T> Iterator for RevIter<'a, T> {
@@ -631,11 +655,15 @@ impl<'a, T> Iterator for RevIter<'a, T> {
     #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
 }
 
+impl<'a, T> ExactSizeIterator for RevIter<'a, T> {}
+
 impl<T> Iterator for IntoIter<T> {
     type Item = T;
     #[inline] fn next(&mut self) -> Option<T> { self.0.next() }
     #[inline] fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
 }
+
+impl<T> ExactSizeIterator for IntoIter<T> {}
 
 impl<'a, T, C> Iterator for Difference<'a, T, C> where C: Compare<T> {
     type Item = &'a T;
