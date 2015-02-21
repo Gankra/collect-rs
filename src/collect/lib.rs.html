@@ -135,7 +135,6 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-<span id="96">96</span>
 </pre><pre class='rust '>
 
 <span class='doccomment'>//! collect-rs is intended as an experimental extension of the Rust standard library&#39;s</span>
@@ -179,7 +178,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;traverse&quot;</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>traverse</span>;
 
-
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>mod</span> <span class='ident'>bench</span>;
 
 <span class='comment'>// Re-Exports</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;blist&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>blist</span>::<span class='ident'>BList</span>;
@@ -196,7 +195,6 @@
 <span class='comment'>// privates</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;tree_map&quot;</span>)]</span> <span class='kw'>mod</span> <span class='ident'>tree</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;trie_map&quot;</span>)]</span> <span class='kw'>mod</span> <span class='ident'>trie</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>mod</span> <span class='ident'>bench</span>;
 
 <span class='comment'>// publics</span>
 
