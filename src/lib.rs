@@ -40,7 +40,7 @@ extern crate core;
 #[cfg(feature="traverse")]
 extern crate traverse;
 
-
+#[cfg(test)] #[macro_use] mod bench;
 
 // Re-Exports
 #[cfg(feature="blist")] pub use blist::BList;
@@ -57,7 +57,6 @@ extern crate traverse;
 // privates
 #[cfg(feature="tree_map")] mod tree;
 #[cfg(feature="trie_map")] mod trie;
-#[cfg(test)] mod bench;
 
 // publics
 

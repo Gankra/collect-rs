@@ -1920,74 +1920,18 @@ mod bench {
     use test::{Bencher, black_box};
 
     use super::TreeMap;
-    use bench::{insert_rand_n, insert_seq_n, find_rand_n, find_seq_n};
 
-    #[bench]
-    pub fn insert_rand_100(b: &mut Bencher) {
-        let mut m: TreeMap<u32,u32> = TreeMap::new();
-        insert_rand_n(100, &mut m, b,
-                      |m, i| { m.insert(i, 1); },
-                      |m, i| { m.remove(&i); });
-    }
+    map_insert_rand_bench!{insert_rand_100,    100,    TreeMap}
+    map_insert_rand_bench!{insert_rand_10_000, 10_000, TreeMap}
 
-    #[bench]
-    pub fn insert_rand_10_000(b: &mut Bencher) {
-        let mut m: TreeMap<u32,u32> = TreeMap::new();
-        insert_rand_n(10_000, &mut m, b,
-                      |m, i| { m.insert(i, 1); },
-                      |m, i| { m.remove(&i); });
-    }
+    map_insert_seq_bench!{insert_seq_100,    100,    TreeMap}
+    map_insert_seq_bench!{insert_seq_10_000, 10_000, TreeMap}
 
-    // Insert seq
-    #[bench]
-    pub fn insert_seq_100(b: &mut Bencher) {
-        let mut m: TreeMap<u32,u32> = TreeMap::new();
-        insert_seq_n(100, &mut m, b,
-                     |m, i| { m.insert(i, 1); },
-                     |m, i| { m.remove(&i); });
-    }
+    map_find_rand_bench!{find_rand_100,    100,    TreeMap}
+    map_find_rand_bench!{find_rand_10_000, 10_000, TreeMap}
 
-    #[bench]
-    pub fn insert_seq_10_000(b: &mut Bencher) {
-        let mut m: TreeMap<u32,u32> = TreeMap::new();
-        insert_seq_n(10_000, &mut m, b,
-                     |m, i| { m.insert(i, 1); },
-                     |m, i| { m.remove(&i); });
-    }
-
-    // Find rand
-    #[bench]
-    pub fn find_rand_100(b: &mut Bencher) {
-        let mut m: TreeMap<u32,u32> = TreeMap::new();
-        find_rand_n(100, &mut m, b,
-                    |m, i| { m.insert(i, 1); },
-                    |m, i| { m.get(&i); });
-    }
-
-    #[bench]
-    pub fn find_rand_10_000(b: &mut Bencher) {
-        let mut m: TreeMap<u32,u32> = TreeMap::new();
-        find_rand_n(10_000, &mut m, b,
-                    |m, i| { m.insert(i, 1); },
-                    |m, i| { m.get(&i); });
-    }
-
-    // Find seq
-    #[bench]
-    pub fn find_seq_100(b: &mut Bencher) {
-        let mut m: TreeMap<u32,u32> = TreeMap::new();
-        find_seq_n(100, &mut m, b,
-                   |m, i| { m.insert(i, 1); },
-                   |m, i| { m.get(&i); });
-    }
-
-    #[bench]
-    pub fn find_seq_10_000(b: &mut Bencher) {
-        let mut m: TreeMap<u32,u32> = TreeMap::new();
-        find_seq_n(10_000, &mut m, b,
-                   |m, i| { m.insert(i, 1); },
-                   |m, i| { m.get(&i); });
-    }
+    map_find_seq_bench!{find_seq_100,    100,    TreeMap}
+    map_find_seq_bench!{find_seq_10_000, 10_000, TreeMap}
 
     fn bench_iter(b: &mut Bencher, size: usize) {
         let mut map = TreeMap::<u32, u32>::new();
