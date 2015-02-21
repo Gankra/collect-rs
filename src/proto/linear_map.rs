@@ -2,7 +2,7 @@
 
 #![warn(missing_docs)]
 
-use std::iter::Map;
+use std::iter::{IntoIterator, Map};
 use std::mem;
 use std::slice;
 
@@ -297,6 +297,18 @@ impl<'a, K:'a, V:'a> ExactSizeIterator for Iter   <'a, K, V> { }
 impl<'a, K:'a, V:'a> ExactSizeIterator for IterMut<'a, K, V> { }
 impl<'a, K:'a, V:'a> ExactSizeIterator for Keys   <'a, K, V> { }
 impl<'a, K:'a, V:'a> ExactSizeIterator for Values <'a, K, V> { }
+
+impl<'a, K:'a + Eq, V:'a> IntoIterator for &'a LinearMap<K, V> {
+    type Item = (&'a K, &'a V);
+    type IntoIter = Iter<'a, K, V>;
+    fn into_iter(self) -> Iter<'a, K, V> { self.iter() }
+}
+
+impl<'a, K:'a + Eq, V:'a> IntoIterator for &'a mut LinearMap<K, V> {
+    type Item = (&'a K, &'a mut V);
+    type IntoIter = IterMut<'a, K, V>;
+    fn into_iter(self) -> IterMut<'a, K, V> { self.iter_mut() }
+}
 
 #[cfg(test)]
 mod test {

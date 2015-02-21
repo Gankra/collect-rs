@@ -1205,6 +1205,18 @@ macro_rules! iterator_impl {
 iterator_impl! { Iter, iter = iter, mutability = }
 iterator_impl! { IterMut, iter = iter_mut, mutability = mut }
 
+impl<'a, T> IntoIterator for &'a TrieMap<T> {
+    type Item = (usize, &'a T);
+    type IntoIter = Iter<'a, T>;
+    fn into_iter(self) -> Iter<'a, T> { self.iter() }
+}
+
+impl<'a, T> IntoIterator for &'a mut TrieMap<T> {
+    type Item = (usize, &'a mut T);
+    type IntoIter = IterMut<'a, T>;
+    fn into_iter(self) -> IterMut<'a, T> { self.iter_mut() }
+}
+
 #[cfg(test)]
 mod test {
     use std::iter::range_step;
