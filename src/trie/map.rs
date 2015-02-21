@@ -1772,6 +1772,18 @@ mod bench {
 
     const MAP_SIZE: usize = 1000;
 
+    map_insert_rand_bench!{insert_rand_100,    100,    TrieMap}
+    map_insert_rand_bench!{insert_rand_10_000, 10_000, TrieMap}
+
+    map_insert_seq_bench!{insert_seq_100,    100,    TrieMap}
+    map_insert_seq_bench!{insert_seq_10_000, 10_000, TrieMap}
+
+    map_find_rand_bench!{find_rand_100,    100,    TrieMap}
+    map_find_rand_bench!{find_rand_10_000, 10_000, TrieMap}
+
+    map_find_seq_bench!{find_seq_100,    100,    TrieMap}
+    map_find_seq_bench!{find_seq_10_000, 10_000, TrieMap}
+
     fn random_map(size: usize) -> TrieMap<usize> {
         let mut map = TrieMap::<usize>::new();
         let mut rng = weak_rng();
