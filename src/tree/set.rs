@@ -55,7 +55,7 @@ use tree_map::{self, TreeMap};
 ///     level: u32,
 /// }
 ///
-/// let mut trolls = TreeSet::with_comparator(|&: l: &Troll, r: &Troll| l.level.cmp(&r.level));
+/// let mut trolls = TreeSet::with_comparator(|l: &Troll, r: &Troll| l.level.cmp(&r.level));
 ///
 /// trolls.insert(Troll { name: "Orgarr", level: 2 });
 /// trolls.insert(Troll { name: "Blargarr", level: 3 });
@@ -1180,7 +1180,7 @@ mod test {
 
     #[test]
     fn test_comparator_iterator() {
-        use compare::{CompareExt, natural};
+        use compare::{Compare, natural};
 
         let mut m = TreeSet::with_comparator(natural().rev());
 
@@ -1200,9 +1200,9 @@ mod test {
 
     #[test]
     fn test_comparator_borrowed() {
-        use compare::{CompareExt, natural};
+        use compare::{Compare, natural};
 
-        let mut m = TreeSet::with_comparator(natural::<str>().borrow());
+        let mut m = TreeSet::with_comparator(natural().borrow());
 
         assert!(m.insert("a".to_string()));
 

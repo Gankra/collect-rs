@@ -42,13 +42,13 @@
 //! assert!(cmp.compares_ne(a, b));
 //! ```
 //!
-//! The [`CompareExt`](trait.CompareExt.html) trait provides extension methods that
+//! The `Compare` trait also provides default methods that
 //! consume a comparator to produce a new one with different behavior, similar to
 //! [iterator adaptors](http://doc.rust-lang.org/std/iter/trait.IteratorExt.html). For
-//! example, all comparators can be [reversed](trait.CompareExt.html#method.rev):
+//! example, all comparators can be [reversed](trait.Compare.html#method.rev):
 //!
 //! ```rust
-//! use collect::compare::{Compare, CompareExt, natural};
+//! use collect::compare::{Compare, natural};
 //! use std::cmp::Ordering::Greater;
 //!
 //! let cmp = natural().rev();
@@ -60,13 +60,13 @@
 //! can be compared by their length instead of their contents:
 //!
 //! ```rust
-//! use collect::compare::{Compare, CompareExt};
+//! use collect::compare::Compare;
 //! use std::cmp::Ordering::{Less, Greater};
 //!
 //! let a = vec![1, 2, 3];
 //! let b = vec![4, 5];
 //!
-//! let cmp = |&: lhs: &Vec<u8>, rhs: &Vec<u8>| lhs.len().cmp(&rhs.len());
+//! let cmp = |lhs: &Vec<u8>, rhs: &Vec<u8>| lhs.len().cmp(&rhs.len());
 //! assert_eq!(cmp.compare(&a, &b), Greater);
 //!
 //! let cmp = cmp.rev();
@@ -75,11 +75,11 @@
 //!
 //! Comparators can be combined [lexicographically]
 //! (https://en.wikipedia.org/wiki/Lexicographical_order) in order to compare values
-//! first by one key, [then](trait.CompareExt.html#method.then), if the first keys were
+//! first by one key, [then](trait.Compare.html#method.then), if the first keys were
 //! equal, by another:
 //!
 //! ```rust
-//! use collect::compare::{Compare, CompareExt};
+//! use collect::compare::Compare;
 //! use std::cmp::Ordering::{Less, Equal, Greater};
 //!
 //! struct Pet { name: &'static str, age: u8 }
@@ -88,12 +88,12 @@
 //! let ruff2 = &Pet { name: "Ruff", age: 2 };
 //! let fido3 = &Pet { name: "Fido", age: 3 };
 //!
-//! let name_cmp = |&: lhs: &Pet, rhs: &Pet| lhs.name.cmp(rhs.name);
+//! let name_cmp = |lhs: &Pet, rhs: &Pet| lhs.name.cmp(rhs.name);
 //! assert_eq!(name_cmp.compare(fido4, ruff2), Less);
 //! assert_eq!(name_cmp.compare(fido4, fido3), Equal);
 //! assert_eq!(name_cmp.compare(ruff2, fido3), Greater);
 //!
-//! let age_cmp = |&: lhs: &Pet, rhs: &Pet| lhs.age.cmp(&rhs.age);
+//! let age_cmp = |lhs: &Pet, rhs: &Pet| lhs.age.cmp(&rhs.age);
 //! assert_eq!(age_cmp.compare(fido4, ruff2), Greater);
 //! assert_eq!(age_cmp.compare(fido4, fido3), Greater);
 //! assert_eq!(age_cmp.compare(ruff2, fido3), Less);
@@ -109,7 +109,7 @@
 //! previous example:
 //!
 //! ```rust
-//! use collect::compare::{Compare, CompareExt, Extract, natural};
+//! use collect::compare::{Compare, Extract, natural};
 //! use std::cmp::Ordering::{Less, Greater};
 //!
 //! struct Pet { name: &'static str, age: u8 }
@@ -223,6 +223,97 @@ pub trait Compare<Lhs: ?Sized, Rhs: ?Sized = Lhs> {
     fn compares_ne(&self, lhs: &Lhs, rhs: &Rhs) -> bool {
         self.compare(lhs, rhs) != Equal
     }
+
+    /// Borrows the comparator's parameters before comparing them.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::compare::{Compare, natural};
+    /// use std::cmp::Ordering::{Less, Equal, Greater};
+    ///
+    /// let a_str = "a";
+    /// let a_string = a_str.to_string();
+    ///
+    /// let b_str = "b";
+    /// let b_string = b_str.to_string();
+    ///
+    /// let cmp = natural().borrow();
+    /// assert_eq!(cmp.compare(a_str, &a_string), Equal);
+    /// assert_eq!(cmp.compare(a_str, b_str), Less);
+    /// assert_eq!(cmp.compare(&b_string, a_str), Greater);
+    /// ```
+    fn borrow(self) -> Borrow<Self, Lhs, Rhs> where Self: Sized {
+        Borrow(self, PhantomData, PhantomData)
+    }
+
+    /// Reverses the ordering of the comparator.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::compare::{Compare, natural};
+    /// use std::cmp::Ordering::{Less, Equal, Greater};
+    ///
+    /// let a = &1;
+    /// let b = &2;
+    ///
+    /// let cmp = natural().rev();
+    /// assert_eq!(cmp.compare(a, b), Greater);
+    /// assert_eq!(cmp.compare(b, a), Less);
+    /// assert_eq!(cmp.compare(a, a), Equal);
+    /// ```
+    fn rev(self) -> Rev<Self> where Self: Sized { Rev(self) }
+
+    /// Swaps the comparator's parameters, maintaining the underlying ordering.
+    ///
+    /// This is useful for providing a comparator `C: Compare<T, U>` in a context that
+    /// expects `C: Compare<U, T>`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::compare::Compare;
+    /// use std::cmp::Ordering::{Less, Equal, Greater};
+    ///
+    /// let cmp = |lhs: &u8, rhs: &u16| (*lhs as u16).cmp(rhs);
+    /// assert_eq!(cmp.compare(&1u8, &2u16), Less);
+    /// assert_eq!(cmp.compare(&2u8, &1u16), Greater);
+    /// assert_eq!(cmp.compare(&1u8, &1u16), Equal);
+    ///
+    /// let cmp = cmp.swap();
+    /// assert_eq!(cmp.compare(&2u16, &1u8), Less);
+    /// assert_eq!(cmp.compare(&1u16, &2u8), Greater);
+    /// assert_eq!(cmp.compare(&1u16, &1u8), Equal);
+    /// ```
+    fn swap(self) -> Swap<Self> where Self: Sized { Swap(self) }
+
+    /// [Lexicographically](https://en.wikipedia.org/wiki/Lexicographical_order) combines
+    /// the comparator with another.
+    ///
+    /// The retuned comparator compares values first using `self`, then, if they are
+    /// equal, using `then`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use collect::compare::Compare;
+    /// use std::cmp::Ordering::{Less, Equal};
+    ///
+    /// struct Foo { key1: char, key2: u8 }
+    ///
+    /// let f1 = &Foo { key1: 'a', key2: 2};
+    /// let f2 = &Foo { key1: 'a', key2: 3};
+    ///
+    /// let cmp = |lhs: &Foo, rhs: &Foo| lhs.key1.cmp(&rhs.key1);
+    /// assert_eq!(cmp.compare(f1, f2), Equal);
+    ///
+    /// let cmp = cmp.then(|lhs: &Foo, rhs: &Foo| lhs.key2.cmp(&rhs.key2));
+    /// assert_eq!(cmp.compare(f1, f2), Less);
+    /// ```
+    fn then<D>(self, then: D) -> Then<Self, D> where D: Compare<Lhs, Rhs>, Self: Sized {
+        Then(self, then)
+    }
 }
 
 impl<F: ?Sized, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for F
@@ -239,104 +330,11 @@ impl<'a, Lhs: ?Sized, Rhs: ?Sized, C: ?Sized> Compare<Lhs, Rhs> for &'a C
     }
 }
 
-/// An extension trait with methods applicable to all comparators.
-pub trait CompareExt<Lhs: ?Sized, Rhs: ?Sized = Lhs> : Compare<Lhs, Rhs> + Sized {
-    /// Borrows the comparator's parameters before comparing them.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::compare::{Compare, CompareExt, natural};
-    /// use std::cmp::Ordering::{Less, Equal, Greater};
-    ///
-    /// let a_str = "a";
-    /// let a_string = a_str.to_string();
-    ///
-    /// let b_str = "b";
-    /// let b_string = b_str.to_string();
-    ///
-    /// let cmp = natural::<str>().borrow();
-    /// assert_eq!(cmp.compare(a_str, &a_string), Equal);
-    /// assert_eq!(cmp.compare(a_str, b_str), Less);
-    /// assert_eq!(cmp.compare(&b_string, a_str), Greater);
-    /// ```
-    fn borrow(self) -> Borrow<Self, Lhs, Rhs> { Borrow(self, PhantomData, PhantomData) }
-
-    /// Reverses the ordering of the comparator.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::compare::{Compare, CompareExt, natural};
-    /// use std::cmp::Ordering::{Less, Equal, Greater};
-    ///
-    /// let a = &1;
-    /// let b = &2;
-    ///
-    /// let cmp = natural().rev();
-    /// assert_eq!(cmp.compare(a, b), Greater);
-    /// assert_eq!(cmp.compare(b, a), Less);
-    /// assert_eq!(cmp.compare(a, a), Equal);
-    /// ```
-    fn rev(self) -> Rev<Self> { Rev(self) }
-
-    /// Swaps the comparator's parameters, maintaining the underlying ordering.
-    ///
-    /// This is useful for providing a comparator `C: Compare<T, U>` in a context that
-    /// expects `C: Compare<U, T>`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::compare::{Compare, CompareExt};
-    /// use std::cmp::Ordering::{Less, Equal, Greater};
-    ///
-    /// let cmp = |&: lhs: &u8, rhs: &u16| (*lhs as u16).cmp(rhs);
-    /// assert_eq!(cmp.compare(&1u8, &2u16), Less);
-    /// assert_eq!(cmp.compare(&2u8, &1u16), Greater);
-    /// assert_eq!(cmp.compare(&1u8, &1u16), Equal);
-    ///
-    /// let cmp = cmp.swap();
-    /// assert_eq!(cmp.compare(&2u16, &1u8), Less);
-    /// assert_eq!(cmp.compare(&1u16, &2u8), Greater);
-    /// assert_eq!(cmp.compare(&1u16, &1u8), Equal);
-    /// ```
-    fn swap(self) -> Swap<Self> { Swap(self) }
-
-    /// [Lexicographically](https://en.wikipedia.org/wiki/Lexicographical_order) combines
-    /// the comparator with another.
-    ///
-    /// The retuned comparator compares values first using `self`, then, if they are
-    /// equal, using `then`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use collect::compare::{Compare, CompareExt};
-    /// use std::cmp::Ordering::{Less, Equal};
-    ///
-    /// struct Foo { key1: char, key2: u8 }
-    ///
-    /// let f1 = &Foo { key1: 'a', key2: 2};
-    /// let f2 = &Foo { key1: 'a', key2: 3};
-    ///
-    /// let cmp = |&: lhs: &Foo, rhs: &Foo| lhs.key1.cmp(&rhs.key1);
-    /// assert_eq!(cmp.compare(f1, f2), Equal);
-    ///
-    /// let cmp = cmp.then(|&: lhs: &Foo, rhs: &Foo| lhs.key2.cmp(&rhs.key2));
-    /// assert_eq!(cmp.compare(f1, f2), Less);
-    /// ```
-    fn then<D>(self, then: D) -> Lexicographic<Self, D> where D: Compare<Lhs, Rhs> {
-        Lexicographic(self, then)
-    }
-}
-
-impl<C, Lhs: ?Sized, Rhs: ?Sized> CompareExt<Lhs, Rhs> for C where C: Compare<Lhs, Rhs> {}
-
 /// A comparator that borrows its parameters before comparing them.
 ///
-/// See [`CompareExt::borrow`](trait.CompareExt.html#method.borrow) for an example.
-pub struct Borrow<C, Lb: ?Sized, Rb: ?Sized>(C, PhantomData<*mut Lb>, PhantomData<*mut Rb>);
+/// See [`Compare::borrow`](trait.Compare.html#method.borrow) for an example.
+pub struct Borrow<C, Lb: ?Sized, Rb: ?Sized = Lb>(C, PhantomData<*mut Lb>, PhantomData<*mut Rb>)
+    where C: Compare<Lb, Rb>;
 
 impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for Borrow<C, Lb, Rb>
     where C: Compare<Lb, Rb>,
@@ -430,26 +428,23 @@ impl<C, Lb: ?Sized, Rb: ?Sized> Debug for Borrow<C, Lb, Rb>
 /// let cmp = Extract::new(|vec: &Vec<u8>| vec.len(), natural());
 /// assert_eq!(cmp.compare(&a, &b), Greater);
 /// ```
-pub struct Extract<E, C, T: ?Sized, K> where E: Fn(&T) -> K, C: Compare<K> {
+pub struct Extract<E, C, T: ?Sized> {
     ext: E,
     cmp: C,
-    phantom1: PhantomData<*mut T>,
-    phantom2: PhantomData<*mut K>,
+    phantom: PhantomData<*mut T>,
 }
 
-// FIXME: convert to default method on `CompareExt` once where clauses permit equality
+// FIXME: convert to default method on `Compare` once where clauses permit equality
 // (https://github.com/rust-lang/rust/issues/20041)
-impl<E, C, T: ?Sized, K> Extract<E, C, T, K> where E: Fn(&T) -> K, C: Compare<K> {
+impl<E, C, T: ?Sized, K> Extract<E, C, T> where E: Fn(&T) -> K, C: Compare<K> {
     /// Returns a comparator that extracts a sort key using `ext` and compares it using
     /// `cmp`.
-    pub fn new(ext: E, cmp: C) -> Extract<E, C, T, K> {
-        Extract { ext: ext, cmp: cmp, phantom1: PhantomData, phantom2: PhantomData }
+    pub fn new(ext: E, cmp: C) -> Extract<E, C, T> {
+        Extract { ext: ext, cmp: cmp, phantom: PhantomData }
     }
 }
 
-impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T, K>
-    where E: Fn(&T) -> K, C: Compare<K> {
-
+impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T> where E: Fn(&T) -> K, C: Compare<K> {
     fn compare(&self, lhs: &T, rhs: &T) -> Ordering {
         self.cmp.compare(&(self.ext)(lhs), &(self.ext)(rhs))
     }
@@ -481,51 +476,39 @@ impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T, K>
 
 // FIXME: replace with `derive(Clone)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Clone for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Clone, C: Compare<K> + Clone {
-
-    fn clone(&self) -> Extract<E, C, T, K> {
-        Extract { ext: self.ext.clone(), cmp: self.cmp.clone(),
-                  phantom1: PhantomData, phantom2: PhantomData }
+impl<E, C, T: ?Sized> Clone for Extract<E, C, T> where E: Clone, C: Clone {
+    fn clone(&self) -> Extract<E, C, T> {
+        Extract { ext: self.ext.clone(), cmp: self.cmp.clone(), phantom: PhantomData }
     }
 }
 
 // FIXME: replace with `derive(Copy)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Copy for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Copy, C: Compare<K> + Copy {}
+impl<E, C, T: ?Sized> Copy for Extract<E, C, T> where E: Copy, C: Copy {}
 
 // FIXME: replace with `derive(Default)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Default for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Default, C: Compare<K> + Default {
-
-    fn default() -> Extract<E, C, T, K> {
-        Extract { ext: Default::default(), cmp: Default::default(),
-                  phantom1: PhantomData, phantom2: PhantomData }
+impl<E, C, T: ?Sized> Default for Extract<E, C, T> where E: Default, C: Default {
+    fn default() -> Extract<E, C, T> {
+        Extract { ext: Default::default(), cmp: Default::default(), phantom: PhantomData }
     }
 }
 
 // FIXME: replace with `derive(PartialEq)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> PartialEq for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + PartialEq, C: Compare<K> + PartialEq {
-
-    fn eq(&self, other: &Extract<E, C, T, K>) -> bool {
+impl<E, C, T: ?Sized> PartialEq for Extract<E, C, T> where E: PartialEq, C: PartialEq {
+    fn eq(&self, other: &Extract<E, C, T>) -> bool {
         self.ext == other.ext && self.cmp == other.cmp
     }
 }
 
 // FIXME: replace with `derive(Eq)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Eq for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Eq, C: Compare<K> + Eq {}
+impl<E, C, T: ?Sized> Eq for Extract<E, C, T> where E: Eq, C: Eq {}
 
 // FIXME: replace with `derive(Debug)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Debug for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Debug, C: Compare<K> + Debug {
-
+impl<E, C, T: ?Sized> Debug for Extract<E, C, T> where E: Debug, C: Debug {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Extract {{ ext: {:?}, cmp: {:?} }}", self.ext, self.cmp)
     }
@@ -534,11 +517,11 @@ impl<E, C, T: ?Sized, K> Debug for Extract<E, C, T, K>
 /// A comparator that [lexicographically]
 /// (https://en.wikipedia.org/wiki/Lexicographical_order) combines two others.
 ///
-/// See [`CompareExt::then`](trait.CompareExt.html#method.then) for an example.
+/// See [`Compare::then`](trait.Compare.html#method.then) for an example.
 #[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
-pub struct Lexicographic<C, D>(C, D);
+pub struct Then<C, D>(C, D);
 
-impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Lexicographic<C, D>
+impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Then<C, D>
     where C: Compare<Lhs, Rhs>, D: Compare<Lhs, Rhs> {
 
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
@@ -622,7 +605,7 @@ impl<T: Ord + ?Sized> Debug for Natural<T> {
 
 /// A comparator that reverses the ordering of another.
 ///
-/// See [`CompareExt::rev`](trait.CompareExt.html#method.rev) for an example.
+/// See [`Compare::rev`](trait.Compare.html#method.rev) for an example.
 #[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
 pub struct Rev<C>(C);
 
@@ -649,7 +632,7 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Rev<C> where C: Compare<
 /// This is useful for providing a comparator `C: Compare<T, U>` in a context that
 /// expects `C: Compare<U, T>`.
 ///
-/// See [`CompareExt::swap`](trait.CompareExt.html#method.swap) for an example.
+/// See [`Compare::swap`](trait.Compare.html#method.swap) for an example.
 #[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
 pub struct Swap<C>(C);
 

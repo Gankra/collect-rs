@@ -83,7 +83,7 @@ use compare::{Compare, Natural, natural};
 ///
 /// // Use a map to store trolls, sorted by level, and track a list of
 /// // heroes slain.
-/// let mut trolls = TreeMap::with_comparator(|&: l: &Troll, r: &Troll| l.level.cmp(&r.level));
+/// let mut trolls = TreeMap::with_comparator(|l: &Troll, r: &Troll| l.level.cmp(&r.level));
 ///
 /// trolls.insert(Troll { name: "Orgarr", level: 2 },
 ///               vec!["King Karl"]);
@@ -1866,7 +1866,7 @@ mod test_treemap {
 
     #[test]
     fn test_comparator_iterator() {
-        use compare::{CompareExt, natural};
+        use compare::{Compare, natural};
 
         let mut m = TreeMap::with_comparator(natural().rev());
 
@@ -1887,9 +1887,9 @@ mod test_treemap {
 
     #[test]
     fn test_comparator_borrowed() {
-        use compare::{CompareExt, natural};
+        use compare::{Compare, natural};
 
-        let mut m = TreeMap::with_comparator(natural::<str>().borrow());
+        let mut m = TreeMap::with_comparator(natural().borrow());
 
         assert!(m.insert("a".to_string(), 1).is_none());
 
