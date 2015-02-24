@@ -333,7 +333,8 @@ impl<'a, Lhs: ?Sized, Rhs: ?Sized, C: ?Sized> Compare<Lhs, Rhs> for &'a C
 /// A comparator that borrows its parameters before comparing them.
 ///
 /// See [`Compare::borrow`](trait.Compare.html#method.borrow) for an example.
-pub struct Borrow<C, Lb: ?Sized, Rb: ?Sized>(C, PhantomData<*mut Lb>, PhantomData<*mut Rb>);
+pub struct Borrow<C, Lb: ?Sized, Rb: ?Sized = Lb>(C, PhantomData<*mut Lb>, PhantomData<*mut Rb>)
+    where C: Compare<Lb, Rb>;
 
 impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for Borrow<C, Lb, Rb>
     where C: Compare<Lb, Rb>,
