@@ -311,8 +311,8 @@ pub trait Compare<Lhs: ?Sized, Rhs: ?Sized = Lhs> {
     /// let cmp = cmp.then(|lhs: &Foo, rhs: &Foo| lhs.key2.cmp(&rhs.key2));
     /// assert_eq!(cmp.compare(f1, f2), Less);
     /// ```
-    fn then<D>(self, then: D) -> Lexicographic<Self, D> where D: Compare<Lhs, Rhs>, Self: Sized {
-        Lexicographic(self, then)
+    fn then<D>(self, then: D) -> Then<Self, D> where D: Compare<Lhs, Rhs>, Self: Sized {
+        Then(self, then)
     }
 }
 
@@ -519,9 +519,9 @@ impl<E, C, T: ?Sized> Debug for Extract<E, C, T> where E: Debug, C: Debug {
 ///
 /// See [`Compare::then`](trait.Compare.html#method.then) for an example.
 #[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
-pub struct Lexicographic<C, D>(C, D);
+pub struct Then<C, D>(C, D);
 
-impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Lexicographic<C, D>
+impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Then<C, D>
     where C: Compare<Lhs, Rhs>, D: Compare<Lhs, Rhs> {
 
     fn compare(&self, lhs: &Lhs, rhs: &Rhs) -> Ordering {
