@@ -1889,7 +1889,7 @@ mod test_treemap {
     fn test_comparator_borrowed() {
         use compare::{Compare, natural};
 
-        let mut m = TreeMap::with_comparator(natural::<str>().borrow());
+        let mut m = TreeMap::with_comparator(natural().borrow());
 
         assert!(m.insert("a".to_string(), 1).is_none());
 
