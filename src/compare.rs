@@ -428,26 +428,23 @@ impl<C, Lb: ?Sized, Rb: ?Sized> Debug for Borrow<C, Lb, Rb>
 /// let cmp = Extract::new(|vec: &Vec<u8>| vec.len(), natural());
 /// assert_eq!(cmp.compare(&a, &b), Greater);
 /// ```
-pub struct Extract<E, C, T: ?Sized, K> where E: Fn(&T) -> K, C: Compare<K> {
+pub struct Extract<E, C, T: ?Sized> {
     ext: E,
     cmp: C,
-    phantom1: PhantomData<*mut T>,
-    phantom2: PhantomData<*mut K>,
+    phantom: PhantomData<*mut T>,
 }
 
 // FIXME: convert to default method on `Compare` once where clauses permit equality
 // (https://github.com/rust-lang/rust/issues/20041)
-impl<E, C, T: ?Sized, K> Extract<E, C, T, K> where E: Fn(&T) -> K, C: Compare<K> {
+impl<E, C, T: ?Sized, K> Extract<E, C, T> where E: Fn(&T) -> K, C: Compare<K> {
     /// Returns a comparator that extracts a sort key using `ext` and compares it using
     /// `cmp`.
-    pub fn new(ext: E, cmp: C) -> Extract<E, C, T, K> {
-        Extract { ext: ext, cmp: cmp, phantom1: PhantomData, phantom2: PhantomData }
+    pub fn new(ext: E, cmp: C) -> Extract<E, C, T> {
+        Extract { ext: ext, cmp: cmp, phantom: PhantomData }
     }
 }
 
-impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T, K>
-    where E: Fn(&T) -> K, C: Compare<K> {
-
+impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T> where E: Fn(&T) -> K, C: Compare<K> {
     fn compare(&self, lhs: &T, rhs: &T) -> Ordering {
         self.cmp.compare(&(self.ext)(lhs), &(self.ext)(rhs))
     }
@@ -479,51 +476,39 @@ impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T, K>
 
 // FIXME: replace with `derive(Clone)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Clone for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Clone, C: Compare<K> + Clone {
-
-    fn clone(&self) -> Extract<E, C, T, K> {
-        Extract { ext: self.ext.clone(), cmp: self.cmp.clone(),
-                  phantom1: PhantomData, phantom2: PhantomData }
+impl<E, C, T: ?Sized> Clone for Extract<E, C, T> where E: Clone, C: Clone {
+    fn clone(&self) -> Extract<E, C, T> {
+        Extract { ext: self.ext.clone(), cmp: self.cmp.clone(), phantom: PhantomData }
     }
 }
 
 // FIXME: replace with `derive(Copy)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Copy for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Copy, C: Compare<K> + Copy {}
+impl<E, C, T: ?Sized> Copy for Extract<E, C, T> where E: Copy, C: Copy {}
 
 // FIXME: replace with `derive(Default)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Default for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Default, C: Compare<K> + Default {
-
-    fn default() -> Extract<E, C, T, K> {
-        Extract { ext: Default::default(), cmp: Default::default(),
-                  phantom1: PhantomData, phantom2: PhantomData }
+impl<E, C, T: ?Sized> Default for Extract<E, C, T> where E: Default, C: Default {
+    fn default() -> Extract<E, C, T> {
+        Extract { ext: Default::default(), cmp: Default::default(), phantom: PhantomData }
     }
 }
 
 // FIXME: replace with `derive(PartialEq)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> PartialEq for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + PartialEq, C: Compare<K> + PartialEq {
-
-    fn eq(&self, other: &Extract<E, C, T, K>) -> bool {
+impl<E, C, T: ?Sized> PartialEq for Extract<E, C, T> where E: PartialEq, C: PartialEq {
+    fn eq(&self, other: &Extract<E, C, T>) -> bool {
         self.ext == other.ext && self.cmp == other.cmp
     }
 }
 
 // FIXME: replace with `derive(Eq)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Eq for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Eq, C: Compare<K> + Eq {}
+impl<E, C, T: ?Sized> Eq for Extract<E, C, T> where E: Eq, C: Eq {}
 
 // FIXME: replace with `derive(Debug)` once
 // https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized, K> Debug for Extract<E, C, T, K>
-    where E: Fn(&T) -> K + Debug, C: Compare<K> + Debug {
-
+impl<E, C, T: ?Sized> Debug for Extract<E, C, T> where E: Debug, C: Debug {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Extract {{ ext: {:?}, cmp: {:?} }}", self.ext, self.cmp)
     }
