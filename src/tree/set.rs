@@ -1180,7 +1180,7 @@ mod test {
 
     #[test]
     fn test_comparator_iterator() {
-        use compare::{CompareExt, natural};
+        use compare::{Compare, natural};
 
         let mut m = TreeSet::with_comparator(natural().rev());
 
@@ -1200,7 +1200,7 @@ mod test {
 
     #[test]
     fn test_comparator_borrowed() {
-        use compare::{CompareExt, natural};
+        use compare::{Compare, natural};
 
         let mut m = TreeSet::with_comparator(natural::<str>().borrow());
 
