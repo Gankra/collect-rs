@@ -55,7 +55,7 @@ use tree_map::{self, TreeMap};
 ///     level: u32,
 /// }
 ///
-/// let mut trolls = TreeSet::with_comparator(|&: l: &Troll, r: &Troll| l.level.cmp(&r.level));
+/// let mut trolls = TreeSet::with_comparator(|l: &Troll, r: &Troll| l.level.cmp(&r.level));
 ///
 /// trolls.insert(Troll { name: "Orgarr", level: 2 });
 /// trolls.insert(Troll { name: "Blargarr", level: 3 });

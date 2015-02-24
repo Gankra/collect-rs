@@ -83,7 +83,7 @@ use compare::{Compare, Natural, natural};
 ///
 /// // Use a map to store trolls, sorted by level, and track a list of
 /// // heroes slain.
-/// let mut trolls = TreeMap::with_comparator(|&: l: &Troll, r: &Troll| l.level.cmp(&r.level));
+/// let mut trolls = TreeMap::with_comparator(|l: &Troll, r: &Troll| l.level.cmp(&r.level));
 ///
 /// trolls.insert(Troll { name: "Orgarr", level: 2 },
 ///               vec!["King Karl"]);

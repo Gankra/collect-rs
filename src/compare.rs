@@ -66,7 +66,7 @@
 //! let a = vec![1, 2, 3];
 //! let b = vec![4, 5];
 //!
-//! let cmp = |&: lhs: &Vec<u8>, rhs: &Vec<u8>| lhs.len().cmp(&rhs.len());
+//! let cmp = |lhs: &Vec<u8>, rhs: &Vec<u8>| lhs.len().cmp(&rhs.len());
 //! assert_eq!(cmp.compare(&a, &b), Greater);
 //!
 //! let cmp = cmp.rev();
@@ -88,12 +88,12 @@
 //! let ruff2 = &Pet { name: "Ruff", age: 2 };
 //! let fido3 = &Pet { name: "Fido", age: 3 };
 //!
-//! let name_cmp = |&: lhs: &Pet, rhs: &Pet| lhs.name.cmp(rhs.name);
+//! let name_cmp = |lhs: &Pet, rhs: &Pet| lhs.name.cmp(rhs.name);
 //! assert_eq!(name_cmp.compare(fido4, ruff2), Less);
 //! assert_eq!(name_cmp.compare(fido4, fido3), Equal);
 //! assert_eq!(name_cmp.compare(ruff2, fido3), Greater);
 //!
-//! let age_cmp = |&: lhs: &Pet, rhs: &Pet| lhs.age.cmp(&rhs.age);
+//! let age_cmp = |lhs: &Pet, rhs: &Pet| lhs.age.cmp(&rhs.age);
 //! assert_eq!(age_cmp.compare(fido4, ruff2), Greater);
 //! assert_eq!(age_cmp.compare(fido4, fido3), Greater);
 //! assert_eq!(age_cmp.compare(ruff2, fido3), Less);
@@ -276,7 +276,7 @@ pub trait Compare<Lhs: ?Sized, Rhs: ?Sized = Lhs> {
     /// use collect::compare::Compare;
     /// use std::cmp::Ordering::{Less, Equal, Greater};
     ///
-    /// let cmp = |&: lhs: &u8, rhs: &u16| (*lhs as u16).cmp(rhs);
+    /// let cmp = |lhs: &u8, rhs: &u16| (*lhs as u16).cmp(rhs);
     /// assert_eq!(cmp.compare(&1u8, &2u16), Less);
     /// assert_eq!(cmp.compare(&2u8, &1u16), Greater);
     /// assert_eq!(cmp.compare(&1u8, &1u16), Equal);
@@ -305,10 +305,10 @@ pub trait Compare<Lhs: ?Sized, Rhs: ?Sized = Lhs> {
     /// let f1 = &Foo { key1: 'a', key2: 2};
     /// let f2 = &Foo { key1: 'a', key2: 3};
     ///
-    /// let cmp = |&: lhs: &Foo, rhs: &Foo| lhs.key1.cmp(&rhs.key1);
+    /// let cmp = |lhs: &Foo, rhs: &Foo| lhs.key1.cmp(&rhs.key1);
     /// assert_eq!(cmp.compare(f1, f2), Equal);
     ///
-    /// let cmp = cmp.then(|&: lhs: &Foo, rhs: &Foo| lhs.key2.cmp(&rhs.key2));
+    /// let cmp = cmp.then(|lhs: &Foo, rhs: &Foo| lhs.key2.cmp(&rhs.key2));
     /// assert_eq!(cmp.compare(f1, f2), Less);
     /// ```
     fn then<D>(self, then: D) -> Lexicographic<Self, D> where D: Compare<Lhs, Rhs>, Self: Sized {
