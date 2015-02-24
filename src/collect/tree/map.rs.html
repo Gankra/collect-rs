@@ -2091,7 +2091,7 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// // Use a map to store trolls, sorted by level, and track a list of</span>
 <span class='doccomment'>/// // heroes slain.</span>
-<span class='doccomment'>/// let mut trolls = TreeMap::with_comparator(|&amp;: l: &amp;Troll, r: &amp;Troll| l.level.cmp(&amp;r.level));</span>
+<span class='doccomment'>/// let mut trolls = TreeMap::with_comparator(|l: &amp;Troll, r: &amp;Troll| l.level.cmp(&amp;r.level));</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// trolls.insert(Troll { name: &quot;Orgarr&quot;, level: 2 },</span>
 <span class='doccomment'>///               vec![&quot;King Karl&quot;]);</span>
@@ -3874,7 +3874,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_comparator_iterator</span>() {
-        <span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>CompareExt</span>, <span class='ident'>natural</span>};
+        <span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>with_comparator</span>(<span class='ident'>natural</span>().<span class='ident'>rev</span>());
 
@@ -3895,9 +3895,9 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_comparator_borrowed</span>() {
-        <span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>CompareExt</span>, <span class='ident'>natural</span>};
+        <span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>with_comparator</span>(<span class='ident'>natural</span>::<span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span>().<span class='ident'>borrow</span>());
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>TreeMap</span>::<span class='ident'>with_comparator</span>(<span class='ident'>natural</span>().<span class='ident'>borrow</span>());
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>1</span>).<span class='ident'>is_none</span>());
 
