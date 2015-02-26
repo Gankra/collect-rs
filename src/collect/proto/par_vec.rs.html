@@ -243,6 +243,7 @@
 <span id="201">201</span>
 <span id="202">202</span>
 <span id="203">203</span>
+<span id="204">204</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>alloc</span>;
 
@@ -358,6 +359,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
+    <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>threadpool</span>;
     <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>test</span>;
     <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>test</span>::<span class='ident'>Bencher</span>;
     <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>ParVec</span>;
@@ -398,10 +400,10 @@
 
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>par_prime_factors_1000</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Bencher</span>) {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>TaskPool</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>threadpool</span>::<span class='ident'>ThreadPool</span>;
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>thread_rng</span>();
-        <span class='kw'>let</span> <span class='ident'>pool</span> <span class='op'>=</span> <span class='ident'>TaskPool</span>::<span class='ident'>new</span>(<span class='ident'>TEST_SLICES</span>);
+        <span class='kw'>let</span> <span class='ident'>pool</span> <span class='op'>=</span> <span class='ident'>ThreadPool</span>::<span class='ident'>new</span>(<span class='ident'>TEST_SLICES</span>);
 
         <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>(<span class='ident'>u32</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u32</span><span class='op'>&gt;</span>)<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>range_inclusive</span>(<span class='number'>1</span>, <span class='ident'>TEST_MAX</span>)
