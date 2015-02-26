@@ -36,3 +36,4 @@ optional = true
 
 [dev-dependencies]
 rand = "*"
+threadpool = "*"
