@@ -112,6 +112,7 @@ impl<T: Send> Debug for ParSlice<T> where T: Debug {
 
 #[cfg(test)]
 mod test {
+    extern crate threadpool;
     extern crate test;
     use self::test::Bencher;
     use super::ParVec;
@@ -152,10 +153,10 @@ mod test {
 
     #[bench]
     fn par_prime_factors_1000(b: &mut Bencher) {
-        use std::sync::TaskPool;
+        use self::threadpool::ThreadPool;
 
         let mut rng = thread_rng();
-        let pool = TaskPool::new(TEST_SLICES);
+        let pool = ThreadPool::new(TEST_SLICES);
 
         b.iter(|| {
             let mut vec: Vec<(u32, Vec<u32>)> = range_inclusive(1, TEST_MAX)
