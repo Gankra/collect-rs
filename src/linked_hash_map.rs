@@ -30,6 +30,7 @@
 
 use std::cmp::{PartialEq, Eq};
 use std::collections::HashMap;
+use std::default::Default;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::iter::IntoIterator;
@@ -434,6 +435,9 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     }
 }
 
+impl<K: Hash + Eq, V> Default for LinkedHashMap<K, V> {
+    fn default() -> LinkedHashMap<K, V> { LinkedHashMap::new() }
+}
 
 impl<K: Hash + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
     fn extend<T: IntoIterator<Item=(K, V)>>(&mut self, iter: T) {
