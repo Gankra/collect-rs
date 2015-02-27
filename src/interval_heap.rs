@@ -2,6 +2,7 @@
 
 use std::slice;
 use std::default::Default;
+use std::fmt::{self, Debug};
 use std::iter::{self, IntoIterator};
 
 use compare::{Compare, Natural, natural};
@@ -378,6 +379,21 @@ impl<T, C: Compare<T>> IntervalHeap<T, C> {
                 }),
             _ => true, // 1
         }
+    }
+}
+
+impl<T: Debug, C: Compare<T>> Debug for IntervalHeap<T, C> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        try!(write!(f, "{{"));
+
+        let mut it = self.iter();
+
+        if let Some(item) = it.next() {
+            try!(write!(f, "{:?}", item));
+            for item in it { try!(write!(f, ", {:?}", item)); }
+        }
+
+        write!(f, "}}")
     }
 }
 
