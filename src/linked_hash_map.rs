@@ -30,6 +30,7 @@
 
 use std::cmp::{PartialEq, Eq};
 use std::collections::HashMap;
+use std::default::Default;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::iter::IntoIterator;
@@ -133,6 +134,11 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
             }
         }
         old_val
+    }
+
+    /// Checks if the map contains the given key.
+    pub fn contains_key(&self, k: &K) -> bool {
+        self.map.contains_key(&KeyRef{k: k})
     }
 
     /// Returns the value corresponding to the key in the map.
@@ -429,12 +435,23 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     }
 }
 
+impl<K: Hash + Eq, V> Default for LinkedHashMap<K, V> {
+    fn default() -> LinkedHashMap<K, V> { LinkedHashMap::new() }
+}
 
 impl<K: Hash + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
     fn extend<T: IntoIterator<Item=(K, V)>>(&mut self, iter: T) {
         for (k, v) in iter {
             self.insert(k, v);
         }
+    }
+}
+
+impl<K: Hash + Eq, V> iter::FromIterator<(K, V)> for LinkedHashMap<K, V> {
+    fn from_iter<I: IntoIterator<Item=(K, V)>>(iter: I) -> LinkedHashMap<K, V> {
+        let mut map = LinkedHashMap::new();
+        map.extend(iter);
+        map
     }
 }
 
@@ -482,6 +499,10 @@ pub struct IterMut<'a, K: 'a, V: 'a> {
     tail: *mut LinkedHashMapEntry<K, V>,
     remaining: usize,
     marker: marker::PhantomData<(&'a K, &'a mut V)>,
+}
+
+impl<'a, K, V> Clone for Iter<'a, K, V> {
+    fn clone(&self) -> Iter<'a, K, V> { Iter { ..*self } }
 }
 
 impl<'a, K, V> Iterator for Iter<'a, K, V> {
@@ -565,6 +586,10 @@ pub struct Keys<'a, K: 'a, V: 'a> {
     inner: iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>
 }
 
+impl<'a, K, V> Clone for Keys<'a, K, V> {
+    fn clone(&self) -> Keys<'a, K, V> { Keys { inner: self.inner.clone() } }
+}
+
 impl<'a, K, V> Iterator for Keys<'a, K, V> {
     type Item = &'a K;
 
@@ -581,6 +606,10 @@ impl<'a, K, V> ExactSizeIterator for Keys<'a, K, V> {}
 
 pub struct Values<'a, K: 'a, V: 'a> {
     inner: iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>
+}
+
+impl<'a, K, V> Clone for Values<'a, K, V> {
+    fn clone(&self) -> Values<'a, K, V> { Values { inner: self.inner.clone() } }
 }
 
 impl<'a, K, V> Iterator for Values<'a, K, V> {
