@@ -2,6 +2,7 @@
 
 #![warn(missing_docs)]
 
+use std::fmt::{self, Debug};
 use std::iter::{IntoIterator, Map};
 use std::mem;
 use std::slice;
@@ -308,6 +309,21 @@ impl<'a, K:'a + Eq, V:'a> IntoIterator for &'a mut LinearMap<K, V> {
     type Item = (&'a K, &'a mut V);
     type IntoIter = IterMut<'a, K, V>;
     fn into_iter(self) -> IterMut<'a, K, V> { self.iter_mut() }
+}
+
+impl<K, V> Debug for LinearMap<K, V> where K: Debug + Eq, V: Debug {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        try!(write!(f, "{{"));
+
+        let mut it = self.iter();
+
+        if let Some((k, v)) = it.next() {
+            try!(write!(f, "{:?}: {:?}", k, v));
+            for (k, v) in it { try!(write!(f, ", {:?}: {:?}", k, v)); }
+        }
+
+        write!(f, "}}")
+    }
 }
 
 #[cfg(test)]
