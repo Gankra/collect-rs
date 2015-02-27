@@ -18,7 +18,7 @@ use super::super::{trie_set, trie_map};
 /// Allows an iterator to be do an inner join with another
 /// iterator to combine their values or filter based on their keys.
 /// this trait is applied to an iterator over a map like structure
-pub trait OrderedMapIterator: Iterator<Item=(Self::Key, Self::Val)> + Sized {
+pub trait OrderedMapIterator: Iterator<Item=(<Self as OrderedMapIterator>::Key, <Self as OrderedMapIterator>::Val)> + Sized {
     type Key;
     type Val;
     /// join two ordered maps together
@@ -252,18 +252,34 @@ where A: OrderedMapIterator,
     }
 }
 
-impl<'a, K: Ord> OrderedSetIterator<Key=&'a K> for btree_set::Iter<'a, K> {}
-impl<'a, K: Ord, V> OrderedMapIterator<Key=&'a K, Val=&'a V> for btree_map::Iter<'a, K, V> {}
+impl<'a, K: Ord> OrderedSetIterator for btree_set::Iter<'a, K> {}
+impl<'a, K: Ord, V> OrderedMapIterator for btree_map::Iter<'a, K, V> {
+    type Key = &'a K;
+    type Val = &'a V;
+}
 #[cfg(feature="tree_map")]
-impl<'a, K> OrderedSetIterator<Item=&'a K> for tree_set::Iter<'a, K> {}
+impl<'a, K> OrderedSetIterator for tree_set::Iter<'a, K> {}
 #[cfg(feature="tree_map")]
-impl<'a, K, V> OrderedMapIterator<Key=&'a K, Val=&'a V> for tree_map::Iter<'a, K, V> {}
-#[cfg(feature="tree_map")]
-impl<'a> OrderedSetIterator<Item=usize> for trie_set::Iter<'a> {}
+impl<'a, K, V> OrderedMapIterator for tree_map::Iter<'a, K, V> {
+    type Key = &'a K;
+    type Val = &'a V;
+}
+
 #[cfg(feature="trie_map")]
-impl<'a, V> OrderedMapIterator<Item=usize, Val=&'a V> for trie_map::Iter<'a, V> {}
-impl<'a, V> OrderedMapIterator<Key=usize, Val=&'a V> for vec_map::Iter<'a, V> {}
-impl<'a> OrderedSetIterator<Item=usize> for bitv_set::Iter<'a> {}
+impl<'a> OrderedSetIterator for trie_set::Iter<'a> {}
+#[cfg(feature="trie_map")]
+impl<'a, V> OrderedMapIterator for trie_map::Iter<'a, V> {
+    type Key = usize;
+    type Val = &'a V;
+}
+
+
+impl<'a, V> OrderedMapIterator for vec_map::Iter<'a, V> {
+    type Key = usize;
+    type Val = &'a V;
+}
+
+impl<'a> OrderedSetIterator for bit_set::Iter<'a> {}
 
 
 impl<A, B> OrderedMapIterator for InnerJoinMapIterator<A, B>
@@ -285,8 +301,8 @@ where A: OrderedMapIterator,
 }
 
 impl<A, B> OrderedSetIterator for InnerJoinSetIterator<A, B>
-where A: OrderedMapIterator,
-      B: OrderedMapIterator<Item=A::Item>,
+where A: OrderedSetIterator,
+      B: OrderedSetIterator<Item=A::Item>,
       A::Item: Ord,
 {}
 
