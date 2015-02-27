@@ -135,6 +135,11 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
         old_val
     }
 
+    /// Checks if the map contains the given key.
+    pub fn contains_key(&self, k: &K) -> bool {
+        self.map.contains_key(&KeyRef{k: k})
+    }
+
     /// Returns the value corresponding to the key in the map.
     ///
     /// # Examples
