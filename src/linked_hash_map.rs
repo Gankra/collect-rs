@@ -501,6 +501,10 @@ pub struct IterMut<'a, K: 'a, V: 'a> {
     marker: marker::PhantomData<(&'a K, &'a mut V)>,
 }
 
+impl<'a, K, V> Clone for Iter<'a, K, V> {
+    fn clone(&self) -> Iter<'a, K, V> { Iter { ..*self } }
+}
+
 impl<'a, K, V> Iterator for Iter<'a, K, V> {
     type Item = (&'a K, &'a V);
 
@@ -582,6 +586,10 @@ pub struct Keys<'a, K: 'a, V: 'a> {
     inner: iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a K>
 }
 
+impl<'a, K, V> Clone for Keys<'a, K, V> {
+    fn clone(&self) -> Keys<'a, K, V> { Keys { inner: self.inner.clone() } }
+}
+
 impl<'a, K, V> Iterator for Keys<'a, K, V> {
     type Item = &'a K;
 
@@ -598,6 +606,10 @@ impl<'a, K, V> ExactSizeIterator for Keys<'a, K, V> {}
 
 pub struct Values<'a, K: 'a, V: 'a> {
     inner: iter::Map<Iter<'a, K, V>, fn((&'a K, &'a V)) -> &'a V>
+}
+
+impl<'a, K, V> Clone for Values<'a, K, V> {
+    fn clone(&self) -> Values<'a, K, V> { Values { inner: self.inner.clone() } }
 }
 
 impl<'a, K, V> Iterator for Values<'a, K, V> {
