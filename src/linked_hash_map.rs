@@ -447,6 +447,14 @@ impl<K: Hash + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
     }
 }
 
+impl<K: Hash + Eq, V> iter::FromIterator<(K, V)> for LinkedHashMap<K, V> {
+    fn from_iter<I: IntoIterator<Item=(K, V)>>(iter: I) -> LinkedHashMap<K, V> {
+        let mut map = LinkedHashMap::new();
+        map.extend(iter);
+        map
+    }
+}
+
 impl<A: fmt::Debug + Hash + Eq, B: fmt::Debug> fmt::Debug for LinkedHashMap<A, B> {
     /// Returns a string that lists the key-value pairs in insertion order.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
