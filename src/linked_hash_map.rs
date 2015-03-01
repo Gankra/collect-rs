@@ -435,6 +435,12 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     }
 }
 
+impl<K: Hash + Eq + Clone, V: Clone> Clone for LinkedHashMap<K, V> {
+    fn clone(&self) -> LinkedHashMap<K, V> {
+        self.iter().map(|(k, v)| (k.clone(), v.clone())).collect()
+    }
+}
+
 impl<K: Hash + Eq, V> Default for LinkedHashMap<K, V> {
     fn default() -> LinkedHashMap<K, V> { LinkedHashMap::new() }
 }
