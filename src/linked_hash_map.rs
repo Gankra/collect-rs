@@ -28,6 +28,7 @@
 //! assert_eq!(vec![(2, 20), (1, 10), (3, 30)], items);
 //! ```
 
+use std::boxed;
 use std::cmp::{PartialEq, Eq};
 use std::collections::HashMap;
 use std::default::Default;
@@ -92,7 +93,7 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     fn with_map(map: HashMap<KeyRef<K>, Box<LinkedHashMapEntry<K, V>>>) -> LinkedHashMap<K, V> {
         let map = LinkedHashMap {
             map: map,
-            head: unsafe{ mem::transmute(box mem::uninitialized::<LinkedHashMapEntry<K, V>>()) },
+            head: unsafe{ boxed::into_raw(box mem::uninitialized::<LinkedHashMapEntry<K, V>>()) },
         };
         unsafe {
             (*map.head).next = map.head;
@@ -512,7 +513,7 @@ unsafe impl<K: Sync, V: Sync> Sync for LinkedHashMap<K, V> {}
 impl<K, V> Drop for LinkedHashMap<K, V> {
     fn drop(&mut self) {
         unsafe {
-            let node: Box<LinkedHashMapEntry<K, V>> = mem::transmute(self.head);
+            let node = Box::from_raw(self.head);
             // Prevent compiler from trying to drop the un-initialized field in the sigil node.
             let box internal_node = node;
             let LinkedHashMapEntry { next: _, prev: _, key: k, value: v } = internal_node;
