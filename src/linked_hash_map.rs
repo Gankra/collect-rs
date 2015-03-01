@@ -475,6 +475,14 @@ impl<A: fmt::Debug + Hash + Eq, B: fmt::Debug> fmt::Debug for LinkedHashMap<A, B
     }
 }
 
+impl<K: Hash + Eq, V: PartialEq> PartialEq for LinkedHashMap<K, V> {
+    fn eq(&self, other: &LinkedHashMap<K, V>) -> bool {
+        self.len() == other.len() && self.iter().zip(other.iter()).all(|(l, r)| l == r)
+    }
+}
+
+impl<K: Hash + Eq, V: Eq> Eq for LinkedHashMap<K, V> {}
+
 unsafe impl<K: Send, V: Send> Send for LinkedHashMap<K, V> {}
 
 unsafe impl<K: Sync, V: Sync> Sync for LinkedHashMap<K, V> {}
