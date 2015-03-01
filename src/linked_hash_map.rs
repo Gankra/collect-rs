@@ -82,9 +82,16 @@ impl<K, V> LinkedHashMapEntry<K, V> {
 
 impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     /// Creates a linked hash map.
-    pub fn new() -> LinkedHashMap<K, V> {
+    pub fn new() -> LinkedHashMap<K, V> { LinkedHashMap::with_map(HashMap::new()) }
+
+    /// Creates an empty linked hash map with the given initial capacity.
+    pub fn with_capacity(capacity: usize) -> LinkedHashMap<K, V> {
+        LinkedHashMap::with_map(HashMap::with_capacity(capacity))
+    }
+
+    fn with_map(map: HashMap<KeyRef<K>, Box<LinkedHashMapEntry<K, V>>>) -> LinkedHashMap<K, V> {
         let map = LinkedHashMap {
-            map: HashMap::new(),
+            map: map,
             head: unsafe{ mem::transmute(box mem::uninitialized::<LinkedHashMapEntry<K, V>>()) },
         };
         unsafe {
@@ -93,6 +100,19 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
         }
         return map;
     }
+
+    /// Reserves capacity for at least `additional` more elements to be inserted into the map. The
+    /// map may reserve more space to avoid frequent allocations.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the new allocation size overflows `usize.`
+    pub fn reserve(&mut self, additional: usize) { self.map.reserve(additional); }
+
+    /// Shrinks the capacity of the map as much as possible. It will drop down as much as possible
+    /// while maintaining the internal rules and possibly leaving some space in accordance with the
+    /// resize policy.
+    pub fn shrink_to_fit(&mut self) { self.map.shrink_to_fit(); }
 
     /// Inserts a key-value pair into the map. If the key already existed, the old value is
     /// returned.
@@ -455,7 +475,8 @@ impl<K: Hash + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
 
 impl<K: Hash + Eq, V> iter::FromIterator<(K, V)> for LinkedHashMap<K, V> {
     fn from_iter<I: IntoIterator<Item=(K, V)>>(iter: I) -> LinkedHashMap<K, V> {
-        let mut map = LinkedHashMap::new();
+        let iter = iter.into_iter();
+        let mut map = LinkedHashMap::with_capacity(iter.size_hint().0);
         map.extend(iter);
         map
     }
