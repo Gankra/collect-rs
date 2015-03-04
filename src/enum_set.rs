@@ -104,7 +104,7 @@ impl<E:CLike> EnumSet<E> {
     /// Returns the number of elements in the given `EnumSet`.
     #[unstable = "matches collection reform specification, waiting for dust to settle"]
     pub fn len(&self) -> usize {
-        self.bits.count_ones()
+        self.bits.count_ones() as usize
     }
 
     /// Returns true if the `EnumSet` is empty.
@@ -237,7 +237,7 @@ impl<E:CLike> Iterator for Iter<E> {
         Some(elem)
     }
     fn size_hint(&self) -> (usize, Option<usize>) {
-        let exact = self.bits.count_ones();
+        let exact = self.bits.count_ones() as usize;
         (exact, Some(exact))
     }
 }
