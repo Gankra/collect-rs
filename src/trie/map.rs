@@ -1315,12 +1315,12 @@ mod test {
         assert!(m.insert(2, 4).is_none());
         assert!(m.insert(1, 2).is_none());
 
-        let mut n = 4;
+        let mut n = 5;
         let mut vec: Vec<&i32> = vec![];
         m.each_reverse(|k, v| {
+            n -= 1;
             assert_eq!(*k, n);
             vec.push(v);
-            n -= 1;
             true
         });
         assert_eq!(vec, [&8, &6, &4, &2, &0]);
