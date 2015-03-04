@@ -33,7 +33,7 @@ const SHIFT: usize = 4;
 const SIZE: usize = 1 << SHIFT;
 const MASK: usize = SIZE - 1;
 // The number of chunks that the key is divided into. Also the maximum depth of the TrieMap.
-const MAX_DEPTH: usize = usize::BITS / SHIFT;
+const MAX_DEPTH: usize = usize::BITS as usize / SHIFT;
 
 /// A map implemented as a radix trie.
 ///
@@ -701,7 +701,7 @@ impl<T> InternalNode<T> {
 // if this was done via a trait, the key could be generic
 #[inline]
 fn chunk(n: usize, idx: usize) -> usize {
-    let sh = usize::BITS - (SHIFT * (idx + 1));
+    let sh = usize::BITS as usize - (SHIFT * (idx + 1));
     (n >> sh) & MASK
 }
 
@@ -1315,12 +1315,12 @@ mod test {
         assert!(m.insert(2, 4).is_none());
         assert!(m.insert(1, 2).is_none());
 
-        let mut n = 4;
+        let mut n = 5;
         let mut vec: Vec<&i32> = vec![];
         m.each_reverse(|k, v| {
+            n -= 1;
             assert_eq!(*k, n);
             vec.push(v);
-            n -= 1;
             true
         });
         assert_eq!(vec, [&8, &6, &4, &2, &0]);
