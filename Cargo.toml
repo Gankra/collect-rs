@@ -18,7 +18,7 @@ readme = "README.md"
 default = ["blist", "enum_set", "immut_slist", "interval_heap",
            "linked_hash_map", "lru_cache", "tree_map", "trie_map",
        	   "compare", "proto", "string_joiner", "ordered_iter"]
-blist = ["proto"]
+blist = ["proto", "traverse"]
 enum_set = []
 immut_slist  = []
 interval_heap = ["compare"]
