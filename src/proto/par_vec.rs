@@ -18,7 +18,7 @@ pub struct ParVec<T> {
     data: Arc<Vec<T>>,
 }
 
-impl<T: Send + Sync> ParVec<T> {
+impl<T: 'static + Send + Sync> ParVec<T> {
     /// Create a new `ParVec`, returning it and a vector of slices that can be sent
     /// to other threads and mutated concurrently.
     pub fn new(vec: Vec<T>, slices: usize) -> (ParVec<T>, Vec<ParSlice<T>>) {
