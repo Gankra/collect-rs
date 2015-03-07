@@ -26,7 +26,6 @@
 #![cfg_attr(test, feature(test))]
 
 #![feature(box_patterns, box_syntax)]
-#![feature(old_impl_check)]
 #![feature(std_misc)]
 #![feature(unboxed_closures)]
 #![feature(unsafe_destructor)]
