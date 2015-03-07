@@ -4,7 +4,7 @@ use std::iter::{self, IntoIterator};
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::num::Int;
-// use traverse::Traversal;
+use traverse::Traversal;
 use proto::dlist::{self, DList};
 
 /// A skeleton implementation of a BList, based on the [Space-Efficient Linked List]
@@ -189,7 +189,6 @@ impl<T> BList<T> {
         })
     }
 
-    /* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
     pub fn traversal(&self) -> Trav<T> {
         Trav { list: self }
     }
@@ -201,7 +200,6 @@ impl<T> BList<T> {
     pub fn into_traversal(self) -> IntoTrav<T> {
         IntoTrav { list: self }
     }
-    */
 
     /// Lazily moves the contents of `other` to the end of `self`, in the sense that it makes no
     /// effort to preserve the node-size lower-bound invariant. This can have negative effects
@@ -253,23 +251,6 @@ fn block_min(b: usize) -> usize {
     b - 1
 }
 
-/// Abstracts over getting the appropriate iterator from a T, &T, or &mut T
-trait Traverse<I> {
-    fn traverse(self) -> I;
-}
-
-impl<'a, T> Traverse<vec_deque::Iter<'a, T>> for &'a VecDeque<T> {
-    fn traverse(self) -> vec_deque::Iter<'a, T> { self.iter() }
-}
-
-impl<'a, T> Traverse<vec_deque::IterMut<'a, T>> for &'a mut VecDeque<T> {
-    fn traverse(self) -> vec_deque::IterMut<'a, T> { self.iter_mut() }
-}
-
-impl<T> Traverse<vec_deque::IntoIter<T>> for VecDeque<T> {
-    fn traverse(self) -> vec_deque::IntoIter<T> { self.into_iter() }
-}
-
 /// A by-ref iterator for a BList
 pub struct Iter<'a, T: 'a>
     (AbsIter<dlist::Iter<'a, VecDeque<T>>, vec_deque::Iter<'a, T>>);
@@ -288,14 +269,15 @@ struct AbsIter<DListIter, VecDequeIter> {
     len: usize,
 }
 
-impl<A,
-    VecDequeIter: Iterator<Item=A>,
-    DListIter: Iterator<Item=T>,
-    T: Traverse<VecDequeIter>> Iterator for AbsIter<DListIter, VecDequeIter> {
-    type Item = A;
+impl<VecDequeIter, DListIter> Iterator for AbsIter<DListIter, VecDequeIter> where
+    VecDequeIter: Iterator,
+    DListIter: Iterator,
+    DListIter::Item: IntoIterator<IntoIter=VecDequeIter, Item=VecDequeIter::Item>
+{
+    type Item = VecDequeIter::Item;
     // I would like to thank all my friends and the fact that Iterator::next doesn't
     // borrow self, for this passing borrowck with minimal gymnastics
-    fn next(&mut self) -> Option<A> {
+    fn next(&mut self) -> Option<VecDequeIter::Item> {
         if self.len > 0 { self.len -= 1; }
         // Keep loopin' till we hit gold
         loop {
@@ -312,7 +294,7 @@ impl<A,
                     },
                     // Got new block from list iterator, make it the new left iterator
                     Some(block) => {
-                        let mut next_iter = block.traverse();
+                        let mut next_iter = block.into_iter();
                         let next = next_iter.next();
                         (next, Some(next_iter))
                     },
@@ -338,12 +320,14 @@ impl<A,
     }
 }
 
-impl<A,
-    VecDequeIter: DoubleEndedIterator + Iterator<Item=A>,
-    DListIter: DoubleEndedIterator + Iterator<Item=T>,
-    T: Traverse<VecDequeIter>> DoubleEndedIterator for AbsIter<DListIter, VecDequeIter> {
+impl<VecDequeIter, DListIter> DoubleEndedIterator
+for AbsIter<DListIter, VecDequeIter> where
+    VecDequeIter: DoubleEndedIterator,
+    DListIter: DoubleEndedIterator,
+    DListIter::Item: IntoIterator<IntoIter=VecDequeIter, Item=VecDequeIter::Item>
+{
     // see `next` for details. This should be an exact mirror.
-    fn next_back(&mut self) -> Option<A> {
+    fn next_back(&mut self) -> Option<VecDequeIter::Item> {
         if self.len > 0 { self.len -= 1; }
         loop {
             let (ret, iter) = match self.right_block_iter.as_mut() {
@@ -353,7 +337,7 @@ impl<A,
                         Some(iter) => return iter.next_back(),
                     },
                     Some(block) => {
-                        let mut next_iter = block.traverse();
+                        let mut next_iter = block.into_iter();
                         let next = next_iter.next_back();
                         (next, Some(next_iter))
                     },
@@ -402,7 +386,6 @@ impl<T> DoubleEndedIterator for IntoIter<T> {
 }
 impl<T> ExactSizeIterator for IntoIter<T> {}
 
-/* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
 pub struct Trav<'a, T: 'a> {
     list: &'a BList<T>,
 }
@@ -450,7 +433,6 @@ impl<T> Traversal for IntoTrav<T> {
         }
     }
 }
-*/
 
 impl<A> iter::FromIterator<A> for BList<A> {
     fn from_iter<T: IntoIterator<Item=A>>(iter: T) -> BList<A> {
@@ -781,7 +763,7 @@ mod test {
 mod bench{
     use super::BList;
     use test;
-    // use traverse::Traversal;
+    use traverse::Traversal;
 
     #[bench]
     fn bench_collect_into(b: &mut test::Bencher) {
@@ -859,7 +841,6 @@ mod bench{
         })
     }
 
-    /* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
     #[bench]
     fn bench_trav(b: &mut test::Bencher) {
         let v = &[0; 128];
@@ -868,5 +849,4 @@ mod bench{
             assert!(m.traversal().count() == 128);
         })
     }
-    */
 }
