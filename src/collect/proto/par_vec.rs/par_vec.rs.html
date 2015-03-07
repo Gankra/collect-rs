@@ -9,7 +9,7 @@
 
     <title>par_vec.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
     
@@ -265,7 +265,7 @@
     <span class='ident'>data</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span><span class='op'>&gt;</span> <span class='ident'>ParVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span><span class='op'>&gt;</span> <span class='ident'>ParVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create a new `ParVec`, returning it and a vector of slices that can be sent</span>
     <span class='doccomment'>/// to other threads and mutated concurrently.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>slices</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> (<span class='ident'>ParVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>ParSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>) {
@@ -489,13 +489,13 @@
     
 
     <script>
-        window.rootPath = "../../../";
+        window.rootPath = "../../../../";
         window.currentCrate = "collect";
         window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
-    <script src="../../../main.js"></script>
+    <script src="../../../../jquery.js"></script>
+    <script src="../../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script async src="../../../../search-index.js"></script>
 </body>
 </html>

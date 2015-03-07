@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/trie/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `src/tree/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css">
 
     
     
@@ -59,6 +59,22 @@
 <span id="17">17</span>
 <span id="18">18</span>
 <span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -73,9 +89,25 @@
 <span class='doccomment'>//! Maps are collections of unique keys with corresponding values, and sets are</span>
 <span class='doccomment'>//! just unique keys without a corresponding value.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! This crate defines `TrieMap` and `TrieSet`, which require `uint` keys.</span>
+<span class='doccomment'>//! This crate defines the `TreeMap` and `TreeSet` types. Their keys must implement `Ord`.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! `TrieMap` is ordered.</span>
+<span class='doccomment'>//! `TreeMap`s are ordered.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # Examples</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```{rust}</span>
+<span class='doccomment'>//! use collect::TreeSet;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! let mut tree_set = TreeSet::new();</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! tree_set.insert(2);</span>
+<span class='doccomment'>//! tree_set.insert(1);</span>
+<span class='doccomment'>//! tree_set.insert(3);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! for i in tree_set.iter() {</span>
+<span class='doccomment'>//!    println!(&quot;{}&quot;, i) // prints 1, then 2, then 3</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>map</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>set</span>;
@@ -119,13 +151,13 @@
     
 
     <script>
-        window.rootPath = "../../../";
+        window.rootPath = "../../../../";
         window.currentCrate = "collect";
         window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
-    <script src="../../../main.js"></script>
+    <script src="../../../../jquery.js"></script>
+    <script src="../../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script async src="../../../../search-index.js"></script>
 </body>
 </html>
