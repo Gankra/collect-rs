@@ -86,7 +86,6 @@ pub struct OuterJoinIterator<A: Iterator, B: Iterator> {
     right: Peekable<B>,
 }
 
-#[old_impl_check]
 impl<A, B> Iterator for InnerJoinMapIterator<A, B>
 where A: OrderedMapIterator,
       B: OrderedMapIterator<Key=A::Key>,
@@ -133,7 +132,6 @@ where A: OrderedMapIterator,
 }
 
 
-#[old_impl_check]
 impl<A, B> Iterator for InnerJoinSetIterator<A, B>
 where A: OrderedSetIterator,
       B: OrderedSetIterator<Item=A::Item>,
@@ -173,7 +171,6 @@ where A: OrderedSetIterator,
     }
 }
 
-#[old_impl_check]
 impl<MapIter, SetIter> Iterator for InnerJoinMapSetIterator<MapIter, SetIter>
 where SetIter: OrderedSetIterator,
       MapIter: OrderedMapIterator<Key=SetIter::Item>,
