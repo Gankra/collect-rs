@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.BList.html' title='A skeleton implementation of a BList, based on the [Space-Efficient Linked List] (http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html) described in Open Data Structures.'>BList</a><a class='struct ' href='struct.IntoIter.html' title='A by-value iterator for a BList'>IntoIter</a><a class='struct ' href='struct.Iter.html' title='A by-ref iterator for a BList'>Iter</a><a class='struct ' href='struct.IterMut.html' title='A by-mut-ref iterator for a BList'>IterMut</a></div>
+        <p class='location'><a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.BList.html' title='A skeleton implementation of a BList, based on the [Space-Efficient Linked List] (http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html) described in Open Data Structures.'>BList</a><a class='struct ' href='struct.IntoIter.html' title='A by-value iterator for a BList'>IntoIter</a><a class='struct ' href='struct.IntoTrav.html' title=''>IntoTrav</a><a class='struct ' href='struct.Iter.html' title='A by-ref iterator for a BList'>Iter</a><a class='struct ' href='struct.IterMut.html' title='A by-mut-ref iterator for a BList'>IterMut</a><a class='struct ' href='struct.Trav.html' title=''>Trav</a><a class='struct ' href='struct.TravMut.html' title=''>TravMut</a></div>
     </section>
 
     <nav class="sub">
@@ -43,7 +43,7 @@
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>collect</a>::<wbr><a href='index.html'>blist</a>::<wbr><a class='struct' href=''>BList</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-14735' href='../../src/collect/blist.rs.html#24-28'>[src]</a></span></h1>
+        </span><a id='src-14737' href='../../src/collect/blist.rs.html#24-28'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct BList&lt;T&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A skeleton implementation of a BList, based on the <a href="http://opendatastructures.org/ods-python/3_3_SEList_Space_Efficient_.html">Space-Efficient Linked List</a> described in
@@ -90,7 +90,10 @@ worst-case cost of <code>O(B^2)</code>. Insertion and deletion on either end wil
 <div class='docblock'><p>Gets a by-mutable-reference iterator over the elements in the list.</p>
 </div><h4 id='method.into_iter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../../collect/blist/struct.IntoIter.html' title='collect::blist::IntoIter'>IntoIter</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Gets a by-value iterator over the elements in the list.</p>
-</div><h4 id='method.append_lazy' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.append_lazy' class='fnname'>append_lazy</a>(&amp;mut self, other: &amp;mut <a class='struct' href='../../collect/blist/struct.BList.html' title='collect::blist::BList'>BList</a>&lt;T&gt;)</code></h4>
+</div><h4 id='method.traversal' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.traversal' class='fnname'>traversal</a>(&amp;self) -&gt; <a class='struct' href='../../collect/blist/struct.Trav.html' title='collect::blist::Trav'>Trav</a>&lt;T&gt;</code></h4>
+<h4 id='method.traversal_mut' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.traversal_mut' class='fnname'>traversal_mut</a>(&amp;mut self) -&gt; <a class='struct' href='../../collect/blist/struct.TravMut.html' title='collect::blist::TravMut'>TravMut</a>&lt;T&gt;</code></h4>
+<h4 id='method.into_traversal' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.into_traversal' class='fnname'>into_traversal</a>(self) -&gt; <a class='struct' href='../../collect/blist/struct.IntoTrav.html' title='collect::blist::IntoTrav'>IntoTrav</a>&lt;T&gt;</code></h4>
+<h4 id='method.append_lazy' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.append_lazy' class='fnname'>append_lazy</a>(&amp;mut self, other: &amp;mut <a class='struct' href='../../collect/blist/struct.BList.html' title='collect::blist::BList'>BList</a>&lt;T&gt;)</code></h4>
 <div class='docblock'><p>Lazily moves the contents of <code>other</code> to the end of <code>self</code>, in the sense that it makes no
 effort to preserve the node-size lower-bound invariant. This can have negative effects
 on the effeciency of the resulting list, but is otherwise much faster than a proper

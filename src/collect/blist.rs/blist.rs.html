@@ -892,26 +892,6 @@
 <span id="850">850</span>
 <span id="851">851</span>
 <span id="852">852</span>
-<span id="853">853</span>
-<span id="854">854</span>
-<span id="855">855</span>
-<span id="856">856</span>
-<span id="857">857</span>
-<span id="858">858</span>
-<span id="859">859</span>
-<span id="860">860</span>
-<span id="861">861</span>
-<span id="862">862</span>
-<span id="863">863</span>
-<span id="864">864</span>
-<span id="865">865</span>
-<span id="866">866</span>
-<span id="867">867</span>
-<span id="868">868</span>
-<span id="869">869</span>
-<span id="870">870</span>
-<span id="871">871</span>
-<span id="872">872</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>vec_deque</span>, <span class='ident'>VecDeque</span>};
@@ -919,7 +899,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::{<span class='ident'>Hash</span>, <span class='ident'>Hasher</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>num</span>::<span class='ident'>Int</span>;
-<span class='comment'>// use traverse::Traversal;</span>
+<span class='kw'>use</span> <span class='ident'>traverse</span>::<span class='ident'>Traversal</span>;
 <span class='kw'>use</span> <span class='ident'>proto</span>::<span class='ident'>dlist</span>::{<span class='self'>self</span>, <span class='ident'>DList</span>};
 
 <span class='doccomment'>/// A skeleton implementation of a BList, based on the [Space-Efficient Linked List]</span>
@@ -1104,19 +1084,17 @@
         })
     }
 
-    <span class='comment'>/* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
-    pub fn traversal(&amp;self) -&gt; Trav&lt;T&gt; {
-        Trav { list: self }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>traversal</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Trav</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='ident'>Trav</span> { <span class='ident'>list</span>: <span class='self'>self</span> }
     }
 
-    pub fn traversal_mut(&amp;mut self) -&gt; TravMut&lt;T&gt; {
-        TravMut { list: self }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>traversal_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>TravMut</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='ident'>TravMut</span> { <span class='ident'>list</span>: <span class='self'>self</span> }
     }
 
-    pub fn into_traversal(self) -&gt; IntoTrav&lt;T&gt; {
-        IntoTrav { list: self }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_traversal</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>IntoTrav</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='ident'>IntoTrav</span> { <span class='ident'>list</span>: <span class='self'>self</span> }
     }
-    */</span>
 
     <span class='doccomment'>/// Lazily moves the contents of `other` to the end of `self`, in the sense that it makes no</span>
     <span class='doccomment'>/// effort to preserve the node-size lower-bound invariant. This can have negative effects</span>
@@ -1168,23 +1146,6 @@
     <span class='ident'>b</span> <span class='op'>-</span> <span class='number'>1</span>
 }
 
-<span class='doccomment'>/// Abstracts over getting the appropriate iterator from a T, &amp;T, or &amp;mut T</span>
-<span class='kw'>trait</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>I</span>;
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>vec_deque</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>vec_deque</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>iter</span>() }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>vec_deque</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>vec_deque</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>iter_mut</span>() }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>vec_deque</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>vec_deque</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> { <span class='self'>self</span>.<span class='ident'>into_iter</span>() }
-}
-
 <span class='doccomment'>/// A by-ref iterator for a BList</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>
     (<span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>dlist</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>vec_deque</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span>);
@@ -1203,14 +1164,15 @@
     <span class='ident'>len</span>: <span class='ident'>usize</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>,
-    <span class='ident'>VecDequeIter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;</span>,
-    <span class='ident'>DListIter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-    <span class='ident'>T</span>: <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span><span class='op'>&gt;&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>VecDequeIter</span><span class='op'>&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>A</span>;
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span>, <span class='ident'>DListIter</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>VecDequeIter</span><span class='op'>&gt;</span> <span class='kw'>where</span>
+    <span class='ident'>VecDequeIter</span>: <span class='ident'>Iterator</span>,
+    <span class='ident'>DListIter</span>: <span class='ident'>Iterator</span>,
+    <span class='ident'>DListIter</span>::<span class='ident'>Item</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>IntoIter</span><span class='op'>=</span><span class='ident'>VecDequeIter</span>, <span class='ident'>Item</span><span class='op'>=</span><span class='ident'>VecDequeIter</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>
+{
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>VecDequeIter</span>::<span class='ident'>Item</span>;
     <span class='comment'>// I would like to thank all my friends and the fact that Iterator::next doesn&#39;t</span>
     <span class='comment'>// borrow self, for this passing borrowck with minimal gymnastics</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>&gt;</span> <span class='number'>0</span> { <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>-=</span> <span class='number'>1</span>; }
         <span class='comment'>// Keep loopin&#39; till we hit gold</span>
         <span class='kw'>loop</span> {
@@ -1227,7 +1189,7 @@
                     },
                     <span class='comment'>// Got new block from list iterator, make it the new left iterator</span>
                     <span class='prelude-val'>Some</span>(<span class='ident'>block</span>) <span class='op'>=&gt;</span> {
-                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>next_iter</span> <span class='op'>=</span> <span class='ident'>block</span>.<span class='ident'>traverse</span>();
+                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>next_iter</span> <span class='op'>=</span> <span class='ident'>block</span>.<span class='ident'>into_iter</span>();
                         <span class='kw'>let</span> <span class='ident'>next</span> <span class='op'>=</span> <span class='ident'>next_iter</span>.<span class='ident'>next</span>();
                         (<span class='ident'>next</span>, <span class='prelude-val'>Some</span>(<span class='ident'>next_iter</span>))
                     },
@@ -1253,12 +1215,14 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>,
-    <span class='ident'>VecDequeIter</span>: <span class='ident'>DoubleEndedIterator</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;</span>,
-    <span class='ident'>DListIter</span>: <span class='ident'>DoubleEndedIterator</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-    <span class='ident'>T</span>: <span class='ident'>Traverse</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span><span class='op'>&gt;&gt;</span> <span class='ident'>DoubleEndedIterator</span> <span class='kw'>for</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>VecDequeIter</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span>, <span class='ident'>DListIter</span><span class='op'>&gt;</span> <span class='ident'>DoubleEndedIterator</span>
+<span class='kw'>for</span> <span class='ident'>AbsIter</span><span class='op'>&lt;</span><span class='ident'>DListIter</span>, <span class='ident'>VecDequeIter</span><span class='op'>&gt;</span> <span class='kw'>where</span>
+    <span class='ident'>VecDequeIter</span>: <span class='ident'>DoubleEndedIterator</span>,
+    <span class='ident'>DListIter</span>: <span class='ident'>DoubleEndedIterator</span>,
+    <span class='ident'>DListIter</span>::<span class='ident'>Item</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>IntoIter</span><span class='op'>=</span><span class='ident'>VecDequeIter</span>, <span class='ident'>Item</span><span class='op'>=</span><span class='ident'>VecDequeIter</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>
+{
     <span class='comment'>// see `next` for details. This should be an exact mirror.</span>
-    <span class='kw'>fn</span> <span class='ident'>next_back</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>next_back</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>VecDequeIter</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>&gt;</span> <span class='number'>0</span> { <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>-=</span> <span class='number'>1</span>; }
         <span class='kw'>loop</span> {
             <span class='kw'>let</span> (<span class='ident'>ret</span>, <span class='ident'>iter</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>right_block_iter</span>.<span class='ident'>as_mut</span>() {
@@ -1268,7 +1232,7 @@
                         <span class='prelude-val'>Some</span>(<span class='ident'>iter</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='ident'>iter</span>.<span class='ident'>next_back</span>(),
                     },
                     <span class='prelude-val'>Some</span>(<span class='ident'>block</span>) <span class='op'>=&gt;</span> {
-                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>next_iter</span> <span class='op'>=</span> <span class='ident'>block</span>.<span class='ident'>traverse</span>();
+                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>next_iter</span> <span class='op'>=</span> <span class='ident'>block</span>.<span class='ident'>into_iter</span>();
                         <span class='kw'>let</span> <span class='ident'>next</span> <span class='op'>=</span> <span class='ident'>next_iter</span>.<span class='ident'>next_back</span>();
                         (<span class='ident'>next</span>, <span class='prelude-val'>Some</span>(<span class='ident'>next_iter</span>))
                     },
@@ -1317,55 +1281,53 @@
 }
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ExactSizeIterator</span> <span class='kw'>for</span> <span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {}
 
-<span class='comment'>/* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
-pub struct Trav&lt;&#39;a, T: &#39;a&gt; {
-    list: &amp;&#39;a BList&lt;T&gt;,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Trav</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>list</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
 }
 
-pub struct TravMut&lt;&#39;a, T: &#39;a&gt; {
-    list: &amp;&#39;a mut BList&lt;T&gt;,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TravMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>list</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
 }
 
-pub struct IntoTrav&lt;T&gt; {
-    list: BList&lt;T&gt;,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IntoTrav</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='ident'>list</span>: <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
 }
 
-impl&lt;&#39;a, T&gt; Traversal for Trav&lt;&#39;a, T&gt; {
-    type Item = &amp;&#39;a T;
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>Trav</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>;
 
-    fn foreach&lt;F&gt;(self, mut f: F) where F: FnMut(&amp;&#39;a T) -&gt; bool {
-        for node in self.list.list.iter() {
-            for elem in node.iter() {
-                if f(elem) { return; }
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>for</span> <span class='ident'>node</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>list</span>.<span class='ident'>list</span>.<span class='ident'>iter</span>() {
+            <span class='kw'>for</span> <span class='ident'>elem</span> <span class='kw'>in</span> <span class='ident'>node</span>.<span class='ident'>iter</span>() {
+                <span class='kw'>if</span> <span class='ident'>f</span>(<span class='ident'>elem</span>) { <span class='kw'>return</span>; }
             }
         }
     }
 }
 
-impl&lt;&#39;a, T&gt; Traversal for TravMut&lt;&#39;a, T&gt; {
-    type Item = &amp;&#39;a mut T;
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>TravMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span>;
 
-    fn foreach&lt;F&gt;(self, mut f: F) where F: FnMut(&amp;&#39;a mut T) -&gt; bool {
-        for node in self.list.list.iter_mut() {
-            for elem in node.iter_mut() {
-                if f(elem) { return; }
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>for</span> <span class='ident'>node</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>list</span>.<span class='ident'>list</span>.<span class='ident'>iter_mut</span>() {
+            <span class='kw'>for</span> <span class='ident'>elem</span> <span class='kw'>in</span> <span class='ident'>node</span>.<span class='ident'>iter_mut</span>() {
+                <span class='kw'>if</span> <span class='ident'>f</span>(<span class='ident'>elem</span>) { <span class='kw'>return</span>; }
             }
         }
     }
 }
 
-impl&lt;T&gt; Traversal for IntoTrav&lt;T&gt; {
-    type Item = T;
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Traversal</span> <span class='kw'>for</span> <span class='ident'>IntoTrav</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
 
-    fn foreach&lt;F&gt;(self, mut f: F) where F: FnMut(T) -&gt; bool {
-        for node in self.list.list.into_iter() {
-            for elem in node.into_iter() {
-                if f(elem) { return; }
+    <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>for</span> <span class='ident'>node</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>list</span>.<span class='ident'>list</span>.<span class='ident'>into_iter</span>() {
+            <span class='kw'>for</span> <span class='ident'>elem</span> <span class='kw'>in</span> <span class='ident'>node</span>.<span class='ident'>into_iter</span>() {
+                <span class='kw'>if</span> <span class='ident'>f</span>(<span class='ident'>elem</span>) { <span class='kw'>return</span>; }
             }
         }
     }
 }
-*/</span>
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FromIterator</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>A</span><span class='op'>&gt;&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
@@ -1696,7 +1658,7 @@ impl&lt;T&gt; Traversal for IntoTrav&lt;T&gt; {
 <span class='kw'>mod</span> <span class='ident'>bench</span>{
     <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>BList</span>;
     <span class='kw'>use</span> <span class='ident'>test</span>;
-    <span class='comment'>// use traverse::Traversal;</span>
+    <span class='kw'>use</span> <span class='ident'>traverse</span>::<span class='ident'>Traversal</span>;
 
     <span class='attribute'>#[<span class='ident'>bench</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bench_collect_into</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>test</span>::<span class='ident'>Bencher</span>) {
@@ -1774,16 +1736,14 @@ impl&lt;T&gt; Traversal for IntoTrav&lt;T&gt; {
         })
     }
 
-    <span class='comment'>/* FIXME(https://github.com/rust-lang/rust/issues/21750): ICE-ICE-BABY
-    #[bench]
-    fn bench_trav(b: &amp;mut test::Bencher) {
-        let v = &amp;[0; 128];
-        let m: BList&lt;i32&gt; = v.iter().map(|&amp;x|x).collect();
-        b.iter(|| {
-            assert!(m.traversal().count() == 128);
+    <span class='attribute'>#[<span class='ident'>bench</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>bench_trav</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>test</span>::<span class='ident'>Bencher</span>) {
+        <span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='number'>0</span>; <span class='number'>128</span>];
+        <span class='kw'>let</span> <span class='ident'>m</span>: <span class='ident'>BList</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span><span class='ident'>x</span>).<span class='ident'>collect</span>();
+        <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
+            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>traversal</span>().<span class='ident'>count</span>() <span class='op'>==</span> <span class='number'>128</span>);
         })
     }
-    */</span>
 }
 </pre>
 </section>
