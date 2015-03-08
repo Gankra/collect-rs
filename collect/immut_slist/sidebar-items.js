@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ImmutSList","An immutable singly-linked list, as seen in basically every functional language"],["Iter","An iterator over the items of an ImmutSList"]]});

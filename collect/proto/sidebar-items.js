@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["dlist",""],["linear_map","A module providing a map implementation `LinearMap` backed by a vector."],["par_vec",""]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["StringJoiner","An Iterator adapter that walks through all the elements in the Iterator, converts them to Strings and joins them to one big String, seperated by some seperator string slice."]]});

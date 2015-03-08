@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ParSlice","A slice of `ParVec` that can be sent to another task for processing. Automatically releases the slice on drop."],["ParVec","A vector that can be operated on concurrently via non-overlapping slices."]]});
