@@ -244,7 +244,7 @@ pub trait Compare<Lhs: ?Sized, Rhs: ?Sized = Lhs> {
     /// assert_eq!(cmp.compare(&b_string, a_str), Greater);
     /// ```
     fn borrow(self) -> Borrow<Self, Lhs, Rhs> where Self: Sized {
-        Borrow(self, PhantomData, PhantomData)
+        Borrow(self, PhantomData)
     }
 
     /// Reverses the ordering of the comparator.
@@ -333,7 +333,7 @@ impl<'a, Lhs: ?Sized, Rhs: ?Sized, C: ?Sized> Compare<Lhs, Rhs> for &'a C
 /// A comparator that borrows its parameters before comparing them.
 ///
 /// See [`Compare::borrow`](trait.Compare.html#method.borrow) for an example.
-pub struct Borrow<C, Lb: ?Sized, Rb: ?Sized = Lb>(C, PhantomData<*mut Lb>, PhantomData<*mut Rb>)
+pub struct Borrow<C, Lb: ?Sized, Rb: ?Sized = Lb>(C, PhantomData<fn(&Lb, &Rb)>)
     where C: Compare<Lb, Rb>;
 
 impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for Borrow<C, Lb, Rb>
@@ -376,7 +376,7 @@ impl<C, Lhs: ?Sized, Rhs: ?Sized, Lb: ?Sized, Rb: ?Sized> Compare<Lhs, Rhs> for 
 impl<C, Lb: ?Sized, Rb: ?Sized> Clone for Borrow<C, Lb, Rb>
     where C: Compare<Lb, Rb> + Clone {
 
-    fn clone(&self) -> Borrow<C, Lb, Rb> { Borrow(self.0.clone(), PhantomData, PhantomData) }
+    fn clone(&self) -> Borrow<C, Lb, Rb> { Borrow(self.0.clone(), PhantomData) }
 }
 
 // FIXME: replace with `derive(Copy)` once
@@ -389,7 +389,7 @@ impl<C, Lb: ?Sized, Rb: ?Sized> Copy for Borrow<C, Lb, Rb>
 impl<C, Lb: ?Sized, Rb: ?Sized> Default for Borrow<C, Lb, Rb>
     where C: Compare<Lb, Rb> + Default {
 
-    fn default() -> Borrow<C, Lb, Rb> { Borrow(Default::default(), PhantomData, PhantomData) }
+    fn default() -> Borrow<C, Lb, Rb> { Borrow(Default::default(), PhantomData) }
 }
 
 // FIXME: replace with `derive(PartialEq)` once
@@ -509,7 +509,7 @@ impl<C, D, Lhs: ?Sized, Rhs: ?Sized> Compare<Lhs, Rhs> for Then<C, D>
 /// assert_eq!(cmp.compare(b, a), Greater);
 /// assert_eq!(cmp.compare(a, a), Equal);
 /// ```
-pub struct Natural<T: Ord + ?Sized>(PhantomData<*mut T>);
+pub struct Natural<T: Ord + ?Sized>(PhantomData<fn(&T)>);
 
 pub fn natural<T: Ord + ?Sized>() -> Natural<T> {
     Natural(PhantomData)
