@@ -428,23 +428,23 @@ impl<C, Lb: ?Sized, Rb: ?Sized> Debug for Borrow<C, Lb, Rb>
 /// let cmp = Extract::new(|vec: &Vec<u8>| vec.len(), natural());
 /// assert_eq!(cmp.compare(&a, &b), Greater);
 /// ```
-pub struct Extract<E, C, T: ?Sized> {
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Extract<E, C> {
     ext: E,
     cmp: C,
-    phantom: PhantomData<*mut T>,
 }
 
 // FIXME: convert to default method on `Compare` once where clauses permit equality
 // (https://github.com/rust-lang/rust/issues/20041)
-impl<E, C, T: ?Sized, K> Extract<E, C, T> where E: Fn(&T) -> K, C: Compare<K> {
+impl<E, C> Extract<E, C> {
     /// Returns a comparator that extracts a sort key using `ext` and compares it using
     /// `cmp`.
-    pub fn new(ext: E, cmp: C) -> Extract<E, C, T> {
-        Extract { ext: ext, cmp: cmp, phantom: PhantomData }
+    pub fn new<T: ?Sized, K>(ext: E, cmp: C) -> Extract<E, C> where E: Fn(&T) -> K, C: Compare<K> {
+        Extract { ext: ext, cmp: cmp }
     }
 }
 
-impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T> where E: Fn(&T) -> K, C: Compare<K> {
+impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C> where E: Fn(&T) -> K, C: Compare<K> {
     fn compare(&self, lhs: &T, rhs: &T) -> Ordering {
         self.cmp.compare(&(self.ext)(lhs), &(self.ext)(rhs))
     }
@@ -471,46 +471,6 @@ impl<E, C, T: ?Sized, K> Compare<T> for Extract<E, C, T> where E: Fn(&T) -> K, C
 
     fn compares_ne(&self, lhs: &T, rhs: &T) -> bool {
         self.cmp.compares_ne(&(self.ext)(lhs), &(self.ext)(rhs))
-    }
-}
-
-// FIXME: replace with `derive(Clone)` once
-// https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized> Clone for Extract<E, C, T> where E: Clone, C: Clone {
-    fn clone(&self) -> Extract<E, C, T> {
-        Extract { ext: self.ext.clone(), cmp: self.cmp.clone(), phantom: PhantomData }
-    }
-}
-
-// FIXME: replace with `derive(Copy)` once
-// https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized> Copy for Extract<E, C, T> where E: Copy, C: Copy {}
-
-// FIXME: replace with `derive(Default)` once
-// https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized> Default for Extract<E, C, T> where E: Default, C: Default {
-    fn default() -> Extract<E, C, T> {
-        Extract { ext: Default::default(), cmp: Default::default(), phantom: PhantomData }
-    }
-}
-
-// FIXME: replace with `derive(PartialEq)` once
-// https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized> PartialEq for Extract<E, C, T> where E: PartialEq, C: PartialEq {
-    fn eq(&self, other: &Extract<E, C, T>) -> bool {
-        self.ext == other.ext && self.cmp == other.cmp
-    }
-}
-
-// FIXME: replace with `derive(Eq)` once
-// https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized> Eq for Extract<E, C, T> where E: Eq, C: Eq {}
-
-// FIXME: replace with `derive(Debug)` once
-// https://github.com/rust-lang/rust/issues/19839 is fixed
-impl<E, C, T: ?Sized> Debug for Extract<E, C, T> where E: Debug, C: Debug {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Extract {{ ext: {:?}, cmp: {:?} }}", self.ext, self.cmp)
     }
 }
 
