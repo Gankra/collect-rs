@@ -37,6 +37,3 @@ optional = true
 [dev-dependencies]
 rand = "*"
 threadpool = "*"
-
-[profile.dev]
-debug = false
