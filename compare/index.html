@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `compare` mod in crate `collect`.">
+    <meta name="description" content="API documentation for the Rust `compare` crate.">
     <meta name="keywords" content="rust, rustlang, rust-lang, compare">
 
-    <title>collect::compare - Rust</title>
+    <title>compare - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
 
     
     
@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>collect</a></p><script>window.sidebarCurrent = {name: 'compare', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'compare', ty: 'mod', relpath: '../'};</script>
     </section>
 
     <nav class="sub">
@@ -41,9 +41,9 @@
     </nav>
 
     <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>collect</a>::<wbr><a class='mod' href=''>compare</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>compare</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-11176' href='../../src/collect/compare.rs.html#1-655'>[src]</a></span></h1>
+        </span><a id='src-0' href='../src/compare/lib.rs.html#1-615'>[src]</a></span></h1>
 <div class='docblock'><p>Comparators.</p>
 
 <p>A comparator is any type that implements the <a href="trait.Compare.html"><code>Compare</code></a> trait,
@@ -57,7 +57,7 @@ data structures.</p>
 <p>The most basic comparator is <a href="struct.Natural.html"><code>Natural</code></a>, which simply delegates
 to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/trait.Ord.html"><code>Ord</code></a>:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
+<span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1</span>;
@@ -71,7 +71,7 @@ to the type&#39;s implementation of <a href="http://doc.rust-lang.org/std/cmp/tr
 
 <p>There are convenience methods for checking each of the six relations:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
+<span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>1</span>;
 <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>2</span>;
@@ -90,7 +90,7 @@ consume a comparator to produce a new one with different behavior, similar to
 <a href="http://doc.rust-lang.org/std/iter/trait.IteratorExt.html">iterator adaptors</a>. For
 example, all comparators can be <a href="trait.Compare.html#method.rev">reversed</a>:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
+<span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::<span class='ident'>Greater</span>;
 
 <span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>natural</span>().<span class='ident'>rev</span>();
@@ -101,7 +101,7 @@ example, all comparators can be <a href="trait.Compare.html#method.rev">reversed
 a type by using a closure of type <code>Fn(&amp;Lhs, &amp;Rhs) -&gt; Ordering</code>. For example, vectors
 can be compared by their length instead of their contents:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::<span class='ident'>Compare</span>;
+<span class='kw'>use</span> <span class='ident'>compare</span>::<span class='ident'>Compare</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
@@ -118,7 +118,7 @@ can be compared by their length instead of their contents:</p>
 first by one key, <a href="trait.Compare.html#method.then">then</a>, if the first keys were
 equal, by another:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::<span class='ident'>Compare</span>;
+<span class='kw'>use</span> <span class='ident'>compare</span>::<span class='ident'>Compare</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>struct</span> <span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>age</span>: <span class='ident'>u8</span> }
@@ -147,7 +147,7 @@ equal, by another:</p>
 <a href="struct.Extract.html">key-extraction logic</a> can be factored out, simplifying the
 previous example:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>use</span> <span class='ident'>collect</span>::<span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Extract</span>, <span class='ident'>natural</span>};
+<span class='kw'>use</span> <span class='ident'>compare</span>::{<span class='ident'>Compare</span>, <span class='ident'>Extract</span>, <span class='ident'>natural</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Less</span>, <span class='ident'>Greater</span>};
 
 <span class='kw'>struct</span> <span class='ident'>Pet</span> { <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>age</span>: <span class='ident'>u8</span> }
@@ -167,42 +167,42 @@ previous example:</p>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Borrow.html'
-                               title='collect::compare::Borrow'>Borrow</a></td>
+                               title='compare::Borrow'>Borrow</a></td>
                         <td class='docblock short'><p>A comparator that borrows its parameters before comparing them.</p>
 </td>
                     </tr>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Extract.html'
-                               title='collect::compare::Extract'>Extract</a></td>
+                               title='compare::Extract'>Extract</a></td>
                         <td class='docblock short'><p>A comparator that extracts a sort key from a value.</p>
 </td>
                     </tr>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Natural.html'
-                               title='collect::compare::Natural'>Natural</a></td>
+                               title='compare::Natural'>Natural</a></td>
                         <td class='docblock short'><p>A comparator that delegates to <a href="http://doc.rust-lang.org/std/cmp/trait.Ord.html"><code>Ord</code></a>.</p>
 </td>
                     </tr>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Rev.html'
-                               title='collect::compare::Rev'>Rev</a></td>
+                               title='compare::Rev'>Rev</a></td>
                         <td class='docblock short'><p>A comparator that reverses the ordering of another.</p>
 </td>
                     </tr>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Swap.html'
-                               title='collect::compare::Swap'>Swap</a></td>
+                               title='compare::Swap'>Swap</a></td>
                         <td class='docblock short'><p>A comparator that swaps another&#39;s parameters, maintaining the underlying ordering.</p>
 </td>
                     </tr>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Then.html'
-                               title='collect::compare::Then'>Then</a></td>
+                               title='compare::Then'>Then</a></td>
                         <td class='docblock short'><p>A comparator that <a href="https://en.wikipedia.org/wiki/Lexicographical_order">lexicographically</a> combines two others.</p>
 </td>
                     </tr>
@@ -210,7 +210,7 @@ previous example:</p>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.Compare.html'
-                               title='collect::compare::Compare'>Compare</a></td>
+                               title='compare::Compare'>Compare</a></td>
                         <td class='docblock short'><p>A comparator imposing a <a href="https://en.wikipedia.org/wiki/Total_order">total order</a>.</p>
 </td>
                     </tr>
@@ -218,7 +218,7 @@ previous example:</p>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.max.html'
-                               title='collect::compare::max'>max</a></td>
+                               title='compare::max'>max</a></td>
                         <td class='docblock short'><p>Returns the maximum of two values according to the given comparator, or <code>lhs</code> if they
 are equal.</p>
 </td>
@@ -226,7 +226,7 @@ are equal.</p>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.min.html'
-                               title='collect::compare::min'>min</a></td>
+                               title='compare::min'>min</a></td>
                         <td class='docblock short'><p>Returns the minimum of two values according to the given comparator, or <code>lhs</code> if they
 are equal.</p>
 </td>
@@ -234,7 +234,7 @@ are equal.</p>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.natural.html'
-                               title='collect::compare::natural'>natural</a></td>
+                               title='compare::natural'>natural</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 </table></section>
@@ -276,13 +276,13 @@ are equal.</p>
     
 
     <script>
-        window.rootPath = "../../";
-        window.currentCrate = "collect";
+        window.rootPath = "../";
+        window.currentCrate = "compare";
         window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script async src="../search-index.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['collect'] = [];
+implementors['compare'] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

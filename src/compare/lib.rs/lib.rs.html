@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/compare.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/compare-0.0.4/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
-    <title>compare.rs.html -- source</title>
+    <title>lib.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../main.css">
 
@@ -655,46 +655,6 @@
 <span id="613">613</span>
 <span id="614">614</span>
 <span id="615">615</span>
-<span id="616">616</span>
-<span id="617">617</span>
-<span id="618">618</span>
-<span id="619">619</span>
-<span id="620">620</span>
-<span id="621">621</span>
-<span id="622">622</span>
-<span id="623">623</span>
-<span id="624">624</span>
-<span id="625">625</span>
-<span id="626">626</span>
-<span id="627">627</span>
-<span id="628">628</span>
-<span id="629">629</span>
-<span id="630">630</span>
-<span id="631">631</span>
-<span id="632">632</span>
-<span id="633">633</span>
-<span id="634">634</span>
-<span id="635">635</span>
-<span id="636">636</span>
-<span id="637">637</span>
-<span id="638">638</span>
-<span id="639">639</span>
-<span id="640">640</span>
-<span id="641">641</span>
-<span id="642">642</span>
-<span id="643">643</span>
-<span id="644">644</span>
-<span id="645">645</span>
-<span id="646">646</span>
-<span id="647">647</span>
-<span id="648">648</span>
-<span id="649">649</span>
-<span id="650">650</span>
-<span id="651">651</span>
-<span id="652">652</span>
-<span id="653">653</span>
-<span id="654">654</span>
-<span id="655">655</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Comparators.</span>
 <span class='doccomment'>//!</span>
@@ -711,7 +671,7 @@
 <span class='doccomment'>//! (http://doc.rust-lang.org/std/cmp/trait.Ord.html):</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! use collect::compare::{Compare, natural};</span>
+<span class='doccomment'>//! use compare::{Compare, natural};</span>
 <span class='doccomment'>//! use std::cmp::Ordering::{Less, Equal, Greater};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let a = &amp;1;</span>
@@ -726,7 +686,7 @@
 <span class='doccomment'>//! There are convenience methods for checking each of the six relations:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! use collect::compare::{Compare, natural};</span>
+<span class='doccomment'>//! use compare::{Compare, natural};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let a = &amp;1;</span>
 <span class='doccomment'>//! let b = &amp;2;</span>
@@ -746,7 +706,7 @@
 <span class='doccomment'>//! example, all comparators can be [reversed](trait.Compare.html#method.rev):</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! use collect::compare::{Compare, natural};</span>
+<span class='doccomment'>//! use compare::{Compare, natural};</span>
 <span class='doccomment'>//! use std::cmp::Ordering::Greater;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let cmp = natural().rev();</span>
@@ -758,7 +718,7 @@
 <span class='doccomment'>//! can be compared by their length instead of their contents:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! use collect::compare::Compare;</span>
+<span class='doccomment'>//! use compare::Compare;</span>
 <span class='doccomment'>//! use std::cmp::Ordering::{Less, Greater};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let a = vec![1, 2, 3];</span>
@@ -777,7 +737,7 @@
 <span class='doccomment'>//! equal, by another:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! use collect::compare::Compare;</span>
+<span class='doccomment'>//! use compare::Compare;</span>
 <span class='doccomment'>//! use std::cmp::Ordering::{Less, Equal, Greater};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! struct Pet { name: &amp;&#39;static str, age: u8 }</span>
@@ -807,7 +767,7 @@
 <span class='doccomment'>//! previous example:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! use collect::compare::{Compare, Extract, natural};</span>
+<span class='doccomment'>//! use compare::{Compare, Extract, natural};</span>
 <span class='doccomment'>//! use std::cmp::Ordering::{Less, Greater};</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! struct Pet { name: &amp;&#39;static str, age: u8 }</span>
@@ -836,7 +796,7 @@
 <span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```rust</span>
-<span class='doccomment'>/// use collect::compare::{Extract, natural, max};</span>
+<span class='doccomment'>/// use compare::{Extract, natural, max};</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// struct Foo { key: char, id: u8 }</span>
 <span class='doccomment'>///</span>
@@ -862,7 +822,7 @@
 <span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```rust</span>
-<span class='doccomment'>/// use collect::compare::{Extract, natural, min};</span>
+<span class='doccomment'>/// use compare::{Extract, natural, min};</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// struct Foo { key: char, id: u8 }</span>
 <span class='doccomment'>///</span>
@@ -927,7 +887,7 @@
     <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use collect::compare::{Compare, natural};</span>
+    <span class='doccomment'>/// use compare::{Compare, natural};</span>
     <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal, Greater};</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let a_str = &quot;a&quot;;</span>
@@ -942,7 +902,7 @@
     <span class='doccomment'>/// assert_eq!(cmp.compare(&amp;b_string, a_str), Greater);</span>
     <span class='doccomment'>/// ```</span>
     <span class='kw'>fn</span> <span class='ident'>borrow</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='kw'>Self</span>, <span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='kw'>Self</span>: <span class='ident'>Sized</span> {
-        <span class='ident'>Borrow</span>(<span class='self'>self</span>, <span class='ident'>PhantomData</span>, <span class='ident'>PhantomData</span>)
+        <span class='ident'>Borrow</span>(<span class='self'>self</span>, <span class='ident'>PhantomData</span>)
     }
 
     <span class='doccomment'>/// Reverses the ordering of the comparator.</span>
@@ -950,7 +910,7 @@
     <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use collect::compare::{Compare, natural};</span>
+    <span class='doccomment'>/// use compare::{Compare, natural};</span>
     <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal, Greater};</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let a = &amp;1;</span>
@@ -971,7 +931,7 @@
     <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use collect::compare::Compare;</span>
+    <span class='doccomment'>/// use compare::Compare;</span>
     <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal, Greater};</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// let cmp = |lhs: &amp;u8, rhs: &amp;u16| (*lhs as u16).cmp(rhs);</span>
@@ -995,7 +955,7 @@
     <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use collect::compare::Compare;</span>
+    <span class='doccomment'>/// use compare::Compare;</span>
     <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal};</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// struct Foo { key1: char, key2: u8 }</span>
@@ -1031,7 +991,7 @@
 <span class='doccomment'>/// A comparator that borrows its parameters before comparing them.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// See [`Compare::borrow`](trait.Compare.html#method.borrow) for an example.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>: ?<span class='ident'>Sized</span>, <span class='ident'>Rb</span>: ?<span class='ident'>Sized</span> <span class='op'>=</span> <span class='ident'>Lb</span><span class='op'>&gt;</span>(<span class='ident'>C</span>, <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Lb</span><span class='op'>&gt;</span>, <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Rb</span><span class='op'>&gt;</span>)
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>: ?<span class='ident'>Sized</span>, <span class='ident'>Rb</span>: ?<span class='ident'>Sized</span> <span class='op'>=</span> <span class='ident'>Lb</span><span class='op'>&gt;</span>(<span class='ident'>C</span>, <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>Lb</span>, <span class='kw-2'>&amp;</span><span class='ident'>Rb</span>)<span class='op'>&gt;</span>)
     <span class='kw'>where</span> <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span>;
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lhs</span>: ?<span class='ident'>Sized</span>, <span class='ident'>Rhs</span>: ?<span class='ident'>Sized</span>, <span class='ident'>Lb</span>: ?<span class='ident'>Sized</span>, <span class='ident'>Rb</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lhs</span>, <span class='ident'>Rhs</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span>
@@ -1074,7 +1034,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>: ?<span class='ident'>Sized</span>, <span class='ident'>Rb</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span>
     <span class='kw'>where</span> <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Clone</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span> { <span class='ident'>Borrow</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>(), <span class='ident'>PhantomData</span>, <span class='ident'>PhantomData</span>) }
+    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span> { <span class='ident'>Borrow</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>(), <span class='ident'>PhantomData</span>) }
 }
 
 <span class='comment'>// FIXME: replace with `derive(Copy)` once</span>
@@ -1087,7 +1047,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>: ?<span class='ident'>Sized</span>, <span class='ident'>Rb</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span>
     <span class='kw'>where</span> <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Default</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span> { <span class='ident'>Borrow</span>(<span class='ident'>Default</span>::<span class='ident'>default</span>(), <span class='ident'>PhantomData</span>, <span class='ident'>PhantomData</span>) }
+    <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>C</span>, <span class='ident'>Lb</span>, <span class='ident'>Rb</span><span class='op'>&gt;</span> { <span class='ident'>Borrow</span>(<span class='ident'>Default</span>::<span class='ident'>default</span>(), <span class='ident'>PhantomData</span>) }
 }
 
 <span class='comment'>// FIXME: replace with `derive(PartialEq)` once</span>
@@ -1117,7 +1077,7 @@
 <span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```rust</span>
-<span class='doccomment'>/// use collect::compare::{Compare, Extract, natural};</span>
+<span class='doccomment'>/// use compare::{Compare, Extract, natural};</span>
 <span class='doccomment'>/// use std::cmp::Ordering::Greater;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let a = vec![1, 2, 3];</span>
@@ -1126,23 +1086,23 @@
 <span class='doccomment'>/// let cmp = Extract::new(|vec: &amp;Vec&lt;u8&gt;| vec.len(), natural());</span>
 <span class='doccomment'>/// assert_eq!(cmp.compare(&amp;a, &amp;b), Greater);</span>
 <span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> {
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>, <span class='ident'>Default</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span><span class='op'>&gt;</span> {
     <span class='ident'>ext</span>: <span class='ident'>E</span>,
     <span class='ident'>cmp</span>: <span class='ident'>C</span>,
-    <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
 }
 
 <span class='comment'>// FIXME: convert to default method on `Compare` once where clauses permit equality</span>
 <span class='comment'>// (https://github.com/rust-lang/rust/issues/20041)</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span>, <span class='ident'>K</span><span class='op'>&gt;</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>K</span>, <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span><span class='op'>&gt;</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Returns a comparator that extracts a sort key using `ext` and compares it using</span>
     <span class='doccomment'>/// `cmp`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>ext</span>: <span class='ident'>E</span>, <span class='ident'>cmp</span>: <span class='ident'>C</span>) <span class='op'>-&gt;</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>Extract</span> { <span class='ident'>ext</span>: <span class='ident'>ext</span>, <span class='ident'>cmp</span>: <span class='ident'>cmp</span>, <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span> }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>T</span>: ?<span class='ident'>Sized</span>, <span class='ident'>K</span><span class='op'>&gt;</span>(<span class='ident'>ext</span>: <span class='ident'>E</span>, <span class='ident'>cmp</span>: <span class='ident'>C</span>) <span class='op'>-&gt;</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>K</span>, <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span> {
+        <span class='ident'>Extract</span> { <span class='ident'>ext</span>: <span class='ident'>ext</span>, <span class='ident'>cmp</span>: <span class='ident'>cmp</span> }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span>, <span class='ident'>K</span><span class='op'>&gt;</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>K</span>, <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span>, <span class='ident'>K</span><span class='op'>&gt;</span> <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>K</span>, <span class='ident'>C</span>: <span class='ident'>Compare</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>lhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span> {
         <span class='self'>self</span>.<span class='ident'>cmp</span>.<span class='ident'>compare</span>(<span class='kw-2'>&amp;</span>(<span class='self'>self</span>.<span class='ident'>ext</span>)(<span class='ident'>lhs</span>), <span class='kw-2'>&amp;</span>(<span class='self'>self</span>.<span class='ident'>ext</span>)(<span class='ident'>rhs</span>))
     }
@@ -1172,46 +1132,6 @@
     }
 }
 
-<span class='comment'>// FIXME: replace with `derive(Clone)` once</span>
-<span class='comment'>// https://github.com/rust-lang/rust/issues/19839 is fixed</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Clone</span>, <span class='ident'>C</span>: <span class='ident'>Clone</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>Extract</span> { <span class='ident'>ext</span>: <span class='self'>self</span>.<span class='ident'>ext</span>.<span class='ident'>clone</span>(), <span class='ident'>cmp</span>: <span class='self'>self</span>.<span class='ident'>cmp</span>.<span class='ident'>clone</span>(), <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span> }
-    }
-}
-
-<span class='comment'>// FIXME: replace with `derive(Copy)` once</span>
-<span class='comment'>// https://github.com/rust-lang/rust/issues/19839 is fixed</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Copy</span> <span class='kw'>for</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Copy</span>, <span class='ident'>C</span>: <span class='ident'>Copy</span> {}
-
-<span class='comment'>// FIXME: replace with `derive(Default)` once</span>
-<span class='comment'>// https://github.com/rust-lang/rust/issues/19839 is fixed</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Default</span>, <span class='ident'>C</span>: <span class='ident'>Default</span> {
-    <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>Extract</span> { <span class='ident'>ext</span>: <span class='ident'>Default</span>::<span class='ident'>default</span>(), <span class='ident'>cmp</span>: <span class='ident'>Default</span>::<span class='ident'>default</span>(), <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span> }
-    }
-}
-
-<span class='comment'>// FIXME: replace with `derive(PartialEq)` once</span>
-<span class='comment'>// https://github.com/rust-lang/rust/issues/19839 is fixed</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>PartialEq</span> <span class='kw'>for</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>PartialEq</span>, <span class='ident'>C</span>: <span class='ident'>PartialEq</span> {
-    <span class='kw'>fn</span> <span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>ext</span> <span class='op'>==</span> <span class='ident'>other</span>.<span class='ident'>ext</span> <span class='op'>&amp;&amp;</span> <span class='self'>self</span>.<span class='ident'>cmp</span> <span class='op'>==</span> <span class='ident'>other</span>.<span class='ident'>cmp</span>
-    }
-}
-
-<span class='comment'>// FIXME: replace with `derive(Eq)` once</span>
-<span class='comment'>// https://github.com/rust-lang/rust/issues/19839 is fixed</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Eq</span> <span class='kw'>for</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Eq</span>, <span class='ident'>C</span>: <span class='ident'>Eq</span> {}
-
-<span class='comment'>// FIXME: replace with `derive(Debug)` once</span>
-<span class='comment'>// https://github.com/rust-lang/rust/issues/19839 is fixed</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Extract</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>C</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Debug</span>, <span class='ident'>C</span>: <span class='ident'>Debug</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;Extract {{ ext: {:?}, cmp: {:?} }}&quot;</span>, <span class='self'>self</span>.<span class='ident'>ext</span>, <span class='self'>self</span>.<span class='ident'>cmp</span>)
-    }
-}
-
 <span class='doccomment'>/// A comparator that [lexicographically]</span>
 <span class='doccomment'>/// (https://en.wikipedia.org/wiki/Lexicographical_order) combines two others.</span>
 <span class='doccomment'>///</span>
@@ -1236,7 +1156,7 @@
 <span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```rust</span>
-<span class='doccomment'>/// use collect::compare::{Compare, natural};</span>
+<span class='doccomment'>/// use compare::{Compare, natural};</span>
 <span class='doccomment'>/// use std::cmp::Ordering::{Less, Equal, Greater};</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let a = &amp;1;</span>
@@ -1247,7 +1167,7 @@
 <span class='doccomment'>/// assert_eq!(cmp.compare(b, a), Greater);</span>
 <span class='doccomment'>/// assert_eq!(cmp.compare(a, a), Equal);</span>
 <span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Natural</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Ord</span> <span class='op'>+</span> ?<span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span>);
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Natural</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Ord</span> <span class='op'>+</span> ?<span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>)<span class='op'>&gt;</span>);
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>natural</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Ord</span> <span class='op'>+</span> ?<span class='ident'>Sized</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='ident'>Natural</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='ident'>Natural</span>(<span class='ident'>PhantomData</span>)
@@ -1392,7 +1312,7 @@
 
     <script>
         window.rootPath = "../../../";
-        window.currentCrate = "collect";
+        window.currentCrate = "compare";
         window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>

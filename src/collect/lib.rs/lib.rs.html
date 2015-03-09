@@ -134,6 +134,8 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
 </pre><pre class='rust '>
 
 <span class='doccomment'>//! collect-rs is intended as an experimental extension of the Rust standard library&#39;s</span>
@@ -173,6 +175,9 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>test</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>core</span>;
 
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;compare&quot;</span>)]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>compare</span>;
+
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;traverse&quot;</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>traverse</span>;
 
@@ -196,7 +201,6 @@
 
 <span class='comment'>// publics</span>
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;compare&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>compare</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>iter</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;blist&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>blist</span>;
