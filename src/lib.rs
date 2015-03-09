@@ -36,6 +36,9 @@
 #[cfg(test)] extern crate test;
 extern crate core;
 
+#[cfg(feature="compare")]
+extern crate compare;
+
 #[cfg(feature="traverse")]
 extern crate traverse;
 
@@ -59,7 +62,6 @@ extern crate traverse;
 
 // publics
 
-#[cfg(feature="compare")] pub mod compare;
 pub mod iter;
 
 #[cfg(feature="blist")] pub mod blist;
