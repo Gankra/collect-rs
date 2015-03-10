@@ -474,7 +474,7 @@ mod test {
     }
 
     #[test]
-    #[should_fail]
+    #[should_panic]
     fn test_overflow() {
         #[allow(dead_code)]
         #[repr(u32)]

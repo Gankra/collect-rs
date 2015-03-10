@@ -1837,7 +1837,7 @@ mod test_treemap {
     }
 
     #[test]
-    #[should_fail]
+    #[should_panic]
     fn test_index_nonexistent() {
         let mut map: TreeMap<i32, i32> = TreeMap::new();
 
