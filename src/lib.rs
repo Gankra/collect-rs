@@ -34,6 +34,7 @@
 
 #[cfg(test)] extern crate rand;
 #[cfg(test)] extern crate test;
+extern crate alloc;
 extern crate core;
 
 #[cfg(feature="compare")]
