@@ -1194,10 +1194,7 @@ fn insert<K, V, C>(node: &mut Option<Box<TreeNode<K, V>>>, key: K, value: V, cmp
             split(save);
             inserted
           }
-          Equal => {
-            save.key = key;
-            Some(replace(&mut save.value, value))
-          }
+          Equal => Some(replace(&mut save.value, value)),
         }
       }
       None => {
