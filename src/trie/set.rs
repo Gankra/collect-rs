@@ -659,6 +659,9 @@ impl<'a> IntoIterator for &'a TrieSet {
     fn into_iter(self) -> Iter<'a> { self.iter() }
 }
 
+#[cfg(feature="ordered_iter")]
+impl<'a> ::ordered_iter::OrderedSetIterator for Iter<'a> {}
+
 #[cfg(test)]
 mod test {
     use std::usize;

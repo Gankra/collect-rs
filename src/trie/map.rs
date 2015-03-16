@@ -1217,6 +1217,12 @@ impl<'a, T> IntoIterator for &'a mut TrieMap<T> {
     fn into_iter(self) -> IterMut<'a, T> { self.iter_mut() }
 }
 
+#[cfg(feature="ordered_iter")]
+impl<'a, T> ::ordered_iter::OrderedMapIterator for Iter<'a, T> {
+    type Key = usize;
+    type Val = &'a T;
+}
+
 #[cfg(test)]
 mod test {
     use std::iter::range_step;
