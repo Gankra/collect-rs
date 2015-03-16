@@ -28,9 +28,11 @@ tree_map = ["compare"]
 trie_map = []
 proto = []
 string_joiner = []
-ordered_iter = []
 
 [dependencies.compare]
+optional = true
+
+[dependencies.ordered_iter]
 optional = true
 
 [dependencies.traverse]

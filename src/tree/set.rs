@@ -845,6 +845,9 @@ impl<T, C> IntoIterator for TreeSet<T, C> where C: Compare<T> {
     fn into_iter(self) -> IntoIter<T> { self.into_iter() }
 }
 
+#[cfg(feature="ordered_iter")]
+impl<'a, K> ::ordered_iter::OrderedSetIterator for Iter<'a, K> {}
+
 #[cfg(test)]
 mod test {
     use std::hash;

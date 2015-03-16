@@ -39,6 +39,9 @@ extern crate core;
 #[cfg(feature="compare")]
 extern crate compare;
 
+#[cfg(feature="ordered_iter")]
+extern crate ordered_iter;
+
 #[cfg(feature="traverse")]
 extern crate traverse;
 

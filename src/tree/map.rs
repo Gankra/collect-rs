@@ -1332,6 +1332,12 @@ impl<K, V, C> IntoIterator for TreeMap<K, V, C> where C: Compare<K> {
     fn into_iter(self) -> IntoIter<K, V> { self.into_iter() }
 }
 
+#[cfg(feature="ordered_iter")]
+impl<'a, K, V> ::ordered_iter::OrderedMapIterator for Iter<'a, K, V> {
+    type Key = &'a K;
+    type Val = &'a V;
+}
+
 #[cfg(test)]
 mod test_treemap {
     use rand::{self, Rng};
