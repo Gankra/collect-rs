@@ -16,7 +16,7 @@ readme = "README.md"
 
 [features]
 default = ["blist", "enum_set", "immut_slist", "interval_heap",
-           "linked_hash_map", "lru_cache", "tree_map", "trie_map",
+           "linked_hash_map", "lru_cache", "tree_map",
        	   "proto", "string_joiner", "ordered_iter"]
 blist = ["proto", "traverse"]
 enum_set = []
@@ -25,7 +25,6 @@ interval_heap = ["compare"]
 linked_hash_map = []
 lru_cache = ["linked_hash_map"]
 tree_map = ["compare"]
-trie_map = []
 proto = []
 string_joiner = []
 
