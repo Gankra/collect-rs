@@ -42,14 +42,10 @@ extern crate compare;
 #[cfg(feature="ordered_iter")]
 extern crate ordered_iter;
 
-#[cfg(feature="traverse")]
-extern crate traverse;
-
 #[cfg(test)] #[macro_use] mod bench;
 
 // Re-Exports
 #[cfg(feature="immut_slist")] pub use immut_slist::ImmutSList;
-#[cfg(feature="interval_heap")] pub use interval_heap::IntervalHeap;
 #[cfg(feature="tree_map")] pub use tree_map::TreeMap;
 #[cfg(feature="tree_map")] pub use tree_set::TreeSet;
 
@@ -61,7 +57,6 @@ extern crate traverse;
 pub mod iter;
 
 #[cfg(feature="immut_slist")] pub mod immut_slist;
-#[cfg(feature="interval_heap")] pub mod interval_heap;
 
 #[cfg(feature="tree_map")]
 pub mod tree_map {

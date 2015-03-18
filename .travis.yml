@@ -9,7 +9,6 @@ script:
 - cargo build
 - cargo test
 - cargo test --no-default-features --features "immut_slist"
-- cargo test --no-default-features --features "interval_heap"
 - cargo test --no-default-features --features "tree_map"
 - cargo test --no-default-features --features "proto"
 - cargo test --no-default-features --features "string_joiner"
