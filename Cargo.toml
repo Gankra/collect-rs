@@ -15,10 +15,9 @@ keywords = ["data-structures"]
 readme = "README.md"
 
 [features]
-default = ["blist", "enum_set", "immut_slist", "interval_heap",
+default = ["enum_set", "immut_slist", "interval_heap",
            "linked_hash_map", "lru_cache", "tree_map",
        	   "proto", "string_joiner", "ordered_iter"]
-blist = ["proto", "traverse"]
 enum_set = []
 immut_slist  = []
 interval_heap = ["compare"]
@@ -32,9 +31,6 @@ string_joiner = []
 optional = true
 
 [dependencies.ordered_iter]
-optional = true
-
-[dependencies.traverse]
 optional = true
 
 [dev-dependencies]
