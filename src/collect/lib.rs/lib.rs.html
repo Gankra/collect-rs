@@ -113,11 +113,6 @@
 <span id="71">71</span>
 <span id="72">72</span>
 <span id="73">73</span>
-<span id="74">74</span>
-<span id="75">75</span>
-<span id="76">76</span>
-<span id="77">77</span>
-<span id="78">78</span>
 </pre><pre class='rust '>
 
 <span class='doccomment'>//! collect-rs is intended as an experimental extension of the Rust standard library&#39;s</span>
@@ -163,14 +158,10 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ordered_iter&quot;</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ordered_iter</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;traverse&quot;</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>traverse</span>;
-
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>mod</span> <span class='ident'>bench</span>;
 
 <span class='comment'>// Re-Exports</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;immut_slist&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>immut_slist</span>::<span class='ident'>ImmutSList</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;interval_heap&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>interval_heap</span>::<span class='ident'>IntervalHeap</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;tree_map&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>tree_map</span>::<span class='ident'>TreeMap</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;tree_map&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>tree_set</span>::<span class='ident'>TreeSet</span>;
 
@@ -182,7 +173,6 @@
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>iter</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;immut_slist&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>immut_slist</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;interval_heap&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>interval_heap</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;tree_map&quot;</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>tree_map</span> {
