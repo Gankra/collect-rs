@@ -124,8 +124,6 @@
 <span id="82">82</span>
 <span id="83">83</span>
 <span id="84">84</span>
-<span id="85">85</span>
-<span id="86">86</span>
 </pre><pre class='rust '>
 
 <span class='doccomment'>//! collect-rs is intended as an experimental extension of the Rust standard library&#39;s</span>
@@ -177,7 +175,6 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>mod</span> <span class='ident'>bench</span>;
 
 <span class='comment'>// Re-Exports</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;blist&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>blist</span>::<span class='ident'>BList</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;enum_set&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>enum_set</span>::<span class='ident'>EnumSet</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;immut_slist&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>immut_slist</span>::<span class='ident'>ImmutSList</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;interval_heap&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>interval_heap</span>::<span class='ident'>IntervalHeap</span>;
@@ -193,7 +190,6 @@
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>iter</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;blist&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>blist</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;enum_set&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>enum_set</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;immut_slist&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>immut_slist</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;interval_heap&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>interval_heap</span>;
