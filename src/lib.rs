@@ -56,12 +56,9 @@ extern crate traverse;
 #[cfg(feature="lru_cache")] pub use lru_cache::LruCache;
 #[cfg(feature="tree_map")] pub use tree_map::TreeMap;
 #[cfg(feature="tree_map")] pub use tree_set::TreeSet;
-#[cfg(feature="trie_map")] pub use trie_map::TrieMap;
-#[cfg(feature="trie_map")] pub use trie_set::TrieSet;
 
 // privates
 #[cfg(feature="tree_map")] mod tree;
-#[cfg(feature="trie_map")] mod trie;
 
 // publics
 
@@ -82,16 +79,6 @@ pub mod tree_map {
 #[cfg(feature="tree_map")]
 pub mod tree_set {
     pub use tree::set::*;
-}
-
-#[cfg(feature="trie_map")]
-pub mod trie_map {
-    pub use trie::map::*;
-}
-
-#[cfg(feature="trie_map")]
-pub mod trie_set {
-    pub use trie::set::*;
 }
 
 #[cfg(feature="proto")]
