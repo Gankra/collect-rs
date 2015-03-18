@@ -15,10 +15,9 @@ keywords = ["data-structures"]
 readme = "README.md"
 
 [features]
-default = ["enum_set", "immut_slist", "interval_heap",
+default = ["immut_slist", "interval_heap",
            "tree_map",
        	   "proto", "string_joiner", "ordered_iter"]
-enum_set = []
 immut_slist  = []
 interval_heap = ["compare"]
 tree_map = ["compare"]

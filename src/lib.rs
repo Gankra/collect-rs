@@ -48,7 +48,6 @@ extern crate traverse;
 #[cfg(test)] #[macro_use] mod bench;
 
 // Re-Exports
-#[cfg(feature="enum_set")] pub use enum_set::EnumSet;
 #[cfg(feature="immut_slist")] pub use immut_slist::ImmutSList;
 #[cfg(feature="interval_heap")] pub use interval_heap::IntervalHeap;
 #[cfg(feature="tree_map")] pub use tree_map::TreeMap;
@@ -61,7 +60,6 @@ extern crate traverse;
 
 pub mod iter;
 
-#[cfg(feature="enum_set")] pub mod enum_set;
 #[cfg(feature="immut_slist")] pub mod immut_slist;
 #[cfg(feature="interval_heap")] pub mod interval_heap;
 
