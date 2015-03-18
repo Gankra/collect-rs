@@ -16,13 +16,11 @@ readme = "README.md"
 
 [features]
 default = ["enum_set", "immut_slist", "interval_heap",
-           "linked_hash_map", "lru_cache", "tree_map",
+           "tree_map",
        	   "proto", "string_joiner", "ordered_iter"]
 enum_set = []
 immut_slist  = []
 interval_heap = ["compare"]
-linked_hash_map = []
-lru_cache = ["linked_hash_map"]
 tree_map = ["compare"]
 proto = []
 string_joiner = []
