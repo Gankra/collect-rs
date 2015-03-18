@@ -51,8 +51,6 @@ extern crate traverse;
 #[cfg(feature="enum_set")] pub use enum_set::EnumSet;
 #[cfg(feature="immut_slist")] pub use immut_slist::ImmutSList;
 #[cfg(feature="interval_heap")] pub use interval_heap::IntervalHeap;
-#[cfg(feature="linked_hash_map")] pub use linked_hash_map::LinkedHashMap;
-#[cfg(feature="lru_cache")] pub use lru_cache::LruCache;
 #[cfg(feature="tree_map")] pub use tree_map::TreeMap;
 #[cfg(feature="tree_map")] pub use tree_set::TreeSet;
 
@@ -66,8 +64,6 @@ pub mod iter;
 #[cfg(feature="enum_set")] pub mod enum_set;
 #[cfg(feature="immut_slist")] pub mod immut_slist;
 #[cfg(feature="interval_heap")] pub mod interval_heap;
-#[cfg(feature="linked_hash_map")] pub mod linked_hash_map;
-#[cfg(feature="lru_cache")] pub mod lru_cache;
 
 #[cfg(feature="tree_map")]
 pub mod tree_map {
