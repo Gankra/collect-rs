@@ -62,7 +62,7 @@ impl<T> ImmutSList<T> {
         } else {
             let len = self.len() - n;
             let mut head = self.front.as_ref();
-            for _ in range(0, n) {
+            for _ in 0..n {
                 head = head.unwrap().next.as_ref();
             }
             ImmutSList {
@@ -367,7 +367,7 @@ mod tests {
 
     #[test]
     fn test_debug() {
-        let list: ImmutSList<i32> = range(0, 10).rev().collect();
+        let list: ImmutSList<i32> = (0..10).rev().collect();
         assert_eq!(format!("{:?}", list), "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
 
         let list: ImmutSList<&str> = vec!["just", "one", "test", "more"].iter()

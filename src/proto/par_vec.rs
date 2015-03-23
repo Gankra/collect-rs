@@ -135,7 +135,7 @@ mod test {
 
     #[test]
     fn test_slices() {
-        let (_, slices) = ParVec::new(range(1u32, TEST_MAX).collect(), TEST_SLICES);
+        let (_, slices) = ParVec::new((1u32..TEST_MAX).collect(), TEST_SLICES);
 
         assert_eq!(slices.len(), TEST_SLICES);
     }
@@ -184,17 +184,15 @@ mod test {
     }
 
     fn get_prime_factors(x: u32) -> Vec<u32> {
-        range(1, x).filter(|&y| x % y == 0 && is_prime(y)).collect()
+        (1..x).filter(|&y| x % y == 0 && is_prime(y)).collect()
     }
 
     fn is_prime(x: u32) -> bool {
-        use std::iter::range_step;
-
         if x < 3 { return true; }
 
         if x & 1 == 0 { return false; }
 
-        for i in range_step(3, x, 2) {
+        for i in (3..x).step_by(2) {
             if x % i == 0 { return false; }
         }
 

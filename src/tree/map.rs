@@ -60,7 +60,7 @@ use compare::{Compare, Natural, natural};
 ///     println!("1 is no more");
 /// }
 ///
-/// for key in range(0, 4) {
+/// for key in 0..4 {
 ///     match map.get(&key) {
 ///         Some(value) => println!("{} has a value: {}", key, value),
 ///         None => println!("{} not in map", key),
@@ -1521,8 +1521,8 @@ mod test_treemap {
         let seed: &[_] = &[42];
         let mut rng: rand::IsaacRng = rand::SeedableRng::from_seed(seed);
 
-        for _ in range(0, 3) {
-            for _ in range(0, 90) {
+        for _ in 0..3 {
+            for _ in 0..90 {
                 let k = rng.gen();
                 let v = rng.gen();
                 if !ctrl.iter().any(|x| x == &(k, v)) {
@@ -1533,7 +1533,7 @@ mod test_treemap {
                 }
             }
 
-            for _ in range(0, 30) {
+            for _ in 0..30 {
                 let r = rng.gen_range(0, ctrl.len());
                 let (key, _) = ctrl.remove(r);
                 assert!(map.remove(&key).is_some());
@@ -1584,11 +1584,11 @@ mod test_treemap {
     #[test]
     fn test_interval_iteration() {
         let mut m = TreeMap::new();
-        for i in range(1, 100) {
+        for i in 1..100 {
             assert!(m.insert(i * 2, i * 4).is_none());
         }
 
-        for i in range(1, 198) {
+        for i in 1..198 {
             let mut lb_it = m.lower_bound(&i);
             let (&k, &v) = lb_it.next().unwrap();
             let lb = i + i % 2;
@@ -1626,7 +1626,7 @@ mod test_treemap {
     #[test]
     fn test_mut_iter() {
         let mut m = TreeMap::new();
-        for i in range(0, 10) {
+        for i in 0..10 {
             assert!(m.insert(i, 100 * i).is_none());
         }
 
@@ -1641,7 +1641,7 @@ mod test_treemap {
     #[test]
     fn test_mut_rev_iter() {
         let mut m = TreeMap::new();
-        for i in range(0, 10) {
+        for i in 0..10 {
             assert!(m.insert(i, 100 * i).is_none());
         }
 
@@ -1658,19 +1658,19 @@ mod test_treemap {
     fn test_mut_interval_iter() {
         let mut m_lower = TreeMap::new();
         let mut m_upper = TreeMap::new();
-        for i in range(1, 100) {
+        for i in 1..100 {
             assert!(m_lower.insert(i * 2, i * 4).is_none());
             assert!(m_upper.insert(i * 2, i * 4).is_none());
         }
 
-        for i in range(1, 199) {
+        for i in 1..199 {
             let mut lb_it = m_lower.lower_bound_mut(&i);
             let (&k, v) = lb_it.next().unwrap();
             let lb = i + i % 2;
             assert_eq!(lb, k);
             *v -= k;
         }
-        for i in range(0, 198) {
+        for i in 0..198 {
             let mut ub_it = m_upper.upper_bound_mut(&i);
             let (&k, v) = ub_it.next().unwrap();
             let ub = i + 2 - i % 2;
@@ -1940,7 +1940,7 @@ mod bench {
         let mut map = TreeMap::<u32, u32>::new();
         let mut rng = weak_rng();
 
-        for _ in range(0, size) {
+        for _ in 0..size {
             map.insert(rng.gen(), rng.gen());
         }
 
