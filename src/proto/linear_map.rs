@@ -205,7 +205,7 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     /// Removes a key-value pair from the map. If the key had a value present
     /// in the map, it is returned. Otherwise, `None` is returned.
     pub fn remove(&mut self, key: &K) -> Option<V> {
-        for i in range(0, self.storage.len()) {
+        for i in 0..self.storage.len() {
             let found;
             {
                 let (ref k, _) = self.storage[i];
@@ -356,7 +356,7 @@ mod test {
         map.reserve(TEST_CAPACITY);
         let capacity = map.capacity();
         assert!(capacity >= TEST_CAPACITY);
-        for i in range(0, TEST_CAPACITY as i32) {
+        for i in 0..TEST_CAPACITY as i32 {
             assert!(map.insert(i, i).is_none());
         }
         assert_eq!(capacity, map.capacity());
@@ -367,7 +367,7 @@ mod test {
         let mut map = LinearMap::new();
         map.reserve(TEST_CAPACITY);
         assert!(map.capacity() >= TEST_CAPACITY);
-        for i in range(0, TEST_CAPACITY as i32) {
+        for i in 0..TEST_CAPACITY as i32 {
             assert!(map.insert(i, i).is_none());
         }
         map.reserve(TEST_CAPACITY);
@@ -376,7 +376,7 @@ mod test {
         let mut map = LinearMap::new();
         map.reserve(TEST_CAPACITY);
         assert!(map.capacity() >= TEST_CAPACITY);
-        for i in range(0, TEST_CAPACITY as i32) {
+        for i in 0..TEST_CAPACITY as i32 {
             assert!(map.insert(i, i).is_none());
         }
         map.reserve(TEST_CAPACITY);
@@ -391,7 +391,7 @@ mod test {
         map.reserve(TEST_CAPACITY);
         map.shrink_to_fit();
         assert_eq!(map.capacity(), 0);
-        for i in range(0, TEST_CAPACITY as i32) {
+        for i in 0..TEST_CAPACITY as i32 {
             assert!(map.insert(i, i).is_none());
         }
         map.shrink_to_fit();
@@ -407,7 +407,7 @@ mod test {
         map.insert(100, 100);
         assert_eq!(map.len(), 1);
         assert!(!map.is_empty());
-        for i in range(0, TEST_CAPACITY as i32) {
+        for i in 0..TEST_CAPACITY as i32 {
             assert!(map.insert(i, i).is_none());
         }
         assert_eq!(map.len(), 1 + TEST_CAPACITY);
@@ -422,7 +422,7 @@ mod test {
         let mut map = LinearMap::new();
         map.clear();
         assert_eq!(map.len(), 0);
-        for i in range(0, TEST_CAPACITY as i32) {
+        for i in 0..TEST_CAPACITY as i32 {
             assert!(map.insert(i, i).is_none());
         }
         map.clear();
@@ -488,7 +488,7 @@ mod test {
         assert!(map.contains_key(&100));
         assert_eq!(map.get(&100), Some(&101));
         assert_eq!(map.get_mut(&100), Some(&mut 101));
-        for i in range(0, TEST_CAPACITY as i32) {
+        for i in 0..TEST_CAPACITY as i32 {
             assert!(map.insert(i, i).is_none());
         }
         assert_eq!(map.insert(100, 102), Some(101));
@@ -510,7 +510,7 @@ mod bench {
     fn insert(b: &mut test::Bencher, num: u32) {
         b.iter(|| {
             let mut map = LinearMap::new();
-            for i in range(0, num) {
+            for i in 0..num {
                 map.insert(i, i);
             }
         })
@@ -519,10 +519,10 @@ mod bench {
     fn remove_insert(b: &mut test::Bencher, num: u32) {
         b.iter(|| {
             let mut map = LinearMap::new();
-            for i in range(0, num) {
+            for i in 0..num {
                 map.insert(i, i);
             }
-            for i in range(0, num) {
+            for i in 0..num {
                 map.remove(&i);
             }
         })
@@ -531,10 +531,10 @@ mod bench {
     fn remove_rev_insert(b: &mut test::Bencher, num: u32) {
         b.iter(|| {
             let mut map = LinearMap::new();
-            for i in range(0, num) {
+            for i in 0..num {
                 map.insert(i, i);
             }
-            for i in range(0, num) {
+            for i in 0..num {
                 map.remove(&(num - i - 1));
             }
         })
@@ -542,7 +542,7 @@ mod bench {
 
     fn get_middle(b: &mut test::Bencher, num: u32) {
         let mut map = LinearMap::new();
-        for i in range(0, num) {
+        for i in 0..num {
             map.insert(i, i);
         }
         let middle = num / 2;
@@ -554,7 +554,7 @@ mod bench {
 
     fn get_none(b: &mut test::Bencher, num: u32) {
         let mut map = LinearMap::new();
-        for i in range(0, num) {
+        for i in 0..num {
             map.insert(i, i);
         }
         let none = num + 1;

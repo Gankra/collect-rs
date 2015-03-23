@@ -30,7 +30,7 @@
 #![feature(unboxed_closures)]
 #![feature(unsafe_destructor)]
 
-#![feature(core, hash, alloc)]
+#![feature(core, hash, alloc, step_by)]
 
 #[cfg(test)] extern crate rand;
 #[cfg(test)] extern crate test;

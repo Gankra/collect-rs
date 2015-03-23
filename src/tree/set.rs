@@ -955,7 +955,7 @@ mod test {
 
     #[test]
     fn test_move_iter() {
-        let s: TreeSet<i32> = range(0, 5).collect();
+        let s: TreeSet<i32> = (0..5).collect();
 
         let mut n = 0;
         for x in s.into_iter() {
