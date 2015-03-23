@@ -242,8 +242,6 @@
 <span id="200">200</span>
 <span id="201">201</span>
 <span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>alloc</span>;
 
@@ -382,7 +380,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_slices</span>() {
-        <span class='kw'>let</span> (_, <span class='ident'>slices</span>) <span class='op'>=</span> <span class='ident'>ParVec</span>::<span class='ident'>new</span>(<span class='ident'>range</span>(<span class='number'>1u32</span>, <span class='ident'>TEST_MAX</span>).<span class='ident'>collect</span>(), <span class='ident'>TEST_SLICES</span>);
+        <span class='kw'>let</span> (_, <span class='ident'>slices</span>) <span class='op'>=</span> <span class='ident'>ParVec</span>::<span class='ident'>new</span>((<span class='number'>1u32</span>..<span class='ident'>TEST_MAX</span>).<span class='ident'>collect</span>(), <span class='ident'>TEST_SLICES</span>);
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>slices</span>.<span class='ident'>len</span>(), <span class='ident'>TEST_SLICES</span>);
     }
@@ -431,17 +429,15 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>get_prime_factors</span>(<span class='ident'>x</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u32</span><span class='op'>&gt;</span> {
-        <span class='ident'>range</span>(<span class='number'>1</span>, <span class='ident'>x</span>).<span class='ident'>filter</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>y</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='ident'>y</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>is_prime</span>(<span class='ident'>y</span>)).<span class='ident'>collect</span>()
+        (<span class='number'>1</span>..<span class='ident'>x</span>).<span class='ident'>filter</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>y</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='ident'>y</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>is_prime</span>(<span class='ident'>y</span>)).<span class='ident'>collect</span>()
     }
 
     <span class='kw'>fn</span> <span class='ident'>is_prime</span>(<span class='ident'>x</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>range_step</span>;
-
         <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&lt;</span> <span class='number'>3</span> { <span class='kw'>return</span> <span class='boolval'>true</span>; }
 
         <span class='kw'>if</span> <span class='ident'>x</span> <span class='kw-2'>&amp;</span> <span class='number'>1</span> <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>return</span> <span class='boolval'>false</span>; }
 
-        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range_step</span>(<span class='number'>3</span>, <span class='ident'>x</span>, <span class='number'>2</span>) {
+        <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> (<span class='number'>3</span>..<span class='ident'>x</span>).<span class='ident'>step_by</span>(<span class='number'>2</span>) {
             <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='ident'>i</span> <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>return</span> <span class='boolval'>false</span>; }
         }
 
