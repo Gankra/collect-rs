@@ -39,7 +39,7 @@ fn test_join() {
   let one  = vec![1];
   let none: Vec<usize> = vec![];
 
-  assert_eq!(&many.iter().join(", ")[..], "1, 2, 3");
-  assert_eq!( &one.iter().join(", ")[..], "1");
-  assert_eq!(&none.iter().join(", ")[..], "");
+  assert_eq!(many.iter().join(", "), "1, 2, 3");
+  assert_eq!( one.iter().join(", "), "1");
+  assert_eq!(none.iter().join(", "), "");
 }

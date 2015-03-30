@@ -130,7 +130,7 @@ mod test {
 
         let vec = vec.into_inner();
 
-        assert_eq!(&*vec, &[5; TEST_MAX as usize][..]);
+        assert_eq!(vec, &[5; TEST_MAX as usize][..]);
     }
 
     #[test]
