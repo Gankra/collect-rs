@@ -173,18 +173,18 @@ impl<K, V, C> Default for TreeMap<K, V, C> where C: Compare<K> + Default {
     fn default() -> TreeMap<K, V, C> { TreeMap::with_comparator(Default::default()) }
 }
 
-impl<K, V, C, Q: ?Sized> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+impl<K, V, C, Q: Sized> ops::Index<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     type Output = V;
     #[inline]
-    fn index(&self, i: &Q) -> &V {
-        self.get(i).expect("no entry found for key")
+    fn index(&self, i: Q) -> &V {
+        self.get(&i).expect("no entry found for key")
     }
 }
 
-impl<K, V, C, Q: ?Sized> ops::IndexMut<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
+impl<K, V, C, Q: Sized> ops::IndexMut<Q> for TreeMap<K, V, C> where C: Compare<K> + Compare<Q, K> {
     #[inline]
-    fn index_mut(&mut self, i: &Q) -> &mut V {
-        self.get_mut(i).expect("no entry found for key")
+    fn index_mut(&mut self, i: Q) -> &mut V {
+        self.get_mut(&i).expect("no entry found for key")
     }
 }
 
@@ -1004,8 +1004,7 @@ define_iterator! {
 fn deref<K, V>(node: &Option<Box<TreeNode<K, V>>>) -> *const TreeNode<K, V> {
     match *node {
         Some(ref n) => {
-            let n: &TreeNode<K, V> = &**n;
-            n as *const TreeNode<K, V>
+            &**n
         }
         None => ptr::null()
     }
@@ -1015,8 +1014,7 @@ fn deref_mut<K, V>(x: &mut Option<Box<TreeNode<K, V>>>)
              -> *mut TreeNode<K, V> {
     match *x {
         Some(ref mut n) => {
-            let n: &mut TreeNode<K, V> = &mut **n;
-            n as *mut TreeNode<K, V>
+            &mut **n
         }
         None => ptr::null_mut()
     }
@@ -1515,7 +1513,7 @@ mod test_treemap {
         let mut map: TreeMap<i32,i32> = TreeMap::new();
         let mut ctrl = vec![];
 
-        check_equal(ctrl.as_slice(), &map);
+        check_equal(&ctrl, &map);
         assert!(map.get(&5).is_none());
 
         let seed: &[_] = &[42];
@@ -1529,7 +1527,7 @@ mod test_treemap {
                     assert!(map.insert(k, v).is_none());
                     ctrl.push((k, v));
                     check_structure(&map);
-                    check_equal(ctrl.as_slice(), &map);
+                    check_equal(&ctrl, &map);
                 }
             }
 
@@ -1538,7 +1536,7 @@ mod test_treemap {
                 let (key, _) = ctrl.remove(r);
                 assert!(map.remove(&key).is_some());
                 check_structure(&map);
-                check_equal(ctrl.as_slice(), &map);
+                check_equal(&ctrl, &map);
             }
         }
     }

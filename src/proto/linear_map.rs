@@ -134,7 +134,7 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     /// element type is `(&'a K, &'a V)`.
     pub fn iter<'a>(&'a self) -> Iter<'a, K, V> {
         fn ref_<A,B>(&(ref v1, ref v2): &(A, B)) -> (&A, &B) { (v1, v2) }
-        Iter { iter: self.storage.iter().map(ref_ as fn(&'a (K, V)) -> (&'a K, &'a V)) }
+        Iter { iter: self.storage.iter().map(ref_) }
     }
 
     /// An iterator visiting all key-value pairs in arbitrary order with
@@ -142,21 +142,21 @@ impl<K:PartialEq+Eq,V> LinearMap<K,V> {
     /// mut V)`.
     pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, K, V> {
         fn ref_<A,B>(&mut (ref v1, ref mut v2): &mut (A, B)) -> (&A, &mut B) { (v1, v2) }
-        IterMut { iter: self.storage.iter_mut().map(ref_ as fn(&'a mut (K, V)) -> (&'a K, &'a mut V)) }
+        IterMut { iter: self.storage.iter_mut().map(ref_) }
     }
 
     /// An iterator visiting all keys in arbitrary order. Iterator element type
     /// is `&'a K`.
     pub fn keys<'a>(&'a self) -> Keys<'a, K, V> {
         fn first<A,B>((v, _): (A, B)) -> A { v }
-        Keys { iter: self.iter().map(first as fn((&'a K, &'a V)) -> &'a K) }
+        Keys { iter: self.iter().map(first) }
     }
 
     /// An iterator visiting all values in arbitrary order. Iterator element
     /// type is `&'a V`.
     pub fn values<'a>(&'a self) -> Values<'a, K, V> {
         fn second<A,B>((_, v): (A, B)) -> B { v }
-        Values { iter: self.iter().map(second as fn((&'a K, &'a V)) -> &'a V) }
+        Values { iter: self.iter().map(second) }
     }
 
     /// Returns a reference to the value corresponding to the key.
