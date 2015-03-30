@@ -46,27 +46,12 @@ extern crate ordered_iter;
 
 // Re-Exports
 #[cfg(feature="immut_slist")] pub use immut_slist::ImmutSList;
-#[cfg(feature="tree_map")] pub use tree_map::TreeMap;
-#[cfg(feature="tree_map")] pub use tree_set::TreeSet;
-
-// privates
-#[cfg(feature="tree_map")] mod tree;
 
 // publics
 
 pub mod iter;
 
 #[cfg(feature="immut_slist")] pub mod immut_slist;
-
-#[cfg(feature="tree_map")]
-pub mod tree_map {
-    pub use tree::map::*;
-}
-
-#[cfg(feature="tree_map")]
-pub mod tree_set {
-    pub use tree::set::*;
-}
 
 #[cfg(feature="proto")]
 pub mod proto;
