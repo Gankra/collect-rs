@@ -24,7 +24,7 @@ impl<A: ToString, T: Iterator<Item=A>> StringJoiner for T {
         let mut output = elem.to_string();
         for elem in self.by_ref() {
           output.push_str(sep);
-          output.push_str(elem.to_string().as_slice());
+          output.push_str(&elem.to_string());
         }
         output
       }
@@ -39,7 +39,7 @@ fn test_join() {
   let one  = vec![1];
   let none: Vec<usize> = vec![];
 
-  assert_eq!(many.iter().join(", ").as_slice(), "1, 2, 3");
-  assert_eq!( one.iter().join(", ").as_slice(), "1");
-  assert_eq!(none.iter().join(", ").as_slice(), "");
+  assert_eq!(many.iter().join(", "), "1, 2, 3");
+  assert_eq!( one.iter().join(", "), "1");
+  assert_eq!(none.iter().join(", "), "");
 }

@@ -24,7 +24,7 @@ impl<T: 'static + Send + Sync> ParVec<T> {
     pub fn new(vec: Vec<T>, slices: usize) -> (ParVec<T>, Vec<ParSlice<T>>) {
         let data = Arc::new(vec);
 
-        let par_slices = sub_slices(data.as_slice(), slices).into_iter()
+        let par_slices = sub_slices(&data, slices).into_iter()
             .map(|slice|
                 ParSlice {
                     _vec: data.clone(),
@@ -130,7 +130,7 @@ mod test {
 
         let vec = vec.into_inner();
 
-        assert_eq!(&*vec, [5; TEST_MAX as usize].as_slice());
+        assert_eq!(vec, &[5; TEST_MAX as usize][..]);
     }
 
     #[test]

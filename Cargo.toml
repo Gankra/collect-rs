@@ -16,10 +16,8 @@ readme = "README.md"
 
 [features]
 default = ["immut_slist",
-           "tree_map",
        	   "proto", "string_joiner", "ordered_iter"]
 immut_slist  = []
-tree_map = ["compare"]
 proto = []
 string_joiner = []
 
