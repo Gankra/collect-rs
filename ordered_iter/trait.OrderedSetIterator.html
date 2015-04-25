@@ -42,8 +42,8 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>ordered_iter</a>::<wbr><a class='trait' href=''>OrderedSetIterator</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-85' class='srclink' href='../src/ordered_iter/lib.rs.html#59-77'>[src]</a></span></h1>
+            <a id="toggle-all-docs" href="#" title="collapse all docs">[-]</a>
+        </span><a id='src-85' class='srclink' href='../src/ordered_iter/lib.rs.html#59-77' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait OrderedSetIterator: <a class='trait' href='http://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a> + <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
     fn <a href='#method.inner_join_map' class='fnname'>inner_join_map</a>&lt;I&gt;(self, map: I) -&gt; <a class='struct' href='../ordered_iter/struct.InnerJoinMapSetIterator.html' title='ordered_iter::InnerJoinMapSetIterator'>InnerJoinMapSetIterator</a>&lt;I, Self&gt; <span class='where'>where I: <a class='trait' href='../ordered_iter/trait.OrderedMapIterator.html' title='ordered_iter::OrderedMapIterator'>OrderedMapIterator</a>&lt;Key=Self::<a class='trait' href='../ordered_iter/trait.OrderedSetIterator.html' title='ordered_iter::OrderedSetIterator'>Item</a>&gt;</span> { ... }
     fn <a href='#method.inner_join_set' class='fnname'>inner_join_set</a>&lt;I&gt;(self, map: I) -&gt; <a class='struct' href='../ordered_iter/struct.InnerJoinSetIterator.html' title='ordered_iter::InnerJoinSetIterator'>InnerJoinSetIterator</a>&lt;Self, I&gt; <span class='where'>where I: <a class='trait' href='../ordered_iter/trait.OrderedSetIterator.html' title='ordered_iter::OrderedSetIterator'>OrderedSetIterator</a>&lt;Item=Self::<a class='trait' href='../ordered_iter/trait.OrderedSetIterator.html' title='ordered_iter::OrderedSetIterator'>Item</a>&gt;</span> { ... }
