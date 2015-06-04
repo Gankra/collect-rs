@@ -1,3 +1,12 @@
+
+# Collect-rs has been deprecated in favour of seperate crates hosted at contain-rs
+
+https://github.com/contain-rs/
+
+
+
+# Old Readme
+
 collect-rs is intended as an experimental extension of the Rust standard library's
 libcollections. Ideas that are too niche, crazy, or experimental to land in libcollections
 can be gathered here where they can gain the maintenance and network-effect benefits that
