@@ -50,6 +50,7 @@ extern crate ordered_iter;
 // publics
 
 pub mod iter;
+pub mod macros;
 
 #[cfg(feature="immut_slist")] pub mod immut_slist;
 
